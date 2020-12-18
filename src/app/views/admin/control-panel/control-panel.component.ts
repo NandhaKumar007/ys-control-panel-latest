@@ -75,27 +75,27 @@ export class ControlPanelComponent implements OnInit {
           if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
           let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
           this.commonService.store_currency = result.data.currency_types[currencyIndex];
-          localStorage.setItem("store_currency", this.commonService.encryptData(this.commonService.store_currency));
-          localStorage.setItem("store_details", this.commonService.encryptData(this.commonService.store_details));
+          this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
+          this.commonService.updateLocalData('store_details', this.commonService.store_details);
           // courier partner
           this.commonService.courier_partners = [];
-          localStorage.setItem("courier_partners", this.commonService.encryptData(this.commonService.courier_partners));
+          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
           if(this.commonService.ys_features.indexOf('courier_partners') != -1) {
             this.storeApi.COURIER_PARTNERS().subscribe(result => {
               if(result.status) {
                 this.commonService.courier_partners = result.data;
-                localStorage.setItem("courier_partners", this.commonService.encryptData(this.commonService.courier_partners));
+                this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
               }
             });
           }
           // vendors
           this.commonService.vendor_list = [];
-          localStorage.setItem("vendor_list", this.commonService.encryptData(this.commonService.vendor_list));
+          this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           if(this.commonService.store_details.login_type!='vendor' && this.commonService.ys_features.indexOf('vendors') != -1) {
             this.storeApi.VENDOR_LIST().subscribe(result => {
               if(result.status) {
                 this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
-                localStorage.setItem("vendor_list", this.commonService.encryptData(this.commonService.vendor_list));
+                this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
               }
             });
           }

@@ -118,15 +118,15 @@ export class SidebarService {
           });
           this.commonService.seo_category = sectionSeoArray;
           this.commonService.overall_category = overallCategoryArray;
-          localStorage.setItem("seo_category", this.commonService.encryptData(this.commonService.seo_category));
-          localStorage.setItem("overall_category", this.commonService.encryptData(this.commonService.overall_category));
+          this.commonService.updateLocalData('seo_category', this.commonService.seo_category);
+          this.commonService.updateLocalData('overall_category', this.commonService.overall_category);
 					resolve(true);
 				}
 				else {
           this.commonService.seo_category = [];
           this.commonService.overall_category = [];
-          localStorage.setItem("seo_category", this.commonService.encryptData(this.commonService.seo_category));
-          localStorage.setItem("overall_category", this.commonService.encryptData(this.commonService.overall_category));
+          this.commonService.updateLocalData('seo_category', this.commonService.seo_category);
+          this.commonService.updateLocalData('overall_category', this.commonService.overall_category);
 					console.log("response", result);
 					resolve(true);
 				}
@@ -310,7 +310,7 @@ export class SidebarService {
       }
       sidePanelList.push({ name: 'Settings', type: 'link', icon: 'settings', state: '/settings' });
       this.commonService.route_permission_list = routePermissionList;
-      localStorage.setItem("route_permission_list", this.commonService.encryptData(this.commonService.route_permission_list));
+      this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);
     }
 
 		return sidePanelList;

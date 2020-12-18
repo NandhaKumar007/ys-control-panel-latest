@@ -150,6 +150,28 @@ export class ProductExtrasApiService {
     return this.http.patch<any>(environment.ws_url+'/store/size_chart', x, httpOptions);
   }
 
+  // Sizing assistant
+  SIZING_ASSISTANT_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/sizing_assistant', httpOptions);
+  }
+  SIZING_ASSISTANT_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/sizing_assistant/'+x, httpOptions); 
+  }
+  ADD_SIZING_ASSISTANT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/sizing_assistant', x, httpOptions);
+  }
+  UPDATE_SIZING_ASSISTANT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/sizing_assistant', x, httpOptions); 
+  }
+  DELETE_SIZING_ASSISTANT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/sizing_assistant', x, httpOptions);
+  }
+
   // TAGS
   TAG_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

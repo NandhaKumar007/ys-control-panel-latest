@@ -123,13 +123,13 @@
                 </div>
                 <label>Unit {{i+1}}</label>
                 <select name="unit{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" (change)="addForm.list=[{conditions: []}];" required>
-                  <option *ngFor="let x of default_units;" [ngValue]="x.value">{{x.name}}</option>
+                  <option *ngFor="let x of commonService.default_units;" [ngValue]="x.value">{{x.name}}</option>
                 </select>
                 <label class="mt-2">Max Measurement Value</label>
                 <input type="text" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value" #max_value="ngModel" appNumberOnly required />
               </div>
             </div>
-            <div *ngIf="addForm.units?.length<default_units.length" class="ml-1 col-md-12" [ngClass]="addForm.units.length? 'mt-3': ''">
+            <div *ngIf="addForm.units?.length<commonService.default_units.length" class="ml-1 col-md-12" [ngClass]="addForm.units.length? 'mt-3': ''">
               <span class="add-another  x-close" (click)="addForm.units.push({}); addForm.list=[{conditions: []}];">
                 <b>ADD ANOTHER UNIT</b>
               </span>
@@ -266,13 +266,13 @@
                 </div>
                 <label>Unit {{i+1}}</label>
                 <select name="unit{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" (change)="editForm.list=[{conditions: []}];" required>
-                  <option *ngFor="let x of default_units;" [ngValue]="x.value">{{x.name}}</option>
+                  <option *ngFor="let x of commonService.default_units;" [ngValue]="x.value">{{x.name}}</option>
                 </select>
                 <label class="mt-2">Max Measurement Value</label>
                 <input type="text" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value" #max_value="ngModel" appNumberOnly required />
               </div>
             </div>
-            <div *ngIf="editForm.units?.length<default_units.length" class="ml-1 col-md-12" [ngClass]="editForm.units.length? 'mt-3': ''">
+            <div *ngIf="editForm.units?.length<commonService.default_units.length" class="ml-1 col-md-12" [ngClass]="editForm.units.length? 'mt-3': ''">
               <span class="add-another  x-close" (click)="editForm.units.push({}); editForm.list=[{conditions: []}];">
                 <b>ADD ANOTHER UNIT</b>
               </span>

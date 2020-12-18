@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'measurement-sets', loadChildren: () => import('./measurements/measurements.module').then(m => m.MeasurementsModule) },
   { path: 'shop-assistant', loadChildren: () => import('./shop-assistant/shop-assistant.module').then(m => m.ShopAssistantModule) },
   { path: 'shop-assistant/:type', loadChildren: () => import('./shop-assistant/shop-assistant.module').then(m => m.ShopAssistantModule) },
+  { path: 'sizing-assistant', loadChildren: () => import('./sizing-assistant/sizing-assistant.module').then(m => m.SizingAssistantModule) },
   { path: 'size-chart', loadChildren: () => import('./size-chart/size-chart.module').then(m => m.SizeChartModule) },
   { path: 'tags', loadChildren: () => import('./tag/tag.module').then(m => m.TagModule) },
   { path: 'tax-rates', loadChildren: () => import('./tax-rates/tax-rates.module').then(m => m.TaxRatesModule) }

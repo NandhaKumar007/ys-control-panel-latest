@@ -53,19 +53,10 @@ export class ProductOrdersComponent implements OnInit {
   getOrderList() {
     if(this.filterForm.from_date && this.filterForm.to_date) {
       this.pageLoader = true;
-      if(this.filterForm.type=='all' || this.filterForm.type=='placed') this.filterForm.date_type = 'created_on';
-      else if(this.filterForm.type=='confirmed') this.filterForm.date_type = 'confirmed_on';
-      else if(this.filterForm.type=='dispatched') this.filterForm.date_type = 'dispatched_on';
-      else if(this.filterForm.type=='delivered') this.filterForm.date_type = 'delivered_on';
-      else if(this.filterForm.type=='cancelled') this.filterForm.date_type = 'cancelled_on';
+      this.filterForm.date_type = 'created_on';
       this.api.ORDER_LIST(this.filterForm).subscribe(result => {
         if(result.status) {
-          let orderList: any = [];
-          if(this.filterForm.type=='all' || this.filterForm.type=='placed') orderList = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-          else if(this.filterForm.type=='confirmed') orderList = result.list.sort((a, b) => 0 - (a.confirmed_on > b.confirmed_on ? 1 : -1));
-          else if(this.filterForm.type=='dispatched') orderList = result.list.sort((a, b) => 0 - (a.dispatched_on > b.dispatched_on ? 1 : -1));
-          else if(this.filterForm.type=='delivered') orderList = result.list.sort((a, b) => 0 - (a.delivered_on > b.delivered_on ? 1 : -1));
-          else if(this.filterForm.type=='cancelled') orderList = result.list.sort((a, b) => 0 - (a.cancelled_on > b.cancelled_on ? 1 : -1));
+          let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
           this.list = [];
           orderList.forEach(obj => {
             if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;

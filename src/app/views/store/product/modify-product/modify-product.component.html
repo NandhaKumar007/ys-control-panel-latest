@@ -452,6 +452,36 @@
         </div>
         <!-- #FAQ -->
 
+        <!-- Sizing Assistant -->
+        <div *ngIf="commonService.ys_features.indexOf('sizing_assistant')!=-1 && sizingList?.length" [ngClass]="productForm.sizing_assist_status? 'card p-3 mb-3': ''">
+          <div class="row">
+            <div class="form-group mb-3 col-md-12">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="sizing_assist_status" [(ngModel)]="productForm.sizing_assist_status" (change)="!productForm.sizing_assist_id? productForm.sizing_assist_id=sizingList[0]._id: ''"
+                  #sizing_assist_status="ngModel">
+                <span>Apply Sizing Assistant</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="row ml-3" *ngIf="productForm.sizing_assist_status">
+            <div class="col-md-12 form-group mb-3">
+              <div class="card card-in-card p-3">
+                <div class="row ml-3 mt-3">
+                  <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let x of sizingList; let i=index;">
+                    <label class="radio radio-success">
+                      <input type="radio" name="sizing_assist_id" [value]="x._id" [checked]="x._id==productForm.sizing_assist_id" (change)="productForm.sizing_assist_id=x._id;">
+                      <span>{{x.name}}</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- #Sizing Assistant -->
+
         <!-- AI Style Assistant -->
         <div *ngIf="commonService.ys_features.indexOf('shopping_assistant')!=-1 && aiStyleList?.length" [ngClass]="productForm.aistyle_status? 'card p-3 mb-3': ''">
           <div class="row">

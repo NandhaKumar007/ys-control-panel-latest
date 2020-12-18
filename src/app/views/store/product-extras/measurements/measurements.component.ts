@@ -20,10 +20,6 @@ export class MeasurementsComponent implements OnInit {
 	addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; btnLoader: boolean;
   imgBaseUrl = environment.img_baseurl;
-  default_units: any = [
-    { name: "Inches", value: "inches" },
-    { name: "Cms", value: "cms" }
-  ];
 
 	constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;

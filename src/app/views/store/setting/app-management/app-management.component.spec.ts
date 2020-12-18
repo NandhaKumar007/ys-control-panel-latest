@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShippingPolicyComponent } from './shipping-policy.component';
+import { AppManagementComponent } from './app-management.component';
 
-describe('ShippingPolicyComponent', () => {
-  let component: ShippingPolicyComponent;
-  let fixture: ComponentFixture<ShippingPolicyComponent>;
+describe('AppManagementComponent', () => {
+  let component: AppManagementComponent;
+  let fixture: ComponentFixture<AppManagementComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ShippingPolicyComponent ]
+      declarations: [ AppManagementComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShippingPolicyComponent);
+    fixture = TestBed.createComponent(AppManagementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

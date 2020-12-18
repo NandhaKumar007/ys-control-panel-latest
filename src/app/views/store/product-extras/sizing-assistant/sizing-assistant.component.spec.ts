@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TermsConditionsComponent } from './terms-conditions.component';
+import { SizingAssistantComponent } from './sizing-assistant.component';
 
-describe('TermsConditionsComponent', () => {
-  let component: TermsConditionsComponent;
-  let fixture: ComponentFixture<TermsConditionsComponent>;
+describe('SizingAssistantComponent', () => {
+  let component: SizingAssistantComponent;
+  let fixture: ComponentFixture<SizingAssistantComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TermsConditionsComponent ]
+      declarations: [ SizingAssistantComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TermsConditionsComponent);
+    fixture = TestBed.createComponent(SizingAssistantComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

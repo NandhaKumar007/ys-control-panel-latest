@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "module": "es2020",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "importHelpers": true,

@@ -19,7 +19,8 @@ export class ModifyCouponCodeComponent implements OnInit {
   page = 1; pageSize = 10;
   pageLoader: boolean; productListLoader: boolean; search_bar: string;
   imgBaseUrl = environment.img_baseurl; offerForm: any;
-  productList: any = []; tempCategoryList: any = []; tempProductList: any = [];
+  productList: any = []; allProductList: any = [];
+  tempCategoryList: any = []; tempProductList: any = [];
   category_id: any; formType: string;
 
   constructor(
@@ -47,6 +48,7 @@ export class ModifyCouponCodeComponent implements OnInit {
               this.offerForm.end_date = new Date(this.offerForm.valid_to);
               this.offerForm.end_time = new Date(this.offerForm.valid_to).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
             }
+            if(this.offerForm.buy_x_get_y_usage_limit) this.offerForm.buy_x_get_y_usage_status = true;
           }
           else console.log("response", result);
         });
@@ -55,7 +57,7 @@ export class ModifyCouponCodeComponent implements OnInit {
         this.formType = "add";
         this.offerForm = {
           discount_type: 'percentage', apply_to: 'order', min_order_amt: 0, min_order_qty: 0,
-          category_list: [], product_list: [], enable_status: true
+          category_list: [], product_list: [], enable_status: true, code_type: 'discount'
         };
         setTimeout(() => { this.pageLoader = false; }, 500);
       }
@@ -64,9 +66,13 @@ export class ModifyCouponCodeComponent implements OnInit {
 
   onSubmit() {
     this.offerForm.valid_from = new Date(new Date(this.offerForm.start_date).toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' })+" "+this.offerForm.start_time);
-    this.offerForm.valid_to = null;
+    delete this.offerForm.valid_to;
     if(this.offerForm.enable_end_date) {
       this.offerForm.valid_to = new Date(new Date(this.offerForm.end_date).toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' })+" "+this.offerForm.end_time);
+    }
+    if(this.offerForm.discount_type!='buy_x_get_y') {
+      delete this.offerForm.buy_properties;
+      delete this.offerForm.get_properties;
     }
     if(this.formType=='add') {
       this.api.ADD_OFFER(this.offerForm).subscribe(result => {
@@ -91,39 +97,116 @@ export class ModifyCouponCodeComponent implements OnInit {
 
   // product
   getProductList(categoryId) {
-    this.productListLoader = true
-    this.storeApi.PRODUCT_LIST({ category_id: categoryId }).subscribe(result => {
-      setTimeout(() => { this.productListLoader = false; }, 500);
-      if(result.status) this.productList = result.list;
-      else console.log("response", result);
-    });
+    if(categoryId=='all' && this.allProductList.length) this.productList = this.allProductList;
+    else {
+      this.productListLoader = true;
+      this.storeApi.PRODUCT_LIST({ category_id: categoryId }).subscribe(result => {
+        setTimeout(() => { this.productListLoader = false; }, 500);
+        if(result.status) {
+          this.productList = result.list;
+          if(categoryId=='all') this.allProductList = result.list;
+        }
+        else console.log("response", result);
+      });
+    }
   }
-  checkProduct(x) {
-    if(this.tempProductList.findIndex(obj => obj.product_id==x._id) != -1) return true;
-  }
-  addProduct(x) {
-    let index = this.tempProductList.findIndex(obj => obj.product_id==x._id);
-    if(index != -1) this.tempProductList.splice(index, 1);
-    else this.tempProductList.push({ product_id: x._id, name: x.name, image: x.image_list[0].image });
+  openProdListModal(modalName) {
+    if(this.offerForm.discount_type == 'buy_x_get_y') {
+      if(this.offerForm.bx_gy_type=='buy') {
+        this.productList.forEach(element => {
+          element.checked = false;
+          if(this.offerForm.buy_properties.product_list.findIndex(obj => obj.product_id==element._id) != -1) element.checked = true;
+        });
+      }
+      else {
+        this.productList.forEach(element => {
+          element.checked = false;
+          if(this.offerForm.get_properties.product_list.findIndex(obj => obj.product_id==element._id) != -1) element.checked = true;
+        });
+      }
+    }
+    else {
+      this.productList.forEach(element => {
+        element.checked = false;
+        if(this.offerForm.product_list.findIndex(obj => obj.product_id==element._id) != -1) element.checked = true;
+      });
+    }
+    this.modalService.open(modalName, { size: 'lg'});
   }
   onSubmitProduct() {
     this.offerForm.product_list = [];
-    this.tempProductList.forEach(element => { this.offerForm.product_list.push(element); });
+    if(this.offerForm.discount_type == 'buy_x_get_y') {
+      if(this.offerForm.bx_gy_type=='buy') {
+        this.offerForm.buy_properties.product_list = [];
+        this.productList.forEach(element => {
+          element.product_id = element._id;
+          element.image = element.image_list[0].image;
+          if(element.checked) this.offerForm.buy_properties.product_list.push(element);
+        });
+      }
+      else {
+        this.offerForm.get_properties.product_list = [];
+        this.productList.forEach(element => {
+          element.product_id = element._id;
+          element.image = element.image_list[0].image;
+          if(element.checked) this.offerForm.get_properties.product_list.push(element);
+        });
+      }
+    }
+    else this.productList.forEach(element => {
+      element.product_id = element._id;
+      element.image = element.image_list[0].image;
+      if(element.checked) this.offerForm.product_list.push(element);
+    });
     document.getElementById('closeModal').click();
   }
 
   // category
-  checkCategory(x) {
-    if(this.tempCategoryList.findIndex(obj => obj.category_id==x._id) != -1) return true;
-  }
-  addCategory(x) {
-    let index = this.tempCategoryList.findIndex(obj => obj.category_id==x._id);
-    if(index != -1) this.tempCategoryList.splice(index, 1);
-    else this.tempCategoryList.push({ category_id: x._id, name: x.name });
+  openCatListModal(modalName) {
+    if(this.offerForm.discount_type == 'buy_x_get_y') {
+      if(this.offerForm.bx_gy_type=='buy') {
+        this.commonService.overall_category.forEach(element => {
+          element.checked = false;
+          if(this.offerForm.buy_properties.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
+        });
+      }
+      else {
+        this.commonService.overall_category.forEach(element => {
+          element.checked = false;
+          if(this.offerForm.get_properties.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
+        });
+      }
+    }
+    else {
+      this.commonService.overall_category.forEach(element => {
+        element.checked = false;
+        if(this.offerForm.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
+      });
+    }
+    this.modalService.open(modalName, { size: 'lg'});
   }
   onSubmitCategory() {
     this.offerForm.category_list = [];
-    this.tempCategoryList.forEach(element => { this.offerForm.category_list.push(element); });
+    if(this.offerForm.discount_type == 'buy_x_get_y') {
+      if(this.offerForm.bx_gy_type=='buy') {
+        this.offerForm.buy_properties.category_list = [];
+        this.commonService.overall_category.forEach(element => {
+          element.category_id = element._id;
+          if(element.checked) this.offerForm.buy_properties.category_list.push(element);
+        });
+      }
+      else {
+        this.offerForm.get_properties.category_list = [];
+        this.commonService.overall_category.forEach(element => {
+          element.category_id = element._id;
+          if(element.checked) this.offerForm.get_properties.category_list.push(element);
+        });
+      }
+    }
+    else this.commonService.overall_category.forEach(element => {
+      element.category_id = element._id;
+      if(element.checked) this.offerForm.category_list.push(element);
+    });
     document.getElementById('closeModal').click();
   }
   

@@ -24,7 +24,18 @@ export class CouponCodesComponent implements OnInit {
   ngOnInit() {
     this.pageLoader = true;
     this.api.OFFER_LIST().subscribe(result => {
-      if(result.status) this.list = result.list;
+      if(result.status) {
+        this.list = result.list;
+        this.list.forEach(obj => {
+          obj.code_status='Active';
+          if(obj.valid_to) {
+            let today = new Date().setHours(23,59,59,999);
+            let validTo = new Date(obj.valid_to).setHours(23,59,59,999);
+            if(today>validTo) obj.code_status='Expired';
+          }
+          if(!obj.enable_status) obj.code_status='Inactive';
+        });
+      }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });

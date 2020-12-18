@@ -112,16 +112,7 @@
             class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
             <p class="w-30 w-sm-100 m-b-0">{{x.customer_name}}</p>
-            <p *ngIf="filterForm?.type=='all' || filterForm?.type=='placed'" class="w-30 w-sm-100 m-b-0">
-              {{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-            <p *ngIf="filterForm?.type=='confirmed'" class="w-30 w-sm-100 m-b-0">
-              {{x.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
-            <p *ngIf="filterForm?.type=='dispatched'" class="w-30 w-sm-100 m-b-0">
-              {{x.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
-            <p *ngIf="filterForm?.type=='delivered'" class="w-30 w-sm-100 m-b-0">
-              {{x.delivered_on | date: "dd MMM y hh:mm a"}}</p>
-            <p *ngIf="filterForm?.type=='cancelled'" class="w-30 w-sm-100 m-b-0">
-              {{x.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
+            <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
             <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
               <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}</p>
               <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">

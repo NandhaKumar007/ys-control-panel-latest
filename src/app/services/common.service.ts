@@ -74,6 +74,11 @@ export class CommonService {
     }
   ];
 
+  default_units: any = [
+    { name: "Inches", value: "inches" },
+    { name: "Cms", value: "cms" }
+  ];
+
   master_token: string = null;
   store_token: string = null;
 

@@ -20,7 +20,8 @@ export class AddProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.overall_category;
   addonList: any; tagList: any; noteList: any; taxRates: any;
-  sizeCharts: any; faqList: any; aiStyleList: any = this.commonService.aistyle_list;
+  sizeCharts: any; faqList: any; sizingList: any;
+  aiStyleList: any = this.commonService.aistyle_list;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = 15;
@@ -56,6 +57,7 @@ export class AddProductComponent implements OnInit {
           this.noteList = result.data.footnote_list;
           this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
           this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
+          this.sizingList = result.data.sizing_assistant.filter(obj => obj.status=='active');
           if(this.taxRates.length) {
             let taxIndex = this.taxRates.findIndex(obj => obj.primary);
             if(taxIndex!=-1) {
