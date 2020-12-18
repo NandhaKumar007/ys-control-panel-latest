@@ -1,0 +1,239 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Shipping Methods</h1>
+        <ul><li>Manage your couriers and delivery partners</li></ul>
+      </div>
+
+      <div *ngIf="commonService.ys_features.indexOf('pincode_service')!=-1" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" routerLink="/shipping/pincodes">Pincodes</button>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+  <div class="top-filter-sec">
+  <div class="row mb-4">
+    <div class="col-6">
+      <button type="button" class="btn btn-primary" (click)="addForm={ shipping_type: 'Domestic' }; modalService.open(addModal);">Add New Shipping Method</button>
+    </div>
+    <!-- search box -->
+    <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+      <div class="form-group">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="row" *ngIf="list?.length" class="list-horizontal">
+
+    <div *ngFor="let x of list | gridSearch: { name: search_bar, tracking_link: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;" class="col-md-12 list-item"
+      [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}" >
+      <div class="card o-hidden mb-4 d-flex flex-row">
+        <div class="flex-grow-1 pl-2 d-flex">
+          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+            <p class="w-20 w-md-100 m-b-0">{{x.name}}</p>
+            <p class="w-30 w-md-100 m-b-0">{{x.tracking_link}}</p>
+            <p class="w-10 w-md-100 m-b-0">
+              <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.delivery_time}}</ng-container>
+              <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
+            </p>
+            <p class="w-10 w-md-100 m-b-0">
+              <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.shipping_price | currency:commonService.store_currency?.country_code}}</ng-container>
+              <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
+            </p>
+            <p class="w-10 w-md-100 m-b-0">
+              <ng-container *ngIf="x.free_shipping">Above {{x.minimum_price | currency:commonService.store_currency?.country_code}}</ng-container>
+              <ng-container *ngIf="!x.free_shipping">No</ng-container>
+            </p>
+            <p class="m-0 text-muted text-small w-15 w-md-100 d-lg-block item-actions">
+              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x._id, editModal)">
+               <span class="black-outline-txt">
+                Edit
+               </span>
+              </button>
+              <button [disabled]="x.domes_zone_status || x.inter_zone_status" class="btn btn-wide orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+               <span class="orng-outline-txt">Remove</span>
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="col-md-12 mt-3">
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+    </div>
+
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12">
+      <p align="center">No records found</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADD MODAL -->
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Shipping Details</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onAdd();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="shipping_type" value="Domestic" [(ngModel)]="addForm.shipping_type">
+              <span>Domestic</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="commonService.ys_features.indexOf('domestic_shipping')==-1" class="col-md-8 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="shipping_type" value="International" [(ngModel)]="addForm.shipping_type">
+              <span>International</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label for="name">Carrier Name</label>
+            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="tracking_link">Tracking Link</label>
+            <input type="text" name="tracking_link" id="tracking_link" class="form-control" [(ngModel)]="addForm.tracking_link" #tracking_link="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+              <label for="delivery_time">Delivery Time</label>
+              <select name="delivery_time" id="delivery_time" class="form-control" [(ngModel)]="addForm.delivery_time" #delivery_time="ngModel" required>
+                <option value="Same day">Same day</option>
+                <option value="Next day">Next day</option>
+                <option value="1 to 2 days">1 to 2 days</option>
+                <option value="2 to 5 days">2 to 5 days</option>
+                <option value="More than 5 days">More than 5 days</option>
+              </select>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="shipping_price">Shipping Charge</label>
+            <input type="text" name="shipping_price" id="shipping_price" class="form-control" [(ngModel)]="addForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="free_shipping" [(ngModel)]="addForm.free_shipping" #free_shipping="ngModel">
+              <span>Free Shipping</span><span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="addForm.free_shipping" class="col-md-12 form-group mb-3">
+            <label for="minimum_price">Order above</label>
+            <input type="text" name="minimum_price" id="minimum_price" class="form-control" [(ngModel)]="addForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="addForm.errorMsg"><p class="text-danger">{{ addForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeAddModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Add</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- EDIT MODAL -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Shipping Type</label>
+            <input type="text" name="shipping_type" class="form-control" [(ngModel)]="editForm.shipping_type" #shipping_type="ngModel" readonly />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="name">Carrier Name</label>
+            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="tracking_link">Tracking Link</label>
+            <input type="text" name="tracking_link" id="tracking_link" class="form-control" [(ngModel)]="editForm.tracking_link" #tracking_link="ngModel" required />
+          </div>
+        </div>
+        <div *ngIf="!editForm.domes_zone_status && !editForm.inter_zone_status" class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label for="delivery_time">Delivery Time</label>
+            <select name="delivery_time" id="delivery_time" class="form-control" [(ngModel)]="editForm.delivery_time" #delivery_time="ngModel" required>
+              <option value="Same day">Same day</option>
+              <option value="Next day">Next day</option>
+              <option value="1 to 2 days">1 to 2 days</option>
+              <option value="2 to 5 days">2 to 5 days</option>
+              <option value="More than 5 days">More than 5 days</option>
+            </select>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="shipping_price">Shipping Charge</label>
+            <input type="text" name="shipping_price" id="shipping_price" class="form-control" [(ngModel)]="editForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
+          </div>
+        </div>
+        <div *ngIf="editForm.domes_zone_status || editForm.inter_zone_status" class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label for="delivery_time">Delivery Time</label>
+            <input type="text" value="Refer excel sheet" class="form-control" disabled />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="shipping_price">Shipping Charge</label>
+            <input type="text" value="Refer excel sheet" class="form-control" disabled />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="free_shipping" [(ngModel)]="editForm.free_shipping" #free_shipping="ngModel">
+              <span>Free Shipping</span><span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="editForm.free_shipping" class="col-md-12 form-group mb-3">
+            <label for="minimum_price">Order above</label>
+            <input type="text" name="minimum_price" id="minimum_price" class="form-control" [(ngModel)]="editForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg"><p class="text-danger">{{ editForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeEditModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+  
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to delete <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span> carrier?</strong></p>
+    <div *ngIf="deleteForm.errorMsg"><p class="text-danger">{{ deleteForm.errorMsg }}</p></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeDeleteModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+     <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" class="btn btn-wide orng-outline-btn" (click)="onDelete();">
+     <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>

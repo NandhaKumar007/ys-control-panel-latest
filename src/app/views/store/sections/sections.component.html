@@ -1,0 +1,267 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>{{ (commonService.ys_features.indexOf('multi_menu')!=-1)? 'Menus': 'Sections' }}</h1>
+    <ul>
+      <li>This is the first level of categorization</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <button type="button" class="btn btn-wide btn-h-wide btn-primary"
+          (click)="maxRank=list.length; formType='section'; addForm = { rank: list.length+1 }; modalService.open(addModal);">
+          Add New {{ (commonService.ys_features.indexOf('multi_menu')!=-1)? 'Menu': 'Section' }}
+        </button>
+      </div>
+      <!-- search box -->
+      <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+        <div class="form-group">
+          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA LIST -->
+  <div *ngIf="list?.length" class="row" class="list-horizontal">
+
+    <!-- SECTIONS -->
+    <div *ngIf="commonService.ys_features.indexOf('multi_menu')==-1" class="card p-3">
+      <div class="row m-2">
+        <h4>Shop</h4>
+      </div>
+      <div class="row">
+        <div
+          *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          class="col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+                <p class="m-0 text-muted text-small w-30 w-sm-100">{{x.categories?.length}} Categories</p>
+                <!-- <p class="m-0 text-muted text-small w-30 w-sm-100 d-lg-block item-actions"> -->
+
+
+                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                  <button class="btn btn-wide btn-primary w-md-100" (click)="onRouterChange(x);">View
+                    Categories</button>
+                </div>
+
+                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                  <button class="btn btn-wide black-outline-btn w-md-100"
+                  (click)="maxRank=list.length; formType='section'; onEdit(x, editModal);">
+                  <span class="black-outline-txt">Edit</span></button>
+                </div>
+
+                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                  <button class="btn orng-outline-btn w-md-100"
+                  (click)="formType='section'; deleteForm = x; modalService.open(deleteModal, { centered: true });">
+                  <span class="orng-outline-txt">Remove</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MENUS -->
+    <ng-container *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1">
+      <div
+        *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+        class="card p-3 mb-3">
+        <div class="row mb-3">
+          <div class="col-8">
+            <h4>{{x.name}}</h4>
+          </div>
+          <div class="col-4 d-flex justify-content-end align-items-center">
+            <i class="material-icons edit-icon"
+              (click)="maxRank=list.length; formType='section'; onEdit(x, editModal);">edit</i>
+            <i class="material-icons edit-icon ml-3"
+              (click)="formType='section'; deleteForm=x; modalService.open(deleteModal, { centered: true });">delete</i>
+          </div>
+        </div>
+        <div class="row">
+          <div *ngFor="let y of x.categories | orderAsc:'rank'; let j=index;" class="col-md-12">
+
+            <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <p class="w-30 w-sm-100 m-b-0">{{y.name}}</p>
+                  <p class="m-0 text-muted text-small w-30 w-sm-100">{{y.sub_categories?.length}} Categories</p>
+
+                  <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                    <button class="btn btn-primary w-md-100" (click)="onViewCategories(x, y);">View
+                      Categories</button>
+                  </div>
+
+                  <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                    <button class="btn btn-wide black-outline-btn w-md-100"
+                      (click)="maxRank=x.categories.length; formType='category'; sectionId=x._id; onEdit(y, editModal);">
+                      <span class="btn-wide black-outline-txt">Edit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                    <button class="btn orng-outline-btn w-md-100"
+                      (click)="formType='category'; sectionId=x._id; deleteForm = y; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </div>
+
+                </div>
+
+
+
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="!x?.categories?.length" class="col-md-12">
+            <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <p class="w-100 w-sm-100 m-b-0" align="center">No sections found.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 ml-2 mb-2">
+            <span class="add-another x-close"
+              (click)="maxRank=x.categories.length; formType='category'; sectionId=x._id; addForm = { rank: x.categories.length+1 }; modalService.open(addModal);">
+              <b>ADD NEW SECTION</b>
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="col-md-12 mt-3">
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
+        previousLabel="" nextLabel=""></pagination-controls>
+    </div>
+
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display. {{ (commonService.ys_features.indexOf('multi_menu')!=-1)? 'Menus': 'Sections' }} help you
+        segregate your products.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New
+      {{ (commonService.ys_features.indexOf('multi_menu')!=-1 && formType=='section')? 'Menu': 'Section' }}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onAdd()" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel"
+              required />
+          </div>
+
+          <div class="col-md-12 form-group mb-3">
+            <label for="rank">Rank</label>
+            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel"
+              min="1" max="{{maxRank+1}}" appNumberOnly required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="addForm.errorMsg">
+        <p class="text-danger">{{ addForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Add</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- EDIT MODAL -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ editForm.name }}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdate()" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel"
+              required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label for="rank">Rank</label>
+            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel"
+              min="1" max="{{maxRank}}" appNumberOnly required />
+          </div>
+          <div *ngIf="editForm?.seo_details?.modified" class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="update_seo" [(ngModel)]="editForm.update_seo"
+                #update_seo="ngModel">
+              <span>Update SEO Details</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to remove <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span>
+        {{ (commonService.ys_features.indexOf('multi_menu')!=-1 && formType=='section')? 'menu': 'section' }}?</strong></p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>

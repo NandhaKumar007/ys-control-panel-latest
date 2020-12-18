@@ -1,2 +1,2 @@
-# new-ys-control-panel
-Control panel
+# yourstore-control-panel
+Control Panel

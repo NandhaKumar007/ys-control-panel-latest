@@ -1,0 +1,299 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>Vendors</h1>
+    <ul>
+      <li>View and manage your vendors</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+  <div class="top-filter-sec">
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <button *ngIf="commonService.master_token" type="button" class="btn btn-primary" (click)="addForm={}; modalService.open(addModal);">Add New Vendor</button>
+    </div>
+    <!-- search box -->
+    <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+      <div class="form-group">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- DATA LIST -->
+  <div *ngIf="list?.length" class="row" class="list-horizontal">
+
+    <!-- SINGLE LIST ITEM -->
+    <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+      <div class="card o-hidden mb-4 d-flex flex-row" [ngStyle]="{'background-color':x.status==='inactive' ? '#F0F0F0' : '' }">
+        <div class="flex-grow-1 pl-2 d-flex mtb-20">
+          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+            <!-- OTHER DATA -->
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.contact_person}} - {{x.mobile}}</p>
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
+            <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+              <button class="btn btn-wide blue-outline-btn w-md-100" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">
+               <span class="blue-outline-txt">Change Password</span>
+              </button>
+              <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
+                <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                  <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
+                   <span class="black-outline-txt">Edit</span>
+                  </button>
+                  <div class="dropdown-menu" ngbDropdownMenu>
+                    <button class="dropdown-item" (click)="onEdit(x, 'details', editDetailsModal);">Details</button>
+                    <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
+                  </div>
+                </div>
+              </div>
+              <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+               <span class="orng-outline-txt">Remove</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="col-md-12 mt-3">
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel=""
+        nextLabel=""></pagination-controls>
+    </div>
+
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<ng-template #addModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New Vendor</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onAdd();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" (input)="addForm.errorMsg=null;" #name="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Contact Person</label>
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="addForm.contact_person" (input)="addForm.errorMsg=null;" #contact_person="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Mobile</label>
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="addForm.mobile" (input)="addForm.errorMsg=null;" #mobile="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Login Email</label>
+            <input type="email" name="email" class="form-control" [(ngModel)]="addForm.email" (input)="addForm.errorMsg=null;" #email="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Password</label>
+            <input type="text" name="password" class="form-control" [(ngModel)]="addForm.password" (input)="addForm.errorMsg=null;" #password="ngModel"
+              required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="addForm.errorMsg">
+        <p class="text-danger">{{ addForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span classs="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Add</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- CHANGE PASSWORD -->
+<ng-template #changePwdModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{pwdForm.email}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdatePwd();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>New Password</label>
+            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd" (input)="pwdForm.errorMsg=null;" #new_pwd="ngModel"
+              required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Confirm New Password</label>
+            <input type="text" name="confirm_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_pwd" (input)="pwdForm.errorMsg=null;"
+              #confirm_pwd="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="pwdForm.errorMsg">
+        <p class="text-danger">{{ pwdForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" [disabled]="pwdForm.confirm_pwd && pwdForm.new_pwd!=pwdForm.confirm_pwd" class="btn btn-wide btn-primary">Submit</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- EDIT DETAILS -->
+<ng-template #editDetailsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="vendor_status" [(ngModel)]="editForm.vendor_status" #vendor_status="ngModel">
+              <span>{{ editForm.exist_status=='active'? 'Disable': 'Enable'}}</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" (input)="editForm.errorMsg=null;" #name="ngModel"
+              required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Contact Person</label>
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="editForm.contact_person" (input)="editForm.errorMsg=null;" #contact_person="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Mobile</label>
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="editForm.mobile" (input)="editForm.errorMsg=null;" #mobile="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- EDIT PERMISSIONS -->
+<ng-template #editPermissionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <span class="primary-color">
+              <b>PRODUCTS</b>
+            </span>
+          </div>
+          <div class="col-md-6 col-lg-4 form-group mt-1 mb-1">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="product_add" [(ngModel)]="permissions.products.add" #product_add="ngModel">
+              <span>Add</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-6 col-lg-4 form-group mt-1 mb-1">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="product_remove" [(ngModel)]="permissions.products.remove" #product_remove="ngModel">
+              <span>Remove</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="permissions.products.add || permissions.products.update" class="col-md-6 col-lg-4 form-group mt-1 mb-1">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="product_section_tag" [(ngModel)]="permissions.products.section_tag" #product_section_tag="ngModel">
+              <span>Section Tag</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-6 col-lg-4 form-group">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="product_update" [(ngModel)]="permissions.products.update" #product_update="ngModel">
+              <span>Update</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div *ngIf="permissions.products.update" class="row mt-2 ml-2">
+          <div class="col-md-6 col-lg-4 form-group">
+            <label class="radio radio-primary">
+              <input type="radio" name="product_update_type" value="overall" [(ngModel)]="permissions.products.update_type">
+              <span>Overall</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-6 col-lg-4 form-group">
+            <label class="radio radio-primary">
+              <input type="radio" name="product_update_type" value="stock_only" [(ngModel)]="permissions.products.update_type">
+              <span>Stock Only</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="editForm.errorMsg">
+      <p class="text-danger">{{ editForm.errorMsg }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span> 
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to delete
+        <span class="txt-grdint-highlight">"{{deleteForm.email}}?"</span>
+      </strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+     <span class="black-outline-txt">No</span> 
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
+     <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>

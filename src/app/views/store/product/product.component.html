@@ -1,0 +1,228 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+
+  <div class="breadcrumb with-back-btn">
+    
+    <div class="row">
+      <div class="col-md-12 p-0">
+        <div class="row">
+          <div class="col-md-8 col-md-8 d-flex justify-content-end align-items-start flex-column">
+            <h1>Products</h1>
+            <ul>
+              <li>These are the items on sale at your store</li>
+            </ul>
+          </div>
+          <div class="col-md-2 mt-2 d-flex align-items-end justify-content-end mt-sm-15" align="right">
+            <!-- <button *ngIf="commonService.master_token" type="button" (click)="importProduct();" class="btn btn-primary m-0">Import</button> &nbsp; &nbsp; &nbsp; -->
+            <button *ngIf="commonService.ys_features.indexOf('sales_report')!=-1" type="button" (click)="exportAsXLSX();" class="btn btn-primary m-0 ladda-button" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+          </div>
+          <div class="col-md-2 mt-3" align="right">
+            <div class="top-filter-sec">
+            <p class="m-0">Total {{list?.length}} product<ng-container *ngIf="list?.length>1">s</ng-container>
+            </p>
+            <select name="product_filter" class="form-control select-arrow" [(ngModel)]="product_filter"
+              (change)="onChangeFilter(product_filter);">
+              <option value="all">All</option>
+              <option value="in">In Stock</option>
+              <option value="out">Out Of Stock</option>
+            </select>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <!-- category list -->
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <select name="category_id" class="form-control select-arrow" [(ngModel)]="filterForm.category_id"
+            (change)="getProductList();">
+            <option [ngValue]="x._id" *ngFor="let x of categoryList">{{x.name}}</option>
+          </select>
+        </div>
+      </div>
+      <!-- sort -->
+      <div class="col-md-3 col-6">
+        <select name="sort_by" class="form-control select-arrow" [(ngModel)]="sort_by" (change)="onChangeSort(sort_by);">
+          <option value="null" selected hidden>Sort by</option>
+          <option value="rank">Rank: Low to High</option>
+          <option value="rank_desc">Rank: High to Low</option>
+          <option value="discounted_price">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="stock">Stock: Low to High</option>
+          <option value="stock_desc">Stock: High to Low</option>
+          <option value="created_on">Created on: Earliest to Latest</option>
+          <option value="created_desc">Created on: Latest to Earliest</option>
+          <option value="modified_on">Modified on: Earliest to Latest</option>
+          <option value="modified_desc">Modified on: Latest to Earliest</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+      <!-- from date -->
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <input type="text" placeholder="Select From Date" class="form-control" name="from_date" autocomplete="off"
+            [(ngModel)]="filterForm.from_date" (ngModelChange)="getProductList();" bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+      <!-- to date -->
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <input type="text" placeholder="Select To Date" class="form-control" name="to_date" autocomplete="off"
+            [(ngModel)]="filterForm.to_date" (ngModelChange)="getProductList();" bsDatepicker
+            [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <!-- add btn -->
+      <div class="col-6" [ngClass]="vendorList.length? 'col-md-3': 'col-md-6'">
+        <ng-container *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || productCount<12">
+          <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary" routerLink="/products/add/{{productCount+1}}">Add New Product</button>
+        </ng-container>
+      </div>
+      <!-- vendor list -->
+      <div *ngIf="vendorList.length" class="col-md-3 col-6">
+        <div class="form-group">
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id" (change)="getProductList();">
+            <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.name}}</option>
+          </select>
+        </div>
+      </div>
+      <!-- search box -->
+      <div class="col-md-6 mt-sm-15">
+        <div class="form-group">
+          <input type="text" name="search_bar" placeholder="Search" class="form-control" autocomplete="off"
+            [(ngModel)]="search_bar" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <!-- DATA LIST -->
+  <div class="row list-horizontal">
+    <div
+      *ngFor="let x of list | gridSearch: { name: search_bar, sku: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+      class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+      <div class="card mb-4 mtb-0-60 d-flex flex-row">
+        <div class="list-thumb d-flex align-items-center mtb-20">
+          <img [src]="imgBaseUrl+x.image_list[0].image" alt="">
+        </div>
+        <div class="flex-grow-1 pl-2 d-flex mtb-20">
+          <div
+            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+            <p class="m-0 prod-card-content">{{x.name}}</p>
+            <p class="m-0 text-muted text-small w-sm-100">{{x.created_on | date: "dd MMM y"}}</p>
+            <p class="m-0 text-muted text-small w-sm-100">
+              {{x?.discounted_price | currency:commonService.store_currency?.country_code}}
+            </p>
+            <p *ngIf="x.stock>0" class="m-0 text-muted text-small w-sm-100">{{x.stock}} {{x.unit}} in Stock</p>
+            <p *ngIf="x.stock==0" class="m-0 text-muted text-small w-sm-100">Out of Stock</p>
+            <div class="m-0 text-muted text-small w-sm-100 d-lg-block item-actions">
+              <div *ngIf="commonService.store_details?.login_type!='vendor'" class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                  <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
+                   <span class="black-outline-txt">Edit</span></button>
+                  <div class="dropdown-menu" ngbDropdownMenu>
+                    <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
+                    <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
+                      <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
+                      <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item" (click)="goModifyPage(x, 3);">Sections</button>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <button *ngIf="commonService.archive_list.length && commonService.store_details?.login_type=='admin'"
+                (click)="archiveForm={ _id: x._id, rank: x.rank, archive_id: commonService.archive_list[0]._id }; modalService.open(archiveModal, { centered: true });"
+                class="btn btn-wide blue-outline-btn w-md-100 mr-3">
+                <span class="blue-outline-txt">Move to Archive</span>
+              </button>
+              <button *ngIf="commonService.store_details?.login_type!='vendor'" (click)="btnLoader=false; deleteForm=x; modalService.open(deleteModal, { centered: true });" class="btn btn-wide orng-outline-btn w-md-100">
+                <span class="orng-outline-txt">Remove</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- PAGINATION CONTROL -->
+    <div class="col-md-12 mt-3" *ngIf="list?.length">
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
+        previousLabel="" nextLabel=""></pagination-controls>
+    </div>
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display. Start adding products to begin operations.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to remove
+        <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span> product?</strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+     <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" class="btn btn-wide orng-outline-btn ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader" (click)="onDelete();">
+     <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- Archive Modal -->
+<ng-template #archiveModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Archive</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onMoveToArchive();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div *ngFor="let x of commonService.archive_list; let i=index;" class="col-md-12 form-group mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="archiveId" [checked]="archiveForm.archive_id==x._id"
+                (change)="archiveForm.archive_id=x._id;">
+              <span>{{x.name}}</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="archiveForm.errorMsg">
+        <p class="text-danger">{{ archiveForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Move</button>
+    </div>
+  </form>
+</ng-template>

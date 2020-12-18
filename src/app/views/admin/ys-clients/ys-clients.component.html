@@ -1,0 +1,118 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>Clients</h1>
+    <ul>
+      <li>View and manage your clients</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="row mb-4">
+    <div class="col-md-4 col-6">
+      <div class="form-group">
+        <select name="type" class="form-control select-arrow" [(ngModel)]="listType" (change)="ngOnInit();">
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <!-- search box -->
+    <div class="col-md-4 col-6">
+      <div class="form-group">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      </div>
+    </div>
+    <div class="col-md-4 col-6">
+      <button type="button" routerLink="/admin/clients/add" class="btn btn-primary pull-right">Add Client</button>
+    </div>
+  </div>
+
+  <!-- DATA LIST -->
+  <div class="row list-horizontal">
+    <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+      class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+      <div class="card o-hidden mb-4 d-flex flex-row">
+        <div class="flex-grow-1 pl-2 d-flex mtb-20">
+          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+            <!-- OTHER DATA -->
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
+            <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+              <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                  <button class="btn btn-wide btn-outline-secondary w-md-100" ngbDropdownToggle>Action</button>
+                  <div class="dropdown-menu" ngbDropdownMenu>
+                    <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
+                    <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change Password</button>
+                  </div>
+                </div>
+              </div>
+              <button (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });" class="btn btn-wide  w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success'">
+                {{ (x.status=='active')? 'Disable': 'Enable' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- PAGINATION CONTROL -->
+    <div class="col-md-12 mt-3" *ngIf="list?.length">
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+    </div>
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12">
+      <p align="center">No data to display.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PWD MODAL -->
+<ng-template #pwdModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Change Password - {{pwdForm.name}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdatePwd(pwdModal);" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>New Password</label>
+            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd" #new_pwd="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Confirm New Password</label>
+            <input type="text" name="confirm_new_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_new_pwd" #confirm_new_pwd="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="pwdForm.errorMsg"><p class="text-danger">{{ pwdForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" [disabled]="pwdForm.new_pwd!=pwdForm.confirm_new_pwd" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('Cross click');">No</button>
+    <button type="button" (click)="onDelete();" class="btn btn-primary">Yes</button>
+  </div>
+</ng-template>

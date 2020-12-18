@@ -1,0 +1,193 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>{{params.client_id? clientForm.name: 'New Client'}}
+      <span class="breadcrumb-steps">(Step {{step_num}} of 2)</span>
+    </h1>
+    <ul>
+      <li *ngIf="step_num==1">{{params.client_id? 'Update': 'Add your'}} client details</li>
+      <li *ngIf="step_num==2">{{params.client_id? 'Update': 'Select'}} rental package</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="clientForm.package_details? '': clientForm.package_details={}; step_num=2; onChoosePackage();" ngNativeValidate>
+    <div class="row">
+      <div class="col-md-12 mb-3" align="center">
+        <div *ngIf="clientForm.logo">
+          <span (click)="clientForm.img_change=false; clientForm.logo=null;" class="material-icons item-close float-right" aria-hidden="true">close</span>
+          <img *ngIf="!params.client_id" [src]="clientForm.logo" height="100px;" width="auto;">
+          <ng-container *ngIf="params.client_id">
+            <img *ngIf="!clientForm.img_change" [src]="imgBaseUrl+clientForm.logo" height="100px;" width="auto;">
+            <img *ngIf="clientForm.img_change" [src]="clientForm.logo" height="100px;" width="auto;">
+          </ng-container>
+        </div>
+        <div *ngIf="!clientForm.logo">
+          <label>
+            <div>
+              <i class="material-icons add-img">add_photo_alternate</i>
+              <p>Click to upload logo</p>
+            </div>
+            <input type="file" name="logo" (change)="fileChangeListener('add', $event);" accept="image/jpeg, image/png" />
+          </label>
+        </div>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label>Store Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="clientForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Domain</label>
+            <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required [readonly]="params.client_id" />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Contact Person</label>
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="clientForm.contact_person" #contact_person="ngModel" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Phone</label>
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.mobile" #mobile="ngModel" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" [(ngModel)]="clientForm.email" #email="ngModel" required [readonly]="params.client_id" />
+          </div>
+          <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
+            <label>Password</label>
+            <input type="text" name="password" class="form-control" [(ngModel)]="clientForm.password" #password="ngModel" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Country</label>
+            <select name="country" class="form-control" [(ngModel)]="clientForm.country" #country="ngModel" required>
+              <option *ngFor="let x of commonService.country_list;" [ngValue]="x.name">{{x.name}}</option>
+            </select>
+          </div>
+          <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
+            <label>Currency</label>
+            <select name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types" #currency_types="ngModel" required>
+              <option *ngFor="let x of currency_list;" [ngValue]="x">{{x.country_code}}</option>
+            </select>
+          </div>
+          <div *ngIf="params.client_id" class="col-md-6 form-group mb-3">
+            <label>Currency</label>
+            <input type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
+          </div>
+          <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
+            <label>Theme</label>
+            <select name="theme" class="form-control" [(ngModel)]="clientForm.theme" #theme="ngModel" required>
+              <option value="boleiro">Boleiro</option>
+              <option value="premeiro">Premeiro</option>
+              <option value="luxeiro">Luxeiro</option>
+              <option value="slate">Slate</option>
+              <option value="brook">Brook</option>
+              <option value="snap">Snap</option>
+              <option value="slot">Slot</option>
+            </select>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>GST Number</label>
+            <input type="text" name="gst_no" class="form-control" [(ngModel)]="clientForm.gst_no" #gst_no="ngModel" />
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="separator-breadcrumb border-top mt-5"></div>
+    <div class="row">
+      <div align="center" class="col-md-12">
+        <button type="button" routerLink="/admin/clients" class="btn btn-wide btn-outline-secondary">Cancel</button>&nbsp; &nbsp; &nbsp;
+        <button type="submit" class="btn btn-primary">Next</button>
+      </div>
+    </div>
+  </form>
+
+  <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
+    <div class="row">
+      <div class="form-group mb-3 col-md-12">
+        <label class="checkbox checkbox-primary">
+          <input class="form-check-input" type="checkbox" name="billing_status" [(ngModel)]="clientForm.package_details.billing_status" #billing_status="ngModel">
+          <span>Enable Billing</span>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <ng-container *ngIf="clientForm.package_details.billing_status">
+        <div class="col-md-6 form-group mb-3">
+          <label>Subscription Start Date</label>
+          <input type="text" placeholder="Select Date" class="form-control" name="start_date" autocomplete="off"
+          [(ngModel)]="clientForm.package_details.subscription_start_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label>Subscription End Date</label>
+          <input type="text" placeholder="Select Date" class="form-control" name="end_date" autocomplete="off"
+          [(ngModel)]="clientForm.package_details.expiry_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+        </div>
+      </ng-container>
+      <div class="col-md-12 mb-3">
+        <div class="card card-in-card p-3">
+          <div class="row ml-3 mt-3">
+            <div class="col-lg-3 col-md-4 mb-3" *ngFor="let x of packages_list;">
+              <label class="radio radio-success">
+                <input type="radio" name="package_id" [value]="x._id" [checked]="x._id==clientForm.package_details.package_id" (change)="clientForm.package_details.package_id=x._id; onChoosePackage();">
+                <span>{{x.name}} - <b>{{ x.currency_types[clientForm.currency_types.country_code].amount | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Discount -->
+      <div class="form-group mb-3 col-md-12">
+        <label class="checkbox checkbox-primary">
+          <input class="form-check-input" type="checkbox" name="disc_status" [(ngModel)]="clientForm.package_details.disc_status" #disc_status="ngModel">
+          <span>Apply Discount</span>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <ng-container *ngIf="clientForm.package_details.disc_status">
+        <div class="form-group mb-3 ml-3 col-md-6">
+          <label>Discount per month ({{clientForm.currency_types.country_code}})</label>
+          <input type="text" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" required />
+        </div>
+        <div class="col-md-6"></div>
+      </ng-container>
+      <!-- Additional Features -->
+      <div *ngIf="paid_features_list?.length" class="form-group mb-3 col-md-12">
+        <label class="checkbox checkbox-primary">
+          <input class="form-check-input" type="checkbox" name="add_features" [(ngModel)]="clientForm.add_features" #add_features="ngModel">
+          <span>Apply Additional Features</span>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="row ml-3" *ngIf="paid_features_list?.length && clientForm.add_features">
+      <ng-container *ngFor="let x of paid_features_list; let i=index;">
+        <div *ngIf="x.package_pricing[clientForm.currency_types.country_code].price > 0" class="col-lg-3 col-md-4 form-group mb-3">
+          <label class="checkbox checkbox-success">
+            <input class="form-check-input" type="checkbox" name="feature_checked{{i}}" [(ngModel)]="x.feature_checked">
+            <span>{{x.name}} - <b>{{ x.package_pricing[clientForm.currency_types.country_code].price | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="separator-breadcrumb border-top mt-5"></div>
+    <div class="row">
+      <div class="col-md-12 mt-3 mb-3" *ngIf="clientForm.errorMsg">
+        <p class="text-danger" align="center">{{ clientForm.errorMsg }}</p>
+      </div>
+
+      <div align="center" class="col-md-12">
+        <button type="button" (click)="step_num=1;" class="btn btn-wide btn-outline-secondary">Go Back</button>&nbsp; &nbsp; &nbsp;
+        <button type="submit" class="btn btn-primary">{{params.client_id? 'Update': 'Add'}}</button>
+      </div>
+    </div>
+  </form>
+</div>

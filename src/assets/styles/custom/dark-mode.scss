@@ -1,0 +1,375 @@
+$theme-tansition: background 0.5s ease-out 0.5s, background-color 0.5s ease-out 0.5s, color 0.5s ease-out 0.5s,
+  border-color 0.5s ease-out 0.5s,
+  opacity 0.5s ease-out 0.5s;
+
+$dark-mode-primary: #1f1f1f;
+
+$dark-mode-secondary: #212121;
+
+$dark-card-primary: #292929;
+
+$dark-card-secondary: #282828;
+
+$primary-border: 1px solid #3c3c3c;
+
+$input-focus: #292929;
+
+$secondary-text: #808080;
+
+[data-theme="dark"] {
+  transition: $theme-tansition;
+  background-color: $dark-mode-primary !important;
+  color: #eee !important;
+}
+
+[data-theme="dark"] .bg-light {
+  background-color: #333 !important;
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #000 !important;
+}
+
+[data-theme="dark"] .bg-black {
+  background-color: #eee !important;
+}
+
+[data-theme="dark"] {
+  // Layout font color
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    transition: $theme-tansition;
+    color: #fff;
+  }
+  .layout-sidebar-large .main-header {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    i,
+    b {
+      transition: $theme-tansition;
+      color: #fff !important;
+    }
+  }
+
+  .layout-sidebar-large .sidebar-left-secondary,
+  .layout-sidebar-large .sidebar-left {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    i,
+    b {
+      transition: $theme-tansition;
+      color: #fff;
+    }
+  }
+
+  .breadcrumb {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul li {
+      transition: $theme-tansition;
+      color: $secondary-text;
+    }
+  }
+
+  .modal-header {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    i,
+    b {
+      transition: $theme-tansition;
+      color: #fff;
+    }
+  }
+
+  .card {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    i,
+    b {
+      transition: $theme-tansition;
+    }
+  }
+
+  .card-title,
+  .text-title {
+    transition: $theme-tansition;
+    color: #888888;
+  }
+
+  // Layout font color End
+
+  .layout-sidebar-large .sidebar-left .navigation-left .nav-item.active .triangle {
+    transition: all 0.24s ease-in-out, $theme-tansition;
+  background: #292929;
+background: linear-gradient(145deg, transparent 0%, transparent 50%, rgba(236,54,107,1) 53%, rgba(164,52,147,1) 100%);
+}
+
+  // CUSTOM BUTTONS
+  .btn-outline-primary{
+    background: #1f1f1f;
+    color: #ffffff;
+  } 
+  .black-outline-btn{
+    background: #1f1f1f;
+    color: #ffffff;
+  } 
+  // .black-outline-btn .black-outline-txt{
+  //   background-color: #f9f9f9;
+  //   background-image: linear-gradient(45deg, #ffffff, #ffffff);
+  // }
+  .blue-outline-btn{
+    background: #1f1f1f;
+    color: #ffffff;
+  } 
+  // .blue-outline-btn .blue-outline-txt{
+  //   background-color: #f9f9f9;
+  //   background-image: linear-gradient(45deg, #ffffff, #ffffff);
+  // }
+
+  .orng-outline-btn{
+    background: #1f1f1f;
+    color: #ffffff;
+  } 
+  // .orng-outline-btn .orng-outline-txt{
+  //   background-color: #f9f9f9;
+  //   background-image: linear-gradient(45deg, #ffffff, #ffffff);
+  // }
+  //  CUSTOM BUTTONS
+
+  .layout-sidebar-large .main-header {
+    transition: $theme-tansition;
+    background: $dark-card-primary;
+  }
+  .layout-sidebar-large .main-header .header-icon:hover{
+    background: $dark-mode-primary;
+  }
+  .layout-sidebar-large .sidebar-left-secondary,
+  .layout-sidebar-large .sidebar-left {
+    transition: all 0.24s ease-in-out, $theme-tansition;
+    background: $dark-card-primary;
+  }
+  .ps--active-x > .ps__rail-x,
+  .ps--active-y > .ps__rail-y {
+    background-color: $dark-card-primary;
+  }
+
+  .app-footer {
+    transition: $theme-tansition;
+    background: $dark-card-primary;
+  }
+
+  .app-footer .footer-logo p{
+    color:#fff;
+    transition: $theme-tansition;
+  }
+
+  .yourstore-logo-path {
+    transition: $theme-tansition;
+    fill: #fff;
+  }
+
+  .layout-sidebar-large .sidebar-left-secondary .childNav li.nav-item a:hover {
+    background: $dark-mode-secondary;
+  }
+
+  .main-content-wrap {
+    transition: $theme-tansition;
+    background-color: $dark-mode-primary;
+  }
+
+  .card {
+    transition: $theme-tansition;
+    background: $dark-card-primary;
+  }
+
+  .card-in-card {
+    transition: $theme-tansition;
+    background: $dark-mode-secondary;
+  }
+
+  .layout-sidebar-large .sidebar-left .navigation-left .nav-item {
+    transition: $theme-tansition;
+    border-bottom: $primary-border !important;
+  }
+
+  .border-top {
+    transition: $theme-tansition;
+    border-top: $primary-border !important;
+  }
+
+  .form-control {
+    transition: $theme-tansition;
+    background: $dark-card-primary;
+    border: $primary-border;
+    color: #fff;
+  }
+  .form-control:focus {
+    background-color: $input-focus;
+  }
+  .form-group label {
+    color: $secondary-text;
+  }
+
+  tag-input-form input {
+    background: $dark-card-primary;
+  }
+  input,
+  textarea {
+    color: #fff;
+  }
+  .dropdown-menu {
+    background-color: $dark-mode-secondary;
+  }
+  .dropdown-item {
+    color: #fff;
+  }
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: $dark-card-primary;
+  }
+  .modal-header {
+    transition: $theme-tansition;
+    border-bottom: $primary-border;
+  }
+  .modal-footer {
+    transition: $theme-tansition;
+    border-top: $primary-border;
+  }
+
+  .modal-content {
+    transition: $theme-tansition;
+    background-color: $dark-mode-secondary;
+  }
+  .modal-backdrop {
+    background-color: #0c0c0c;
+  }
+  .modal-backdrop.show {
+    opacity: 0.8;
+  }
+
+  .gray-bg {
+    background-color: #404040;
+  }
+  .main-header-div,
+  .invoice-border {
+    border-bottom: $primary-border;
+  }
+  .m-close-btn {
+    color: #fff;
+  }
+  .invoice-border-top {
+    border-top: $primary-border;
+  }
+  #time-picker-wrapper.material-purple #time-picker {
+    background: $dark-mode-secondary !important;
+  }
+
+  .ngx-toolbar {
+    background-color: $dark-card-secondary !important;
+    border: 1px solid $primary-border !important;
+  }
+
+  .ngxePopover form .form-group .form-control-sm {
+    color: #fff;
+  }
+
+  .ngxePopover form .form-group .form-control-sm {
+    color: #000;
+  }
+
+  i.edit-icon{
+    background-color: $dark-card-primary;
+  }
+  .user-profile-info{
+    transition: $theme-tansition;
+    background-color: $dark-card-primary;
+  }
+
+  .table .thead-light th {
+    transition: $theme-tansition;
+    background-color: $dark-mode-primary;
+    border-top: $primary-border;
+    border-bottom: $primary-border;
+  }
+
+  .table th,
+  .table td {
+    transition: $theme-tansition;
+    border-top: $primary-border;
+  }
+
+.size-chart .table-input{
+  transition: $theme-tansition;
+  background-color: $input-focus;
+  border-color: $dark-card-primary;
+}
+.table-bordered.size-chart th, .table-bordered.table-bordered td{
+  transition: $theme-tansition;
+  border: $primary-border;
+}
+
+.bs-datepicker{
+  transition: $theme-tansition;
+  background: $dark-card-primary;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+}
+.bs-datepicker-body table td span.is-other-month, .bs-datepicker-body table td.is-other-month span{
+  color: rgba(255, 255, 255, .1);
+}
+
+  .darkmode-switcher {
+    background-color: #66bb6a;
+    background-color: #023660;
+    background-image: radial-gradient(circle, #fff 10%, transparent 30%),
+      radial-gradient(circle, #fff 10%, transparent 30%), radial-gradient(circle, #fff 10%, transparent 30%),
+      radial-gradient(circle, #fff 10%, transparent 30%), radial-gradient(circle, #fff 10%, transparent 30%),
+      radial-gradient(circle, #fff 10%, transparent 30%), radial-gradient(circle, #fff 10%, transparent 30%),
+      radial-gradient(circle, #fff 10%, transparent 30%), radial-gradient(circle, #fff 10%, transparent 30%);
+    background-size: 8% 8%, 7% 7%, 6% 6%, 8% 8%, 8% 8%, 6% 6%, 6% 6%, 8% 8%, 7% 7%;
+    background-position: 20% 20%, 45% 30%, 25% 55%, 20% 90%, 40% 60%, 5% 50%, 58% 10%, 58% 60%, 50% 80%;
+    background-repeat: no-repeat;
+  }
+  .darkmode-switcher:before {
+    transform: translateX(100%);
+    background-color: #ddd;
+    background-image: radial-gradient(circle, #c4c4c4 50%, transparent 50%),
+      radial-gradient(circle, #c9c9c9 50%, transparent 50%), radial-gradient(circle, #c9c9c9 50%, transparent 50%),
+      radial-gradient(circle, #c9c9c9 50%, transparent 50%);
+    background-size: 40% 40%, 25% 25%, 50% 50%, 30% 30%;
+    background-position: 20% 20%, 65% 30%, 120% 100%, 20% 80%;
+    box-shadow: 0px 0px 20px 10px rgba(255, 255, 255, 0.2);
+  }
+}
