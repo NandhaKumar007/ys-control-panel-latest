@@ -86,7 +86,13 @@ export class CommonService {
   admin_features: any = [];
 
   store_list: any = [];
-  ys_features: any = [];
+  // basic_discount, time_based_delivery, giftcard_wallet, variant_image_tag, limited_products, multi_menu, domestic_shipping
+  ys_features: any = [
+    "pincode_service", "measurements", "addons", "product_filters", "foot_note", "size_chart", "faq", "shopping_assistant", "advanced_seo",
+    "seo_page_content", "blogs", "currency_variation", "giftcard", "product_archive", "newsletter", "advanced_discount", "manual_order", 
+    "manual_giftcard", "donation", "customer_feedback", "vendors", "menus", "courier_partners", "testimonials", "sales_report", "order_note",
+    "sizing_assistant", "product_video"
+  ];
   store_details: any = {};
   store_currency: any = {};
   courier_partners: any = {};

@@ -132,9 +132,31 @@ export class SidebarService {
 				}
 			});
 		});
-	}
+  }
+  
+  getSidePanelList() {
+    let sidePanelList: IMenuItem[] = [
+      { name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' },
+      { name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' },
+      {
+        name: 'Catalog', type: 'dropDown', icon: 'view_carousel',
+        sub: [
+          { icon: 'view_carousel', name: 'Catalog Management', state: '/catalog', type: 'link' },
+          { icon: 'category', name: 'Products', state: '/products', type: 'link' },
+          {
+            name: 'Product Extras', type: 'dropDown', icon: 'extension',
+            sub: [
+              { icon: 'view_carousel', name: 'Catalog Management', state: '/catalog', type: 'link' },
+              { icon: 'category', name: 'Products', state: '/products', type: 'link' }
+            ]
+          }
+        ]
+      }
+    ];
+    return sidePanelList;
+  }
 
-	getSidePanelList() {
+	getSidePanelList2() {
 		let routePermissionList = [];
 		let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
@@ -172,10 +194,8 @@ export class SidebarService {
       }
       if (extraSubList.length) sidePanelList.push({ name: 'Product Extras', type: 'dropDown', icon: 'extension', sub: extraSubList });
       // tax rates
-      if (ysFeatures.indexOf('tax_rates') !== -1) {
-        sidePanelList.push({ name: 'Tax Rates', type: 'link', icon: 'local_atm', state: '/tax-rates' });
-        routePermissionList.push("tax_rates");
-      }
+      sidePanelList.push({ name: 'Tax Rates', type: 'link', icon: 'local_atm', state: '/tax-rates' });
+      routePermissionList.push("tax_rates");
       // shopping assistant
       if (ysFeatures.indexOf('shopping_assistant') !== -1) {
         sidePanelList.push({ name: 'Shop Assistant', type: 'link', icon: 'assistant', state: '/shop-assistant' });
@@ -255,7 +275,7 @@ export class SidebarService {
       ];
       subList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive', type: 'link' });
       routePermissionList.push("inactive_orders");
-      if (ysFeatures.indexOf('abandoned_cart') !== -1) {
+      if (this.commonService.store_details.abandoned_status) {
         subList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
         routePermissionList.push("abandoned_cart");
       }

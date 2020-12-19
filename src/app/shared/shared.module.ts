@@ -10,7 +10,6 @@ import { SharedPipesModule } from './pipes/shared-pipes.module';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedComponentsModule } from './components/shared-components.module';
 
-
 @NgModule({
   imports: [
     CommonModule,

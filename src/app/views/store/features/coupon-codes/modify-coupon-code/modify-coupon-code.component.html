@@ -25,28 +25,30 @@
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
       <!-- code type -->
-      <div class="col-md-12 col-lg-6 d-flex">
-        <div class="card w-100 p-3 mb-3">
-          <div class="ml-3 mt-3 mb-2">
-            <label class="radio radio-primary">
-              <input type="radio" name="code_type" value="discount" [(ngModel)]="offerForm.code_type" />
-              <span><b>Discount Code</b><br>Customers will get a discount if they enter a code at checkout.</span>
-              <span class="checkmark"></span>
-            </label>
+      <ng-container *ngIf="commonService.ys_features.indexOf('basic_discount')==-1">
+        <div class="col-md-12 col-lg-6 d-flex">
+          <div class="card w-100 p-3 mb-3">
+            <div class="ml-3 mt-3 mb-2">
+              <label class="radio radio-primary">
+                <input type="radio" name="code_type" value="discount" [(ngModel)]="offerForm.code_type" />
+                <span><b>Discount Code</b><br>Customers will get a discount if they enter a code at checkout.</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-12 col-lg-6 d-flex">
-        <div class="card w-100 p-3 mb-3">
-          <div class="ml-3 mt-3 mb-2">
-            <label class="radio radio-primary">
-              <input type="radio" name="code_type" value="auto_discount" [(ngModel)]="offerForm.code_type" />
-              <span><b>Automatic discount</b><br>Customers will get a discount automatically in their cart.</span>
-              <span class="checkmark"></span>
-            </label>
+        <div class="col-md-12 col-lg-6 d-flex">
+          <div class="card w-100 p-3 mb-3">
+            <div class="ml-3 mt-3 mb-2">
+              <label class="radio radio-primary">
+                <input type="radio" name="code_type" value="auto_discount" [(ngModel)]="offerForm.code_type" />
+                <span><b>Automatic discount</b><br>Customers will get a discount automatically in their cart.</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
 
       <!-- discount code -->
       <div class="col-md-12 col-lg-6 d-flex">
@@ -91,7 +93,7 @@
               <span>Discount by amount</span>
               <span class="checkmark"></span>
             </label>
-            <label class="radio radio-primary">
+            <label *ngIf="commonService.ys_features.indexOf('basic_discount')==-1" class="radio radio-primary">
               <input type="radio" name="discount_type" value="buy_x_get_y" (change)="offerForm.buy_properties={type: 'quantity'}; offerForm.get_properties={discount_type: 'quantity'}; offerForm.restrict_discount=false; offerForm.discount_upto=0; offerForm.discount_value='';"
                 [(ngModel)]="offerForm.discount_type" />
               <span>Buy X Get Y</span>
