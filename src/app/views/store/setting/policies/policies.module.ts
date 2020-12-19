@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { PoliciesRoutingModule } from './policies-routing.module';
 import { PoliciesComponent } from './policies.component';
 
-
 @NgModule({
   declarations: [PoliciesComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     PoliciesRoutingModule
   ]
 })
+
 export class PoliciesModule { }

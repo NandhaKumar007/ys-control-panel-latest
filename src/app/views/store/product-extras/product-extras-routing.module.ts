@@ -5,7 +5,7 @@ const routes: Routes = [
   { path: 'addons', loadChildren: () => import('./addons/addons.module').then(m => m.AddonsModule) },
   { path: 'archive', loadChildren: () => import('./archive/archive.module').then(m => m.ArchiveModule) },
   { path: 'faq', loadChildren: () => import('./faq/faq.module').then(m => m.FaqModule) },
-  { path: 'foot-note', loadChildren: () => import('./foot-note/foot-note.module').then(m => m.FootNoteModule) },
+  { path: 'footnote', loadChildren: () => import('./foot-note/foot-note.module').then(m => m.FootNoteModule) },
   { path: 'measurement-sets', loadChildren: () => import('./measurements/measurements.module').then(m => m.MeasurementsModule) },
   { path: 'shop-assistant', loadChildren: () => import('./shop-assistant/shop-assistant.module').then(m => m.ShopAssistantModule) },
   { path: 'shop-assistant/:type', loadChildren: () => import('./shop-assistant/shop-assistant.module').then(m => m.ShopAssistantModule) },

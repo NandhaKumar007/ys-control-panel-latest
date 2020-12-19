@@ -87,6 +87,7 @@ export class CommonService {
 
   store_list: any = [];
   // basic_discount, time_based_delivery, giftcard_wallet, variant_image_tag, limited_products, multi_menu, domestic_shipping
+  // collections, discount_pages
   ys_features: any = [
     "pincode_service", "measurements", "addons", "product_filters", "foot_note", "size_chart", "faq", "shopping_assistant", "advanced_seo",
     "seo_page_content", "blogs", "currency_variation", "giftcard", "product_archive", "newsletter", "advanced_discount", "manual_order", 

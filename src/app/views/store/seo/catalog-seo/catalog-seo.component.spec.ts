@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SectionSeoComponent } from './section-seo.component';
+import { CatalogSeoComponent } from './catalog-seo.component';
 
-describe('SectionSeoComponent', () => {
-  let component: SectionSeoComponent;
-  let fixture: ComponentFixture<SectionSeoComponent>;
+describe('CatalogSeoComponent', () => {
+  let component: CatalogSeoComponent;
+  let fixture: ComponentFixture<CatalogSeoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SectionSeoComponent ]
+      declarations: [ CatalogSeoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SectionSeoComponent);
+    fixture = TestBed.createComponent(CatalogSeoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

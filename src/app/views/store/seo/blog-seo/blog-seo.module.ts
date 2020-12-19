@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { BlogSeoRoutingModule } from './blog-seo-routing.module';
 import { BlogSeoComponent } from './blog-seo.component';
 
-
 @NgModule({
   declarations: [BlogSeoComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     BlogSeoRoutingModule
   ]
 })
+
 export class BlogSeoModule { }

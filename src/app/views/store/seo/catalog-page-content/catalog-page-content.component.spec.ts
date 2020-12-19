@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SectionPageContentComponent } from './section-page-content.component';
+import { CatalogPageContentComponent } from './catalog-page-content.component';
 
-describe('SectionPageContentComponent', () => {
-  let component: SectionPageContentComponent;
-  let fixture: ComponentFixture<SectionPageContentComponent>;
+describe('CatalogPageContentComponent', () => {
+  let component: CatalogPageContentComponent;
+  let fixture: ComponentFixture<CatalogPageContentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SectionPageContentComponent ]
+      declarations: [ CatalogPageContentComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SectionPageContentComponent);
+    fixture = TestBed.createComponent(CatalogPageContentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

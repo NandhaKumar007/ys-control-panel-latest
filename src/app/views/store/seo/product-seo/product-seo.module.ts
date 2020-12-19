@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { ProductSeoRoutingModule } from './product-seo-routing.module';
 import { ProductSeoComponent } from './product-seo.component';
 
-
 @NgModule({
   declarations: [ProductSeoComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     ProductSeoRoutingModule
   ]
 })
+
 export class ProductSeoModule { }

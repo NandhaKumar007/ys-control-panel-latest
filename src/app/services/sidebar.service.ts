@@ -141,15 +141,110 @@ export class SidebarService {
       {
         name: 'Catalog', type: 'dropDown', icon: 'view_carousel',
         sub: [
-          { icon: 'view_carousel', name: 'Catalog Management', state: '/catalog', type: 'link' },
+          { icon: 'view_carousel', name: 'Catalog Management', state: '/catalogs', type: 'link' },
           { icon: 'category', name: 'Products', state: '/products', type: 'link' },
           {
             name: 'Product Extras', type: 'dropDown', icon: 'extension',
             sub: [
-              { icon: 'view_carousel', name: 'Catalog Management', state: '/catalog', type: 'link' },
-              { icon: 'category', name: 'Products', state: '/products', type: 'link' }
+              { name: 'Measurement Sets', state: '/product-extras/measurement-sets', type: 'link' },
+              { name: 'Addons', state: '/product-extras/addons', type: 'link' },
+              { name: 'Tags', state: '/product-extras/tags', type: 'link' },
+              { name: 'Footnote', state: '/product-extras/footnote', type: 'link' },
+              { name: 'Size Chart', state: '/product-extras/size-chart', type: 'link' },
+              { name: 'FAQ', state: '/product-extras/faq', type: 'link' }
+            ]
+          },
+          { icon: 'archive', name: 'Archive', state: '/product-extras/archive', type: 'link' }
+        ]
+      },
+      {
+        name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore',
+        sub: [
+          { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
+          { icon: 'check_circle_outline', name: 'Completed Orders', state: '/orders/product/delivered/all', type: 'link' },
+          { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' },
+          { icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' },
+          {
+            name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline',
+            sub: [
+              { name: 'Product', state: '/orders/inactive-orders', type: 'link' },
+              { name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' }
+            ]
+          },
+          { icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' },
+          { icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' }
+        ]
+      },
+      {
+        name: 'Selling Tools', type: 'dropDown', icon: 'build_circle',
+        sub: [
+          { icon: 'local_offer', name: 'Offers', state: '/features/coupon-codes', type: 'link' },
+          { icon: 'redeem', name: 'Gift Cards', state: '/features/giftcard', type: 'link' },
+          { icon: 'mail', name: 'Newsletter', state: '/newsletter', type: 'link' },
+          { icon: 'feedback', name: 'Feedback', state: '/feedback', type: 'link' }
+        ]
+      },
+      {
+        name: 'Website', type: 'dropDown', icon: 'language',
+        sub: [
+          {
+            name: 'Layouts', type: 'dropDown', icon: 'format_paint',
+            sub: [
+              { name: 'Home Page', state: '/layouts/home', type: 'link' },
+              { name: 'Catalog', state: '/layouts/catalog', type: 'link' },
+              { name: 'Product', state: '/under-construction', type: 'link' }
+            ]
+          },
+          { icon: 'menu_book', name: 'Menu', state: '/features/menus', type: 'link' },
+          {
+            name: 'Policies', type: 'dropDown', icon: 'policy',
+            sub: [
+              { name: 'Privacy Policy', state: '/policies/privacy', type: 'link' },
+              { name: 'Shipping Policy', state: '/policies/shipping', type: 'link' },
+              { name: 'Cancellation Policy', state: '/policies/cancellation', type: 'link' },
+              { name: 'Terms & Conditions', state: '/policies/terms-conditions', type: 'link' }
+            ]
+          },
+          {
+            name: 'SEO', type: 'dropDown', icon: 'track_changes',
+            sub: [
+              { name: 'Store', state: '/seo/store', type: 'link' },
+              { name: 'Catalog', state: '/seo/catalog', type: 'link' },
+              { name: 'Catalog Page Content', state: '/seo/catalog-page-content', type: 'link' },
+              { name: 'Product', state: '/seo/product', type: 'link' },
+              { name: 'Blog', state: '/seo/blog', type: 'link' }
             ]
           }
+        ]
+      },
+      {
+        name: 'Store Modules', type: 'dropDown', icon: 'view_week',
+        sub: [
+          { icon: 'assistant', name: 'Shopping Assistant', state: '/product-extras/shop-assistant', type: 'link' },
+          { icon: 'straighten', name: 'Sizing Assistant', state: '/product-extras/sizing-assistant', type: 'link' },
+          { icon: 'attach_money', name: 'Currency Convertor', state: '/currency-types', type: 'link' },
+          { icon: 'art_track', name: 'Blogs', state: '/features/blogs', type: 'link' },
+          { icon: 'local_atm', name: 'Discounts Page', state: '/features/discounts-page', type: 'link' },
+          { icon: 'view_carousel', name: 'Collections', state: '/features/collections', type: 'link' }
+        ]
+      },
+      {
+        name: 'Settings', type: 'dropDown', icon: 'settings',
+        sub: [
+          { icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' },
+          { icon: 'local_shipping', name: 'Courier Partners', state: '/modules/archive', type: 'link' },
+          { icon: 'local_shipping', name: 'Shipping Methods', state: '/products', type: 'link' },
+          { icon: 'local_shipping', name: 'Delivery Methods', state: '/modules/archive', type: 'link' },
+          { icon: 'payment', name: 'Payment Gateway', state: '/modules/archive', type: 'link' },
+          { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
+          { icon: 'shopping_basket', name: 'Checkout Settings', state: '/modules/archive', type: 'link' },
+          { icon: 'search', name: 'Search Keywords', state: '/modules/archive', type: 'link' }
+        ]
+      },
+      {
+        name: 'My Account', type: 'dropDown', icon: 'account_circle',
+        sub: [
+          { icon: 'local_offer', name: 'Profile', state: '/catalog', type: 'link' }
         ]
       }
     ];

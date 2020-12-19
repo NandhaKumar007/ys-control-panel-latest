@@ -26,6 +26,7 @@ const adminRoutes: Routes = [
 
 const storeRoutes: Routes = [
   { path: 'whats-new', loadChildren: () => import('./views/store/whats-new/whats-new.module').then(m => m.WhatsNewModule) },
+  { path: 'under-construction', loadChildren: () => import('./views/others/under-construction/under-construction.module').then(m => m.UnderConstructionModule) },
   { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule) },
   { path: 'sections', loadChildren: () => import('./views/store/sections/sections.module').then(m => m.SectionsModule) },
@@ -43,10 +44,12 @@ const storeRoutes: Routes = [
   { path: 'products', loadChildren: () => import('./views/store/product/product.module').then(m => m.ProductModule) },
   { path: 'feedback', loadChildren: () => import('./views/store/properties/feedback/feedback.module').then(m => m.FeedbackModule) },
   { path: 'newsletter', loadChildren: () => import('./views/store/properties/newsletter/newsletter.module').then(m => m.NewsletterModule) },
+  { path: 'policies/:type', loadChildren: () => import('./views/store/setting/policies/policies.module').then(m => m.PoliciesModule) },
+  { path: 'seo', loadChildren: () => import('./views/store/seo/seo.module').then(m => m.SeoModule) },
   { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule) },
   { path: 'vendors', loadChildren: () => import('./views/store/vendors/vendors.module').then(m => m.VendorsModule) },
   { path: 'users', loadChildren: () => import('./views/store/sub-users/sub-users.module').then(m => m.SubUsersModule) },
-  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/vendors/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule) }
+  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/vendors/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule) },
 ];
 
 const routes: Routes = [
