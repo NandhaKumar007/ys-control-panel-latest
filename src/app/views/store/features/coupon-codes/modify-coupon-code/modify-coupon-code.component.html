@@ -489,7 +489,7 @@
 <!-- CATEGORY LIST MODAL -->
 <ng-template #categoryListModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add Sections</h4>
+    <h4 class="modal-title" id="modal-basic-title">Add Catalogs</h4>
   </div>
   <div class="modal-body scroll-modal slim-scroll">
     <div class="form-group">
@@ -498,7 +498,7 @@
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
       </div>
-      <div class="row" *ngFor="let x of commonService.overall_category | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page };">
+      <div class="row" *ngFor="let x of commonService.catalog_list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page };">
         <div class="form-group mb-3 col-md-12">
           <label class="checkbox checkbox-primary">
             <input type="checkbox" [(ngModel)]="x.checked">
@@ -533,8 +533,8 @@
       <div class="row">
         <div class="form-group mb-3 col-md-6">
           <select name="category_id" class="form-control select-arrow" [(ngModel)]="category_id" (change)="getProductList(category_id);">
-            <option value="all">All Sections</option>
-            <option [ngValue]="x._id" *ngFor="let x of commonService.overall_category;">{{x.name}}</option>
+            <option value="all">All Catalogs</option>
+            <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list;">{{x.name}}</option>
           </select>
         </div>
         <div class="form-group mb-3 col-md-6">

@@ -54,82 +54,9 @@ export class SidebarService {
 	BUILD_CATEGORY_LIST() {
 		return new Promise((resolve, reject) => {
 			this.storeApi.CATALOG_LIST().subscribe(result => {
-				if (result.status) {
-					let overallCategoryArray = [];
-					let sectionSeoArray = [];
-					// Sections
-          let sectionList = result.list.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
-          if(this.commonService.ys_features.indexOf('menus') !== -1) sectionList = sectionList.filter(obj => obj.status=='active');
-					sectionList.forEach(secObject => {
-						let pageUrl = null;
-						if (secObject.seo_status) pageUrl = secObject.seo_details.page_url;
-						let sectionJson = {
-							_id: secObject._id, type: "section", name: secObject.name, image: secObject.image,
-							seo_status: secObject.seo_status, seo_page_url: pageUrl
-						};
-						if(this.commonService.ys_features.indexOf('multi_megamenu')==-1 || !secObject.categories.length) sectionSeoArray.push(sectionJson);
-						// Categories
-						let categoryList = secObject.categories.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
-						if (categoryList.length) {
-							categoryList.forEach(catObject => {
-								let pageUrl = null;
-								if (catObject.seo_status) pageUrl = catObject.seo_details.page_url;
-								let catName = secObject.name + " > " + catObject.name;
-								let categoryJson = {
-									section_id: secObject._id, _id: catObject._id, type: "category", name: catName, image: catObject.image,
-									seo_status: catObject.seo_status, seo_page_url: pageUrl
-								}
-								sectionSeoArray.push(categoryJson);
-								// Sub Categories
-								let subCategoryList = catObject.sub_categories.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
-								if (subCategoryList.length) {
-									subCategoryList.forEach(subCatObject => {
-										let pageUrl = null;
-										if (subCatObject.seo_status) pageUrl = subCatObject.seo_details.page_url;
-										let catName = secObject.name + " > " + catObject.name + " > " + subCatObject.name;
-										let subCategoryJson = {
-											section_id: secObject._id, category_id: catObject._id, _id: subCatObject._id, type: "sub-category", name: catName,
-											image: subCatObject.image, seo_status: subCatObject.seo_status, seo_page_url: pageUrl
-										}
-										sectionSeoArray.push(subCategoryJson);
-										// Child Sub Categories
-										let childSubCategoryList = subCatObject.child_sub_categories.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
-										if (childSubCategoryList.length) {
-											childSubCategoryList.forEach(childSubCatObject => {
-												// overall category list
-												let pageUrl = null;
-												if (childSubCatObject.seo_status) pageUrl = childSubCatObject.seo_details.page_url;
-												let catName = secObject.name + " > " + catObject.name + " > " + subCatObject.name + " > " + childSubCatObject.name;
-												let childSubCategoryJson = {
-													section_id: secObject._id, category_id: catObject._id, sub_category_id: subCatObject._id, _id: childSubCatObject._id,
-													type: "child-sub-category", name: catName, image: childSubCatObject.image, seo_status: childSubCatObject.seo_status, seo_page_url: pageUrl
-												}
-												overallCategoryArray.push(childSubCategoryJson);
-												sectionSeoArray.push(childSubCategoryJson);
-											});
-										}
-										else overallCategoryArray.push(subCategoryJson);
-									});
-								}
-								else overallCategoryArray.push(categoryJson);
-							});
-						}
-						else overallCategoryArray.push(sectionJson);
-          });
-          this.commonService.seo_category = sectionSeoArray;
-          this.commonService.overall_category = overallCategoryArray;
-          this.commonService.updateLocalData('seo_category', this.commonService.seo_category);
-          this.commonService.updateLocalData('overall_category', this.commonService.overall_category);
-					resolve(true);
-				}
-				else {
-          this.commonService.seo_category = [];
-          this.commonService.overall_category = [];
-          this.commonService.updateLocalData('seo_category', this.commonService.seo_category);
-          this.commonService.updateLocalData('overall_category', this.commonService.overall_category);
-					console.log("response", result);
-					resolve(true);
-				}
+        this.commonService.catalog_list = [];
+        if(result.status) { this.commonService.catalog_list = result.list; }
+        this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
 			});
 		});
   }
@@ -232,21 +159,16 @@ export class SidebarService {
         name: 'Settings', type: 'dropDown', icon: 'settings',
         sub: [
           { icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' },
-          { icon: 'local_shipping', name: 'Courier Partners', state: '/modules/archive', type: 'link' },
-          { icon: 'local_shipping', name: 'Shipping Methods', state: '/products', type: 'link' },
-          { icon: 'local_shipping', name: 'Delivery Methods', state: '/modules/archive', type: 'link' },
+          { icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' },
+          { icon: 'local_shipping', name: 'Shipping Methods', state: '/shipping/shipping-methods', type: 'link' },
+          { icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' },
           { icon: 'payment', name: 'Payment Gateway', state: '/modules/archive', type: 'link' },
           { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
           { icon: 'shopping_basket', name: 'Checkout Settings', state: '/modules/archive', type: 'link' },
           { icon: 'search', name: 'Search Keywords', state: '/modules/archive', type: 'link' }
         ]
       },
-      {
-        name: 'My Account', type: 'dropDown', icon: 'account_circle',
-        sub: [
-          { icon: 'local_offer', name: 'Profile', state: '/catalog', type: 'link' }
-        ]
-      }
+      { name: "My Account", type: 'link', icon: 'account_circle', state: '/under-construction' }
     ];
     return sidePanelList;
   }

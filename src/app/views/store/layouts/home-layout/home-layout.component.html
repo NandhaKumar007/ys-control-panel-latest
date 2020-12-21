@@ -115,9 +115,9 @@
             <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="2" max="{{maxRank+1}}" appNumberOnly required />
           </div>
           <div *ngIf="addForm.type=='featured_product'" class="col-md-12 form-group mb-3">
-            <label>Link to Section</label>
+            <label>Link to Catalog</label>
             <select name="featured_category_id" class="form-control select-arrow" [(ngModel)]="addForm.featured_category_id" #featured_category_id="ngModel" required>
-              <option [ngValue]="x._id" *ngFor="let x of commonService.overall_category">{{x.name}}</option>
+              <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
           <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider'">
@@ -153,9 +153,9 @@
                     <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
                   </div>
                   <div *ngIf="x.type=='category'" class="col-md-4 form-group mb-3">
-                    <label>Link to Section</label>
+                    <label>Link to Catalog</label>
                     <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
-                      <option [ngValue]="x._id" *ngFor="let x of commonService.overall_category">{{x.name}}</option>
+                      <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -213,9 +213,9 @@
             <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="2" max="{{maxRank}}" [readonly]="editForm.type=='primary_slider'" appNumberOnly required />
           </div>
           <div *ngIf="editForm.type=='featured_product'" class="col-md-12 form-group mb-3">
-            <label>Link to Section</label>
+            <label>Link to Catalog</label>
             <select name="featured_category_id" class="form-control select-arrow" [(ngModel)]="editForm.featured_category_id" #featured_category_id="ngModel" required>
-              <option [ngValue]="x._id" *ngFor="let x of commonService.overall_category">{{x.name}}</option>
+              <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
           <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider'">
@@ -251,9 +251,9 @@
                     <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
                   </div>
                   <div *ngIf="x.type=='category'" class="col-md-4 form-group mb-3">
-                    <label>Link to Section</label>
+                    <label>Link to Catalog</label>
                     <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
-                      <option [ngValue]="x._id" *ngFor="let x of commonService.overall_category">{{x.name}}</option>
+                      <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
                     </select>
                   </div>
                 </div>

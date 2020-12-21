@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SectionService } from '../../sections/section.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 import { SidebarService } from '../../../../services/sidebar.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
@@ -21,7 +21,7 @@ export class CatalogLayoutComponent implements OnInit {
   pageLoader: boolean;
   imgBaseUrl = environment.img_baseurl;
   
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: SectionService, private sidebar: SidebarService, public commonService: CommonService) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService, private sidebar: SidebarService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -33,7 +33,7 @@ export class CatalogLayoutComponent implements OnInit {
   // EDIT SECTION
   onEditSection(x, modalName) {
     this.btnLoader = false;
-    this.api.SECTION_DETAILS({ _id: x._id }).subscribe(result => {
+    this.api.CATALOG_DETAILS({ _id: x._id }).subscribe(result => {
       if(result.status) {
         this.bannerForm = result.data;
         this.bannerForm.exist_image = result.data.image;
@@ -47,7 +47,7 @@ export class CatalogLayoutComponent implements OnInit {
 	onUpdate() {
     this.btnLoader = true;
     this.bannerForm.prev_rank = this.bannerForm.rank;
-    this.api.UPDATE_SECTION(this.bannerForm).subscribe(result => {
+    this.api.UPDATE_CATALOG(this.bannerForm).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
         this.sidebar.BUILD_CATEGORY_LIST().then((resp) => {

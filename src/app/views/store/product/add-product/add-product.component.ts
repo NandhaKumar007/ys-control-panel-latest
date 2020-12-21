@@ -18,7 +18,7 @@ export class AddProductComponent implements OnInit {
   maxRank: any = 0;
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
-  categoryList = this.commonService.overall_category;
+  categoryList = this.commonService.catalog_list;
   addonList: any; tagList: any; noteList: any; taxRates: any;
   sizeCharts: any; faqList: any; sizingList: any;
   aiStyleList: any = this.commonService.aistyle_list;

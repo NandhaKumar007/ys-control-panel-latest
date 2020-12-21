@@ -165,20 +165,20 @@ export class ModifyCouponCodeComponent implements OnInit {
   openCatListModal(modalName) {
     if(this.offerForm.discount_type == 'buy_x_get_y') {
       if(this.offerForm.bx_gy_type=='buy') {
-        this.commonService.overall_category.forEach(element => {
+        this.commonService.catalog_list.forEach(element => {
           element.checked = false;
           if(this.offerForm.buy_properties.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
         });
       }
       else {
-        this.commonService.overall_category.forEach(element => {
+        this.commonService.catalog_list.forEach(element => {
           element.checked = false;
           if(this.offerForm.get_properties.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
         });
       }
     }
     else {
-      this.commonService.overall_category.forEach(element => {
+      this.commonService.catalog_list.forEach(element => {
         element.checked = false;
         if(this.offerForm.category_list.findIndex(obj => obj.category_id==element._id) != -1) element.checked = true;
       });
@@ -190,20 +190,20 @@ export class ModifyCouponCodeComponent implements OnInit {
     if(this.offerForm.discount_type == 'buy_x_get_y') {
       if(this.offerForm.bx_gy_type=='buy') {
         this.offerForm.buy_properties.category_list = [];
-        this.commonService.overall_category.forEach(element => {
+        this.commonService.catalog_list.forEach(element => {
           element.category_id = element._id;
           if(element.checked) this.offerForm.buy_properties.category_list.push(element);
         });
       }
       else {
         this.offerForm.get_properties.category_list = [];
-        this.commonService.overall_category.forEach(element => {
+        this.commonService.catalog_list.forEach(element => {
           element.category_id = element._id;
           if(element.checked) this.offerForm.get_properties.category_list.push(element);
         });
       }
     }
-    else this.commonService.overall_category.forEach(element => {
+    else this.commonService.catalog_list.forEach(element => {
       element.category_id = element._id;
       if(element.checked) this.offerForm.category_list.push(element);
     });

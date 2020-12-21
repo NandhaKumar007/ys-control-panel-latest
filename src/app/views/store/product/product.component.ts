@@ -56,9 +56,9 @@ export class ProductComponent implements OnInit {
       if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
       if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
     }
-    if(this.commonService.overall_category.length) {
+    if(this.commonService.catalog_list.length) {
       this.categoryList.push({_id: 'all', name: "All Sections"});
-      this.commonService.overall_category.forEach(element => {
+      this.commonService.catalog_list.forEach(element => {
         this.categoryList.push(element)
       });
     }
@@ -178,7 +178,7 @@ export class ProductComponent implements OnInit {
   exportAsXLSX() {
     this.exportLoader = true;
     let productList = new GridSearchPipe().transform(this.list, {name: this.search_bar, sku: this.search_bar});
-    this.createList(this.commonService.overall_category, productList).then((exportList: any[]) => {
+    this.createList(this.commonService.catalog_list, productList).then((exportList: any[]) => {
       this.excelService.exportAsExcelFile(exportList, 'product'+' export '+new Date().getTime());
       setTimeout(() => { this.exportLoader = false; }, 500);
     })

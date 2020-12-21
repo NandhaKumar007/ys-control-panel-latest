@@ -29,7 +29,6 @@ const storeRoutes: Routes = [
   { path: 'under-construction', loadChildren: () => import('./views/others/under-construction/under-construction.module').then(m => m.UnderConstructionModule) },
   { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule) },
-  { path: 'sections', loadChildren: () => import('./views/store/sections/sections.module').then(m => m.SectionsModule) },
   { path: 'features', loadChildren: () => import('./views/store/features/features.module').then(m => m.FeaturesModule) },
   { path: 'product-extras', loadChildren: () => import('./views/store/product-extras/product-extras.module').then(m => m.ProductExtrasModule) },
   { path: 'layouts', loadChildren: () => import('./views/store/layouts/layouts.module').then(m => m.LayoutsModule) },

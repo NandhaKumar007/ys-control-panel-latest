@@ -81,7 +81,7 @@ export class ArchiveProductsComponent implements OnInit {
   exportAsXLSX() {
     this.exportLoader = true;
     let productList = new FieldSearchPipe().transform(this.list, 'name', this.search_bar);
-    this.createList(this.commonService.overall_category, productList).then((exportList: any[]) => {
+    this.createList(this.commonService.catalog_list, productList).then((exportList: any[]) => {
       this.excelService.exportAsExcelFile(exportList, 'Archive-'+this.params.archive_name+'-'+this.datePipe.transform(new Date(), 'dd MMM y'));
       setTimeout(() => { this.exportLoader = false; }, 500);
     });

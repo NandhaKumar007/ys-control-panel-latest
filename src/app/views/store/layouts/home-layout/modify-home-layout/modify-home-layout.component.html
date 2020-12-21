@@ -175,7 +175,7 @@
                 <div class="col-md-6 form-group mb-3">
                   <label class="radio radio-primary">
                     <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="category">
-                    <span>Link to Section</span>
+                    <span>Link to Catalog</span>
                     <span class="checkmark"></span>
                   </label>
                 </div>
@@ -201,9 +201,9 @@
                   </label>
                 </div>
                 <div *ngIf="x.link_type=='category' || x.link_type=='product'" class="col-md-12 form-group mb-3">
-                  <label>{{x.link_type=='category'? 'Link to Section': 'Section'}}</label>
+                  <label>{{x.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
                   <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
-                    <option [ngValue]="y._id" *ngFor="let y of commonService.seo_category">{{y.name}}</option>
+                    <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
                   </select>
                 </div>
                 <div *ngIf="x.link_type=='product'" class="col-md-12 form-group mb-3">

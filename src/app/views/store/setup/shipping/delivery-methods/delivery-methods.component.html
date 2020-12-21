@@ -10,8 +10,8 @@
         <ul><li>Manage your delivery times</li></ul>
       </div>
 
-      <div *ngIf="commonService.ys_features.indexOf('pincode_service')!=-1" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" class="btn btn-primary" routerLink="/pincodes">Pincodes</button>
+      <div *ngIf="!params?.type && commonService.ys_features.indexOf('pincode_service')!=-1" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" routerLink="/shipping/pincodes">Pincodes</button>
       </div>
     </div>
   </div>

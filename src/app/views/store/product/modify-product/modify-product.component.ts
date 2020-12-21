@@ -319,7 +319,7 @@ export class ModifyProductComponent implements OnInit {
 
   processCategoryList(categoryId) {
     return new Promise((resolve, reject) => {
-      let catList = this.commonService.overall_category;
+      let catList = this.commonService.catalog_list;
       catList.forEach(element => {
         if(categoryId.findIndex(x => x == element._id)!=-1) element.selected = true;
       });

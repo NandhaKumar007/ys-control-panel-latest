@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubCategoriesComponent } from './sub-categories.component';
+import { CheckoutSettingComponent } from './checkout-setting.component';
 
-describe('SubCategoriesComponent', () => {
-  let component: SubCategoriesComponent;
-  let fixture: ComponentFixture<SubCategoriesComponent>;
+describe('CheckoutSettingComponent', () => {
+  let component: CheckoutSettingComponent;
+  let fixture: ComponentFixture<CheckoutSettingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubCategoriesComponent ]
+      declarations: [ CheckoutSettingComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubCategoriesComponent);
+    fixture = TestBed.createComponent(CheckoutSettingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

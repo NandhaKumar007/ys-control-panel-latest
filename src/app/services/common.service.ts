@@ -104,9 +104,7 @@ export class CommonService {
   country_list: any = [];
   aistyle_list: any = [];
   vendor_permissions: any = {};
-
-  overall_category: any = [];
-  seo_category: any = [];
+  catalog_list: any = [];
 
   page_attr: any;
   product_page_attr: any;
@@ -131,9 +129,7 @@ export class CommonService {
     if(localStorage.getItem('aistyle_list')) this.aistyle_list = this.decryptData(localStorage.getItem("aistyle_list"));
     if(localStorage.getItem('courier_partners')) this.courier_partners = this.decryptData(localStorage.getItem("courier_partners"));
     if(localStorage.getItem('vendor_list')) this.vendor_list = this.decryptData(localStorage.getItem("vendor_list"));
-
-    if(localStorage.getItem('overall_category')) this.overall_category = this.decryptData(localStorage.getItem("overall_category"));
-    if(localStorage.getItem('seo_category')) this.seo_category = this.decryptData(localStorage.getItem("seo_category"));
+    if(localStorage.getItem('catalog_list')) this.catalog_list = this.decryptData(localStorage.getItem("catalog_list"));
 
     if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
 

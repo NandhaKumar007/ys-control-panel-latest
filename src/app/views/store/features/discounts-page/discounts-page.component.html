@@ -115,7 +115,7 @@
           <div class="col-md-6 form-group mb-3">
             <label class="radio radio-primary">
               <input type="radio" name="link_type" [(ngModel)]="addForm.link_type" value="category">
-              <span>Link to Section</span>
+              <span>Link to Catalog</span>
               <span class="checkmark"></span>
             </label>
           </div>
@@ -141,9 +141,9 @@
             </label>
           </div>
           <div *ngIf="addForm.link_type=='category' || addForm.link_type=='product'" class="col-md-12 form-group mb-3">
-            <label>{{addForm.link_type=='category'? 'Link to Section': 'Section'}}</label>
+            <label>{{addForm.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
             <select name="category_id" class="form-control select-arrow" [(ngModel)]="addForm.category_id" #category_id="ngModel" required>
-              <option [ngValue]="y._id" *ngFor="let y of commonService.seo_category">{{y.name}}</option>
+              <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
             </select>
           </div>
           <div *ngIf="addForm.link_type=='product'" class="col-md-12 form-group mb-3">
@@ -233,7 +233,7 @@
           <div class="col-md-6 form-group mb-3">
             <label class="radio radio-primary">
               <input type="radio" name="link_type" [(ngModel)]="editForm.link_type" value="category">
-              <span>Link to Section</span>
+              <span>Link to Catalog</span>
               <span class="checkmark"></span>
             </label>
           </div>
@@ -259,9 +259,9 @@
             </label>
           </div>
           <div *ngIf="editForm.link_type=='category' || editForm.link_type=='product'" class="col-md-12 form-group mb-3">
-            <label>{{editForm.link_type=='category'? 'Link to Section': 'Section'}}</label>
+            <label>{{editForm.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
             <select name="category_id" class="form-control select-arrow" [(ngModel)]="editForm.category_id" #category_id="ngModel" required>
-              <option [ngValue]="y._id" *ngFor="let y of commonService.seo_category">{{y.name}}</option>
+              <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
             </select>
           </div>
           <div *ngIf="editForm.link_type=='product'" class="col-md-12 form-group mb-3">
