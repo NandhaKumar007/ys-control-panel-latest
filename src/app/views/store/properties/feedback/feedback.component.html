@@ -41,7 +41,7 @@
   <div class="row" *ngIf="list?.length" class="list-horizontal">
 
     <div
-      *ngFor="let x of list | gridSearch: { name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+      *ngFor="let x of list | orderDesc:'_id' | gridSearch: { name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
       class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
       <div class="card o-hidden mb-4 d-flex flex-row">
         <div class="flex-grow-1 pl-2 d-flex">

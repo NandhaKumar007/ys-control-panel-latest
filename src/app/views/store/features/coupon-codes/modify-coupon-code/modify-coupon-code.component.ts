@@ -66,7 +66,7 @@ export class ModifyCouponCodeComponent implements OnInit {
 
   onSubmit() {
     this.offerForm.valid_from = new Date(new Date(this.offerForm.start_date).toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' })+" "+this.offerForm.start_time);
-    delete this.offerForm.valid_to;
+    this.offerForm.valid_to = null;
     if(this.offerForm.enable_end_date) {
       this.offerForm.valid_to = new Date(new Date(this.offerForm.end_date).toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' })+" "+this.offerForm.end_time);
     }

@@ -29,9 +29,7 @@ export class CouponCodesComponent implements OnInit {
         this.list.forEach(obj => {
           obj.code_status='Active';
           if(obj.valid_to) {
-            let today = new Date().setHours(23,59,59,999);
-            let validTo = new Date(obj.valid_to).setHours(23,59,59,999);
-            if(today>validTo) obj.code_status='Expired';
+            if(new Date() > new Date(obj.valid_to)) obj.code_status='Expired';
           }
           if(!obj.enable_status) obj.code_status='Inactive';
         });

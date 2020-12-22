@@ -54,11 +54,11 @@ export class GiftcardOrdersComponent implements OnInit {
   onTypeChange(x) {
     this.pageLoader = true;
     let couponList = this.parentList;
-    if(x=="deactivated") this.list = couponList.filter(obj => obj.status=='deactivated').sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-    else if(x=="active") this.list = couponList.filter(obj => obj.status=='active' && obj.balance>0 && new Date(obj.expiry_on)>new Date()).sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-    else if(x=="used") this.list = couponList.filter(obj => obj.status=='active' && obj.balance<=0 && new Date(obj.expiry_on)>new Date()).sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-    else if(x=="expired") this.list = couponList.filter(obj => obj.status=='active' && new Date(obj.expiry_on)<new Date()).sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-    else this.list = couponList.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+    if(x=="deactivated") this.list = couponList.filter(obj => obj.status=='deactivated');
+    else if(x=="active") this.list = couponList.filter(obj => obj.status=='active' && obj.balance>0 && new Date(obj.expiry_on)>new Date());
+    else if(x=="used") this.list = couponList.filter(obj => obj.status=='active' && obj.balance<=0 && new Date(obj.expiry_on)>new Date());
+    else if(x=="expired") this.list = couponList.filter(obj => obj.status=='active' && new Date(obj.expiry_on)<new Date());
+    else this.list = couponList;
     this.list.forEach(obj => {
       if(obj.customerDetails.length) {
         obj.customer_name = obj.customerDetails[0].name;

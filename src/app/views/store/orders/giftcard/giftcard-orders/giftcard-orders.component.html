@@ -60,7 +60,7 @@
 
   <!-- DATA LIST -->
   <div class="row list-horizontal">
-    <div *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, code: search_bar, to_name: search_bar, to_email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+    <div *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, code: search_bar, to_name: search_bar, to_email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { StoreApiService } from '../../../services/store-api.service';
-import { SidebarService } from '../../../services/sidebar.service';
 import { CommonService } from '../../../services/common.service';
 
 @Component({
@@ -20,17 +19,18 @@ export class CatalogsComponent implements OnInit {
   addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean;
 
-  constructor(
-    config: NgbModalConfig, public modalService: NgbModal, private router: Router,
-    private storeApi: StoreApiService, private sidebar: SidebarService, public commonService: CommonService
-  ) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private storeApi: StoreApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
     this.pageLoader = true;
     this.storeApi.CATALOG_LIST().subscribe(result => {
-      if(result.status) this.list = result.list.sort((a, b) => 0 - (a._id > b._id ? 1 : -1));
+      if(result.status) {
+        this.list = result.list;
+        this.commonService.catalog_list = result.list;
+        this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
+      }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
@@ -41,7 +41,6 @@ export class CatalogsComponent implements OnInit {
     this.storeApi.ADD_CATALOG(this.addForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.sidebar.BUILD_CATEGORY_LIST();
         this.ngOnInit();
       }
       else {
@@ -53,9 +52,16 @@ export class CatalogsComponent implements OnInit {
   
   // EDIT
   onEdit(x, modalName) {
-    this.editForm = { _id: x._id, name: x.name, seo_status: x.seo_status };
-    if(this.editForm.seo_status) this.editForm.seo_details = x.seo_details;
-    this.modalService.open(modalName);
+    this.storeApi.CATALOG_DETAILS({ _id: x._id }).subscribe(result => {
+      if(result.status) {
+        let catalogData = result.data;
+        this.editForm = { _id: catalogData._id, name: catalogData.name, seo_status: catalogData.seo_status };
+        this.editForm.seo_details = {};
+        if(this.editForm.seo_status) this.editForm.seo_details = catalogData.seo_details;
+        this.modalService.open(modalName);
+      }
+      else console.log("response", result);
+    });
   }
 
   // UPDATE
@@ -64,7 +70,6 @@ export class CatalogsComponent implements OnInit {
     this.storeApi.UPDATE_CATALOG(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.sidebar.BUILD_CATEGORY_LIST();
         this.ngOnInit();
       }
       else {
@@ -79,7 +84,6 @@ export class CatalogsComponent implements OnInit {
     this.storeApi.DELETE_CATALOG(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.sidebar.BUILD_CATEGORY_LIST();
         this.ngOnInit();
       }
       else {

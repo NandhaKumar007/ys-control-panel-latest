@@ -25,7 +25,7 @@
 
   <!-- DATA LIST -->
   <div class="row list-horizontal">
-    <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;" 
+    <div *ngFor="let x of list | orderDesc:'created_on' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;" 
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}" >
 
       <div class="card o-hidden mb-4 d-flex flex-row">
@@ -41,7 +41,6 @@
               <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
                <span class="black-outline-txt">Edit</span>
               </button>
-
               <button *ngIf="x.status!='enabled'" class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="onChangeStatus(x, 'enable', statusModal);">
                <span class="blue-outline-txt">Enable</span>
               </button>

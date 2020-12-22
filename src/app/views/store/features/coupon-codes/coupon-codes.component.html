@@ -29,7 +29,7 @@
   <div *ngIf="list?.length" class="row" class="list-horizontal">
 
     <!-- SINGLE LIST ITEM -->
-    <div *ngFor="let x of list | fieldSearch:'code':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+    <div *ngFor="let x of list | orderDesc:'created_on' | fieldSearch:'code':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
       class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">

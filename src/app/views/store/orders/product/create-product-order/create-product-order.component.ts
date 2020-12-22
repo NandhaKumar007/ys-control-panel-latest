@@ -284,7 +284,7 @@ export class CreateProductOrderComponent implements OnInit {
           {
             // zone based
             if(data.domes_zone_status) {
-              this.findDomesticPrice(data.domes_zones, data.domes_rate_multiplier, shippingAddress, this.cart_weight).then((respData: any) => {
+              this.findDomesticPrice(data.domes_zones, shippingAddress, this.cart_weight).then((respData: any) => {
                 if(respData) {
                   if(data.free_shipping) {
                     if(this.cart_total >= data.minimum_price) respData.shipping_price = 0;
@@ -316,7 +316,7 @@ export class CreateProductOrderComponent implements OnInit {
           {
             // zone based
             if(data.inter_zone_status) {
-              this.findInternatioanlPrice(data.inter_zones, data.inter_rate_multiplier, shippingAddress, this.cart_weight).then((respData: any) => {
+              this.findInternatioanlPrice(data.inter_zones, shippingAddress, this.cart_weight).then((respData: any) => {
                 if(respData) {
                   if(data.free_shipping) {
                     if(this.cart_total >= data.minimum_price) respData.shipping_price = 0;
@@ -351,12 +351,13 @@ export class CreateProductOrderComponent implements OnInit {
     this.resetDiscount();
   }
 
-  findInternatioanlPrice(zones, multiplier, shippingAddress, cartWeight) {
+  findInternatioanlPrice(zones, shippingAddress, cartWeight) {
     return new Promise((resolve, reject) => {
       // zone
       let filterZone = zones.filter(obj => obj.countries.findIndex(x => x == shippingAddress.country)!=-1);
-      if(filterZone.length) {
+      if(filterZone.length && filterZone[0].rate_multiplier.length) {
         // multiplier
+        let multiplier = filterZone[0].rate_multiplier;
         multiplier.sort((a, b) => 0 - (a.weight > b.weight ? 1 : -1));  // sort desc
         let shippingMultiplier = multiplier[0].multiplier;
         let filterMultiplier = multiplier.filter(obj => obj.weight==cartWeight);
@@ -371,14 +372,15 @@ export class CreateProductOrderComponent implements OnInit {
     });
   }
 
-  findDomesticPrice(zones, multiplier, shippingAddress, cartWeight) {
+  findDomesticPrice(zones, shippingAddress, cartWeight) {
     // domestic type -> state or pincode
     // here pincode based
     return new Promise((resolve, reject) => {
       // zone
       let filterZone = zones.filter(obj => obj.states.findIndex(x => x == shippingAddress.pincode)!=-1);
-      if(filterZone.length) {
+      if(filterZone.length && filterZone[0].rate_multiplier.length) {
         // multiplier
+        let multiplier = filterZone[0].rate_multiplier;
         multiplier.sort((a, b) => 0 - (a.weight > b.weight ? 1 : -1));  // sort desc
         let shippingMultiplier = multiplier[0].multiplier;
         let filterMultiplier = multiplier.filter(obj => obj.weight==cartWeight);
