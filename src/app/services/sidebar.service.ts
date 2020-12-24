@@ -119,7 +119,7 @@ export class SidebarService {
             sub: [
               { name: 'Home Page', state: '/layouts/home', type: 'link' },
               { name: 'Catalog', state: '/layouts/catalog', type: 'link' },
-              { name: 'Product', state: '/under-construction', type: 'link' }
+              { name: 'Product', state: '/layouts/product', type: 'link' }
             ]
           },
           { icon: 'menu_book', name: 'Menu', state: '/features/menus', type: 'link' },

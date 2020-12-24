@@ -31,8 +31,7 @@ export class CreateProductOrderComponent implements OnInit {
 
   existing_model_list: any = []; selected_model: any = {};
   addonForm: any = {}; customized_model: any; measurementView: boolean;
-  selected_custom_list = []; selected_unit: any = {};
-  custom_list: any = []; customIndex: number;
+  custom_list: any = []; customIndex: number; selected_unit: any = {};
   measurement_sets: any = []; mmIndex: number; mm_section: boolean;
   couponForm: any = {}; offerAmount: any = 0; manualDiscount: any = 0;
 
@@ -590,10 +589,15 @@ export class CreateProductOrderComponent implements OnInit {
     this.measurement_sets = this.productDetails.selected_addon.updated_mm_list;
     if(this.custom_list.length) {
       this.mm_section = false;
-      if(this.custom_list[this.customIndex].type=='either_or')
-        this.selected_custom_list = [{ name: this.custom_list[this.customIndex].name, value: [this.custom_list[this.customIndex].option_list[0]], limit: this.custom_list[this.customIndex].limit }];
-      else
-        this.selected_custom_list = [{ name: this.custom_list[this.customIndex].name, value: [], limit: this.custom_list[this.customIndex].limit }];
+      this.custom_list.forEach(obj => {
+        delete obj.selected_option;
+        obj.option_list.forEach(opt => { delete opt.custom_option_checked; delete opt.disabled; });
+      });
+      this.custom_list[this.customIndex].filtered_option_list = this.custom_list[this.customIndex].option_list;
+      if(this.custom_list[this.customIndex].type=='either_or') {
+        this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+        this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
+      }
     }
     else {
       this.mm_section = true;
@@ -632,7 +636,19 @@ export class CreateProductOrderComponent implements OnInit {
       if(!customAlert) {
         this.addonForm.addon_id = this.productDetails.selected_addon._id;
         this.addonForm.price = this.productDetails.selected_addon.price;
-        this.addonForm.custom_list = this.selected_custom_list;
+        this.addonForm.custom_list = [];
+        this.custom_list.forEach(obj => {
+          if(obj.filtered_option_list) {
+            if(obj.type=="either_or") {
+              let selIndex = obj.filtered_option_list.findIndex(opt => opt.name==obj.selected_option);
+              if(selIndex!=-1) this.addonForm.custom_list.push({ name: obj.name, value: [obj.filtered_option_list[selIndex]] });
+            }
+            else {
+              let selectedList = obj.filtered_option_list.filter(opt => opt.custom_option_checked);
+              if(selectedList.length) this.addonForm.custom_list.push({ name: obj.name, value: selectedList })
+            }
+          }
+        });
         // measurement section (for find additional qty)
         if(this.measurement_sets.length) {
           for(let elem of this.measurement_sets[this.mmIndex].list) {
@@ -679,28 +695,35 @@ export class CreateProductOrderComponent implements OnInit {
     }
   }
 
-  onSelectOption(x) {
-    this.selected_custom_list[this.customIndex] = { name: this.custom_list[this.customIndex].name, value: x, limit: this.custom_list[this.customIndex].limit };
+  getRadioNextList(optionName) {
+    // if next option list exist
+    if(this.custom_list[this.customIndex+1]) {
+      this.custom_list[this.customIndex+1].filtered_option_list = this.custom_list[this.customIndex+1].option_list.filter(obj => obj.link_to=='all' || obj.link_to==optionName);
+    }
   }
-
-  onSelectCheckbox(x) {
-    let index = this.selected_custom_list[this.customIndex].value.findIndex(obj => obj.name == x.name);
-    if(index != -1) this.selected_custom_list[this.customIndex].value.splice(index, 1);
-    else this.selected_custom_list[this.customIndex].value.push(x);
+  getCheckboxNextList() {
+    // if next option list exist
+    if(this.custom_list[this.customIndex+1])
+    {
+      let selectedItems = [];
+      this.custom_list[this.customIndex].filtered_option_list.forEach(obj => {
+        if(obj.custom_option_checked) selectedItems.push(obj.name);
+      });
+      this.custom_list[this.customIndex+1].filtered_option_list = this.custom_list[this.customIndex+1].option_list.filter(obj => obj.link_to=='all' || selectedItems.indexOf(obj.link_to)!=-1);
+    }
   }
-
-  checkboxStatus(x) {
-    if(this.selected_custom_list[this.customIndex].value.findIndex(obj => obj.name == x.name) != -1) return true;
-  }
-
-  disableOption(x) {
+  disableOption() {
     // for mandatory or limited options
     if(this.custom_list[this.customIndex].limit > 0) {
       // for disable unchecked checkbox
-      let index = this.selected_custom_list[this.customIndex].value.findIndex(obj => obj.name == x.name);
-      let selectedOptions = this.selected_custom_list[this.customIndex].value.length;
-      let optionLimit = this.custom_list[this.customIndex].limit;
-      if(index==-1 && optionLimit==selectedOptions) return true;
+      let checkedLen = this.custom_list[this.customIndex].filtered_option_list.filter(obj => obj.custom_option_checked).length;
+      if(this.custom_list[this.customIndex].limit==checkedLen) {
+        this.custom_list[this.customIndex].filtered_option_list.forEach(obj => {
+          obj.disabled = true;
+          if(obj.custom_option_checked) obj.disabled = false;
+        });
+      }
+      else this.custom_list[this.customIndex].filtered_option_list.forEach(obj => { obj.disabled = false; });
     }
   }
 
@@ -710,15 +733,18 @@ export class CreateProductOrderComponent implements OnInit {
       let customAlert = this.checkCustomSelection();
       if(!customAlert) {
         this.customIndex = this.customIndex+1;
-        let initialCustomOption = [];
-        if(this.selected_custom_list[this.customIndex]) {
-          initialCustomOption = this.selected_custom_list[this.customIndex].value;
+        if(this.custom_list[this.customIndex].type=='either_or') {
+          if(this.custom_list[this.customIndex].selected_option) {
+            if(this.custom_list[this.customIndex].filtered_option_list.findIndex(obj => obj.name==this.custom_list[this.customIndex].selected_option) == -1) {
+              this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+            }
+          }
+          else {
+            this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+          }
+          this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
         }
-        else {
-          if(this.custom_list[this.customIndex].type=='either_or')
-          initialCustomOption = [this.custom_list[this.customIndex].option_list[0]];
-        }
-        this.onSelectOption(initialCustomOption);
+        else this.disableOption();
         this.commonService.scrollModalTop(0);
       }
       else this.addonForm.alert_msg = customAlert;
@@ -815,12 +841,13 @@ export class CreateProductOrderComponent implements OnInit {
     }
   }
   checkCustomSelection() {
+    let checkedLen = this.custom_list[this.customIndex].filtered_option_list.filter(obj => obj.custom_option_checked).length;
     if(this.custom_list[this.customIndex].type=='mandatory') {
-      if(this.custom_list[this.customIndex].limit==this.selected_custom_list[this.customIndex].value.length) return null;
+      if(this.custom_list[this.customIndex].limit==checkedLen) return null;
       else return "Must choose "+this.custom_list[this.customIndex].limit+" options";
     }
     else if(this.custom_list[this.customIndex].type=='limited') {
-      if(this.custom_list[this.customIndex].limit >= this.selected_custom_list[this.customIndex].value.length) return null;
+      if(this.custom_list[this.customIndex].limit >= checkedLen) return null;
       else return "Choose maximum "+this.custom_list[this.customIndex].limit+" options";
     }
     else return null;

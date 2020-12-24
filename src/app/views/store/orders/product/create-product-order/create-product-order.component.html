@@ -990,7 +990,6 @@
 
   <div class="modal-body lg-modal-body slim-scroll">
     <form id="addon-form" name="addon-form" autocomplete="off">
-
       <ng-container *ngIf="store_details?.additional_features?.custom_model">
         <div class="row">
           <div class="col-md-12">
@@ -1015,37 +1014,27 @@
 
       <div class="row">
         <div class="col-md-12 mt-4">
-
           <!-- custom section -->
           <ng-container *ngIf="!mm_section">
             <h5>{{custom_list[customIndex]?.name}}</h5>
             <div class="row">
-              <div *ngFor="let x of custom_list[customIndex]?.option_list; let i=index;"
+              <div *ngFor="let x of custom_list[customIndex]?.filtered_option_list; let i=index;"
                 class="col-lg-3 col-md-4 col-6 d-flex justify-content-center mb-3">
                 <div class="card customize-model p-3">
-
-                  <!-- Radio -->
-                  <label class="radio radio-primary m-0 p-0" *ngIf="custom_list[customIndex]?.type=='either_or'">
-                    <input type="radio" [checked]="selected_custom_list[customIndex]?.value[0].name==x.name"
-                      (change)="addonForm.alert_msg=null; onSelectOption([x]);" name="option">
+                  <label class="m-0 p-0" [ngClass]="(custom_list[customIndex]?.type=='either_or')? 'radio radio-primary': 'checkbox checkbox-primary'">
+                    <!-- Radio -->
+                    <input *ngIf="custom_list[customIndex]?.type=='either_or'" type="radio" name="option" [checked]="custom_list[customIndex].selected_option==x.name"
+                    (change)="addonForm.alert_msg=null; custom_list[customIndex].selected_option=x.name; getRadioNextList(x.name);" />
+                    <!-- Checkbox -->
+                    <input *ngIf="custom_list[customIndex]?.type!='either_or'" type="checkbox" class="form-check-input" name="option{{i}}"
+                    [(ngModel)]="x.custom_option_checked" (change)="addonForm.alert_msg=null; getCheckboxNextList(); disableOption();" [disabled]="x.disabled" />
+                    <!-- Content -->
+                    <span class="checkmark"></span>
                     <img imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="addon" class="img-fluid">
                     <img imgBroken *ngIf="!x.image" class="addon-icon" src="assets/images/addon.svg">
                     <p class="text-center m-0">{{x.name}}</p>
-                    <span class="checkmark"></span>
+                    <p *ngIf="x.price>0" class="text-center m-0">{{ x.price | currency:commonService.store_currency.country_code }}</p>
                   </label>
-                  <!-- #Radio -->
-
-                  <!-- Checkbox -->
-                  <label class="checkbox checkbox-primary m-0 p-0" *ngIf="custom_list[customIndex]?.type!='either_or'">
-                    <input class="form-check-input" type="checkbox"
-                      (change)="addonForm.alert_msg=null; onSelectCheckbox(x);" [disabled]="disableOption(x)"
-                      [checked]="checkboxStatus(x)" name="option">
-                    <span class="checkmark"></span>
-                    <img imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="addon" class="img-fluid">
-                    <img class="addon-icon" imgBroken *ngIf="!x.image" src="assets/images/addon.svg" alt="addon">
-                    <p class="text-center m-0">{{x.name}}</p>
-                  </label>
-                  <!-- #Checkbox -->
                 </div>
               </div>
             </div>
@@ -1167,11 +1156,9 @@
       <!-- right side -->
       <!-- custom section -->
       <ng-container *ngIf="!mm_section">
-        <button *ngIf="(custom_list.length-1) > customIndex" (click)="onCustomNext();"
-          class="btn btn-wide btn-primary">NEXT</button>
-        <button *ngIf="(custom_list.length-1) == customIndex && measurement_sets?.length"
-          (click)="onSelectMeasurement();" class="btn btn-wide btn-primary">NEXT</button>
-        <button *ngIf="(custom_list.length-1) == customIndex && !measurement_sets?.length" (click)="onSaveNewModal();"
+        <button *ngIf="custom_list[customIndex+1]?.filtered_option_list?.length || measurement_sets?.length" (click)="(custom_list[customIndex+1]?.filtered_option_list?.length)? onCustomNext(): onSelectMeasurement();"
+        class="btn btn-wide btn-primary">NEXT</button>
+        <button *ngIf="!custom_list[customIndex+1]?.filtered_option_list?.length && !measurement_sets?.length" (click)="onSaveNewModal();"
           [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
           SUBMIT
         </button>

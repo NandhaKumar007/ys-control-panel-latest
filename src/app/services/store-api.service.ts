@@ -177,4 +177,14 @@ export class StoreApiService {
     return this.http.get<any>(environment.ws_url+'/store/newsletter_subscribers', httpOptions);
   }
 
+  // policies
+  POLICY_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/policies?type='+x, httpOptions);
+  }
+  UPDATE_POLICY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/policies', x, httpOptions);
+  }
+
 }

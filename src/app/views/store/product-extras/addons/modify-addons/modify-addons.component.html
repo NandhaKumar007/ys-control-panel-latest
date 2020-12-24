@@ -27,7 +27,8 @@
               <i class="material-icons add-img">add_photo_alternate</i>
               <p>Click to upload image</p>
             </div>
-            <input type="file" name="image" style="display: none;" (change)="mainFileChangeListener($event)" accept="image/jpeg, image/png" />
+            <input type="file" name="image" style="display: none;" (change)="mainFileChangeListener($event)" accept="image/jpeg, image/png"
+            />
           </label>
         </div>
       </div>
@@ -45,8 +46,8 @@
       </div>
       <div class="col-md-3 form-group mb-3">
         <label for="min_stock">Min Stock Requirement</label>
-        <input type="text" name="min_stock" id="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel" appNumberOnly
-          required />
+        <input type="text" name="min_stock" id="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel"
+          appNumberOnly required />
       </div>
       <div class="col-md-2 form-group mb-3">
         <label for="rank">Rank</label>
@@ -92,82 +93,92 @@
     <!-- Customization List -->
     <div class="card mb-3 p-3" *ngFor="let x of addonForm.custom_list; let i=index;">
 
-    <div class="">
+      <div class="">
         <span (click)="addonForm.custom_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
-    </div>
+      </div>
 
-    <div class="row">
+      <div class="row">
         <div class="col-md-6 form-group mb-3">
-        <label for="name">Customization Title</label>
-        <input type="text" name="custom_name{{i+1}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" required
-        />
+          <label for="name">Customization Title</label>
+          <input type="text" name="custom_name{{i+1}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" required
+          />
         </div>
         <div class="form-group mb-3" [ngClass]="x.type=='mandatory' || x.type=='limited'? 'col-md-3': 'col-md-6'">
-        <label for="type">Choice Type</label>
-        <select name="type{{i+1}}" id="type" class="form-control" (change)="x.limit=0;" [(ngModel)]="x.type" #type="ngModel" required>
+          <label for="type">Choice Type</label>
+          <select name="type{{i+1}}" id="type" class="form-control" (change)="x.limit=0;" [(ngModel)]="x.type" #type="ngModel" required>
             <option value="either_or">Choose One</option>
             <option value="multiple">Unlimited Choice</option>
             <option value="limited">Limited Choice</option>
             <option value="mandatory">Mandatory Choice</option>
-        </select>
+          </select>
         </div>
         <div *ngIf="x.type=='mandatory' || x.type=='limited'" class="col-md-3 form-group mb-3">
-        <label for="limit">Limit
+          <label for="limit">Limit
             <span *ngIf="x.limit"> ({{x.limit}} out of {{x.option_list.length}})</span>
-        </label>
-        <input type="number" name="limit{{i+1}}" id="limit" class="form-control" [(ngModel)]="x.limit" #limit="ngModel" max="{{x.option_list.length}}"
+          </label>
+          <input type="number" name="limit{{i+1}}" id="limit" class="form-control" [(ngModel)]="x.limit" #limit="ngModel" max="{{x.option_list.length}}"
             required />
         </div>
         <!-- Option List -->
         <div class="col-md-6 col-lg-4" *ngFor="let y of x.option_list; let j=index;">
-        <div class="card card-in-card p-3 mb-3">
+          <div class="card card-in-card p-3 mb-3">
 
             <ng-container *ngIf="x.option_list.length > 1">
-            <span (click)="x.option_list.splice(j, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+              <span (click)="x.option_list.splice(j, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
             </ng-container>
 
             <div class="mb-2" align="center">
-            <label>
+              <label>
                 <div *ngIf="!y.image">
-                <i class="material-icons add-img">add_photo_alternate</i>
-                <p>Click to upload image (Resolution: 150 x 150)</p>
+                  <i class="material-icons add-img">add_photo_alternate</i>
+                  <p>Click to upload image (Resolution: 150 x 150)</p>
                 </div>
                 <img *ngIf="y.image && y?.img_change" [src]="y.image" height="100px;" width="auto;">
-                <input type="file" name="y.image{{i+1}}{{j+1}}" style="display: none;" (change)="fileChangeListener(i, j, $event)" accept="image/jpeg, image/png" />
-            </label>
+                <input type="file" name="y.image{{i+1}}{{j+1}}" style="display: none;" (change)="fileChangeListener(i, j, $event)" accept="image/jpeg, image/png"
+                />
+              </label>
             </div>
 
             <div class="row">
-            <div class="col-md-12">
+              <div class="" [ngClass]="(i>0)? 'col-md-6': 'col-md-12'">
                 <div class="form-group">
-                <label for="name">Option Title</label>
-                <input type="text" name="option_name{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.name" #name="ngModel" required />
+                  <label for="name">Option Title</label>
+                  <input type="text" name="option_name{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.name" #name="ngModel" required />
                 </div>
-            </div>
-            <div class="col-md-6">
+              </div>
+              <div *ngIf="i>0" class="col-md-6 form-group">
+                <label>Option Link To</label>
+                <select name="link_to{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.link_to" #link_to="ngModel" required>
+                  <option value="all">All</option>
+                  <option *ngFor="let z of addonForm.custom_list[i-1].option_list; let k=index;" [ngValue]="z.name">{{z.name}}</option>
+                </select>
+              </div>
+              <div class="col-md-6">
                 <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" name="option_price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" required />
+                  <label for="price">Price</label>
+                  <input type="text" name="option_price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" required
+                  />
                 </div>
-            </div>
-            <div class="col-md-6">
+              </div>
+              <div class="col-md-6">
                 <div class="form-group">
-                <label>Extra Stock Requirement</label>
-                <input type="text" name="additional_qty{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.additional_qty" #additional_qty="ngModel" appNumberOnly required />
+                  <label>Extra Stock Requirement</label>
+                  <input type="text" name="additional_qty{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.additional_qty" #additional_qty="ngModel"
+                    appNumberOnly required />
                 </div>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
         </div>
         <div class="col-md-12 p-0">
-        <div class="col-md-6 col-lg-4 z-i-0">
+          <div class="col-md-6 col-lg-4 z-i-0">
             <div class="add-another-opt" (click)="x.option_list.push({ price: 0, additional_qty: 0 });">
-            <p class="w-100 x-close">ADD ANOTHER OPTION</p>
+              <p class="w-100 x-close">ADD ANOTHER OPTION</p>
             </div>
-        </div>
+          </div>
         </div>
         <!-- #Option List -->
-    </div>
+      </div>
     </div>
 
     <div class="row">
@@ -186,7 +197,7 @@
       </div>
       <div align="center" class="col-md-12 z-i-0">
         <button type="button" routerLink="/product-extras/addons" class="btn btn-wide black-outline-btn">
-         <span class="black-outline-txt">Cancel</span>
+          <span class="black-outline-txt">Cancel</span>
         </button>&nbsp; &nbsp; &nbsp;
         <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Save</button>
       </div>
