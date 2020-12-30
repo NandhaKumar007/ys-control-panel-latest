@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CheckoutSettingComponent } from './checkout-setting.component';
+import { GeneralSettingComponent } from './general-setting.component';
 
-describe('CheckoutSettingComponent', () => {
-  let component: CheckoutSettingComponent;
-  let fixture: ComponentFixture<CheckoutSettingComponent>;
+describe('GeneralSettingComponent', () => {
+  let component: GeneralSettingComponent;
+  let fixture: ComponentFixture<GeneralSettingComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CheckoutSettingComponent ]
+      declarations: [ GeneralSettingComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CheckoutSettingComponent);
+    fixture = TestBed.createComponent(GeneralSettingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

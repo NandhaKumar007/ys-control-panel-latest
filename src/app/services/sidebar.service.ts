@@ -162,10 +162,9 @@ export class SidebarService {
           { icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' },
           { icon: 'local_shipping', name: 'Shipping Methods', state: '/shipping/shipping-methods', type: 'link' },
           { icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' },
-          { icon: 'payment', name: 'Payment Gateway', state: '/modules/archive', type: 'link' },
+          { icon: 'payment', name: 'Payment Gateway', state: '/payment-gateway', type: 'link' },
           { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
-          { icon: 'shopping_basket', name: 'Checkout Settings', state: '/modules/archive', type: 'link' },
-          { icon: 'search', name: 'Search Keywords', state: '/modules/archive', type: 'link' }
+          { icon: 'room_preferences', name: 'General Settings', state: '/general-setting', type: 'link' }
         ]
       },
       { name: "My Account", type: 'link', icon: 'account_circle', state: '/under-construction' }

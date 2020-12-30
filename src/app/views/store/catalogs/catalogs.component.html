@@ -37,6 +37,9 @@
             <!-- OTHER DATA -->
             <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+              <button class="btn btn-wide blue-outline-btn w-md-100 mr-3" routerLink="/catalogs/{{x._id}}">
+                <span class="blue-outline-txt">View Products</span>
+              </button>
               <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
                <span class="black-outline-txt">Edit</span> 
               </button>
