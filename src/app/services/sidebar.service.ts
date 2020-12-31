@@ -136,10 +136,10 @@ export class SidebarService {
           {
             name: 'Policies', type: 'dropDown', icon: 'policy',
             sub: [
-              { name: 'Privacy Policy', state: '/policies/privacy', type: 'link' },
-              { name: 'Shipping Policy', state: '/policies/shipping', type: 'link' },
-              { name: 'Cancellation Policy', state: '/policies/cancellation', type: 'link' },
-              { name: 'Terms & Conditions', state: '/policies/terms-conditions', type: 'link' }
+              { name: 'Privacy Policy', state: '/setup/policies/privacy', type: 'link' },
+              { name: 'Shipping Policy', state: '/setup/policies/shipping', type: 'link' },
+              { name: 'Cancellation Policy', state: '/setup/policies/cancellation', type: 'link' },
+              { name: 'Terms & Conditions', state: '/setup/policies/terms-conditions', type: 'link' }
             ]
           },
           {
@@ -159,7 +159,7 @@ export class SidebarService {
         sub: [
           { icon: 'assistant', name: 'Shopping Assistant', state: '/product-extras/shop-assistant', type: 'link' },
           { icon: 'straighten', name: 'Sizing Assistant', state: '/product-extras/sizing-assistant', type: 'link' },
-          { icon: 'attach_money', name: 'Currency Convertor', state: '/currency-types', type: 'link' },
+          { icon: 'attach_money', name: 'Currency Convertor', state: '/setup/currency-types', type: 'link' },
           { icon: 'art_track', name: 'Blogs', state: '/features/blogs', type: 'link' },
           { icon: 'local_atm', name: 'Discounts Page', state: '/features/discounts-page', type: 'link' },
           { icon: 'view_carousel', name: 'Collections', state: '/features/collections', type: 'link' }
@@ -172,13 +172,22 @@ export class SidebarService {
           { icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' },
           { icon: 'local_shipping', name: 'Shipping Methods', state: '/shipping/shipping-methods', type: 'link' },
           { icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' },
-          { icon: 'payment', name: 'Payment Gateway', state: '/payment-gateway', type: 'link' },
+          { icon: 'payment', name: 'Payment Gateway', state: '/setup/payment-gateway', type: 'link' },
           { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
           { icon: 'insert_photo', name: 'Logo Management', state: '/logo-management', type: 'link' },
+          { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
+          { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' },
           { icon: 'room_preferences', name: 'General Settings', state: '/general-setting', type: 'link' }
         ]
       },
-      { name: "My Account", type: 'link', icon: 'account_circle', state: '/under-construction' }
+      {
+        name: 'My Account', type: 'dropDown', icon: 'account_circle',
+        sub: [
+          { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
+          { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' },
+          { icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' }
+        ]
+      }
     ];
     return sidePanelList;
   }

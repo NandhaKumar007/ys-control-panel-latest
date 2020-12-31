@@ -4,6 +4,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
 import { AdminApiService } from '../../../services/admin-api.service';
 import { StoreApiService } from '../../../services/store-api.service';
+import { AccountService } from '../../../views/store/account/account.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { CommonService } from '../../../services/common.service';
 
@@ -21,7 +22,7 @@ export class ControlPanelComponent implements OnInit {
 
   constructor(
     public router: Router, private adminApi: AdminApiService, private storeApi: StoreApiService, private sidebar: SidebarService,
-    public commonService: CommonService, private api: ApiService
+    public commonService: CommonService, private api: ApiService, private accountApi: AccountService
   ) { }
 
   ngOnInit() {
@@ -92,7 +93,7 @@ export class ControlPanelComponent implements OnInit {
           this.commonService.vendor_list = [];
           this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           if(this.commonService.store_details.login_type!='vendor' && this.commonService.ys_features.indexOf('vendors') != -1) {
-            this.storeApi.VENDOR_LIST().subscribe(result => {
+            this.accountApi.VENDOR_LIST().subscribe(result => {
               if(result.status) {
                 this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
                 this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);

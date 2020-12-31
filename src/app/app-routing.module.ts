@@ -26,32 +26,34 @@ const adminRoutes: Routes = [
 
 const storeRoutes: Routes = [
   { path: 'whats-new', loadChildren: () => import('./views/store/whats-new/whats-new.module').then(m => m.WhatsNewModule) },
-  { path: 'under-construction', loadChildren: () => import('./views/others/under-construction/under-construction.module').then(m => m.UnderConstructionModule) },
+
   { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule) },
-  { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule) },
-  { path: 'features', loadChildren: () => import('./views/store/features/features.module').then(m => m.FeaturesModule) },
-  { path: 'product-extras', loadChildren: () => import('./views/store/product-extras/product-extras.module').then(m => m.ProductExtrasModule) },
+  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/dashboard/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule) },
+
   { path: 'layouts', loadChildren: () => import('./views/store/layouts/layouts.module').then(m => m.LayoutsModule) },
+  { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule) },
+  { path: 'products', loadChildren: () => import('./views/store/product/product.module').then(m => m.ProductModule) },
+  { path: 'customers', loadChildren: () => import('./views/store/customers/customers.module').then(m => m.CustomersModule) },
+
   { path: 'abandoned-carts', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule) },
   { path: 'abandoned-quotes', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule) },
   { path: 'quotations/:type/:customer_id', loadChildren: () => import('./views/store/quotations/quotations.module').then(m => m.QuotationsModule) },
   { path: 'orders', loadChildren: () => import('./views/store/orders/orders.module').then(m => m.OrdersModule) },
-  { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule) },
-  { path: 'shipping', loadChildren: () => import('./views/store/setup/shipping/shipping.module').then(m => m.ShippingModule) },
-  { path: 'currency-types', loadChildren: () => import('./views/store/setup/currency-types/currency-types.module').then(m => m.CurrencyTypesModule) },
-  { path: 'payment-gateway', loadChildren: () => import('./views/store/setup/payment-methods/payment-methods.module').then(m => m.PaymentMethodsModule) },
-  { path: 'customers', loadChildren: () => import('./views/store/customers/customers.module').then(m => m.CustomersModule) },
-  { path: 'products', loadChildren: () => import('./views/store/product/product.module').then(m => m.ProductModule) },
+
+  { path: 'features', loadChildren: () => import('./views/store/features/features.module').then(m => m.FeaturesModule) },
+  { path: 'product-extras', loadChildren: () => import('./views/store/product-extras/product-extras.module').then(m => m.ProductExtrasModule) },
+  { path: 'shipping', loadChildren: () => import('./views/store/shipping/shipping.module').then(m => m.ShippingModule) },
+  { path: 'account', loadChildren: () => import('./views/store/account/account.module').then(m => m.AccountModule) },
+  { path: 'setup', loadChildren: () => import('./views/store/setup/setup.module').then(m => m.SetupModule) },
+  { path: 'seo', loadChildren: () => import('./views/store/seo/seo.module').then(m => m.SeoModule) },
+
   { path: 'feedback', loadChildren: () => import('./views/store/properties/feedback/feedback.module').then(m => m.FeedbackModule) },
   { path: 'newsletter', loadChildren: () => import('./views/store/properties/newsletter/newsletter.module').then(m => m.NewsletterModule) },
-  { path: 'policies/:type', loadChildren: () => import('./views/store/setting/policies/policies.module').then(m => m.PoliciesModule) },
-  { path: 'general-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule) },
-  { path: 'logo-management', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule) },
-  { path: 'seo', loadChildren: () => import('./views/store/seo/seo.module').then(m => m.SeoModule) },
   { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule) },
-  { path: 'vendors', loadChildren: () => import('./views/store/vendors/vendors.module').then(m => m.VendorsModule) },
-  { path: 'users', loadChildren: () => import('./views/store/sub-users/sub-users.module').then(m => m.SubUsersModule) },
-  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/vendors/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule) },
+  { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule) },
+
+  { path: 'general-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule) },
+  { path: 'logo-management', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule) }
 ];
 
 const routes: Routes = [

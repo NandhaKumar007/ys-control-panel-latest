@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
-import { StoreApiService } from '../../../services/store-api.service';
-import { CommonService } from '../../../services/common.service';
+import { AccountService } from '../account.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-vendors',
@@ -20,13 +20,13 @@ export class VendorsComponent implements OnInit {
   list: any = []; btnLoader: boolean;
   addForm: any = {}; editForm: any = {}; pwdForm: any = {}; permissions: any = {}; deleteForm: any = {};
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private storeApi: StoreApiService, public commonService: CommonService) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: AccountService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
     this.pageLoader = true;
-    this.storeApi.VENDOR_LIST().subscribe(result => {
+    this.api.VENDOR_LIST().subscribe(result => {
       if(result.status) {
         this.list = result.list;
         this.commonService.vendor_list = this.list;
@@ -41,7 +41,7 @@ export class VendorsComponent implements OnInit {
   onAdd() {
     this.btnLoader = true;
     this.addForm.permissions = { products: { update: true, update_type: 'stock_only' } };
-    this.storeApi.ADD_VENDOR(this.addForm).subscribe((result) => {
+    this.api.ADD_VENDOR(this.addForm).subscribe((result) => {
       this.btnLoader = false;
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -58,7 +58,7 @@ export class VendorsComponent implements OnInit {
 
   // EDIT
   onEdit(x, type, modalName) {
-    this.storeApi.VENDOR_LIST().subscribe(result => {
+    this.api.VENDOR_LIST().subscribe(result => {
       if(result.status) {
         let vendorList = result.list;
         let index = vendorList.findIndex(obj => obj._id==x._id);
@@ -83,7 +83,7 @@ export class VendorsComponent implements OnInit {
       if(this.editForm.status=='active') this.editForm.status = 'inactive';
       else this.editForm.status = 'active';
     }
-    this.storeApi.UPDATE_VENDOR(this.editForm).subscribe(result => {
+    this.api.UPDATE_VENDOR(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.list = result.list;
@@ -99,7 +99,7 @@ export class VendorsComponent implements OnInit {
 
   // DELETE
   onDelete() {
-    this.storeApi.DELETE_VENDOR(this.deleteForm).subscribe(result => {
+    this.api.DELETE_VENDOR(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.list = result.list;
@@ -115,7 +115,7 @@ export class VendorsComponent implements OnInit {
 
   // UPDATE PWD
   onUpdatePwd() {
-    this.storeApi.UPDATE_VENDOR_PWD(this.pwdForm).subscribe(result => {
+    this.api.UPDATE_VENDOR_PWD(this.pwdForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
       }

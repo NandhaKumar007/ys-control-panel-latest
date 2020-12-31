@@ -4,7 +4,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../../services/store-api.service';
 import { OrderService } from '../../order.service';
-import { SetupService } from '../../../setup/setup.service';
+import { ShippingService } from '../../../shipping/shipping.service';
 import { CustomerApiService } from '../../../../../services/customer-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
@@ -36,7 +36,7 @@ export class CreateProductOrderComponent implements OnInit {
   couponForm: any = {}; offerAmount: any = 0; manualDiscount: any = 0;
 
   constructor(
-    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: StoreApiService, private setupApi: SetupService,
+    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: StoreApiService, private shippingApi: ShippingService,
     public location: Location, public commonService: CommonService, private customerApi: CustomerApiService, private OrderApi: OrderService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -273,7 +273,7 @@ export class CreateProductOrderComponent implements OnInit {
     this.cart_total = this.totalCartAmount(this.cart_list);
     this.cart_weight = this.calcCartWeight(this.cart_list);
     // shipping methods
-    this.setupApi.SHIPPING_LIST().subscribe(result => {
+    this.shippingApi.SHIPPING_LIST().subscribe(result => {
       setTimeout(() => { this.shipping_list_modal_config.pageLoader = false; }, 500);
       if(result.status) {
         if(shippingAddress.country==this.commonService.store_details.country) {
