@@ -4,9 +4,9 @@
       <div class="col-md-12 p-0">
         <div class="row">
           <div class="col-md-12 col-md-8 d-flex justify-content-end align-items-start flex-column">
-            <h1>General Setting</h1>
+            <h1>Store Setting</h1>
             <ul>
-              <li>Manage your general store features</li>
+              <li>Manage your website settings</li>
             </ul>
           </div>
         </div>
@@ -20,6 +20,14 @@
       <div (click)="settingForm={}; onOpenMailModal(mailConfigModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title">Mail Configuration</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 d-flex">
+      <div routerLink="/logo-management" class="card setting-card w-100 p-3 mb-4 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column mt-2">
+          <label class="text-title">Logo Management</label>
         </div>
       </div>
     </div>
@@ -91,7 +99,7 @@
     <div class="col-md-6 col-lg-4 d-flex">
       <div class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
-          <label class="text-title">Store Setting</label>
+          <label class="text-title">General Setting</label>
         </div>
       </div>
     </div>

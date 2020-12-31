@@ -52,7 +52,7 @@ const storeRoutes: Routes = [
   { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule) },
   { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule) },
 
-  { path: 'general-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule) },
+  { path: 'store-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule) },
   { path: 'logo-management', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule) }
 ];
 

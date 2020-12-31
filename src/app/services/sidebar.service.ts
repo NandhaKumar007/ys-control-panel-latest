@@ -151,7 +151,9 @@ export class SidebarService {
               { name: 'Product', state: '/seo/product', type: 'link' },
               { name: 'Blog', state: '/seo/blog', type: 'link' }
             ]
-          }
+          },
+          { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
+          { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' }
         ]
       },
       {
@@ -173,11 +175,7 @@ export class SidebarService {
           { icon: 'local_shipping', name: 'Shipping Methods', state: '/shipping/shipping-methods', type: 'link' },
           { icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' },
           { icon: 'payment', name: 'Payment Gateway', state: '/setup/payment-gateway', type: 'link' },
-          { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
-          { icon: 'insert_photo', name: 'Logo Management', state: '/logo-management', type: 'link' },
-          { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
-          { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' },
-          { icon: 'room_preferences', name: 'General Settings', state: '/general-setting', type: 'link' }
+          { icon: 'room_preferences', name: 'Store Settings', state: '/store-setting', type: 'link' }
         ]
       },
       {
