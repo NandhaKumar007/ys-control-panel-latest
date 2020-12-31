@@ -85,6 +85,16 @@ export class SidebarService {
         ]
       },
       {
+        name: 'Quotations', type: 'dropDown', icon: 'description',
+        sub: [
+          { icon: 'slow_motion_video', name: 'Live Requests', state: '/quotations/live/all', type: 'link' },
+          { icon: 'check_circle_outline', name: 'Confirmed Requests', state: '/quotations/confirmed/all', type: 'link' },
+          { icon: 'highlight_off', name: 'Cancelled Requests', state: '/quotations/cancelled/all', type: 'link' },
+          { icon: 'no_sim', name: 'Abandoned Quotes', state: '/abandoned-quotes', type: 'link' },
+          { icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' }
+        ]
+      },
+      {
         name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore',
         sub: [
           { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
@@ -164,6 +174,7 @@ export class SidebarService {
           { icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' },
           { icon: 'payment', name: 'Payment Gateway', state: '/payment-gateway', type: 'link' },
           { icon: 'mail', name: 'Mail Configuation', state: '/modules/archive', type: 'link' },
+          { icon: 'insert_photo', name: 'Logo Management', state: '/logo-management', type: 'link' },
           { icon: 'room_preferences', name: 'General Settings', state: '/general-setting', type: 'link' }
         ]
       },

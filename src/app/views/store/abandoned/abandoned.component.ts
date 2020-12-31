@@ -5,13 +5,13 @@ import { CustomerApiService } from '../../../services/customer-api.service';
 import { CommonService } from '../../../services/common.service';
 
 @Component({
-  selector: 'app-abandoned-cart',
-  templateUrl: './abandoned-cart.component.html',
-  styleUrls: ['./abandoned-cart.component.scss'],
+  selector: 'app-abandoned',
+  templateUrl: './abandoned.component.html',
+  styleUrls: ['./abandoned.component.scss'],
   animations: [SharedAnimations]
 })
 
-export class AbandonedCartComponent implements OnInit {
+export class AbandonedComponent implements OnInit {
 
   search_bar: string;
   page = 1; pageSize = 10;

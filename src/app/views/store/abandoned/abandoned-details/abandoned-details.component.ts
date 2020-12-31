@@ -7,13 +7,13 @@ import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
-  selector: 'app-abandoned-cart-details',
-  templateUrl: './abandoned-cart-details.component.html',
-  styleUrls: ['./abandoned-cart-details.component.scss'],
+  selector: 'app-abandoned-details',
+  templateUrl: './abandoned-details.component.html',
+  styleUrls: ['./abandoned-details.component.scss'],
   animations: [SharedAnimations]
 })
 
-export class AbandonedCartDetailsComponent implements OnInit {
+export class AbandonedDetailsComponent implements OnInit {
 
   customer_details: any = {};
   pageLoader: boolean;

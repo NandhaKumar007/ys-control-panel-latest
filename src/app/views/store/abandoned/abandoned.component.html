@@ -44,9 +44,7 @@
            
 
             <p class="w-10 w-md-100 m-b-0">
-             <span class="d-block"> {{ x.cart_list?.length }} item
-               <span *ngIf="x.cart_list?.length>1">s</span>
-            </span>
+             <span class="d-block"> {{ x.cart_list?.length }} {{ (x.cart_list?.length>1)? 'items': 'item' }}</span>
             <span class="d-block">
               {{ calcCartTotal(x.cart_list) | currency: commonService.store_currency?.country_code }}
             </span>
@@ -57,12 +55,10 @@
                   <button class="btn btn-wide btn-primary w-md-100 w-100" ngbDropdownToggle>
                     Contact</button>
                   <div class="dropdown-menu" ngbDropdownMenu>
-                    <!-- <a *ngIf="x.mobile!='NA'" target="blank"
-                      href="https://api.whatsapp.com/send?phone={{x.mobile}}&text=Hai!! {{x.name}}, thanks for ordering"><button
-                        class="dropdown-item">Whatsapp</button></a> -->
                     <a *ngIf="x.mobile!='NA'" target="blank"
                       href="https://api.whatsapp.com/send?phone={{x.mobile}}&text=Hi {{x.name}},%0awe noticed that you intended to place an order on our website {{commonService.store_details.website}} which was interrupted or wasn't placed for reasons unknown. Can we help you with your order?">
-                      <button class="dropdown-item">Whatsapp</button></a>
+                      <button class="dropdown-item">Whatsapp</button>
+                    </a>
                     <a href="mailto:{{x.email}}"><button class="dropdown-item">Mail</button></a>
                     <a *ngIf="x.mobile!='NA'" href="tel:{{x.mobile}}"> <button class="dropdown-item">Call</button></a>
                   </div>

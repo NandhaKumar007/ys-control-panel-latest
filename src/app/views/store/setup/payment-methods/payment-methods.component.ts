@@ -96,13 +96,9 @@ export class PaymentMethodsComponent implements OnInit {
   }
 
   onChangeStatus(x, modalName) {
-    this.payForm = { _id: x._id, name: x.name, btn_name: x.btn_name, rank: x.rank, status: x.status, prev_rank: x.rank, prev_status: x.status };
-    if(x.config) this.payForm.config = x.config;
-    if(x.app_config) this.payForm.app_config = x.app_config;
-    if(x.additional_params) this.payForm.additional_params = x.additional_params;
-    if(x.return_url) this.payForm.return_url = x.return_url;
-    if(x.cancel_url) this.payForm.cancel_url = x.cancel_url;
-    if(x.mode) this.payForm.mode = x.mode;
+    this.payForm = x;
+    this.payForm.prev_rank = x.rank;
+    this.payForm.prev_status = x.status;
     this.modalService.open(modalName, { centered: true });
   }
   onUpdateStatus() {
