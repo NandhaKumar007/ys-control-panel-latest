@@ -23,6 +23,9 @@ export class CreateProductOrderComponent implements OnInit {
   customer_list: any = []; customer_list_modal_config: any; selected_customer: any;
   product_list: any = []; product_list_modal_config: any; productDetails: any;
   shipping_list: any = []; shipping_list_modal_config: any; selected_shipping: any;
+  delivery_list: any = []; delivery_list_modal_config: any;
+  selected_day: any; selected_slot: any;
+  dayIndex: number = -1; delivery_id: string;
   product_features: any = { addon_list: [], measurement_set: [], tax_rates: [] };
   country_list: any = this.commonService.country_list; cart_list: any = [];
   cart_weight: any = 0; cart_total: any = 0; cart_qty: any = 0;
@@ -264,6 +267,7 @@ export class CreateProductOrderComponent implements OnInit {
     }
   }
 
+  // shipping methods
   openShippingListModal(modalName) {
     this.selected_shipping = ''; this.shipping_cost = 0;
     this.shipping_list = [];
@@ -345,9 +349,126 @@ export class CreateProductOrderComponent implements OnInit {
     });
   }
   clearShipping() {
-    this.selected_shipping = '';
+    delete this.selected_shipping;
     this.shipping_cost = 0;
     this.resetDiscount();
+  }
+
+  // delivery methods
+  openDeliveryMethodModal(modalName) {
+    delete this.selected_day; delete this.selected_slot;
+    delete this.delivery_id; this.dayIndex = -1;
+    this.delivery_list = []; this.delivery_list_modal_config = { pageLoader: true };
+    this.modalService.open(modalName, { windowClass:'xlModal' });
+    let shippingAddress = this.selected_customer.shipping_address;
+    this.cart_total = this.totalCartAmount(this.cart_list);
+    this.cart_weight = this.calcCartWeight(this.cart_list);
+    // delivery methods
+    this.shippingApi.DELIVERY_METHODS().subscribe(result => {
+      setTimeout(() => { this.delivery_list_modal_config.pageLoader = false; }, 500);
+      if(result.status) {
+        this.delivery_id = result.data._id;
+        let availableWeekDays = result.data.available_days;
+        let deliveryList = [];
+        let filteredDeliveryMethods = result.data.list.filter(obj => obj.status=='active');
+        filteredDeliveryMethods.forEach(list => {
+          let daysCount = list.following_days+1;
+          for(let i=0; i<daysCount; i++) {
+            let newSlotList = [];
+            let filteredGroups = list.groups.filter(obj => obj.status=='active');
+            filteredGroups.forEach((group, index) => {
+              let delayDays = 0; let delayHours = 0;
+              if(group.delay_type=='hour') delayHours = group.delay_duration;
+              if(group.delay_type=='day' && group.delay_duration>0) {
+                let orderTime = new Date().toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' })+" "+group.order_time;
+                if(new Date() >= new Date(orderTime)) delayDays = group.delay_duration;
+                else delayDays = group.delay_duration - 1;
+              }
+              let filteredSlots = group.slots.filter(obj => obj.status=='active');
+              if(i < delayDays) {
+                if(delayDays==0) {
+                  if(group.status=='active') {
+                    filteredSlots.forEach(slotData => {
+                      slotData.delay_hrs = delayHours;
+                      newSlotList.push(slotData);
+                    });
+                  }
+                }
+                else delayDays--;
+              }
+              else {
+                filteredSlots.forEach(slotData => {
+                  slotData.delay_hrs = delayHours;
+                  newSlotList.push(slotData);
+                });
+              }
+            });
+            deliveryList.push({ name: list.name, slots: newSlotList });
+          }
+        });
+        this.createList(deliveryList, availableWeekDays).then((resp) => {
+          this.delivery_list = [];
+          if(resp.findIndex(obj => obj.slots.length) != -1) this.delivery_list = resp;
+          this.dayIndex = this.delivery_list.findIndex(obj => obj.slots.length && obj.available && obj.slots.findIndex(object => object.available)!=-1);
+          if(this.dayIndex!=-1) {
+            this.selected_day = this.delivery_list[this.dayIndex];
+            let slotIndex = this.delivery_list[this.dayIndex].slots.findIndex(obj => obj.available);
+            this.selected_slot = this.delivery_list[this.dayIndex].slots[slotIndex];
+          }
+        });
+      }
+      else console.log("response", result);
+    });
+  }
+  onConfirmDeliveryMethod() {
+    let date = new Date(this.selected_day.date).toLocaleString('en-US', { day: 'numeric' });
+    let month = new Date(this.selected_day.date).toLocaleString('en-US', { month: 'long' });
+    let year = new Date(this.selected_day.date).toLocaleString('en-US', { year: 'numeric' });
+    let deliveryDate = date+" "+month+" "+year+" ("+this.selected_day.day+")";
+    let deliveryTime = new Date(this.selected_slot.from).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })+" - "+new Date(this.selected_slot.to).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    this.selected_shipping = {
+      _id: this.delivery_id, delivery_method: true, delivery_date: deliveryDate, ship_method_type: 'time-based',
+      delivery_time: deliveryTime, shipping_price: this.selected_slot.price
+    };
+    this.shipping_cost = this.selected_slot.price;
+    document.getElementById("closeModal").click();
+  }
+
+  async createList(deliveryList, availableWeekDays) {
+    let updatedList = [];
+    for(let i=0; i<deliveryList.length; i++) {
+      deliveryList[i].day_value = "";
+      if(i==0) { deliveryList[i].day_value = "Today"; }
+      if(i==1) { deliveryList[i].day_value = "Tomorrow"; }
+      let deliveryDate = new Date().setDate(new Date().getDate()+i);
+      let availableDayIndex = availableWeekDays.findIndex(obj => obj.code==new Date(deliveryDate).getDay());
+      deliveryList[i].day = availableWeekDays[availableDayIndex].day;
+      deliveryList[i].date = deliveryDate;
+      deliveryList[i].slots = await this.processSlot(deliveryDate, deliveryList[i].slots);
+      deliveryList[i].available = false;
+      if(availableWeekDays[availableDayIndex].active && deliveryList[i].slots.findIndex(obj => obj.available)!=-1) deliveryList[i].available = true;
+      updatedList.push(deliveryList[i]);
+    }
+    return updatedList;
+  }
+  processSlot(deliveryDate, slotList) {
+    return new Promise((resolve, reject) => {
+      let updatedSlotList = [];
+      let bookingDay = new Date(deliveryDate).toLocaleString('en-US', { day: '2-digit', month: 'numeric', year: 'numeric' });
+      for(let slot of slotList) {
+        let restrictDate = new Date().setHours(new Date().getHours()+slot.delay_hrs);
+        let fromTime: any = new Date(bookingDay+" "+slot.from_time).getTime();
+        let toTime: any = new Date(bookingDay+" "+slot.to_time).getTime();
+        if(restrictDate <= fromTime) updatedSlotList.push({ from: fromTime, to: toTime, price: slot.price, available: true });
+        else updatedSlotList.push({ from: fromTime, to: toTime, price: slot.price, available: false });
+      }
+      resolve(updatedSlotList);
+    });
+  }
+  dayChange(day) {
+    this.selected_day = day;
+    let slotIndex = this.selected_day.slots.findIndex(obj => obj.available);
+    this.selected_slot = this.selected_day.slots[slotIndex];
   }
 
   findInternatioanlPrice(zones, shippingAddress, cartWeight) {

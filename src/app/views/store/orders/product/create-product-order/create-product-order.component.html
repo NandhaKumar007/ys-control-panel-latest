@@ -107,31 +107,50 @@
               (click)="page=1; openProductListModal(productListModal);">ADD ANOTHER PRODUCT</p>
           </ng-container>
 
-          <!-- shipping method or delivery methods -->
-          <ng-container *ngIf="cart_list.length">
+          <!-- shipping methods -->
+          <ng-container *ngIf="cart_list.length && commonService.ys_features.indexOf('time_based_delivery')==-1">
             <div class="">
               <p class="sec-desc">Shipping Details</p>
             </div>
-            <p *ngIf="!selected_shipping" class="add-another x-close pt-2"
-              (click)="openShippingListModal(shippingListModal);">ADD SHIPPING METHOD</p>
+            <p *ngIf="!selected_shipping" class="add-another x-close pt-2" (click)="openShippingListModal(shippingListModal);">ADD SHIPPING METHOD</p>
             <div *ngIf="selected_shipping" class="col-md-12 list-item p-0 mtb-10">
               <div class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                     <p class="w-30 w-sm-100 m-b-0">{{selected_shipping.name}}</p>
                     <p class="w-30 w-sm-100 m-b-0"> {{selected_shipping.delivery_time}}</p>
-                    <p *ngIf="selected_shipping.shipping_price>0" class="w-30 w-sm-100 m-b-0">
-                      {{selected_shipping.shipping_price | currency:commonService.store_currency.country_code}}</p>
+                    <p *ngIf="selected_shipping.shipping_price>0" class="w-30 w-sm-100 m-b-0">{{selected_shipping.shipping_price | currency:commonService.store_currency.country_code}}</p>
                     <p *ngIf="selected_shipping.shipping_price==0" class="w-30 w-sm-100 m-b-0">FREE</p>
                     <p class="m-0 text-muted text-small w-15 w-sm-100 d-none d-lg-block item-actions">
-                      <button type="button" class="btn btn-wide btn-primary"
-                        (click)="openShippingListModal(shippingListModal);">Change</button>
+                      <button type="button" class="btn btn-wide btn-primary" (click)="openShippingListModal(shippingListModal);">Change</button>
                     </p>
                   </div>
                 </div>
-                <span (click)="clearShipping();" class="material-icons item-close absolute-item-close float-right"
-                  aria-hidden="true">close</span>
+                <span (click)="clearShipping();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- delivery methods -->
+          <ng-container *ngIf="cart_list.length && commonService.ys_features.indexOf('time_based_delivery')!=-1">
+            <div class="">
+              <p class="sec-desc">Delivery Details</p>
+            </div>
+            <p *ngIf="!selected_shipping" class="add-another x-close pt-2" (click)="openDeliveryMethodModal(deliveryMethodModal);">ADD DELIVERY METHOD</p>
+            <div *ngIf="selected_shipping" class="col-md-12 list-item p-0 mtb-10">
+              <div class="card mb-4 d-flex flex-row">
+                <div class="flex-grow-1 pl-2 d-flex">
+                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                    <p class="w-30 w-sm-100 m-b-0">{{selected_shipping.delivery_date}}</p>
+                    <p class="w-30 w-sm-100 m-b-0"> {{selected_shipping.delivery_time}}</p>
+                    <p *ngIf="selected_shipping.shipping_price>0" class="w-30 w-sm-100 m-b-0">{{selected_shipping.shipping_price | currency:commonService.store_currency.country_code}}</p>
+                    <p *ngIf="selected_shipping.shipping_price==0" class="w-30 w-sm-100 m-b-0">FREE</p>
+                    <p class="m-0 text-muted text-small w-15 w-sm-100 d-none d-lg-block item-actions">
+                      <button type="button" class="btn btn-wide btn-primary" (click)="openDeliveryMethodModal(deliveryMethodModal);">Change</button>
+                    </p>
+                  </div>
+                </div>
+                <span (click)="clearShipping();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
               </div>
             </div>
           </ng-container>
@@ -887,7 +906,7 @@
             </div>
             <div class="col-md-3 gray-card-inner-col">
               <h6><b>Cost</b></h6>
-              <p>{{x.shipping_price}}</p>
+              <p>{{x.shipping_price | currency:commonService.store_currency.country_code}}</p>
             </div>
             <div class="col-md-3">
               <button class="btn btn-wide btn-primary w-100"
@@ -896,6 +915,104 @@
           </div>
         </div>
       </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- DELIVERY METHOD MODAL -->
+<ng-template #deliveryMethodModal let-modal>
+  <div class="main-header-div d-flex align-items-center">
+    <div class="m-header">
+      <h4 class="modal-title" id="modal-basic-title"><b>Delivery Slots</b></h4>
+      <p class="m-0">Select your delivery slot</p>
+    </div>
+    <p class="m-close-btn m-0"><a id="closeModal" (click)="modal.dismiss('Cross click');">CLOSE</a></p>
+  </div>
+
+  <div class="modal-body modal-body lg-modal-body slim-scroll">
+    <!-- loader -->
+    <div *ngIf="delivery_list_modal_config.pageLoader" class="col-md-12">
+      <app-spinner></app-spinner>
+    </div>
+    <ng-container *ngIf="!delivery_list_modal_config.pageLoader">
+      <div *ngIf="delivery_list?.length && dayIndex>=0" class="container">
+        <!-- day list -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="gray-card primary-card p-3 m-0">
+              <div class="pr-2 pl-2">
+                <b>Choose Day</b>
+              </div>
+              <div class="day-slot pr-2 pl-2">
+                <ng-container *ngFor="let x of delivery_list; let i=index;">
+                  <label *ngIf="x.slots?.length">
+                    <input type="radio" class="card-input-element d-none" name="day" value="{{i}}" (change)="dayIndex=i; dayChange(x);" [checked]="dayIndex==i"
+                      [disabled]="!x.available">
+                    <div class="time-slots card d-flex flex-column justify-content-center align-items-center">
+                      <p>{{x.day}}</p>
+                      <ng-container *ngIf="x.available">
+                        <p *ngIf="x.day_value">{{ x.day_value }}</p>
+                        <p *ngIf="!x.day_value">{{x.date | date: "dd MMM"}}</p>
+                      </ng-container>
+                      <p *ngIf="!x.available">UNAVAILABLE</p>
+                    </div>
+                  </label>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- slot list -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="gray-card primary-card p-3 m-0">
+              <div class="pr-2 pl-2">
+                <b>Choose Slot</b>
+              </div>
+              <div *ngIf="selected_day?.slots" class="day-slot pr-2 pl-2">
+                <ng-container *ngFor="let x of selected_day.slots; let i=index;">
+                  <label>
+                    <input type="radio" class="card-input-element d-none" name="slot" value="{{x.from}}" [checked]="selected_slot.from==x.from"
+                      (change)="selected_slot=x;" [disabled]="!x.available">
+                    <div class="time-slots card d-flex flex-column justify-content-center align-items-center">
+                      <p>{{x.from | date: "hh:mm a"}} - {{x.to | date: "hh:mm a"}}</p>
+                      <p *ngIf="x.available && x.price>0">{{x.price | currency:commonService.store_currency.country_code}}</p>
+                      <p *ngIf="x.available && x.price==0">&nbsp;</p>
+                      <p *ngIf="!x.available">UNAVAILABLE</p>
+                    </div>
+                  </label>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- delivery details -->
+        <div class="row p-4">
+          <div class="col-md-4">
+            <b>Date:</b>
+            <p>{{selected_day?.date | date: "dd MMM y"}}</p>
+          </div>
+          <div class="col-md-4">
+            <b>Time:</b>
+            <p>{{selected_slot.from | date: "hh:mm a"}} - {{selected_slot.to | date: "hh:mm a"}}</p>
+          </div>
+          <div class="col-md-4">
+            <b>Delivery Charges:</b>
+            <p>{{selected_slot.price | currency:commonService.store_currency.country_code}}</p>
+          </div>
+          <div class="col-md-12 mt-5">
+            <button class="btn btn-wide btn-primary w-100" (click)="onConfirmDeliveryMethod();">Confirm</button>
+          </div>
+        </div>
+      </div>
+      <!-- no list found -->
+      <div *ngIf="!delivery_list?.length || dayIndex==-1" class="container">
+        <div class="row">
+          <div class="col-12 mt-5">
+            <h5 align="center">No records found</h5>
+          </div>
+        </div>
+      </div>
     </ng-container>
   </div>
 </ng-template>

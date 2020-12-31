@@ -5,6 +5,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ShippingService } from '../shipping.service';
 import { CommonService } from '../../../../services/common.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-delivery-methods',
@@ -15,10 +16,9 @@ import { CommonService } from '../../../../services/common.service';
 
 export class DeliveryMethodsComponent implements OnInit {
 
-  params: any;
-  deliveryForm: any;
-  pageLoader: boolean;
+  params: any; pageLoader: boolean;
   list: any = []; btnLoader: boolean;
+  deliveryForm: any; deliveryDetails: any;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, private atp: AmazingTimePickerService,
@@ -40,6 +40,25 @@ export class DeliveryMethodsComponent implements OnInit {
               group.slots.forEach(slot => { if(slot.status=='active') slot.slot_checked = true; });
             });
           });
+          // bind data
+          this.deliveryDetails = { available_days: [], list: [] };
+          this.deliveryForm.available_days.forEach(obj => {
+            if(obj.active) this.deliveryDetails.available_days.push(obj.day);
+          });
+          let filterList = this.deliveryForm.list.filter(element => element.list_checked);
+          if(filterList.length) {
+            filterList.forEach((li, liIndex) => {
+              this.deliveryDetails.list.push({ name: li.name, groups: [] });
+              let filterGroup = li.groups.filter(grp => grp.group_checked);
+              if(filterGroup.length) {
+                filterGroup.forEach((grp, grpIndex) => {
+                  this.deliveryDetails.list[liIndex].groups.push({ name: grp.name, slots: [] });
+                  let filterSlots = grp.slots.filter(sl => sl.slot_checked);
+                  if(filterSlots.length) this.deliveryDetails.list[liIndex].groups[grpIndex].slots = filterSlots;
+                });
+              }
+            });
+          }
         }
         else {
           this.list = [];
@@ -71,7 +90,9 @@ export class DeliveryMethodsComponent implements OnInit {
   }
 
   onUpdate() {
+    this.btnLoader = true;
     this.api.UPDATE_DELIVERY_METHODS(this.deliveryForm).subscribe(result => {
+      this.btnLoader = false;
       if(result.status) this.router.navigate(['/shipping/delivery-methods']);
       else {
         this.deliveryForm.errorMsg = result.message;
