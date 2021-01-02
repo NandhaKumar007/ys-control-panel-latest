@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 declare const CryptoJS: any;
 declare const $: any;
 
@@ -73,14 +74,13 @@ export class CommonService {
       ]
     }
   ];
-
   default_units: any = [
     { name: "Inches", value: "inches" },
     { name: "Cms", value: "cms" }
   ];
 
-  master_token: string = null;
-  store_token: string = null;
+  master_token: string;
+  store_token: string;
 
   admin_packages: any = [];
   admin_features: any = [];
@@ -94,6 +94,7 @@ export class CommonService {
     "manual_giftcard", "donation", "customer_feedback", "vendors", "menus", "courier_partners", "testimonials", "sales_report", "order_note",
     "sizing_assistant", "product_video"
   ];
+
   store_details: any = {};
   store_currency: any = {};
   courier_partners: any = {};
@@ -105,6 +106,7 @@ export class CommonService {
   aistyle_list: any = [];
   vendor_permissions: any = {};
   catalog_list: any = [];
+  payment_list: any = [];
 
   page_attr: any;
   product_page_attr: any;
@@ -113,7 +115,7 @@ export class CommonService {
   scroll_y_pos: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
 
-  constructor() {
+  constructor(private router: Router) {
     if(localStorage.getItem('admin_packages')) this.admin_packages = this.decryptData(localStorage.getItem("admin_packages"));
     if(localStorage.getItem('admin_features')) this.admin_features = this.decryptData(localStorage.getItem("admin_features"));
 
@@ -130,6 +132,7 @@ export class CommonService {
     if(localStorage.getItem('courier_partners')) this.courier_partners = this.decryptData(localStorage.getItem("courier_partners"));
     if(localStorage.getItem('vendor_list')) this.vendor_list = this.decryptData(localStorage.getItem("vendor_list"));
     if(localStorage.getItem('catalog_list')) this.catalog_list = this.decryptData(localStorage.getItem("catalog_list"));
+    if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));
 
     if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
 
@@ -137,7 +140,7 @@ export class CommonService {
     if(localStorage.getItem('store_token')) this.store_token = localStorage.getItem("store_token");
   }
 
-  updateLocalData(key, value) {
+  updateLocalData(key: string, value: any) {
     localStorage.setItem(key, this.encryptData(value));
   }
 
@@ -201,6 +204,40 @@ export class CommonService {
 
   pageTop(x) {
     setTimeout(() => { window.scrollTo({ top: x, behavior: 'smooth' }); }, 500);
+  }
+
+  signOut(redirectPath) {
+    localStorage.clear();
+    sessionStorage.clear();
+
+    delete this.admin_packages;
+    delete this.admin_features;
+    
+    // delete this.ys_features;
+
+    delete this.master_token;
+    delete this.store_token;
+    delete this.route_permission_list;
+
+    delete this.store_details;
+    delete this.store_currency;
+    delete this.vendor_permissions;
+
+    delete this.vendor_list;
+    delete this.archive_list;
+    delete this.country_list;
+    delete this.aistyle_list;
+    delete this.catalog_list;
+    delete this.payment_list;
+    delete this.currency_types;
+    delete this.courier_partners;
+    
+    delete this.page_attr;
+    delete this.scroll_y_pos;
+    delete this.product_page_attr;
+    delete this.selected_customer;
+
+    this.router.navigate([redirectPath]);
   }
 
 }

@@ -69,6 +69,7 @@
       <div *ngIf="vendorList.length" class="col-md-3 col-6">
         <div class="form-group">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id" (change)="getOrderList();">
+            <option value="all">All Vendors</option>
             <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.name}}</option>
           </select>
         </div>

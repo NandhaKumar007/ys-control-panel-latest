@@ -57,7 +57,6 @@ export class SigninComponent implements OnInit {
           logo: result.data.logo,
           base_url: result.data.base_url,
           currency_types: result.data.currency_types,
-          payment_methods: result.data.payment_types.filter(obj => obj.status=='active'),
           country: result.data.country,
           section_grid_img_count: result.data.application_setting.section_grid_img_count,
           base_qty: 1,
@@ -72,6 +71,9 @@ export class SigninComponent implements OnInit {
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
         this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        // payment list
+        this.commonService.payment_list = result.data.payment_types;
+        this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
         // courier partner
         this.commonService.courier_partners = [];
         this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);

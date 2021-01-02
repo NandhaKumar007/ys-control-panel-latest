@@ -31,6 +31,8 @@ export class PaymentMethodsComponent implements OnInit {
       if(result.status) {
         this.list = result.list;
         this.maxRank = this.list.length;
+        this.commonService.payment_list = this.list;
+        this.commonService.updateLocalData('payment_list', this.list);
       }
       else console.log("response", result);
     });
@@ -46,6 +48,8 @@ export class PaymentMethodsComponent implements OnInit {
           document.getElementById('closeModal').click();
           this.list = result.list;
           this.maxRank = this.list.length;
+          this.commonService.payment_list = this.list;
+          this.commonService.updateLocalData('payment_list', this.list);
         }
         else {
           this.payForm.errorMsg = result.message;
@@ -109,6 +113,8 @@ export class PaymentMethodsComponent implements OnInit {
         document.getElementById('closeModal').click();
         this.list = result.list;
         this.maxRank = this.list.length;
+        this.commonService.payment_list = this.list;
+        this.commonService.updateLocalData('payment_list', this.list);
       }
       else {
         this.payForm.errorMsg = result.message;
@@ -125,6 +131,8 @@ export class PaymentMethodsComponent implements OnInit {
         document.getElementById('closeModal').click();
         this.list = result.list;
         this.maxRank = this.list.length;
+        this.commonService.payment_list = this.list;
+        this.commonService.updateLocalData('payment_list', this.list);
       }
       else {
         this.payForm.errorMsg = result.message;
@@ -140,6 +148,8 @@ export class PaymentMethodsComponent implements OnInit {
         document.getElementById('closeModal').click();
         this.list = result.list;
         this.maxRank = this.list.length;
+        this.commonService.payment_list = this.list;
+        this.commonService.updateLocalData('payment_list', this.list);
       }
       else {
 				this.deleteForm.errorMsg = result.message;

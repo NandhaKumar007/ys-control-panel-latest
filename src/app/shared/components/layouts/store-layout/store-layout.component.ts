@@ -150,10 +150,4 @@ export class StoreLayoutComponent implements OnInit {
     this.updateSidebar();
   }
 
-  signout() {
-    localStorage.clear();
-    sessionStorage.clear();
-    this.router.navigateByUrl("/session/signin");
-  }
-
 }

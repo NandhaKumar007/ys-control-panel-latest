@@ -84,6 +84,7 @@ export class AdminLayoutComponent implements OnInit {
       { name: 'Packages', type: 'link', icon: 'fact_check', state: '/admin/packages' },
       { name: 'Features', type: 'link', icon: 'extension', state: '/admin/features' },
       { name: 'Clients', type: 'link', icon: 'supervised_user_circle', state: '/admin/clients' },
+      { name: 'Dealers', type: 'link', icon: 'group', state: '/admin/dealers' },
       { name: 'Payments', type: 'link', icon: 'receipt_long', state: '/admin/payments' },
       { name: 'Subscribers', type: 'link', icon: 'mail', state: '/admin/subscribers' }
     ];
@@ -157,12 +158,6 @@ export class AdminLayoutComponent implements OnInit {
   @HostListener("window:resize", ["$event"])
   onResize(event) {
     this.updateSidebar();
-  }
-
-  signout() {
-    localStorage.clear();
-    sessionStorage.clear();
-    this.router.navigateByUrl("/session/signin/master");
   }
   
 }

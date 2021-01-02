@@ -14,14 +14,23 @@
 
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-6">
-        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary">Create New Offer</button>
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <select name="type" class="form-control select-arrow" [(ngModel)]="list_type" (change)="filterList(list_type);">
+            <option value="all">All</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Expired">Expired</option>
+          </select>
+        </div>
       </div>
-      <!-- search box -->
       <div class="col-md-6 mt-sm-15" align="right">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
+      </div>
+      <div class="col-3">
+        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary pull-right">Create New Offer</button>
       </div>
     </div>
   </div>

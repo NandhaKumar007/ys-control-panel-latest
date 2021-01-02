@@ -20,7 +20,8 @@
       <div class="col-md-3 col-6">
         <div class="form-group">
           <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type" (change)="ngOnInit();">
-            <option *ngFor="let x of payment_methods | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+            <option value="All">All</option>
+            <option *ngFor="let x of commonService.payment_list | orderAsc: 'rank';" [ngValue]="x.name">{{x.name}}</option>
           </select>
         </div>
       </div>

@@ -17,12 +17,10 @@ export class InactiveProductOrdersComponent implements OnInit {
   page = 1; pageSize = 10; scrollPos: number = 0;
   filterForm: any = { type: 'All', from_date: new Date(), to_date: new Date() };
   list: any = [];
-  payment_methods: any = this.commonService.store_details.payment_methods;
 
   constructor(private api: OrderService, public commonService: CommonService) { }
 
   ngOnInit() {
-    if(this.payment_methods && this.payment_methods.length) this.payment_methods.unshift({name: "All"});
     if(this.commonService.page_attr) {
       let pageInfo = this.commonService.page_attr;
       delete this.commonService.page_attr;

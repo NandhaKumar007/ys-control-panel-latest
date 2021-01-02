@@ -460,11 +460,13 @@
               </div>
               <div class="card p-3 mb-3">
                 <div class="inner-paymenthod">
-                  <label class="radio radio-primary" *ngFor="let x of store_details.payment_methods;">
-                    <input class="mrl-5" type="radio" [(ngModel)]="payment_type" [value]="x.name"
-                      (change)="orderForm.payment_details={};" name="payment_type">
-                    {{x.name}} <span class="checkmark"></span>
-                  </label>
+                  <ng-container *ngFor="let x of commonService.payment_list;">
+                    <label *ngIf="x.status=='active'" class="radio radio-primary">
+                      <input class="mrl-5" type="radio" [(ngModel)]="payment_type" [value]="x.name"
+                        (change)="orderForm.payment_details={};" name="payment_type">
+                      {{x.name}} <span class="checkmark"></span>
+                    </label>
+                  </ng-container>
                   <label class="radio radio-primary">
                     <input class="mrl-5" type="radio" [(ngModel)]="payment_type" value="cash"
                       (change)="orderForm.payment_details={};" name="payment_type">

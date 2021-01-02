@@ -72,7 +72,8 @@
             </div>
             <div class="profile-inner">
               <div class="footer d-flex justify-content-center align-items-center">
-                <button class="signout-btn" (click)="signout()">Sign out</button>
+                <button class="signout-btn mr-2" routerLink="/control-panel">Control Panel</button>
+                <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign out</button>
               </div>
             </div>
           </div>

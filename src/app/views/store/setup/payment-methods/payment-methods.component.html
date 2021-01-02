@@ -84,12 +84,12 @@
             <label>Payment Types</label>
             <select name="name" class="form-control" [(ngModel)]="payForm.name" #name="ngModel" required>
               <option value="COD">COD</option>
-              <option value="Razorpay">Razorpay</option>
-              <option value="CCAvenue">CCAvenue</option>
+              <option *ngIf="commonService.store_details?.country=='India'" value="Razorpay">Razorpay</option>
+              <option *ngIf="commonService.store_details?.country=='India'" value="CCAvenue">CCAvenue</option>
               <option value="PayPal">PayPal</option>
-              <option value="Square">Square</option>
-              <option value="Fatoorah">Fatoorah</option>
-              <option value="Telr">Telr</option>
+              <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square</option>
+              <option *ngIf="commonService.store_details?.country=='United Arab Emirates'" value="Fatoorah">Fatoorah</option>
+              <option *ngIf="commonService.store_details?.country=='United Arab Emirates'" value="Telr">Telr</option>
             </select>
           </div>
           <div class="col-md-6 form-group mb-3">

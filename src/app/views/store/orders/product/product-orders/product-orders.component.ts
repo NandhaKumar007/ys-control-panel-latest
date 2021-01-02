@@ -26,7 +26,6 @@ export class ProductOrdersComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      if(this.vendorList.length) this.vendorList.unshift({_id: 'all', name: "All Vendors"});
       this.params = params; this.page = 1; this.pageSize = 10;
       this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: this.params.type, vendor_id: 'all' };
       if(this.params.type=='live') this.filterForm.type = 'all';

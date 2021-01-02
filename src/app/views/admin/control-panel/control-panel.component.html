@@ -19,7 +19,7 @@
           <div class="row">
             <div class="col-md-8 d-flex align-items-center">
               <div class="forgot-password-link">
-                <a class="text-muted" routerLink="/session/signin/master">Sign out</a>
+                <a class="text-muted cursor" (click)="commonService.signOut('/session/signin/master');">Sign out</a>
               </div>
             </div>
             <div class="col-md-4">
