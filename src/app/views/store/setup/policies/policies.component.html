@@ -18,7 +18,7 @@
         </ul>
       </div>
       <div *ngIf="!editForm?.title" class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" (click)="editForm={ type: formData.type, title: formData.title, content: formData.content };" class="btn btn-primary">Edit</button>
+        <button type="button" (click)="onEdit();" class="btn btn-primary">Edit</button>
       </div>
     </div>
   </div>

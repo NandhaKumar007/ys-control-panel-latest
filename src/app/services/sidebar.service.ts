@@ -66,10 +66,10 @@ export class SidebarService {
       { name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' },
       { name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' },
       {
-        name: 'Catalog', type: 'dropDown', icon: 'view_carousel',
+        name: 'Products', type: 'dropDown', icon: 'category',
         sub: [
           { icon: 'view_carousel', name: 'Catalog Management', state: '/catalogs', type: 'link' },
-          { icon: 'category', name: 'Products', state: '/products', type: 'link' },
+          { icon: 'category', name: 'All Products', state: '/products', type: 'link' },
           {
             name: 'Product Extras', type: 'dropDown', icon: 'extension',
             sub: [
@@ -81,7 +81,7 @@ export class SidebarService {
               { name: 'FAQ', state: '/product-extras/faq', type: 'link' }
             ]
           },
-          { icon: 'archive', name: 'Archive', state: '/product-extras/archive', type: 'link' }
+          { icon: 'archive', name: 'Archived Products', state: '/product-extras/archive', type: 'link' }
         ]
       },
       {
@@ -113,7 +113,7 @@ export class SidebarService {
         ]
       },
       {
-        name: 'Selling Tools', type: 'dropDown', icon: 'build_circle',
+        name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle',
         sub: [
           { icon: 'local_offer', name: 'Offers', state: '/features/coupon-codes', type: 'link' },
           { icon: 'redeem', name: 'Gift Cards', state: '/features/giftcard', type: 'link' },
@@ -125,7 +125,7 @@ export class SidebarService {
         name: 'Website', type: 'dropDown', icon: 'language',
         sub: [
           {
-            name: 'Layouts', type: 'dropDown', icon: 'format_paint',
+            name: 'Website Design', type: 'dropDown', icon: 'format_paint',
             sub: [
               { name: 'Home Page', state: '/layouts/home', type: 'link' },
               { name: 'Catalog', state: '/layouts/catalog', type: 'link' },

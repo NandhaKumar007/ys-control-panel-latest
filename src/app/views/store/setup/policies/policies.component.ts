@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { StoreApiService } from '../../../../services/store-api.service';
+import { SetupService } from '../setup.service';
 
 @Component({
   selector: 'app-policies',
@@ -13,12 +13,12 @@ export class PoliciesComponent implements OnInit {
   params: any; pageLoader: boolean;
   formData: any = {}; editForm: any = {};
 
-  constructor(private activeRoute: ActivatedRoute, private storeApi: StoreApiService) { }
+  constructor(private activeRoute: ActivatedRoute, private api: SetupService) { }
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {
       this.pageLoader = true; this.params = params; delete this.editForm;
-      this.storeApi.POLICY_DETAILS(this.params.type).subscribe(result => {
+      this.api.POLICY_DETAILS(this.params.type).subscribe(result => {
         setTimeout(() => { this.pageLoader = false; }, 500);
         if(result.status) this.formData = result.data;
         else {
@@ -26,14 +26,18 @@ export class PoliciesComponent implements OnInit {
           if(this.params.type=='shipping') policyTitle = "SHIPPING POLICY";
           else if(this.params.type=='cancellation') policyTitle = "CANCELLATION POLICY";
           else if(this.params.type=='terms-conditions') policyTitle = "TERMS AND CONDITIONS";
-          this.formData = { type: this.params.type, title: policyTitle, content: "" };
+          this.formData = { type: this.params.type, title: policyTitle };
         }
       });
     });
   }
 
+  onEdit() {
+    this.editForm = { type: this.formData.type, title: this.formData.title, content: "" };
+    if(this.formData._id) this.editForm = { type: this.formData.type, title: this.formData.title, content: this.formData.content };
+  }
   onUpdate() {
-    this.storeApi.UPDATE_POLICY(this.editForm).subscribe(result => {
+    this.api.UPDATE_POLICY(this.editForm).subscribe(result => {
       if(result.status) this.ngOnInit();
       else {
         this.editForm.errorMsg = result.message;

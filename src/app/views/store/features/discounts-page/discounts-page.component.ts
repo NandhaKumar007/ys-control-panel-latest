@@ -20,7 +20,7 @@ export class DiscountsPageComponent implements OnInit {
   addForm: any; editForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   maxRank: any = 0; search_bar: string;
-  productList: any = []; settingForm: any;
+  productList: any = []; settingForm: any = {};
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: FeaturesApiService,
@@ -33,8 +33,10 @@ export class DiscountsPageComponent implements OnInit {
     this.pageLoader = true;
     this.api.DISCOUNTS_LIST().subscribe(result => {
       if(result.status) {
-        this.list = result.list;
+        this.list = result.data.discount_list;
         this.maxRank = this.list.length;
+        this.settingForm = {};
+        if(result.data.page_config) this.settingForm = result.data.page_config;
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
@@ -53,8 +55,10 @@ export class DiscountsPageComponent implements OnInit {
       this.addForm.btnLoader = false;
 			if(result.status) {
 				document.getElementById('closeModal').click();
-				this.list = result.list;
-				this.maxRank = this.list.length;
+				this.list = result.data.discount_list;
+        this.maxRank = this.list.length;
+        this.settingForm = {};
+        if(result.data.page_config) this.settingForm = result.data.page_config;
 			}
 			else {
 				this.addForm.errorMsg = result.message;
@@ -82,8 +86,10 @@ export class DiscountsPageComponent implements OnInit {
       this.editForm.btnLoader = false;
 			if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
+        this.list = result.data.discount_list;
         this.maxRank = this.list.length;
+        this.settingForm = {};
+        if(result.data.page_config) this.settingForm = result.data.page_config;
       }
 			else {
 				this.editForm.errorMsg = result.message;
@@ -97,8 +103,10 @@ export class DiscountsPageComponent implements OnInit {
     this.api.DELETE_DISCOUNT(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
+        this.list = result.data.discount_list;
         this.maxRank = this.list.length;
+        this.settingForm = {};
+        if(result.data.page_config) this.settingForm = result.data.page_config;
       }
       else {
 				this.deleteForm.errorMsg = result.message;
@@ -108,19 +116,15 @@ export class DiscountsPageComponent implements OnInit {
   }
 
   // PAGE SETTING
-  onPageSetting(modalName) {
-    this.settingForm = {};
-    this.storeApi.STORE_DETAILS().subscribe(result => {
-      if(result.status) {
-        if(result.data.application_setting.discounts_page_config) this.settingForm = result.data.application_setting.discounts_page_config;
-        this.modalService.open(modalName, {size: 'lg'});
-      }
-			else console.log("response", result);
-    });
-  }
   onUpdateSetting() {
-    this.storeApi.STORE_UPDATE({ "application_setting.discounts_page_config": this.settingForm }).subscribe(result => {
-      if(result.status) document.getElementById('closeModal').click();
+    this.api.UPDATE_DISCOUNT_CONFIG({ "page_config": this.settingForm }).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.list = result.data.discount_list;
+        this.maxRank = this.list.length;
+        this.settingForm = {};
+        if(result.data.page_config) this.settingForm = result.data.page_config;
+      }
       else {
 				this.settingForm.errorMsg = result.message;
         console.log("response", result);

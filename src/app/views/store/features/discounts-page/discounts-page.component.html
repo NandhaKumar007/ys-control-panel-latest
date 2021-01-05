@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" class="btn btn-primary" (click)="onPageSetting(settingModal);">Page Setting</button>
+        <button type="button" class="btn btn-primary" (click)="modalService.open(settingModal, {size: 'lg'});">Page Setting</button>
       </div>
     </div>
   </div>
@@ -327,8 +327,7 @@
 <!-- SETTING MODAL -->
 <ng-template #settingModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Discounts Page</h4>
-    <p>Update your page configuration</p>
+    <h4 class="modal-title" id="modal-basic-title">Page Configuration</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdateSetting();" ngNativeValidate>
     <div class="modal-body">
@@ -340,7 +339,7 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Sub-heading</label>
-            <textarea rows="4" class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="settingForm.sub_heading" #sub_heading="ngModel" required></textarea>
+            <input type="text" name="sub_heading" class="form-control" [(ngModel)]="settingForm.sub_heading" #sub_heading="ngModel" />
           </div>
         </div>
       </div>
