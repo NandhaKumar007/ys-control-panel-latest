@@ -62,14 +62,12 @@
 
         <div ngbDropdown [placement]="'bottom-right'" class="user col d-flex align-self-end">
           <div class="x-close account-circle user-account">
-            <img *ngIf="commonService.store_details.logo" [src]="imgBaseUrl+commonService.store_details.logo" alt="product-logo" ngbDropdownToggle>
-            <img *ngIf="!commonService.store_details.logo" src="assets/images/temp_logo.jpg" alt="product-logo" ngbDropdownToggle>
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum" alt="product-logo" ngbDropdownToggle>
           </div>
           <div ngbDropdownMenu class="header-account-dropdown">
             <div class="">
               <div class="inner-account-circle user-account-inner d-flex flex-column align-items-center justify-content-center">
-                <img *ngIf="commonService.store_details.logo" [src]="imgBaseUrl+commonService.store_details.logo" alt="product-logo">
-                <img *ngIf="!commonService.store_details.logo" src="assets/images/temp_logo.jpg" alt="product-logo">
+                <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum" alt="product-logo">
               </div>
               <p class="m-0" align="center">
                 <b>{{ commonService.store_details?.name }}</b>
@@ -78,10 +76,10 @@
             </div>
             <div class="profile-inner">
               <div class="footer d-flex justify-content-center align-items-center">
-                <button *ngIf="!commonService.master_token" class="signout-btn" (click)="commonService.signOut('/session/signin');">Sign out</button>
+                <button *ngIf="!commonService.master_token" class="signout-btn" (click)="commonService.signOut('/session/signin');">Sign Out</button>
                 <ng-container *ngIf="commonService.master_token">
-                  <button class="signout-btn mr-2" routerLink="/control-panel">Switch Account</button>
-                  <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign out</button>
+                  <button class="signout-btn mr-2" routerLink="/control-panel">Control Panel</button>
+                  <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign Out</button>
                 </ng-container>
               </div>
             </div>

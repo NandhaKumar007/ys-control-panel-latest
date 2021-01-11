@@ -25,16 +25,20 @@ export class AdminApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.get<any>(environment.ws_url+'/admin/store?type='+x, httpOptions);
   }
-  STORE_DETAILS(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
-    return this.http.post<any>(environment.ws_url+'/admin/store/details', x, httpOptions);
-  }
   ADD_STORE(x) {
-    return this.http.post<any>(environment.ws_url+'/others/store', x);
+    return this.http.post<any>(environment.ws_url+'/admin/store', x);
   }
   UPDATE_STORE(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.put<any>(environment.ws_url+'/admin/store', x, httpOptions); 
+  }
+  DELETE_STORE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/admin/store', x, httpOptions); 
+  }
+  STORE_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.post<any>(environment.ws_url+'/admin/store/details', x, httpOptions);
   }
   CHANGE_STORE_PWD(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };

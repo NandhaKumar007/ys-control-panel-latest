@@ -22,7 +22,7 @@ export class ModifyYsClientsComponent implements OnInit {
     { country_code: "INR", html_code: "&#x20B9;" },
     { country_code: "USD", html_code: "&#36;" }
   ];
-  pageLoader: boolean;
+  pageLoader: boolean; currencyTypes: any;
   packages_list: any = this.commonService.admin_packages;
   features_list: any = this.commonService.admin_features;
   free_features_list: any = []; paid_features_list: any = [];
@@ -40,7 +40,8 @@ export class ModifyYsClientsComponent implements OnInit {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if(result.status) {
             this.clientForm = result.data;
-            this.clientForm.currency_types = this.clientForm.currency_types[0];
+            this.currencyTypes = this.clientForm.currency_types[0];
+            delete this.clientForm.currency_types;
           }
           else console.log("response", result);
         });
@@ -57,18 +58,20 @@ export class ModifyYsClientsComponent implements OnInit {
       this.paid_features_list.forEach(element => {
         if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
       });
+      this.clientForm.btnLoader = true;
       this.adminApi.UPDATE_STORE(this.clientForm).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);
         else {
           console.log("response", result);
           this.clientForm.errorMsg = result.message;
+          this.clientForm.btnLoader = false;
         }
       });
     }
     else {
       // ADD
+      this.clientForm.currency_types = [this.currencyTypes];
       this.clientForm.currency_types.default_currency = true;
-      this.clientForm.currency_types = [this.clientForm.currency_types];
       this.clientForm.base_url = 'https://'+this.clientForm.website;
       this.clientForm.session_key = new Date().valueOf();
       this.clientForm.seo_details = {
@@ -79,12 +82,15 @@ export class ModifyYsClientsComponent implements OnInit {
       this.paid_features_list.forEach(element => {
         if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
       });
+      this.clientForm.btnLoader = true;
+      this.clientForm.status = "active";
+      this.clientForm.version = "2";
       this.adminApi.ADD_STORE(this.clientForm).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);
         else {
           console.log("response", result);
           this.clientForm.errorMsg = result.message;
-          this.clientForm.currency_types = this.clientForm.currency_types[0];
+          this.clientForm.btnLoader = false;
         }
       });
     }
@@ -108,7 +114,7 @@ export class ModifyYsClientsComponent implements OnInit {
       if(packIndex!=-1) {
         delete element.feature_checked;
         element.package_pricing = element.linked_packages[packIndex].currency_types;
-        if(element.package_pricing[this.clientForm.currency_types.country_code].price > 0) {
+        if(element.package_pricing[this.currencyTypes.country_code].price > 0) {
           if(this.params.client_id && this.clientForm.package_details.paid_features.indexOf(element.keyword)!=-1) element.feature_checked = true;
           this.paid_features_list.push(element);
         }
@@ -122,7 +128,7 @@ export class ModifyYsClientsComponent implements OnInit {
       let reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {
         this.clientForm.img_change = true;
-        this.clientForm.logo = (<FileReader>event.target).result;
+        this.clientForm.store_logo = (<FileReader>event.target).result;
       }
       reader.readAsDataURL(event.target.files[0]);
     }

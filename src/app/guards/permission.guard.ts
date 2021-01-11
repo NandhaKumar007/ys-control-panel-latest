@@ -18,8 +18,7 @@ export class PermissionGuard implements CanActivate {
       else return false;
     }
     else {
-      localStorage.clear();
-      sessionStorage.clear();
+      this.commonService.clearData();
       this.router.navigate(['/session/signin']);
       return false;
     }

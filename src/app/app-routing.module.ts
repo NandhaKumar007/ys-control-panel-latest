@@ -15,30 +15,30 @@ const sessionRoutes: Routes = [
 ];
 
 const adminRoutes: Routes = [
-  { path: 'dashboard', loadChildren: () => import('./views/admin/ys-dashboard/ys-dashboard.module').then(m => m.YsDashboardModule) },
-  { path: 'currencies', loadChildren: () => import('./views/admin/ys-currencies/ys-currencies.module').then(m => m.YsCurrenciesModule) },
-  { path: 'clients', loadChildren: () => import('./views/admin/ys-clients/ys-clients.module').then(m => m.YsClientsModule) },
-  { path: 'dealers', loadChildren: () => import('./views/admin/ys-dealers/ys-dealers.module').then(m => m.YsDealersModule) },
-  { path: 'packages', loadChildren: () => import('./views/admin/ys-packages/ys-packages.module').then(m => m.YsPackagesModule) },
-  { path: 'features', loadChildren: () => import('./views/admin/ys-features/ys-features.module').then(m => m.YsFeaturesModule) },
-  { path: 'payments', loadChildren: () => import('./views/admin/ys-payments/ys-payments.module').then(m => m.YsPaymentsModule) },
-  { path: 'subscribers', loadChildren: () => import('./views/admin/ys-subscribers/ys-subscribers.module').then(m => m.YsSubscribersModule) }
+  { path: 'dashboard', loadChildren: () => import('./views/admin/ys-dashboard/ys-dashboard.module').then(m => m.YsDashboardModule), canActivate: [MasterGuard] },
+  { path: 'currencies', loadChildren: () => import('./views/admin/ys-currencies/ys-currencies.module').then(m => m.YsCurrenciesModule), canActivate: [MasterGuard] },
+  { path: 'clients', loadChildren: () => import('./views/admin/ys-clients/ys-clients.module').then(m => m.YsClientsModule), canActivate: [MasterGuard] },
+  { path: 'dealers', loadChildren: () => import('./views/admin/ys-dealers/ys-dealers.module').then(m => m.YsDealersModule), canActivate: [MasterGuard] },
+  { path: 'packages', loadChildren: () => import('./views/admin/ys-packages/ys-packages.module').then(m => m.YsPackagesModule), canActivate: [MasterGuard] },
+  { path: 'features', loadChildren: () => import('./views/admin/ys-features/ys-features.module').then(m => m.YsFeaturesModule), canActivate: [MasterGuard] },
+  { path: 'payments', loadChildren: () => import('./views/admin/ys-payments/ys-payments.module').then(m => m.YsPaymentsModule), canActivate: [MasterGuard] },
+  { path: 'subscribers', loadChildren: () => import('./views/admin/ys-subscribers/ys-subscribers.module').then(m => m.YsSubscribersModule), canActivate: [MasterGuard] }
 ];
 
 const storeRoutes: Routes = [
-  { path: 'whats-new', loadChildren: () => import('./views/store/whats-new/whats-new.module').then(m => m.WhatsNewModule) },
+  { path: 'whats-new', loadChildren: () => import('./views/store/whats-new/whats-new.module').then(m => m.WhatsNewModule), canActivate: [MasterGuard] },
 
-  { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule) },
-  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/dashboard/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule) },
+  { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [PermissionGuard], data: { name: "dashboard" } },
+  { path: 'vendors-dashboard', loadChildren: () => import('./views/store/dashboard/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule), canActivate: [PermissionGuard], data: { name: "vendor_dashboard" } },
 
   { path: 'layouts', loadChildren: () => import('./views/store/layouts/layouts.module').then(m => m.LayoutsModule) },
-  { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule) },
+  { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule), canActivate: [PermissionGuard], data: { name: "catalogs" } },
   { path: 'products', loadChildren: () => import('./views/store/product/product.module').then(m => m.ProductModule) },
-  { path: 'customers', loadChildren: () => import('./views/store/customers/customers.module').then(m => m.CustomersModule) },
+  { path: 'customers', loadChildren: () => import('./views/store/customers/customers.module').then(m => m.CustomersModule), canActivate: [PermissionGuard], data: { name: "customers" } },
 
-  { path: 'abandoned-carts', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule) },
-  { path: 'abandoned-quotes', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule) },
-  { path: 'quotations/:type/:customer_id', loadChildren: () => import('./views/store/quotations/quotations.module').then(m => m.QuotationsModule) },
+  { path: 'abandoned-carts', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_cart" } },
+  { path: 'abandoned-quotes', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_quotes" } },
+  { path: 'quotations/:type/:customer_id', loadChildren: () => import('./views/store/quotations/quotations.module').then(m => m.QuotationsModule), canActivate: [PermissionGuard], data: { name: "quotations" } },
   { path: 'orders', loadChildren: () => import('./views/store/orders/orders.module').then(m => m.OrdersModule) },
 
   { path: 'features', loadChildren: () => import('./views/store/features/features.module').then(m => m.FeaturesModule) },
@@ -48,13 +48,13 @@ const storeRoutes: Routes = [
   { path: 'setup', loadChildren: () => import('./views/store/setup/setup.module').then(m => m.SetupModule) },
   { path: 'seo', loadChildren: () => import('./views/store/seo/seo.module').then(m => m.SeoModule) },
 
-  { path: 'feedback', loadChildren: () => import('./views/store/properties/feedback/feedback.module').then(m => m.FeedbackModule) },
-  { path: 'newsletter', loadChildren: () => import('./views/store/properties/newsletter/newsletter.module').then(m => m.NewsletterModule) },
-  { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule) },
-  { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule) },
+  { path: 'feedback', loadChildren: () => import('./views/store/properties/feedback/feedback.module').then(m => m.FeedbackModule), canActivate: [PermissionGuard], data: { name: "feedback" } },
+  { path: 'newsletter', loadChildren: () => import('./views/store/properties/newsletter/newsletter.module').then(m => m.NewsletterModule), canActivate: [PermissionGuard], data: { name: "newsletter" } },
+  { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule), canActivate: [PermissionGuard], data: { name: "courier_partners" } },
+  { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule), canActivate: [PermissionGuard], data: { name: "donations" } },
 
-  { path: 'store-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule) },
-  { path: 'store-logos', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule) }
+  { path: 'store-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule), canActivate: [PermissionGuard], data: { name: "store_setting" } },
+  { path: 'store-logos', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule), canActivate: [PermissionGuard], data: { name: "store_setting" } }
 ];
 
 const routes: Routes = [

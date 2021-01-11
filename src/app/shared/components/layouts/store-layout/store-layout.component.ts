@@ -21,6 +21,7 @@ export class StoreLayoutComponent implements OnInit {
   nav: IMenuItem[];
   currentYear: any = (new Date()).getFullYear();
   imgBaseUrl = environment.img_baseurl;
+  verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
 
   constructor(private router: Router, public navService: SidebarService, public commonService: CommonService) {
     this.notifications = [

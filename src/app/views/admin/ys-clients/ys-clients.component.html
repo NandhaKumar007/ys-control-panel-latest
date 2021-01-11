@@ -37,11 +37,18 @@
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex mtb-20">
+        <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
+          <img [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" style="height: 75px !important;" alt="">
+        </div>
+        <div class="flex-grow-1 pl-5 d-flex mtb-10">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <!-- OTHER DATA -->
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
             <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+              <a href={{x.base_url}} target="_blank">
+                <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
+              </a>
               <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
                 <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                   <button class="btn btn-wide btn-outline-secondary w-md-100" ngbDropdownToggle>Action</button>
@@ -51,8 +58,11 @@
                   </div>
                 </div>
               </div>
-              <button (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });" class="btn btn-wide  w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success'">
+              <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });" class="btn btn-wide w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
                 {{ (x.status=='active')? 'Disable': 'Enable' }}
+              </button>
+              <button *ngIf="x.status!='active'" class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                <span class="orng-outline-txt">Remove</span>
               </button>
             </div>
           </div>
@@ -103,8 +113,8 @@
   </form>
 </ng-template>
 
-<!-- DELETE MODAL -->
-<ng-template #deleteModal let-modal>
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
   <div class="modal-body">
     <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
     <div *ngIf="deleteForm.errorMsg">
@@ -113,6 +123,27 @@
   </div>
   <div class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('Cross click');">No</button>
-    <button type="button" (click)="onDelete();" class="btn btn-primary">Yes</button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-primary">Yes</button>
+  </div>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body" style="background-color: #FA8072;">
+    <p>
+      <strong>Are you sure you want to remove
+      <span style="color: #fff;">"{{deleteForm.name}}"</span> permanently?</strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
   </div>
 </ng-template>

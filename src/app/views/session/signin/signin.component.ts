@@ -54,7 +54,6 @@ export class SigninComponent implements OnInit {
           mobile: result.data.mobile,
           tax: result.data.tax,
           gst_no: result.data.gst_no,
-          logo: result.data.logo,
           base_url: result.data.base_url,
           currency_types: result.data.currency_types,
           country: result.data.country,
@@ -80,7 +79,7 @@ export class SigninComponent implements OnInit {
         if(this.commonService.ys_features.indexOf('courier_partners') != -1) {
           this.storeApi.COURIER_PARTNERS().subscribe(result => {
             if(result.status) {
-              this.commonService.courier_partners = result.data;
+              this.commonService.courier_partners = result.list;
               this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
             }
           });

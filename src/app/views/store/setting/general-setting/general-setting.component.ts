@@ -32,6 +32,10 @@ export class GeneralSettingComponent implements OnInit {
     {
       name: "Roundcube", value: "roundcube",
       transporter : { port: 465, secure: true }
+    },
+    {
+      name: "Zoho", value: "zoho",
+      transporter : { host: "smtp.zoho.com", port: 465, secure: true }
     }
   ];
   textTypes: any = [
@@ -69,7 +73,29 @@ export class GeneralSettingComponent implements OnInit {
     });
   }
   onUpdateMailConfig() {
-
+    let index = this.mailTypes.findIndex(obj => obj.value==this.settingForm.host_type);
+    if(index!=-1) {
+      this.settingForm.submit = true;
+      this.settingForm.transporter = this.mailTypes[index].transporter;
+      this.settingForm.transporter.auth = { user: this.settingForm.username, pass: this.settingForm.password };
+      this.settingForm.send_from = this.settingForm.from_name+" <"+this.settingForm.username+">";
+      if(this.settingForm.host_type=='roundcube') {
+        this.settingForm.transporter.name = this.settingForm.mail_domain;
+        this.settingForm.transporter.host = this.settingForm.mail_host;
+      }
+      this.api.STORE_UPDATE({ mail_config: this.settingForm }).subscribe(result => {
+        if(result.status) {
+          document.getElementById('closeModal').click();
+        }
+        else {
+          this.settingForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+    else {
+      this.settingForm.errorMsg = "Invalid Host";
+    }
   }
 
 }

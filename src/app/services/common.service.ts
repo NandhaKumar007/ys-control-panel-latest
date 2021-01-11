@@ -86,25 +86,28 @@ export class CommonService {
   admin_features: any = [];
 
   store_list: any = [];
+  ys_features: any = [];
   // basic_discount, time_based_delivery, giftcard_wallet, variant_image_tag, limited_products, multi_menu, domestic_shipping
-  // collections, discount_pages
-  ys_features: any = [
-    "pincode_service", "measurements", "addons", "product_filters", "foot_note", "size_chart", "faq", "shopping_assistant", "advanced_seo",
-    "seo_page_content", "blogs", "currency_variation", "giftcard", "product_archive", "newsletter", "advanced_discount", "manual_order", 
-    "manual_giftcard", "donation", "customer_feedback", "vendors", "menus", "courier_partners", "testimonials", "sales_report", "order_note",
-    "sizing_assistant", "product_video"
-  ];
+  // collections, discounts_page
+  // ys_features: any = [
+  //   "pincode_service", "measurements", "addons", "product_filters", "foot_note", "size_chart", "faq", "shopping_assistant", "advanced_seo",
+  //   "catalog_page_content", "blogs", "currency_variation", "giftcard", "product_archive", "newsletter", "advanced_discount", "manual_order", 
+  //   "manual_giftcard", "donation", "customer_feedback", "vendors", "menus", "courier_partners", "testimonials", "sales_report", "order_note",
+  //   "sizing_assistant", "product_video"
+  // ];
 
   store_details: any = {};
   store_currency: any = {};
-  courier_partners: any = {};
+  subuser_permissions: any = {};
+  vendor_permissions: any = {};
+
   vendor_list: any = [];
   currency_types: any = [];
   route_permission_list: any = [];
   archive_list: any = [];
   country_list: any = [];
   aistyle_list: any = [];
-  vendor_permissions: any = {};
+  courier_partners: any = [];
   catalog_list: any = [];
   payment_list: any = [];
 
@@ -207,37 +210,40 @@ export class CommonService {
   }
 
   signOut(redirectPath) {
+    this.clearData();
+    this.router.navigate([redirectPath]);
+  }
+
+  clearData() {
     localStorage.clear();
     sessionStorage.clear();
 
-    delete this.admin_packages;
-    delete this.admin_features;
-    
-    // delete this.ys_features;
+    this.admin_packages = [];
+    this.admin_features = [];
+    this.ys_features = [];
 
     delete this.master_token;
     delete this.store_token;
-    delete this.route_permission_list;
+    this.route_permission_list = [];
 
-    delete this.store_details;
-    delete this.store_currency;
-    delete this.vendor_permissions;
+    this.store_details = {};
+    this.store_currency = {};
+    this.vendor_permissions = {};
+    this.subuser_permissions = {};
 
-    delete this.vendor_list;
-    delete this.archive_list;
-    delete this.country_list;
-    delete this.aistyle_list;
-    delete this.catalog_list;
-    delete this.payment_list;
-    delete this.currency_types;
-    delete this.courier_partners;
+    this.vendor_list = [];
+    this.archive_list = [];
+    this.country_list = [];
+    this.aistyle_list = [];
+    this.catalog_list = [];
+    this.payment_list = [];
+    this.currency_types = [];
+    this.courier_partners = [];
     
     delete this.page_attr;
     delete this.scroll_y_pos;
     delete this.product_page_attr;
     delete this.selected_customer;
-
-    this.router.navigate([redirectPath]);
   }
 
 }

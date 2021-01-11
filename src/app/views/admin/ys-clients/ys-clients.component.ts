@@ -18,7 +18,7 @@ export class YsClientsComponent implements OnInit {
   pageLoader: boolean; list: any = [];
   imgBaseUrl = environment.img_baseurl;
   pwdForm: any = {}; listType: string = 'active';
-  deleteForm: any = {};
+  deleteForm: any = {}; verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -46,10 +46,10 @@ export class YsClientsComponent implements OnInit {
     });
   }
 
-  onDelete() {
+  onUpdateStatus() {
     let storeStatus = 'active';
     if(this.deleteForm.status=='active') storeStatus = 'inactive';
-    this.adminApi.UPDATE_STORE({ _id: this.deleteForm._id, status: storeStatus }).subscribe(result => {
+    this.adminApi.UPDATE_STORE({ _id: this.deleteForm._id, status: storeStatus, session_key: new Date().valueOf() }).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.ngOnInit();
@@ -59,6 +59,22 @@ export class YsClientsComponent implements OnInit {
         this.deleteForm.error_msg = result.message;
       }
     });
+  }
+
+  onDelete() {
+    if(this.deleteForm.status=='inactive') {
+      this.adminApi.DELETE_STORE({ _id: this.deleteForm._id }).subscribe(result => {
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          console.log("response", result);
+          this.deleteForm.error_msg = result.message;
+        }
+      });
+    }
+    else this.deleteForm.error_msg = "Invalid store";
   }
 
 }

@@ -60,7 +60,6 @@ export class ControlPanelComponent implements OnInit {
             mobile: result.data.mobile,
             tax: result.data.tax,
             gst_no: result.data.gst_no,
-            logo: result.data.logo,
             base_url: result.data.base_url,
             currency_types: result.data.currency_types,
             country: result.data.country,
@@ -77,6 +76,9 @@ export class ControlPanelComponent implements OnInit {
           this.commonService.store_currency = result.data.currency_types[currencyIndex];
           this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
           this.commonService.updateLocalData('store_details', this.commonService.store_details);
+          // ys features
+          this.commonService.ys_features = result.ys_features;
+          this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
           // payment list
           this.commonService.payment_list = result.data.payment_types;
           this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
@@ -86,7 +88,7 @@ export class ControlPanelComponent implements OnInit {
           if(this.commonService.ys_features.indexOf('courier_partners') != -1) {
             this.storeApi.COURIER_PARTNERS().subscribe(result => {
               if(result.status) {
-                this.commonService.courier_partners = result.data;
+                this.commonService.courier_partners = result.list;
                 this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
               }
             });

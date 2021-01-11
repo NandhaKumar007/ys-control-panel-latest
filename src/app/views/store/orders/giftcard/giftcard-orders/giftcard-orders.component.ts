@@ -75,9 +75,8 @@ export class GiftcardOrdersComponent implements OnInit {
     this.addForm.order_by = "admin";
     this.addForm.status = "active";
     this.addForm.payment_success = true;
-    this.addForm.coupon_type = "onetime";
+    this.addForm.coupon_type = this.commonService.store_details.additional_features.giftcard_type;
     this.addForm.gc_validity_in_month = this.commonService.store_details.additional_features.gc_validity_in_month;
-    if(this.commonService.ys_features.indexOf('giftcard_wallet')!=-1) this.addForm.coupon_type = "wallet";
     this.api.CREATE_COUPON(this.addForm).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {

@@ -190,7 +190,7 @@ export class FeaturesApiService {
   // MENU SUB CATEGORY
   MENU_SUBCATEGORY_LIST(menuId, sectionId, categoryId) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/menu_sub_category?menu_id='+menuId+'&section_id='+sectionId+'&category_id='+categoryId, httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/menu_sub_category?menu_id='+menuId+'&section_id='+sectionId+'&cat_id='+categoryId, httpOptions);
   }
   MENU_SUBCATEGORY_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

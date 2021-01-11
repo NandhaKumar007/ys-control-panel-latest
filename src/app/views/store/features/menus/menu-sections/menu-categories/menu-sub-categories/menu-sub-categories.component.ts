@@ -58,7 +58,7 @@ export class MenuSubCategoriesComponent implements OnInit {
 	onAdd() {
     this.addForm.menu_id = this.menuId;
     this.addForm.section_id = this.sectionId;
-    this.addForm.category_id = this.categoryId;
+    this.addForm.cat_id = this.categoryId;
 		this.api.ADD_MENU_SUBCATEGORY(this.addForm).subscribe(result => {
 			if(result.status) {
 				document.getElementById('closeModal').click();
@@ -73,7 +73,7 @@ export class MenuSubCategoriesComponent implements OnInit {
 
   // EDIT
   onEdit(x, modalName) {
-    this.api.MENU_SUBCATEGORY_DETAILS({ menu_id: this.menuId, section_id: this.sectionId, category_id: this.categoryId, _id: x._id }).subscribe(result => {
+    this.api.MENU_SUBCATEGORY_DETAILS({ menu_id: this.menuId, section_id: this.sectionId, cat_id: this.categoryId, _id: x._id }).subscribe(result => {
       if(result.status) {
         this.editForm = result.data;
         this.editForm.prev_rank = this.editForm.rank;
@@ -87,7 +87,7 @@ export class MenuSubCategoriesComponent implements OnInit {
 	onUpdate() {
     this.editForm.menu_id = this.menuId;
     this.editForm.section_id = this.sectionId;
-    this.editForm.category_id = this.categoryId;
+    this.editForm.cat_id = this.categoryId;
 		this.api.UPDATE_MENU_SUBCATEGORY(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -104,7 +104,7 @@ export class MenuSubCategoriesComponent implements OnInit {
   onDelete() {
     this.deleteForm.menu_id = this.menuId;
     this.deleteForm.section_id = this.sectionId;
-    this.deleteForm.category_id = this.categoryId;
+    this.deleteForm.cat_id = this.categoryId;
     this.api.DELETE_MENU_SUBCATEGORY(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
