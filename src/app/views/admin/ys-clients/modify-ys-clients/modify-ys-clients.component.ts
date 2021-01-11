@@ -22,7 +22,7 @@ export class ModifyYsClientsComponent implements OnInit {
     { country_code: "INR", html_code: "&#x20B9;" },
     { country_code: "USD", html_code: "&#36;" }
   ];
-  pageLoader: boolean; currencyTypes: any;
+  pageLoader: boolean;
   packages_list: any = this.commonService.admin_packages;
   features_list: any = this.commonService.admin_features;
   free_features_list: any = []; paid_features_list: any = [];
@@ -40,8 +40,7 @@ export class ModifyYsClientsComponent implements OnInit {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if(result.status) {
             this.clientForm = result.data;
-            this.currencyTypes = this.clientForm.currency_types[0];
-            delete this.clientForm.currency_types;
+            this.clientForm.currency_types = this.clientForm.currency_types[0];
           }
           else console.log("response", result);
         });
@@ -53,13 +52,16 @@ export class ModifyYsClientsComponent implements OnInit {
   onSubmit() {
     if(this.params.client_id) {
       // UPDATE
-      delete this.clientForm.currency_types;
       this.clientForm.package_details.paid_features = [];
       this.paid_features_list.forEach(element => {
         if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
       });
       this.clientForm.btnLoader = true;
-      this.adminApi.UPDATE_STORE(this.clientForm).subscribe(result => {
+      let formData = {
+        _id: this.clientForm._id, name: this.clientForm.name, contact_person: this.clientForm.contact_person,
+        mobile: this.clientForm.mobile, gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details
+      }
+      this.adminApi.UPDATE_STORE(formData).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);
         else {
           console.log("response", result);
@@ -70,8 +72,6 @@ export class ModifyYsClientsComponent implements OnInit {
     }
     else {
       // ADD
-      this.clientForm.currency_types = [this.currencyTypes];
-      this.clientForm.currency_types.default_currency = true;
       this.clientForm.base_url = 'https://'+this.clientForm.website;
       this.clientForm.session_key = new Date().valueOf();
       this.clientForm.seo_details = {
@@ -114,7 +114,7 @@ export class ModifyYsClientsComponent implements OnInit {
       if(packIndex!=-1) {
         delete element.feature_checked;
         element.package_pricing = element.linked_packages[packIndex].currency_types;
-        if(element.package_pricing[this.currencyTypes.country_code].price > 0) {
+        if(element.package_pricing[this.clientForm.currency_types.country_code].price > 0) {
           if(this.params.client_id && this.clientForm.package_details.paid_features.indexOf(element.keyword)!=-1) element.feature_checked = true;
           this.paid_features_list.push(element);
         }

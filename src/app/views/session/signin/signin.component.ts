@@ -70,6 +70,9 @@ export class SigninComponent implements OnInit {
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
         this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        // ys features
+        this.commonService.ys_features = result.ys_features;
+        this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
         // payment list
         this.commonService.payment_list = result.data.payment_types;
         this.commonService.updateLocalData('payment_list', this.commonService.payment_list);

@@ -218,8 +218,10 @@ export class SidebarService {
         moduleList.push({ icon: 'straighten', name: 'Sizing Assistant', state: '/product-extras/sizing-assistant', type: 'link' });
         routePermissionList.push("sizing_assistant");
       }
-      moduleList.push({ icon: 'attach_money', name: 'Currency Convertor', state: '/setup/currency-types', type: 'link' });
-      routePermissionList.push("currency_types");
+      if(ysFeatures.indexOf('currency_variation') !== -1) {
+        moduleList.push({ icon: 'attach_money', name: 'Currency Convertor', state: '/setup/currency-types', type: 'link' });
+        routePermissionList.push("currency_types");
+      }
       if(ysFeatures.indexOf('blogs') !== -1) {
         moduleList.push({ icon: 'art_track', name: 'Blogs', state: '/features/blogs', type: 'link' });
         routePermissionList.push("blogs");
@@ -232,7 +234,7 @@ export class SidebarService {
         moduleList.push({ icon: 'view_carousel', name: 'Collections', state: '/features/collections', type: 'link' });
         routePermissionList.push("collections");
       }
-      sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
+      if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting
       routePermissionList.push("tax_rates");
       let settingList: IChildItem[] = [{ icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' }];

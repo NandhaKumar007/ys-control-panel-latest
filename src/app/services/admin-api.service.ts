@@ -17,7 +17,7 @@ export class AdminApiService {
   }
   GENERATE_STORE_TOKEN(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
-    return this.http.post<any>(environment.ws_url+'/admin/store/generate_token', x, httpOptions);
+    return this.http.post<any>(environment.ws_url+'/admin/store/generate_token_v2', x, httpOptions);
   }
 
   // clients

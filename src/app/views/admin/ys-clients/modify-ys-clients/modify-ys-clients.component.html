@@ -60,19 +60,19 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
-            <select name="country" class="form-control" [(ngModel)]="clientForm.country" #country="ngModel" required>
+            <select name="country" class="form-control" [(ngModel)]="clientForm.country" #country="ngModel" [disabled]="params.client_id" required>
               <option *ngFor="let x of commonService.country_list;" [ngValue]="x.name">{{x.name}}</option>
             </select>
           </div>
           <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
             <label>Currency</label>
-            <select name="currency_types" class="form-control" [(ngModel)]="currencyTypes" #currency_types="ngModel" required>
+            <select name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types" #currency_types="ngModel" required>
               <option *ngFor="let x of currency_list;" [ngValue]="x">{{x.country_code}}</option>
             </select>
           </div>
           <div *ngIf="params.client_id" class="col-md-6 form-group mb-3">
             <label>Currency</label>
-            <input type="text" name="currency_types" class="form-control" [(ngModel)]="currencyTypes.country_code" readonly />
+            <input type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
           </div>
           <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
             <label>Theme</label>
@@ -130,7 +130,7 @@
             <div class="col-lg-3 col-md-4 mb-3" *ngFor="let x of packages_list;">
               <label class="radio radio-success">
                 <input type="radio" name="package_id" [value]="x._id" [checked]="x._id==clientForm.package_details.package_id" (change)="clientForm.package_details.package_id=x._id; onChoosePackage();">
-                <span>{{x.name}} - <b>{{ x.currency_types[currencyTypes.country_code].amount | currency:currencyTypes.country_code:'symbol':'1.0' }}</b></span>
+                <span>{{x.name}} - <b>{{ x.currency_types[clientForm.currency_types.country_code].amount | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
                 <span class="checkmark"></span>
               </label>
             </div>
@@ -147,7 +147,7 @@
       </div>
       <ng-container *ngIf="clientForm.package_details.disc_status">
         <div class="form-group mb-3 ml-3 col-md-6">
-          <label>Discount per month ({{currencyTypes.country_code}})</label>
+          <label>Discount per month ({{clientForm.currency_types.country_code}})</label>
           <input type="text" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" required />
         </div>
         <div class="col-md-6"></div>
@@ -164,10 +164,10 @@
 
     <div class="row ml-3" *ngIf="paid_features_list?.length && clientForm.add_features">
       <ng-container *ngFor="let x of paid_features_list; let i=index;">
-        <div *ngIf="x.package_pricing[currencyTypes.country_code].price > 0" class="col-lg-3 col-md-4 form-group mb-3">
+        <div *ngIf="x.package_pricing[clientForm.currency_types.country_code].price > 0" class="col-lg-3 col-md-4 form-group mb-3">
           <label class="checkbox checkbox-success">
             <input class="form-check-input" type="checkbox" name="feature_checked{{i}}" [(ngModel)]="x.feature_checked">
-            <span>{{x.name}} - <b>{{ x.package_pricing[currencyTypes.country_code].price | currency:currencyTypes.country_code:'symbol':'1.0' }}</b></span>
+            <span>{{x.name}} - <b>{{ x.package_pricing[clientForm.currency_types.country_code].price | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
             <span class="checkmark"></span>
           </label>
         </div>

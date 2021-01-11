@@ -12,7 +12,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   // AUTH
-  LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/store/login', x); }
+  LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/store/login_v2', x); }
   MASTER_LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/admin/login', x); }
   FORGOT_REQUEST(x) { return this.http.post<any>(environment.ws_url+'/auth/store/forgot_request', x); }
   VALIDATE_FORGOT_REQUEST(x) { return this.http.post<any>(environment.ws_url+'/auth/store/validate_forgot_request', x); }
