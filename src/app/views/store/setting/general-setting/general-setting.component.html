@@ -138,11 +138,11 @@
             </div>
           </ng-container>
           <div class="col-md-6 form-group mb-3">
-            <label>Login email</label>
+            <label>Login Email</label>
             <input type="email" name="username" class="form-control" [(ngModel)]="settingForm.username" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label>Login Password</label>
+            <label>{{ (settingForm.host_type=='zoho')? 'App': 'Login' }} Password</label>
             <input [type]="settingForm.input_txt? 'text': 'password'" name="password" class="form-control" [(ngModel)]="settingForm.password" #password="ngModel" required />
             <i class="material-icons visibility_icon" *ngIf="!settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility</i>
             <i class="material-icons visibility_icon" *ngIf="settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility_off</i>

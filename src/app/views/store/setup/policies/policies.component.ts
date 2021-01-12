@@ -25,7 +25,7 @@ export class PoliciesComponent implements OnInit {
           let policyTitle = "PRIVACY POLICY";
           if(this.params.type=='shipping') policyTitle = "SHIPPING POLICY";
           else if(this.params.type=='cancellation') policyTitle = "CANCELLATION POLICY";
-          else if(this.params.type=='terms-conditions') policyTitle = "TERMS AND CONDITIONS";
+          else if(this.params.type=='terms_conditions') policyTitle = "TERMS AND CONDITIONS";
           this.formData = { type: this.params.type, title: policyTitle };
         }
       });

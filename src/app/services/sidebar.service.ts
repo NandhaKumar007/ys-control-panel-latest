@@ -197,7 +197,7 @@ export class SidebarService {
             { name: 'Privacy Policy', state: '/setup/policies/privacy', type: 'link' },
             { name: 'Shipping Policy', state: '/setup/policies/shipping', type: 'link' },
             { name: 'Cancellation Policy', state: '/setup/policies/cancellation', type: 'link' },
-            { name: 'Terms & Conditions', state: '/setup/policies/terms-conditions', type: 'link' }
+            { name: 'Terms & Conditions', state: '/setup/policies/terms_conditions', type: 'link' }
           ]
         }
       ];
