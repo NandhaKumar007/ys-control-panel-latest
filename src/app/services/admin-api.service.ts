@@ -26,7 +26,8 @@ export class AdminApiService {
     return this.http.get<any>(environment.ws_url+'/admin/store?type='+x, httpOptions);
   }
   ADD_STORE(x) {
-    return this.http.post<any>(environment.ws_url+'/admin/store', x);
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.post<any>(environment.ws_url+'/admin/store', x, httpOptions);
   }
   UPDATE_STORE(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };

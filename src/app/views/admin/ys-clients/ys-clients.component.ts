@@ -25,7 +25,7 @@ export class YsClientsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pageLoader = true;
+    this.pageLoader = true; this.page = 1;
     this.adminApi.STORE_LIST(this.listType).subscribe(result => {
       if(result.status) {
         this.list = result.list;
@@ -36,6 +36,7 @@ export class YsClientsComponent implements OnInit {
             if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
           }
         });
+        if(this.listType=='active') this.commonService.store_list = result.list;
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
