@@ -45,6 +45,7 @@
             <!-- OTHER DATA -->
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
             <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
               <a href={{x.base_url}} target="_blank">
                 <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
@@ -61,7 +62,7 @@
               <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });" class="btn btn-wide w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
                 {{ (x.status=='active')? 'Disable': 'Enable' }}
               </button>
-              <button *ngIf="x.status!='active'" class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+              <button *ngIf="commonService.host_name=='localhost' && x.status!='active'" class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
                 <span class="orng-outline-txt">Remove</span>
               </button>
             </div>

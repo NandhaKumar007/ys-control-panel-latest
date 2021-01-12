@@ -78,6 +78,7 @@ export class CommonService {
     { name: "Inches", value: "inches" },
     { name: "Cms", value: "cms" }
   ];
+  host_name: string = window.location.hostname;
 
   master_token: string;
   store_token: string;

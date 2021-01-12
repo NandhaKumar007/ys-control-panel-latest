@@ -27,7 +27,16 @@ export class YsClientsComponent implements OnInit {
   ngOnInit() {
     this.pageLoader = true;
     this.adminApi.STORE_LIST(this.listType).subscribe(result => {
-      if(result.status) this.list = result.list;
+      if(result.status) {
+        this.list = result.list;
+        this.list.forEach(obj => {
+          obj.package_name = "NA";
+          if(obj.package_details) {
+            let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
+            if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
+          }
+        });
+      }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });

@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: 'payment-gateway', loadChildren: () => import('./payment-methods/payment-methods.module').then(m => m.PaymentMethodsModule), canActivate: [PermissionGuard], data: { name: "payment_gateway" } },
   { path: 'contact-page', loadChildren: () => import('./contact-page/contact-page.module').then(m => m.ContactPageModule), canActivate: [PermissionGuard], data: { name: "contact_page" } },
   { path: 'store-locator', loadChildren: () => import('./store-locator/store-locator.module').then(m => m.StoreLocatorModule), canActivate: [PermissionGuard], data: { name: "store_locator" } },
-  { path: 'policies/:type', loadChildren: () => import('./policies/policies.module').then(m => m.PoliciesModule), canActivate: [PermissionGuard], data: { name: "policies" } }
+  { path: 'policies/:type', loadChildren: () => import('./policies/policies.module').then(m => m.PoliciesModule), canActivate: [PermissionGuard], data: { name: "policies" } },
+  { path: 'extra-pages', loadChildren: () => import('./extra-pages/extra-pages.module').then(m => m.ExtraPagesModule), canActivate: [PermissionGuard], data: { name: "extra_pages" } },
 ];
 
 @NgModule({
