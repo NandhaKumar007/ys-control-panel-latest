@@ -85,7 +85,10 @@ export class AdminLayoutComponent implements OnInit {
       { name: 'Features', type: 'link', icon: 'extension', state: '/admin/features' },
       { name: 'Clients', type: 'link', icon: 'supervised_user_circle', state: '/admin/clients' },
       { name: 'Dealers', type: 'link', icon: 'group', state: '/admin/dealers' },
-      { name: 'Payments', type: 'link', icon: 'receipt_long', state: '/admin/payments' },
+      { name: 'Payments', type: 'dropDown', icon: 'receipt_long', sub: [
+        { icon: 'receipt_long', name: 'Payments', state: '/admin/payments', type: 'link' },
+        { icon: 'receipt_long', name: 'Inactive Payments', state: '/admin/inactive-payments', type: 'link' }
+      ] },
       { name: 'Subscribers', type: 'link', icon: 'mail', state: '/admin/subscribers' }
     ];
     this.setActiveFlag();

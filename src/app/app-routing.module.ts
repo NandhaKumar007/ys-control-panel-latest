@@ -22,6 +22,7 @@ const adminRoutes: Routes = [
   { path: 'packages', loadChildren: () => import('./views/admin/ys-packages/ys-packages.module').then(m => m.YsPackagesModule) },
   { path: 'features', loadChildren: () => import('./views/admin/ys-features/ys-features.module').then(m => m.YsFeaturesModule) },
   { path: 'payments', loadChildren: () => import('./views/admin/ys-payments/ys-payments.module').then(m => m.YsPaymentsModule) },
+  { path: 'inactive-payments', loadChildren: () => import('./views/admin/ys-inactive-payments/ys-inactive-payments.module').then(m => m.YsInactivePaymentsModule) },
   { path: 'subscribers', loadChildren: () => import('./views/admin/ys-subscribers/ys-subscribers.module').then(m => m.YsSubscribersModule) }
 ];
 

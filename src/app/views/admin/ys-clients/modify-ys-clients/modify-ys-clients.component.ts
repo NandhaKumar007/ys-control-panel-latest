@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { environment } from '../../../../../environments/environment';
+import { ApiService } from '../../../../services/api.service';
 import { AdminApiService } from '../../../../services/admin-api.service';
 import { CommonService } from '../../../../services/common.service';
 
@@ -29,7 +30,7 @@ export class ModifyYsClientsComponent implements OnInit {
   clientForm: any = {}; step_num: number; params: any = {};
   imgBaseUrl = environment.img_baseurl;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, public commonService: CommonService) { }
+  constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, private api: ApiService, public commonService: CommonService) { }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
@@ -72,21 +73,23 @@ export class ModifyYsClientsComponent implements OnInit {
     }
     else {
       // ADD
-      this.clientForm.base_url = 'https://'+this.clientForm.website;
-      this.clientForm.session_key = new Date().valueOf();
-      this.clientForm.seo_details = {
-        page_title: this.clientForm.name,
-        meta_desc: "Ecommerce Application"
-      };
-      this.clientForm.package_details.paid_features = [];
-      this.paid_features_list.forEach(element => {
-        if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
-      });
-      this.clientForm.btnLoader = true;
-      this.clientForm.status = "active";
-      this.clientForm.version = "2";
-      this.adminApi.ADD_STORE(this.clientForm).subscribe(result => {
-        if(result.status) this.router.navigate(['/admin/clients']);
+      this.api.CHECK_EMAIL_AVAILABILITY({ email: this.clientForm.email }).subscribe(result => {
+        if(result.status) {
+          this.clientForm.package_details.paid_features = [];
+          this.paid_features_list.forEach(element => {
+            if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
+          });
+          this.clientForm.btnLoader = true;
+          this.clientForm.status = "active";
+          this.adminApi.ADD_STORE(this.clientForm).subscribe(result => {
+            if(result.status) this.router.navigate(['/admin/clients']);
+            else {
+              console.log("response", result);
+              this.clientForm.errorMsg = result.message;
+              this.clientForm.btnLoader = false;
+            }
+          });
+        }
         else {
           console.log("response", result);
           this.clientForm.errorMsg = result.message;

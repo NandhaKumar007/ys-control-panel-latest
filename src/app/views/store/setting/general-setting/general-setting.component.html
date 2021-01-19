@@ -121,8 +121,8 @@
               <option [ngValue]="x.value" *ngFor="let x of mailTypes">{{x.name}}</option>
             </select>
             <p *ngIf="settingForm.host_type=='gmail'">
-              <b>Note:</b> Follow the instruction
-              <a href="https://support.google.com/mail/answer/78754" target="_blank" style="position: relative; top: 8px;">
+              <b>Note:</b> Please make sure <strong>Allow less secure apps</strong> was enabled
+              <a href="https://myaccount.google.com/lesssecureapps?pli=1" target="_blank" style="position: relative; top: 8px;">
                 <i class="material-icons">link</i>
               </a>
             </p>
@@ -157,7 +157,7 @@
           </div>
           <div class="col-md-12 border-top"></div>
           <div class="mb-3 mt-3 col-md-12">
-            <span class="access-inner-head primary-color">Template Settings</span>
+            <span class="access-inner-head">Template Settings</span>
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Font URL</label>
@@ -180,7 +180,7 @@
           <ng-container *ngIf="commonService.master_token || settingForm.band_status">
             <div class="col-md-12 border-top"></div>
             <div class="mb-3 mt-3 col-md-12">
-              <span class="access-inner-head primary-color">Band Settings</span>
+              <span class="access-inner-head">Band Settings</span>
             </div>
             <div *ngIf="commonService.master_token" class="col-md-12 form-group mb-3">
               <label class="checkbox checkbox-primary">

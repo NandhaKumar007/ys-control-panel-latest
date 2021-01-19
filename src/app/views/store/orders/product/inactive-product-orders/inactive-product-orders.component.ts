@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { OrderService } from '../../order.service';
 import { CommonService } from '../../../../../services/common.service';
-import { core } from '@angular/compiler';
 
 @Component({
   selector: 'app-inactive-product-orders',

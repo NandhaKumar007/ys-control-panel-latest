@@ -14,7 +14,7 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary" (click)="payForm = {form_type: 'add'}; modalService.open(payModal, {size: 'lg'});">Add New</button>
+        <button type="button" class="btn btn-primary" (click)="payForm = {form_type: 'add', store_name: commonService.store_details?.name, description: 'Ecommerce application'}; modalService.open(payModal, {size: 'lg'});">Add New</button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15" align="right">
