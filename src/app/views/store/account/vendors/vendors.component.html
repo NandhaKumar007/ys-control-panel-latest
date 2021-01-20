@@ -30,7 +30,7 @@
     <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
       class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-      <div class="card o-hidden mb-4 d-flex flex-row" [ngStyle]="{'background-color':x.status==='inactive' ? '#F0F0F0' : '' }">
+      <div class="card o-hidden mb-4 d-flex flex-row">
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <!-- OTHER DATA -->
@@ -38,9 +38,6 @@
             <p class="m-0 w-15 w-sm-100 m-b-0">{{x.contact_person}} - {{x.mobile}}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
             <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button class="btn btn-wide blue-outline-btn w-md-100" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">
-               <span class="blue-outline-txt">Change Password</span>
-              </button>
               <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
                 <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                   <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
@@ -48,10 +45,14 @@
                   </button>
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button class="dropdown-item" (click)="onEdit(x, 'details', editDetailsModal);">Details</button>
+                    <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Change Password</button>
                     <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
                   </div>
                 </div>
               </div>
+              <button (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });" class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
+                {{ (x.status=='active')? 'Disable': 'Enable' }}
+              </button>
               <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
                <span class="orng-outline-txt">Remove</span>
               </button>
@@ -162,17 +163,10 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdate('details');" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="form-group mb-3 col-md-12">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="vendor_status" [(ngModel)]="editForm.vendor_status" #vendor_status="ngModel">
-              <span>{{ editForm.exist_status=='active'? 'Disable': 'Enable'}}</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
           <div class="col-md-12 form-group mb-3">
             <label>Vendor Name</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" (input)="editForm.errorMsg=null;" #name="ngModel"
@@ -206,7 +200,7 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdate('permissions');" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
@@ -274,6 +268,20 @@
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to {{ (deleteForm.exist_status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('Cross click');">No</button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-primary">Yes</button>
+  </div>
 </ng-template>
 
 <!-- DELETE MODAL -->

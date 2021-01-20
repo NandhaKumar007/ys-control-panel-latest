@@ -117,6 +117,8 @@ export class SigninComponent implements OnInit {
     this.api.MASTER_LOGIN(this.loginForm).subscribe(result => {
       this.loading = false; this.loadingText = "";
       if(result.status) {
+        this.commonService.ys_payment_list = result.payment_types;
+        this.commonService.updateLocalData('ys_payment_list', this.commonService.ys_payment_list);
         this.commonService.master_token = result.token;
         localStorage.setItem("master_token", this.commonService.master_token);
         this.router.navigateByUrl('/control-panel');

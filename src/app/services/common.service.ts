@@ -103,6 +103,7 @@ export class CommonService {
   courier_partners: any = [];
   catalog_list: any = [];
   payment_list: any = [];
+  ys_payment_list: any = [];
 
   page_attr: any;
   product_page_attr: any;
@@ -129,6 +130,7 @@ export class CommonService {
     if(localStorage.getItem('vendor_list')) this.vendor_list = this.decryptData(localStorage.getItem("vendor_list"));
     if(localStorage.getItem('catalog_list')) this.catalog_list = this.decryptData(localStorage.getItem("catalog_list"));
     if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));
+    if(localStorage.getItem('ys_payment_list')) this.ys_payment_list = this.decryptData(localStorage.getItem("ys_payment_list"));
 
     if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
 

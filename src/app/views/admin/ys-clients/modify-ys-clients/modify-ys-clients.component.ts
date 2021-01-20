@@ -13,21 +13,11 @@ import { CommonService } from '../../../../services/common.service';
 
 export class ModifyYsClientsComponent implements OnInit {
 
-  // currency_list: any = [
-  //   { country_code: "INR", html_code: "&#x20B9;" },
-  //   { country_code: "USD", html_code: "&#36;" },
-  //   { country_code: "AED", html_code: "AED" },
-  //   { country_code: "AUD", html_code: "A&#36;" }
-  // ];
-  currency_list: any = [
-    { country_code: "INR", html_code: "&#x20B9;" },
-    { country_code: "USD", html_code: "&#36;" }
-  ];
   pageLoader: boolean;
   packages_list: any = this.commonService.admin_packages;
   features_list: any = this.commonService.admin_features;
   free_features_list: any = []; paid_features_list: any = [];
-  clientForm: any = {}; step_num: number; params: any = {};
+  clientForm: any; step_num: number; params: any = {};
   imgBaseUrl = environment.img_baseurl;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, private api: ApiService, public commonService: CommonService) { }
@@ -46,7 +36,10 @@ export class ModifyYsClientsComponent implements OnInit {
           else console.log("response", result);
         });
       }
-      else this.pageLoader = false;
+      else {
+        this.pageLoader = false;
+        this.clientForm = { company_details: {} };
+      }
     });
   }
 
@@ -81,6 +74,7 @@ export class ModifyYsClientsComponent implements OnInit {
           });
           this.clientForm.btnLoader = true;
           this.clientForm.status = "active";
+          this.clientForm.created_by = "admin";
           this.adminApi.ADD_STORE(this.clientForm).subscribe(result => {
             if(result.status) this.router.navigate(['/admin/clients']);
             else {

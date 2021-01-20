@@ -64,7 +64,6 @@ export class VendorsComponent implements OnInit {
         let index = vendorList.findIndex(obj => obj._id==x._id);
         if(index!=-1) {
           this.editForm = vendorList[index];
-          this.editForm.exist_status = this.editForm.status;
           this.permissions = {};
           if(this.editForm.permissions) this.permissions = this.editForm.permissions;
           if(type=='details') this.modalService.open(modalName);
@@ -77,12 +76,9 @@ export class VendorsComponent implements OnInit {
   }
 
   // UPDATE
-  onUpdate() {
+  onUpdate(type) {
+    if(type=='permissions') this.editForm.session_key = new Date().valueOf();
     this.editForm.permissions = this.permissions;
-    if(this.editForm.vendor_status) {
-      if(this.editForm.status=='active') this.editForm.status = 'inactive';
-      else this.editForm.status = 'active';
-    }
     this.api.UPDATE_VENDOR(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -111,6 +107,22 @@ export class VendorsComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  onUpdateStatus() {
+    if(this.deleteForm.exist_status=='active') this.deleteForm.status='inactive';
+    else this.deleteForm.status='active';
+    this.deleteForm.session_key = new Date().valueOf();
+    this.api.UPDATE_VENDOR(this.deleteForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        console.log("response", result);
+        this.deleteForm.error_msg = result.message;
+      }
+    });
   }
 
   // UPDATE PWD

@@ -44,7 +44,6 @@ export class YsInactivePaymentsComponent implements OnInit {
     x.loader = true;
     if(x.payment_type=="Razorpay") {
       this.api.RAZORPAY_PAYMENT_STATUS({ _id: x._id, type: x.type }).subscribe(result => {
-        console.log("------", result)
         this.ngOnInit();
         if(!result.status) console.log("response", result);
       });

@@ -100,7 +100,7 @@ export class YsPackagesComponent implements OnInit {
     this.packageForm.new_feature_list = [];
     this.featuresList.forEach(obj => {
       let index = obj.linked_packages.findIndex(elem => elem.package_id==x._id);
-      if(index==-1) {
+      if(index!=-1 && obj.linked_packages[index].currency_types['INR'].price > 0) {
         let featureSelected = false;
         if(x.trial_features && x.trial_features.indexOf(obj.keyword)!=-1) featureSelected = true;
         this.packageForm.new_feature_list.push({ selected: featureSelected, name: obj.name, keyword: obj.keyword });
