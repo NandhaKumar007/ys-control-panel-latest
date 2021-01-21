@@ -21,6 +21,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
     { name: "Bottom Left", value: "b_l" }, { name: "Bottom Center", value: "b_c" }, { name: "Bottom Right", value: "b_r" }
   ];
   grid_details: any = {};
+  shopping_assist_config: any;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService) { }
 
@@ -45,6 +46,11 @@ export class ModifyHomeLayoutComponent implements OnInit {
           else if(this.layoutDetails.type=='testimonial') {
             if(!this.layoutDetails.image_list.length) this.layoutDetails.image_list.push({ rank: 1, content_details: {} });
           }
+          else if(this.layoutDetails.type=='shopping_assistant') {
+            this.shopping_assist_config = this.layoutDetails.shopping_assistant_config;
+            if(this.shopping_assist_config.image) this.shopping_assist_config.exist_image = this.shopping_assist_config.image;
+            if(!this.shopping_assist_config.changing_text.length) this.shopping_assist_config.changing_text = [{ value: ''}];
+          }
           else if(!this.layoutDetails.image_list.length) this.layoutDetails.image_list.push({ rank: 1 });
           // product list
           this.api.PRODUCT_LIST({ category_id: 'all' }).subscribe(result => {
@@ -62,6 +68,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
 
   onUpdateLayout() {
     this.btnLoader = true;
+    if(this.layoutDetails.type=='shopping_assistant') this.layoutDetails.shopping_assistant_config = this.shopping_assist_config;
     this.api.UPDATE_LAYOUT_LIST(this.layoutDetails).subscribe(result => {
       if(result.status) {
         this.router.navigate(["/layouts/home"]);
@@ -86,6 +93,17 @@ export class ModifyHomeLayoutComponent implements OnInit {
           this.layoutDetails.image_list[index].mobile_img = (<FileReader>event.target).result;
           this.layoutDetails.image_list[index].mobile_img_change = true;
         }
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  shopAssistFileChangeListener(event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.shopping_assist_config.image = (<FileReader>event.target).result;
+        this.shopping_assist_config.img_change = true;
       }
       reader.readAsDataURL(event.target.files[0]);
     }

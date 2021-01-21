@@ -182,7 +182,7 @@
           <!-- fatoorah -->
           <div *ngIf="payForm.name=='Fatoorah'" class="col-md-12 form-group mb-3">
             <label>Token</label>
-            <textarea class="form-control" rows="5" aria-label="With textarea" name="token" [(ngModel)]="payForm.token" #token="ngModel" required></textarea>
+            <textarea class="form-control" aria-label="With textarea" name="token" [(ngModel)]="payForm.token" #token="ngModel" required></textarea>
           </div>
           <!-- Telr -->
           <ng-container *ngIf="payForm.name=='Telr'">

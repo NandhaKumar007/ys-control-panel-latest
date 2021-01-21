@@ -38,7 +38,7 @@
               </span>
             </p>
             <div class="w-30 m-0 text-muted text-small w-md-100 d-lg-block item-actions" align="center">
-              <div *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product'" class="product-btn-group btn-group w-md-100 mr-3">
+              <div *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product' && x.type!='blogs'" class="product-btn-group btn-group w-md-100 mr-3">
                 <div class="btn-group w-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                   <button class="btn black-outline-btn w-md-100" ngbDropdownToggle>
                    <span class="black-outline-txt">
@@ -51,7 +51,7 @@
                   </div>
                 </div>
               </div>
-              <button *ngIf="x.type=='featured_product' || x.type=='multiple_featured_product'" class="btn black-outline-btn w-md-100 mr-3" (click)="onEditDetails(x, editModal);">
+              <button *ngIf="x.type=='featured_product' || x.type=='multiple_featured_product' || x.type=='blogs'" class="btn black-outline-btn w-md-100 mr-3" (click)="onEditDetails(x, editModal);">
                 <span class="black-outline-txt">
                   Edit
                  </span>
@@ -95,7 +95,7 @@
               <option [ngValue]="x.value" *ngFor="let x of layoutTypes | slice:1:20;">{{x.name}}</option>
             </select>
           </div>
-          <div *ngIf="addForm.type=='section'" class="col-md-12 form-group mt-3 mb-3">
+          <div *ngIf="addForm.type=='section'" class="col-md-12 form-group mt-2 mb-3">
             <div class="">
               <ng-container *ngFor="let x of commonService.grid_list | fieldSearch:'status':'enabled'; let i=index;">
                 <label class="radio radio-primary display-inline-b mr-5 mb-3">
@@ -121,13 +121,31 @@
             </select>
           </div>
           <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider'">
-            <div class="col-md-12 form-group mb-3">
+            <div class="form-group mb-3" [ngClass]="(addForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel" />
             </div>
+            <div *ngIf="addForm.type=='blogs'" class="col-md-6 form-group mb-3">
+              <label>Type</label>
+              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="addForm.blogs_type" (change)="addForm.section_grid_type=commonService.blog_grid_list[0].type;" #blogs_type="ngModel" required>
+                <option value="grid">Grid</option>
+                <option value="slider">Slider</option>
+              </select>
+            </div>
             <div class="col-md-12 form-group mb-3">
               <label>Sub-heading</label>
-              <textarea rows="4" class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
+              <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
+            </div>
+            <div *ngIf="addForm.type=='blogs' && addForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
+              <div class="">
+                <ng-container *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
+                  <label class="radio radio-primary display-inline-b mr-5 mb-3">
+                    <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==addForm.section_grid_type" (change)="addForm.section_grid_type=x.type;">
+                    <span class="d-flex flex-column"><img [src]="x.icon">{{x.name}}</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </ng-container>
+              </div>
             </div>
           </ng-container>
         </div>
@@ -219,13 +237,31 @@
             </select>
           </div>
           <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider'">
-            <div class="col-md-12 form-group mb-3">
+            <div class="form-group mb-3" [ngClass]="(editForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel" />
             </div>
+            <div *ngIf="editForm.type=='blogs'" class="col-md-6 form-group mb-3">
+              <label>Type</label>
+              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="editForm.blogs_type" (change)="editForm.section_grid_type=commonService.blog_grid_list[0].type;" #blogs_type="ngModel" required>
+                <option value="grid">Grid</option>
+                <option value="slider">Slider</option>
+              </select>
+            </div>
             <div class="col-md-12 form-group mb-3">
               <label>Sub-heading</label>
-              <textarea rows="4" class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
+              <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
+            </div>
+            <div *ngIf="editForm.type=='blogs' && editForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
+              <div class="">
+                <ng-container *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
+                  <label class="radio radio-primary display-inline-b mr-5 mb-3">
+                    <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==editForm.section_grid_type" (change)="editForm.section_grid_type=x.type;">
+                    <span class="d-flex flex-column"><img [src]="x.icon">{{x.name}}</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </ng-container>
+              </div>
             </div>
           </ng-container>
         </div>

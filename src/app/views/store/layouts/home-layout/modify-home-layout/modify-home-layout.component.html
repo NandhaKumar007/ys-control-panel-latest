@@ -100,7 +100,7 @@
                 </div>
                 <div class="col-md-12 form-group mb-3">
                   <label>Content</label>
-                  <textarea rows="4" class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel" required></textarea>
+                  <textarea class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel" required></textarea>
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@
                   </div>
                   <div class="col-md-12 form-group mb-3">
                     <label>Sub-heading</label>
-                    <textarea rows="4" class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
+                    <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
                   </div>
                 </ng-container>
                 <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
@@ -249,13 +249,76 @@
       </div>
     </ng-container>
 
-    <div *ngIf="layoutDetails?.image_list?.length<10 && layoutDetails.type!='section' && layoutDetails.type!='highlighted_section'  && layoutDetails.type!='secondary'" style="margin-top: 50px;" class="row">
+    <div *ngIf="layoutDetails?.image_list?.length<10 && layoutDetails.type!='section' && layoutDetails.type!='highlighted_section' && layoutDetails.type!='secondary' && layoutDetails.type!='shopping_assistant'" style="margin-top: 50px;" class="row">
       <div class="col-md-4">
         <p (click)="(layoutDetails?.type=='testimonial')? layoutDetails.image_list.push({ rank: layoutDetails.image_list.length+1, content_details: {} }): layoutDetails.image_list.push({ rank: layoutDetails.image_list.length+1 });">
           <b class="add-another">ADD NEW</b>
         </p>
       </div>
     </div>
+
+    <!-- shopping assistant -->
+    <ng-container *ngIf="layoutDetails.type=='shopping_assistant'">
+      <div class="card p-3 mb-3">
+        <div class="row">
+          <!-- Image -->
+          <div class="col-md-6 col-lg-6 d-flex">
+            <div class="card card-in-card w-100 p-3 mb-3">
+              <div class="desktop-banner" align="center">
+                <p>1850 x 690 pixels @72ppi</p>
+                <i *ngIf="!shopping_assist_config.image" class="material-icons">add_photo_alternate</i>
+                <img *ngIf="shopping_assist_config.image && shopping_assist_config.img_change" [src]="shopping_assist_config.image">
+                <ng-container *ngIf="shopping_assist_config.image && !shopping_assist_config.img_change">
+                  <img [src]="imgBaseUrl+shopping_assist_config.image">
+                </ng-container>
+              </div>
+              <div class="h-100 d-flex align-items-end">
+                <div class="custom-file mt-2">
+                  <input type="file" name="layout_img" id="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/jpeg">
+                  <label class="custom-file-label" for="layout_img">Choose file</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- #Image -->
+
+          <!-- Content -->
+          <div class="col-md-6 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+            <div class="card w-100 p-3 mb-3">
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                  <label>Prompt</label>
+                  <input type="text" name="prompt" class="form-control" [(ngModel)]="shopping_assist_config.prompt" #prompt="ngModel" required />
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label>Sub-text</label>
+                  <textarea class="form-control" aria-label="With textarea" name="sub_text" [(ngModel)]="shopping_assist_config.sub_text" #sub_text="ngModel" required></textarea>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label>Button Text</label>
+                  <input type="text" name="btn_text" class="form-control" [(ngModel)]="shopping_assist_config.btn_text" #btn_text="ngModel" required />
+                </div>
+                <div class="col-md-12">
+                  <p class="add-another">Changing Text</p>
+                </div>
+                <div *ngFor="let x of shopping_assist_config.changing_text; let i=index;" class="col-md-12 form-group mb-3">
+                  <div class="card p-2">
+                    <label for="name">Text {{i+1}}</label>
+                    <span *ngIf="shopping_assist_config.changing_text.length > 1" (click)="shopping_assist_config.changing_text.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                    <input type="text" name="value{{i}}" class="form-control" [(ngModel)]="x.value" #value="ngModel" required />
+                  </div>
+                </div>
+                <div *ngIf="shopping_assist_config.changing_text.length<3" class="col-md-12">
+                  <p class="add-another pull-right" (click)="shopping_assist_config.changing_text.push({});">ADD NEW</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- #Content -->
+        </div>
+      </div>
+    </ng-container>
+    <!-- end shopping assistant -->
 
     <div class="separator-breadcrumb border-top mt-5"></div>
     <div class="row">

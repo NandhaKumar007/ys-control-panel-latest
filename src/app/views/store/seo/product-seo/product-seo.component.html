@@ -103,7 +103,7 @@
             <div class="col-md-12 form-group mb-3">
               <label for="meta_desc">Meta Description</label>
               <span *ngIf="seoForm?.meta_desc?.length" class="label_hint">{{seoForm?.meta_desc?.length}} of 320 characters used</span>
-              <textarea rows="4" class="form-control" aria-label="With textarea" name="meta_desc" id="meta_desc" [(ngModel)]="seoForm.meta_desc"
+              <textarea class="form-control" aria-label="With textarea" name="meta_desc" id="meta_desc" [(ngModel)]="seoForm.meta_desc"
                 #meta_desc="ngModel" maxlength="320" required></textarea>
             </div>
           </ng-container>

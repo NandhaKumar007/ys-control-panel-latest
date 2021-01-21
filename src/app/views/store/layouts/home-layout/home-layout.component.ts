@@ -26,7 +26,6 @@ export class HomeLayoutComponent implements OnInit {
     { name: "Featured Sections", value: "featured_section" },
     { name: "Featured Products", value: "featured_product" },
     { name: "Highlighted Section", value: "highlighted_section" },
-    // { name: "Highlighted Product", value: "highlighted_product" },
     { name: "Multi-tab Featured Products", value: "multiple_featured_product" },
     { name: "Secondary Banner", value: "secondary" }
   ];
@@ -43,6 +42,8 @@ export class HomeLayoutComponent implements OnInit {
 
   ngOnInit() {
     if(this.commonService.ys_features.indexOf('testimonials') !== -1) this.layoutTypes.push({ name: "Testimonial", value: "testimonial" });
+    if(this.commonService.ys_features.indexOf('shopping_assistant') !== -1) this.layoutTypes.push({ name: "Shopping Assistant", value: "shopping_assistant" });
+    if(this.commonService.ys_features.indexOf('blogs') !== -1) this.layoutTypes.push({ name: "Blogs", value: "blogs" });
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {
       if(result.status) {
