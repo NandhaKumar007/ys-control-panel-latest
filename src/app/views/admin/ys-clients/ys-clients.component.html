@@ -12,7 +12,7 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="row mb-4">
-    <div class="col-md-4 col-6">
+    <div class="col-md-3 col-6">
       <div class="form-group">
         <select name="type" class="form-control select-arrow" [(ngModel)]="listType" (change)="ngOnInit();">
           <option value="active">Active</option>
@@ -20,13 +20,22 @@
         </select>
       </div>
     </div>
+    <div class="col-md-3 col-6">
+      <div class="form-group">
+        <select name="type" class="form-control select-arrow" [(ngModel)]="accountType" (change)="changeAccType();">
+          <option value="all">All</option>
+          <option value="demo">Demo Accounts</option>
+          <option value="client">Live Accounts</option>
+        </select>
+      </div>
+    </div>
     <!-- search box -->
-    <div class="col-md-4 col-6">
+    <div class="col-md-3 col-6">
       <div class="form-group">
         <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
       </div>
     </div>
-    <div class="col-md-4 col-6">
+    <div class="col-md-3 col-6">
       <button type="button" routerLink="/admin/clients/add" class="btn btn-primary pull-right">Add Client</button>
     </div>
   </div>
@@ -37,6 +46,7 @@
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">
+        <div [ngClass]="x.account_type=='demo'? 'find-band': ''"></div>
         <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
           <img [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" style="height: 75px !important;" alt="">
         </div>
@@ -55,6 +65,7 @@
                   <button class="btn btn-wide btn-outline-secondary w-md-100" ngbDropdownToggle>Action</button>
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
+                    <button (click)="settingForm=x; modalService.open(settingModal);" class="dropdown-item">Setting</button>
                     <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change Password</button>
                   </div>
                 </div>
@@ -84,12 +95,12 @@
   </div>
 </div>
 
-<!-- CHANGE PWD MODAL -->
+<!-- Change Pwd -->
 <ng-template #pwdModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Change Password - {{pwdForm.name}}</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdatePwd(pwdModal);" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdatePwd();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
@@ -114,7 +125,7 @@
   </form>
 </ng-template>
 
-<!-- STATUS MODAL -->
+<!-- Status -->
 <ng-template #statusModal let-modal>
   <div class="modal-body">
     <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
@@ -128,7 +139,7 @@
   </div>
 </ng-template>
 
-<!-- DELETE MODAL -->
+<!-- Delete -->
 <ng-template #deleteModal let-modal>
   <div class="modal-body" style="background-color: #FA8072;">
     <p>
@@ -147,4 +158,77 @@
       <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
+</ng-template>
+
+<!-- Setting -->
+<ng-template #settingModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Setting - {{settingForm.name}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSetting();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="menu_image" [(ngModel)]="settingForm.additional_features.menu_image" #menu_image="ngModel">
+              <span>Menu with image</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="addon_image" [(ngModel)]="settingForm.additional_features.addon_image" #addon_image="ngModel">
+              <span>Addon with image</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="custom_model" [(ngModel)]="settingForm.additional_features.custom_model" #custom_model="ngModel">
+              <span>Save custom model</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="measurements_condition" [(ngModel)]="settingForm.additional_features.measurements_condition" #measurements_condition="ngModel">
+              <span>Measurement with condition</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="cfm_odr_on_last_vdr_cfm" [(ngModel)]="settingForm.additional_features.cfm_odr_on_last_vdr_cfm" #cfm_odr_on_last_vdr_cfm="ngModel">
+              <span>Auto order confirm on vendor confirm</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-12 mb-3 border-top"></div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Product image resolution</label>
+            <input type="text" name="cropper_resolution" class="form-control" [(ngModel)]="settingForm.additional_features.cropper_resolution" #cropper_resolution="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Gift card validty in months</label>
+            <input type="text" name="gc_validity_in_month" class="form-control" [(ngModel)]="settingForm.additional_features.gc_validity_in_month" #gc_validity_in_month="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Gift card type</label>
+            <select name="giftcard_type" class="form-control select-arrow" [(ngModel)]="settingForm.additional_features.giftcard_type" required>
+              <option value="onetime">One Time</option>
+              <option value="wallet">Wallet</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg"><p class="text-danger">{{ settingForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
 </ng-template>

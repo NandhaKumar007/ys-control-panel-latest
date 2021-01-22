@@ -57,7 +57,7 @@ export class ProductComponent implements OnInit {
       if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
     }
     if(this.commonService.catalog_list.length) {
-      this.categoryList.push({_id: 'all', name: "All Sections"});
+      this.categoryList.push({_id: 'all', name: "All Catalogs"});
       this.commonService.catalog_list.forEach(element => {
         this.categoryList.push(element)
       });

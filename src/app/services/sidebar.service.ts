@@ -69,7 +69,7 @@ export class SidebarService {
     if(ysFeatures.indexOf('pincode_service') !== -1) routePermissionList.push("pincodes");
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
-      routePermissionList.push("dashboard", "customers");
+      routePermissionList.push("dashboard", "customers", "profile");
       // dashboard
       sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
       // product extras
@@ -127,21 +127,29 @@ export class SidebarService {
         let orderList: IChildItem[] = [
           { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
           { icon: 'check_circle_outline', name: 'Completed Orders', state: '/orders/product/delivered/all', type: 'link' },
-          { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' },
-          { icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' },
-          {
-            name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline',
-            sub: [
-              { name: 'Product', state: '/orders/inactive-orders', type: 'link' },
-              { name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' }
-            ]
-          },
-          { icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' }
+          { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' }
         ];
+        if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
+          orderList.push(
+            { icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' },
+            {
+              name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline',
+              sub: [
+                { name: 'Product', state: '/orders/inactive-orders', type: 'link' },
+                { name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' }
+              ]
+            }
+          );
+          routePermissionList.push("inactive_gift_orders");
+        }
+        else {
+          orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
+        }
+        orderList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
         if(this.commonService.store_details.type == 'order_based') orderList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
         sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
         routePermissionList.push("orders", "abandoned_cart", "inactive_orders");
-        if(this.commonService.ys_features.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
+        if(ysFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
       }
       // customers
       if(this.commonService.store_details.type == 'quot_with_order_based') {
@@ -260,6 +268,7 @@ export class SidebarService {
       // my account
       routePermissionList.push("billing", "sub_users");
       let accountList: IChildItem[] = [
+        { icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' },
         { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
         { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' }
       ];

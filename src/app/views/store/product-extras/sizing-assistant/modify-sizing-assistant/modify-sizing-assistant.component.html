@@ -18,7 +18,7 @@
 
   <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
     <div class="card mb-3 p-3" *ngFor="let x of sizingDetails.assistant_types; let i=index;">
-      <div class="">
+      <div>
         <span (click)="sizingDetails.assistant_types.splice(i, 1);" class="material-icons item-close absolute-item-close float-right "
           aria-hidden="true">close</span>
       </div>

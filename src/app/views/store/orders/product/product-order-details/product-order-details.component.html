@@ -69,7 +69,7 @@
                       </ng-container>
                     </ng-container>
 
-                    <div class="" *ngIf="x.addon_status && x.selected_addon">
+                    <div *ngIf="x.addon_status && x.selected_addon">
                       <b>Addon</b>
                       <br>
                       <span class="w-100">{{x.selected_addon?.name}}</span>
@@ -133,7 +133,7 @@
                       </ng-container>
                     </ng-container>
 
-                    <div class="" *ngIf="x.addon_status && x.selected_addon">
+                    <div *ngIf="x.addon_status && x.selected_addon">
                       <b>Addon</b>
                       <br>
                       <span class="w-100">{{x.selected_addon?.name}}</span>
@@ -209,7 +209,7 @@
                           </ng-container>
                         </ng-container>
 
-                        <div class="" *ngIf="x.addon_status && x.selected_addon">
+                        <div *ngIf="x.addon_status && x.selected_addon">
                           <b>Addon</b>
                           <br>
                           <span class="w-100">{{x.selected_addon?.name}}</span>
@@ -1584,7 +1584,7 @@
         <div class="col-md-12">
 
           <table class="w-100">
-            <tr class="">
+            <tr>
               <td class="p-10 gray-bg invoice-font-size-head py-4" align="left"
                 [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">Item</td>
               <td class="p-10 gray-bg invoice-font-size-head py-4" align="left" style="width: 20%;">SKU</td>
@@ -1600,7 +1600,7 @@
                 <div class="invoice-details">
                   <table *ngFor="let order of invoice_order_list;" class="w-100 invoice-border">
 
-                    <tr *ngFor="let x of order.item_list;" class="">
+                    <tr *ngFor="let x of order.item_list;">
                       <td class="p-10 invoice-font-size" align="left"
                         [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">
                         <p>{{x.name}}</p>
@@ -1628,7 +1628,7 @@
 
                     <ng-container *ngIf="order.tax_details">
                       <tr>
-                        <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right">
+                        <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
                           <p>Item total</p>
                         </td>
                         <td align="right" class="p-10">
@@ -1640,7 +1640,7 @@
                       <ng-container
                         *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
                         <tr>
-                          <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right">
+                          <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
                             <p>SGST ({{order?.tax_details?.sgst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
@@ -1650,7 +1650,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right">
+                          <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
                             <p>CGST ({{order?.tax_details?.cgst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
@@ -1662,7 +1662,7 @@
                       </ng-container>
                       <tr
                         *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state">
-                        <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right">
+                        <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
                           <p>IGST ({{order?.tax_details?.igst}}%)</p>
                         </td>
                         <td align="right" class="p-10">
@@ -1679,7 +1679,7 @@
             </tr>
 
             <tr class="invoice-total">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Subtotal</p>
               </td>
               <td  align="right" class="p-10" style="width: 20%;">
@@ -1688,7 +1688,7 @@
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="tax_config?.tax > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>{{ tax_config?.name }} ({{tax_config.tax}}%)</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
@@ -1696,7 +1696,7 @@
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.gift_wrapper > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Gift Wrapping</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
@@ -1704,7 +1704,7 @@
               </td>
             </tr>
             <tr class="invoice-total">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Shipping and Handling</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
@@ -1713,7 +1713,7 @@
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.cod_charges > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" class="" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>COD Charges</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
@@ -1721,7 +1721,7 @@
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.discount_amount > 0">
-              <td class="" [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Discount</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">

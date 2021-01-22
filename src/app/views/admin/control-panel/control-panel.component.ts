@@ -56,19 +56,12 @@ export class ControlPanelComponent implements OnInit {
             name: result.data.name,
             email: result.data.email,
             website: result.data.website,
-            contact_person: result.data.contact_person,
-            mobile: result.data.mobile,
-            tax: result.data.tax,
             gst_no: result.data.gst_no,
             base_url: result.data.base_url,
             currency_types: result.data.currency_types,
             country: result.data.country,
-            section_grid_img_count: result.data.application_setting.section_grid_img_count,
-            base_qty: 1,
             created_on: result.data.created_on,
-            expiry_on: result.data.expiry_on,
             application_setting: result.data.application_setting,
-            application_access: result.data.application_access,
             additional_features: result.data.additional_features
           };
           if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;

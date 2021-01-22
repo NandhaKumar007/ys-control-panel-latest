@@ -10,7 +10,7 @@
     <ul>
       <li *ngIf="step_num==1">Add your product details</li>
       <li *ngIf="step_num==2">Edit your product's appearance</li>
-      <li *ngIf="step_num==3">Link your product to sections</li>
+      <li *ngIf="step_num==3">Link your product to catalogs</li>
     </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -138,7 +138,7 @@
       </div>
 
       <!-- variants -->
-      <div class="" [ngClass]="productForm.variant_status? 'card p-3 mb-3': ''">
+      <div [ngClass]="productForm.variant_status? 'card p-3 mb-3': ''">
         <div class="row">
           <div class="form-group mb-3 col-md-12">
             <label class="checkbox checkbox-primary">

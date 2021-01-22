@@ -160,7 +160,7 @@
 
             <!-- category -->
             <div *ngIf="offerForm.buy_properties.apply_to=='category'" class="form-group mb-3 ml-3">
-              <button type="button" class="btn btn-wide btn-primary" (click)="offerForm.bx_gy_type='buy'; page=1; openCatListModal(categoryListModal);">Browse Sections</button>
+              <button type="button" class="btn btn-wide btn-primary" (click)="offerForm.bx_gy_type='buy'; page=1; openCatListModal(categoryListModal);">Browse Catalogs</button>
             </div>
 
             <ng-container *ngIf="offerForm.buy_properties.category_list?.length">
@@ -223,7 +223,7 @@
 
             <!-- category -->
             <div *ngIf="offerForm.get_properties.apply_to=='category'" class="form-group mb-3 ml-3">
-              <button type="button" class="btn btn-wide btn-primary" (click)="offerForm.bx_gy_type='get'; page=1; openCatListModal(categoryListModal);">Browse Sections</button>
+              <button type="button" class="btn btn-wide btn-primary" (click)="offerForm.bx_gy_type='get'; page=1; openCatListModal(categoryListModal);">Browse Catalogs</button>
             </div>
 
             <ng-container *ngIf="offerForm.get_properties.category_list?.length">
@@ -305,7 +305,7 @@
                 </label>
                 <label class="radio radio-primary">
                   <input type="radio" name="apply_to" value="category" (change)="offerForm.category_list=[]; offerForm.product_list=[];" [(ngModel)]="offerForm.apply_to" />
-                  <span>Specific Sections</span>
+                  <span>Specific Catalogs</span>
                   <span class="checkmark"></span>
                 </label>
                 <label class="radio radio-primary">
@@ -328,7 +328,7 @@
 
             <!-- category -->
             <div *ngIf="offerForm.apply_to=='category'" class="form-group mb-3 ml-3">
-              <button type="button" class="btn btn-wide btn-primary" (click)="page=1; openCatListModal(categoryListModal);">Browse Sections</button>
+              <button type="button" class="btn btn-wide btn-primary" (click)="page=1; openCatListModal(categoryListModal);">Browse Catalogs</button>
             </div>
 
             <ng-container *ngIf="offerForm.category_list?.length">

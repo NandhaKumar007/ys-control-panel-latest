@@ -20,7 +20,7 @@
       <div class="col-lg-9">
         <div class="order-section">
           <!-- Customer Details -->
-          <div class="">
+          <div>
             <p class="sec-desc">Customer Details</p>
           </div>
           <p *ngIf="!selected_customer || !selected_customer?.shipping_address" class="add-another x-close pt-2"
@@ -57,7 +57,7 @@
 
           <!-- product list -->
           <ng-container *ngIf="selected_customer && selected_customer?.shipping_address">
-            <div class="">
+            <div>
               <p class="sec-desc pb-2">Product Details</p>
             </div>
             <p *ngIf="!cart_list.length" class="add-another x-close"
@@ -109,7 +109,7 @@
 
           <!-- shipping methods -->
           <ng-container *ngIf="cart_list.length && commonService.ys_features.indexOf('time_based_delivery')==-1">
-            <div class="">
+            <div>
               <p class="sec-desc">Shipping Details</p>
             </div>
             <p *ngIf="!selected_shipping" class="add-another x-close pt-2" (click)="openShippingListModal(shippingListModal);">ADD SHIPPING METHOD</p>
@@ -133,7 +133,7 @@
 
           <!-- delivery methods -->
           <ng-container *ngIf="cart_list.length && commonService.ys_features.indexOf('time_based_delivery')!=-1">
-            <div class="">
+            <div>
               <p class="sec-desc">Delivery Details</p>
             </div>
             <p *ngIf="!selected_shipping" class="add-another x-close pt-2" (click)="openDeliveryMethodModal(deliveryMethodModal);">ADD DELIVERY METHOD</p>
@@ -492,7 +492,7 @@
               </div>
 
               <!-- Payment reference No. -->
-              <div class="" *ngIf="payment_type!='cash'">
+              <div *ngIf="payment_type!='cash'">
                 <div class="pb-2">
                   <p class="sec-desc">Payment reference No.</p>
                 </div>
@@ -699,7 +699,7 @@
             <div class="col-md-6">
               <div class="d-flex flex-column">
                 <!-- product-image -->
-                <div class="">
+                <div>
                   <div class="product-image d-flex justify-content-center align-items-center">
                     <div class="list-thumb d-flex align-items-center mtb-20">
                       <img [src]="imgBaseUrl+productDetails.image" alt="prod-img">
@@ -743,7 +743,7 @@
                         <div class="sizes">
                           <p>{{x.name}}</p>
                         </div>
-                        <div class="">
+                        <div>
                           <ng-container *ngFor="let y of x.options; let j=index;">
                             <div class="d-inline-block mr-4">
                               <label class="radio radio-primary">
@@ -1022,7 +1022,7 @@
 <!-- EXISTING MODEL LIST -->
 <ng-template #existingListModal let-modal>
   <div class="modal-header">
-    <div class="">
+    <div>
       <h5 class="modal-title">Models</h5>
       <p class="m-0">Select an existing model or create a new one</p>
     </div>
@@ -1035,7 +1035,7 @@
     <ng-container *ngFor="let x of existing_model_list; let i=index;">
 
       <div class="mb-4">
-        <div class="">
+        <div>
           <h5>Model {{i+1}}</h5>
         </div>
         <div class="card p-3">
@@ -1098,7 +1098,7 @@
 <!-- CREATE NEW MODEL -->
 <ng-template #createNewModal let-modal>
   <div class="modal-header">
-    <div class="">
+    <div>
       <h5 class="modal-title"><b>Add New Model</b></h5>
       <p class="m-0">Name and design your model</p>
     </div>
@@ -1300,7 +1300,7 @@
 <!-- SELECTED MODEL DETAILS -->
 <ng-template #selectedCustomizationDetailsModal let-modal>
   <div class="modal-header d-flex align-items-center">
-    <div class="">
+    <div>
       <h5 class="modal-title">
         <strong>{{customized_model?.name}}</strong>
       </h5>
@@ -1343,7 +1343,7 @@
               <div class="card card-in-card p-3" align="center">
                 <h5 class="m-0">{{x.name}}</h5>
               </div>
-              <div class="">
+              <div>
                 <div class="d-flex align-items-center justify-content-center mb-3">
                   <img class="modal-measurement-img" imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image"
                     alt="measurement_img">
@@ -1383,7 +1383,7 @@
 <!-- VIEW MODEL DETAILS -->
 <ng-template #viewCustomizationDetailsModal let-modal>
   <div class="modal-header d-flex align-items-center">
-    <div class="">
+    <div>
       <h5 class="modal-title">
         <strong>{{selected_model?.name}}</strong>
       </h5>
@@ -1424,7 +1424,7 @@
               <div class="card card-in-card p-3" align="center">
                 <h5 class="m-0">{{x.name}}</h5>
               </div>
-              <div class="">
+              <div>
                 <div class="d-flex align-items-center justify-content-center mb-3">
                   <img class="modal-measurement-img" imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="model">
                 </div>

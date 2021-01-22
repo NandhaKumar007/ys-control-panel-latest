@@ -34,6 +34,14 @@ export class StoreApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/details', x, httpOptions);
   }
+  STORE_PROPERTY_DETAILS() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/properties', httpOptions);
+  }
+  UPDATE_STORE_PROPERTY_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/properties', x, httpOptions);
+  }
   CHANGE_PWD(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/change_pwd', x, httpOptions);

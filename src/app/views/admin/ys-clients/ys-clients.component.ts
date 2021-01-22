@@ -15,10 +15,11 @@ import { environment } from '../../../../environments/environment';
 export class YsClientsComponent implements OnInit {
 
   page = 1; pageSize = 10; search_bar: string;
-  pageLoader: boolean; list: any = [];
+  pageLoader: boolean; parent_list: any = []; list: any = [];
   imgBaseUrl = environment.img_baseurl;
-  pwdForm: any = {}; listType: string = 'active';
-  deleteForm: any = {}; verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
+  listType: string = 'active'; accountType: string = 'all';
+  pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
+  verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -28,8 +29,8 @@ export class YsClientsComponent implements OnInit {
     this.pageLoader = true; this.page = 1;
     this.adminApi.STORE_LIST(this.listType).subscribe(result => {
       if(result.status) {
-        this.list = result.list;
-        this.list.forEach(obj => {
+        this.parent_list = result.list;
+        this.parent_list.forEach(obj => {
           obj.package_name = "NA";
           if(obj.package_details) {
             let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
@@ -37,13 +38,19 @@ export class YsClientsComponent implements OnInit {
           }
         });
         if(this.listType=='active') this.commonService.store_list = result.list;
+        this.changeAccType();
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
   }
 
-  onUpdatePwd(modalName) {
+  changeAccType() {
+    if(this.accountType=='all') this.list = this.parent_list;
+    else this.list = this.parent_list.filter(obj => obj.account_type==this.accountType);
+  }
+
+  onUpdatePwd() {
     this.adminApi.CHANGE_STORE_PWD({ store_id: this.pwdForm._id, new_pwd: this.pwdForm.new_pwd }).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -85,6 +92,19 @@ export class YsClientsComponent implements OnInit {
       });
     }
     else this.deleteForm.error_msg = "Invalid store";
+  }
+
+  onUpdateSetting() {
+    this.adminApi.UPDATE_STORE({ _id: this.settingForm._id, additional_features: this.settingForm.additional_features }).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        console.log("response", result);
+        this.settingForm.error_msg = result.message;
+      }
+    });
   }
 
 }

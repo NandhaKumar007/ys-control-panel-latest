@@ -25,7 +25,7 @@
       <div class="col-md-6 mb-3" *ngFor="let x of collectionForm.option_list; let i=index;">
         <div class="card p-3">
           <div class="row">
-            <div *ngIf="collectionForm.option_list?.length>1" class="">
+            <div *ngIf="collectionForm.option_list?.length>1">
               <span (click)="collectionForm.option_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
             </div>
             <div class="col-md-12 form-group mb-3">

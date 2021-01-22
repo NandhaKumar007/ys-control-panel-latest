@@ -58,7 +58,7 @@
 
     <!-- measurement -->
     <ng-container *ngIf="commonService.ys_features.indexOf('measurements')!=-1 && measurementList?.length">
-      <div class="" [ngClass]="addonForm.mm_status? 'card p-3 mb-3': ''">
+      <div [ngClass]="addonForm.mm_status? 'card p-3 mb-3': ''">
         <div class="row">
           <div class="form-group mb-3 col-md-12">
             <label class="checkbox checkbox-primary">
@@ -93,7 +93,7 @@
     <!-- Customization List -->
     <div class="card mb-3 p-3" *ngFor="let x of addonForm.custom_list; let i=index;">
 
-      <div class="">
+      <div>
         <span (click)="addonForm.custom_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
       </div>
 
@@ -140,7 +140,7 @@
             </div>
 
             <div class="row">
-              <div class="" [ngClass]="(i>0)? 'col-md-6': 'col-md-12'">
+              <div [ngClass]="(i>0)? 'col-md-6': 'col-md-12'">
                 <div class="form-group">
                   <label for="name">Option Title</label>
                   <input type="text" name="option_name{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.name" #name="ngModel" required />

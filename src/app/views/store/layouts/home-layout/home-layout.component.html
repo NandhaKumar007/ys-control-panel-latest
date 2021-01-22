@@ -96,7 +96,7 @@
             </select>
           </div>
           <div *ngIf="addForm.type=='section'" class="col-md-12 form-group mt-2 mb-3">
-            <div class="">
+            <div>
               <ng-container *ngFor="let x of commonService.grid_list | fieldSearch:'status':'enabled'; let i=index;">
                 <label class="radio radio-primary display-inline-b mr-5 mb-3">
                   <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==addForm.section_grid_type" (change)="addForm.section_grid_type=x.type;">
@@ -137,7 +137,7 @@
               <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
             </div>
             <div *ngIf="addForm.type=='blogs' && addForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
-              <div class="">
+              <div>
                 <ng-container *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
                   <label class="radio radio-primary display-inline-b mr-5 mb-3">
                     <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==addForm.section_grid_type" (change)="addForm.section_grid_type=x.type;">
@@ -253,7 +253,7 @@
               <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
             </div>
             <div *ngIf="editForm.type=='blogs' && editForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
-              <div class="">
+              <div>
                 <ng-container *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
                   <label class="radio radio-primary display-inline-b mr-5 mb-3">
                     <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==editForm.section_grid_type" (change)="editForm.section_grid_type=x.type;">

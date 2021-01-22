@@ -65,7 +65,7 @@
                     </ng-container>
                   </ng-container>
 
-                  <div class="" *ngIf="x.addon_status && x.selected_addon">
+                  <div *ngIf="x.addon_status && x.selected_addon">
                     <b>Addon</b><br>
                     <span class="w-100">{{x.selected_addon?.name}}</span>
                   </div>
@@ -322,7 +322,7 @@
                     <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
                   </ng-container>
                 </ng-container>
-                <div class="" *ngIf="x.addon_status && x.selected_addon">
+                <div *ngIf="x.addon_status && x.selected_addon">
                   <b>Addon</b><br>
                   <span class="w-100">{{x.selected_addon?.name}}</span>
                 </div>

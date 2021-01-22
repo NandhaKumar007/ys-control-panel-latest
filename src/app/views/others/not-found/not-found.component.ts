@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-not-found',
@@ -9,7 +8,7 @@ import { Location } from '@angular/common';
 
 export class NotFoundComponent implements OnInit {
 
-  constructor(public location: Location) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

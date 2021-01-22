@@ -65,7 +65,7 @@
             <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum" alt="product-logo" ngbDropdownToggle>
           </div>
           <div ngbDropdownMenu class="header-account-dropdown">
-            <div class="">
+            <div>
               <div class="inner-account-circle user-account-inner d-flex flex-column align-items-center justify-content-center">
                 <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum" alt="product-logo">
               </div>
@@ -116,7 +116,7 @@
     <ng-template #menuTemplate let-parentItem="parentItem">
       <ul class="childNav" appDropdown>
         <li *ngFor="let item of parentItem?.sub" appDropdownLink class="nav-item sub-nav-icon">
-          <a routerLink="{{item.state}}" (click)="closeChildNav();" *ngIf="item.type==='link'" class="" routerLinkActive="open">
+          <a routerLink="{{item.state}}" (click)="closeChildNav();" *ngIf="item.type==='link'" routerLinkActive="open">
             <i class="material-icons">{{item.icon}}</i>
             <span class="item-name lvl1">{{item.name}}</span>
           </a>

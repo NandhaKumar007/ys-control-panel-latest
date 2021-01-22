@@ -29,6 +29,7 @@ export class YsFeaturesComponent implements OnInit {
       if(result.status) {
         this.commonService.admin_features = result.list;
         this.commonService.updateLocalData('admin_features', this.commonService.admin_features);
+        this.list = [];
         result.list.forEach(obj => {
           obj.packages = [];
           obj.linked_packages.forEach(element => {

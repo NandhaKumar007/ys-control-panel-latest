@@ -139,7 +139,7 @@
                     <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
                     <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
                       <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
-                      <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item" (click)="goModifyPage(x, 3);">Sections</button>
+                      <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
                     </ng-container>
                   </div>
                 </div>
