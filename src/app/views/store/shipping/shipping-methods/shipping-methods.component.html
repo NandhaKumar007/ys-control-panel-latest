@@ -106,16 +106,16 @@
         </div>
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Carrier Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Carrier Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="tracking_link">Tracking Link</label>
-            <input type="text" name="tracking_link" id="tracking_link" class="form-control" [(ngModel)]="addForm.tracking_link" #tracking_link="ngModel" required />
+            <label>Tracking Link</label>
+            <input type="text" name="tracking_link" class="form-control" [(ngModel)]="addForm.tracking_link" #tracking_link="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-              <label for="delivery_time">Delivery Time</label>
-              <select name="delivery_time" id="delivery_time" class="form-control" [(ngModel)]="addForm.delivery_time" #delivery_time="ngModel" required>
+              <label>Delivery Time</label>
+              <select name="delivery_time" class="form-control" [(ngModel)]="addForm.delivery_time" #delivery_time="ngModel" required>
                 <option value="Same day">Same day</option>
                 <option value="Next day">Next day</option>
                 <option value="1 to 2 days">1 to 2 days</option>
@@ -124,8 +124,8 @@
               </select>
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="shipping_price">Shipping Charge</label>
-            <input type="text" name="shipping_price" id="shipping_price" class="form-control" [(ngModel)]="addForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
+            <label>Shipping Charge</label>
+            <input type="text" name="shipping_price" class="form-control" [(ngModel)]="addForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
@@ -134,8 +134,8 @@
             </label>
           </div>
           <div *ngIf="addForm.free_shipping" class="col-md-12 form-group mb-3">
-            <label for="minimum_price">Order above</label>
-            <input type="text" name="minimum_price" id="minimum_price" class="form-control" [(ngModel)]="addForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+            <label>Order above</label>
+            <input type="text" name="minimum_price" class="form-control" [(ngModel)]="addForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
           </div>
         </div>
       </div>
@@ -164,18 +164,18 @@
             <input type="text" name="shipping_type" class="form-control" [(ngModel)]="editForm.shipping_type" #shipping_type="ngModel" readonly />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Carrier Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Carrier Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="tracking_link">Tracking Link</label>
-            <input type="text" name="tracking_link" id="tracking_link" class="form-control" [(ngModel)]="editForm.tracking_link" #tracking_link="ngModel" required />
+            <label>Tracking Link</label>
+            <input type="text" name="tracking_link" class="form-control" [(ngModel)]="editForm.tracking_link" #tracking_link="ngModel" required />
           </div>
         </div>
         <div *ngIf="!editForm.domes_zone_status && !editForm.inter_zone_status" class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="delivery_time">Delivery Time</label>
-            <select name="delivery_time" id="delivery_time" class="form-control" [(ngModel)]="editForm.delivery_time" #delivery_time="ngModel" required>
+            <label>Delivery Time</label>
+            <select name="delivery_time" class="form-control" [(ngModel)]="editForm.delivery_time" #delivery_time="ngModel" required>
               <option value="Same day">Same day</option>
               <option value="Next day">Next day</option>
               <option value="1 to 2 days">1 to 2 days</option>
@@ -184,17 +184,17 @@
             </select>
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="shipping_price">Shipping Charge</label>
-            <input type="text" name="shipping_price" id="shipping_price" class="form-control" [(ngModel)]="editForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
+            <label>Shipping Charge</label>
+            <input type="text" name="shipping_price" class="form-control" [(ngModel)]="editForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
           </div>
         </div>
         <div *ngIf="editForm.domes_zone_status || editForm.inter_zone_status" class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="delivery_time">Delivery Time</label>
+            <label>Delivery Time</label>
             <input type="text" value="Refer excel sheet" class="form-control" disabled />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="shipping_price">Shipping Charge</label>
+            <label>Shipping Charge</label>
             <input type="text" value="Refer excel sheet" class="form-control" disabled />
           </div>
         </div>
@@ -206,8 +206,8 @@
             </label>
           </div>
           <div *ngIf="editForm.free_shipping" class="col-md-12 form-group mb-3">
-            <label for="minimum_price">Order above</label>
-            <input type="text" name="minimum_price" id="minimum_price" class="form-control" [(ngModel)]="editForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+            <label>Order above</label>
+            <input type="text" name="minimum_price" class="form-control" [(ngModel)]="editForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
           </div>
         </div>
       </div>

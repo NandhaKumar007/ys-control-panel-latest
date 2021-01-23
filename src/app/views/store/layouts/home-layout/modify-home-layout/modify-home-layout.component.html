@@ -53,8 +53,8 @@
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" id="layout_img{{i}}" class="custom-file-input" [required]="!x.desktop_img" (change)="fileChangeListener('desktop', i, $event)" accept="image/jpeg">
-                  <label class="custom-file-label" for="layout_img{{i}}">Choose file</label>
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.desktop_img" (change)="fileChangeListener('desktop', i, $event)" accept="image/jpeg">
+                  <label class="custom-file-label">Choose file</label>
                 </div>
               </div>
             </div>
@@ -78,8 +78,8 @@
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" id="layout_img{{i}}" class="custom-file-input" [required]="!x.mobile_img" (change)="fileChangeListener('mobile', i, $event)" accept="image/jpeg">
-                  <label class="custom-file-label" for="layout_img{{i}}">Choose file</label>
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.mobile_img" (change)="fileChangeListener('mobile', i, $event)" accept="image/jpeg">
+                  <label class="custom-file-label">Choose file</label>
                 </div>
               </div>
             </div>
@@ -213,9 +213,9 @@
                   </select>
                 </div>
                 <div *ngIf="x.link_type=='internal' || x.link_type=='external'" class="col-md-12 form-group mb-3">
-                  <label *ngIf="x.link_type=='internal'" for="link">{{commonService.store_details?.base_url}}{{x.link}}</label>
-                  <label *ngIf="x.link_type=='external'" for="link">External Link</label>
-                  <input type="text" name="link" id="link" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
+                  <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
+                  <label *ngIf="x.link_type=='external'">External Link</label>
+                  <input type="text" name="link" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
                 </div>
 
                 <!-- Btn -->
@@ -274,8 +274,8 @@
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" id="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/jpeg">
-                  <label class="custom-file-label" for="layout_img">Choose file</label>
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/jpeg">
+                  <label class="custom-file-label">Choose file</label>
                 </div>
               </div>
             </div>
@@ -303,7 +303,7 @@
                 </div>
                 <div *ngFor="let x of shopping_assist_config.changing_text; let i=index;" class="col-md-12 form-group mb-3">
                   <div class="card p-2">
-                    <label for="name">Text {{i+1}}</label>
+                    <label>Text {{i+1}}</label>
                     <span *ngIf="shopping_assist_config.changing_text.length > 1" (click)="shopping_assist_config.changing_text.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
                     <input type="text" name="value{{i}}" class="form-control" [(ngModel)]="x.value" #value="ngModel" required />
                   </div>

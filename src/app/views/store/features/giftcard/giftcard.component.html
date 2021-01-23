@@ -82,8 +82,8 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Gift Card Title</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Gift Card Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
 
           <div class="col-md-4 mb-3">
@@ -103,22 +103,22 @@
           </div>
 
           <div *ngIf="addForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
-            <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="form-control" [(ngModel)]="addForm.price" #price="ngModel" appNumberOnly required />
+            <label>Price</label>
+            <input type="text" name="price" class="form-control" [(ngModel)]="addForm.price" #price="ngModel" appNumberOnly required />
           </div>
 
           <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label for="min_price">Minimum Price Limit</label>
-            <input type="text" name="min_price" id="min_price" class="form-control" [(ngModel)]="addForm.min_price" #min_price="ngModel" appNumberOnly required />
+            <label>Minimum Price Limit</label>
+            <input type="text" name="min_price" class="form-control" [(ngModel)]="addForm.min_price" #min_price="ngModel" appNumberOnly required />
           </div>
 
           <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label for="max_price">Maximum Price Limit</label>
-            <input type="text" name="max_price" id="max_price" class="form-control" [(ngModel)]="addForm.max_price" #max_price="ngModel" appNumberOnly required />
+            <label>Maximum Price Limit</label>
+            <input type="text" name="max_price" class="form-control" [(ngModel)]="addForm.max_price" #max_price="ngModel" appNumberOnly required />
           </div>
 
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
         </div>
@@ -181,8 +181,8 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Gift Card Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Gift Card Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
 
           <div class="col-md-4 mb-3">
@@ -202,22 +202,22 @@
           </div>
 
           <div *ngIf="editForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
-            <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="form-control" [(ngModel)]="editForm.price" #price="ngModel" appNumberOnly required />
+            <label>Price</label>
+            <input type="text" name="price" class="form-control" [(ngModel)]="editForm.price" #price="ngModel" appNumberOnly required />
           </div>
 
           <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label for="min_price">Minimum Price Limit</label>
-            <input type="text" name="min_price" id="min_price" class="form-control" [(ngModel)]="editForm.min_price" #min_price="ngModel" appNumberOnly required />
+            <label>Minimum Price Limit</label>
+            <input type="text" name="min_price" class="form-control" [(ngModel)]="editForm.min_price" #min_price="ngModel" appNumberOnly required />
           </div>
 
           <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label for="max_price">Maximum Price Limit</label>
-            <input type="text" name="max_price" id="max_price" class="form-control" [(ngModel)]="editForm.max_price" #max_price="ngModel" appNumberOnly required />
+            <label>Maximum Price Limit</label>
+            <input type="text" name="max_price" class="form-control" [(ngModel)]="editForm.max_price" #max_price="ngModel" appNumberOnly required />
           </div>
 
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
         </div>

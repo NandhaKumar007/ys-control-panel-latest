@@ -84,34 +84,33 @@
           </div>
           <ng-container *ngIf="!seoForm.default_setting">
             <div class="col-md-12 form-group mb-3">
-              <label for="page_url">New Page URL - {{commonService.store_details?.base_url}}/product/{{seoForm?.page_url}}</label>
-              <input type="text" name="page_url" id="page_url" class="form-control" [(ngModel)]="seoForm.page_url" #page_url="ngModel"
+              <label>New Page URL - {{commonService.store_details?.base_url}}/product/{{seoForm?.page_url}}</label>
+              <input type="text" name="page_url" class="form-control" [(ngModel)]="seoForm.page_url" #page_url="ngModel"
                 required />
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label for="h1_tag">H1 Tag</label>
+              <label>H1 Tag</label>
               <span *ngIf="seoForm?.h1_tag?.length" class="label_hint">{{seoForm?.h1_tag?.length}} of 70 characters used</span>
-              <input type="text" name="h1_tag" id="h1_tag" class="form-control" [(ngModel)]="seoForm.h1_tag" #h1_tag="ngModel"
+              <input type="text" name="h1_tag" class="form-control" [(ngModel)]="seoForm.h1_tag" #h1_tag="ngModel"
                 maxlength="70" required />
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label for="page_title">Page Title</label>
+              <label>Page Title</label>
               <span *ngIf="seoForm?.page_title?.length" class="label_hint">{{seoForm?.page_title?.length}} of 70 characters used</span>
-              <input type="text" name="page_title" id="page_title" class="form-control" [(ngModel)]="seoForm.page_title" #page_title="ngModel"
+              <input type="text" name="page_title" class="form-control" [(ngModel)]="seoForm.page_title" #page_title="ngModel"
                 maxlength="70" required />
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label for="meta_desc">Meta Description</label>
+              <label>Meta Description</label>
               <span *ngIf="seoForm?.meta_desc?.length" class="label_hint">{{seoForm?.meta_desc?.length}} of 320 characters used</span>
-              <textarea class="form-control" aria-label="With textarea" name="meta_desc" id="meta_desc" [(ngModel)]="seoForm.meta_desc"
+              <textarea class="form-control" aria-label="With textarea" name="meta_desc" [(ngModel)]="seoForm.meta_desc"
                 #meta_desc="ngModel" maxlength="320" required></textarea>
             </div>
           </ng-container>
           <div class="col-md-12 form-group mb-3">
-            <label for="meta_keyword_list">Meta Keywords</label>
-            <tag-input class="w-100" name="meta_keyword_list" id="meta_keyword_list" [(ngModel)]="seoForm.meta_keyword_list"
-              #meta_keyword_list="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"
-              required></tag-input>
+            <label>Meta Keywords</label>
+            <tag-input class="w-100" name="meta_keyword_list" [(ngModel)]="seoForm.meta_keyword_list" #meta_keyword_list="ngModel" placeholder=""
+            [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
           </div>
         </div>
       </div>

@@ -35,23 +35,23 @@
     </div>
     <div class="row">
       <div class="col-md-4 form-group mb-3">
-        <label for="name">Name</label>
-        <input type="text" name="addon_name" id="name" class="form-control" [(ngModel)]="addonForm.name" #name="ngModel" required
+        <label>Name</label>
+        <input type="text" name="addon_name" class="form-control" [(ngModel)]="addonForm.name" #name="ngModel" required
         />
       </div>
       <div class="col-md-3 form-group mb-3">
-        <label for="price">Price</label>
-        <input type="text" name="addon_price" id="price" class="form-control" [(ngModel)]="addonForm.price" #price="ngModel" appNumberOnly
+        <label>Price</label>
+        <input type="text" name="addon_price" class="form-control" [(ngModel)]="addonForm.price" #price="ngModel" appNumberOnly
           required />
       </div>
       <div class="col-md-3 form-group mb-3">
-        <label for="min_stock">Min Stock Requirement</label>
-        <input type="text" name="min_stock" id="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel"
+        <label>Min Stock Requirement</label>
+        <input type="text" name="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel"
           appNumberOnly required />
       </div>
       <div class="col-md-2 form-group mb-3">
-        <label for="rank">Rank</label>
-        <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="addonForm.rank" #rank="ngModel" min="1" max="{{maxRank}}"
+        <label>Rank</label>
+        <input type="number" name="rank" class="form-control" [(ngModel)]="addonForm.rank" #rank="ngModel" min="1" max="{{maxRank}}"
           appNumberOnly required />
       </div>
     </div>
@@ -99,13 +99,13 @@
 
       <div class="row">
         <div class="col-md-6 form-group mb-3">
-          <label for="name">Customization Title</label>
-          <input type="text" name="custom_name{{i+1}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" required
+          <label>Customization Title</label>
+          <input type="text" name="custom_name{{i+1}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" required
           />
         </div>
         <div class="form-group mb-3" [ngClass]="x.type=='mandatory' || x.type=='limited'? 'col-md-3': 'col-md-6'">
-          <label for="type">Choice Type</label>
-          <select name="type{{i+1}}" id="type" class="form-control" (change)="x.limit=0;" [(ngModel)]="x.type" #type="ngModel" required>
+          <label>Choice Type</label>
+          <select name="type{{i+1}}" class="form-control" (change)="x.limit=0;" [(ngModel)]="x.type" #type="ngModel" required>
             <option value="either_or">Choose One</option>
             <option value="multiple">Unlimited Choice</option>
             <option value="limited">Limited Choice</option>
@@ -113,10 +113,8 @@
           </select>
         </div>
         <div *ngIf="x.type=='mandatory' || x.type=='limited'" class="col-md-3 form-group mb-3">
-          <label for="limit">Limit
-            <span *ngIf="x.limit"> ({{x.limit}} out of {{x.option_list.length}})</span>
-          </label>
-          <input type="number" name="limit{{i+1}}" id="limit" class="form-control" [(ngModel)]="x.limit" #limit="ngModel" max="{{x.option_list.length}}"
+          <label>Limit <span *ngIf="x.limit"> ({{x.limit}} out of {{x.option_list.length}})</span> </label>
+          <input type="number" name="limit{{i+1}}" class="form-control" [(ngModel)]="x.limit" #limit="ngModel" max="{{x.option_list.length}}"
             required />
         </div>
         <!-- Option List -->
@@ -142,7 +140,7 @@
             <div class="row">
               <div [ngClass]="(i>0)? 'col-md-6': 'col-md-12'">
                 <div class="form-group">
-                  <label for="name">Option Title</label>
+                  <label>Option Title</label>
                   <input type="text" name="option_name{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.name" #name="ngModel" required />
                 </div>
               </div>
@@ -155,7 +153,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="price">Price</label>
+                  <label>Price</label>
                   <input type="text" name="option_price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" required
                   />
                 </div>

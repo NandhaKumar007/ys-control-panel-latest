@@ -21,13 +21,13 @@
       <ng-container *ngIf="commonService.vendor_permissions?.products?.update_type=='stock_only'">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label for="name">Product Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="productForm.name" #name="ngModel" readonly required />
+            <label>Product Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="productForm.name" #name="ngModel" readonly required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <ng-container *ngIf="!productForm.variant_types.length">
-              <label for="stock">Stock</label>
-              <input type="text" name="stock" id="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly required />
+              <label>Stock</label>
+              <input type="text" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly required />
             </ng-container>
           </div>
           <!-- variants -->
@@ -49,12 +49,12 @@
                     </p>
                   </div>
                   <div class="col-md-6 form-group mb-3 d-flex flex-column justify-content-between">
-                    <label for="sku">SKU</label>
-                    <input type="text" name="sku{{i}}" id="sku" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" readonly required />
+                    <label>SKU</label>
+                    <input type="text" name="sku{{i}}" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" readonly required />
                   </div>
                   <div class="col-md-6 form-group mb-3 d-flex flex-column justify-content-between">
-                    <label for="stock">Stock</label>
-                    <input type="text" name="stock{{i}}" id="stock" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly required />
+                    <label>Stock</label>
+                    <input type="text" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly required />
                   </div>
                 </div>
               </div>
@@ -67,7 +67,7 @@
         <div class="row">
           <ng-container *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1">
             <div class="col-md-6 form-group mb-3">
-              <label for="name">Vendor</label>
+              <label>Vendor</label>
               <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel">
                 <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.name}}</option>
               </select>
@@ -79,19 +79,19 @@
             <input type="text" name="brand" class="form-control" [(ngModel)]="productForm.brand" #brand="ngModel" />
           </div>
           <div class="col-md-3 form-group mb-3">
-            <label for="name">Product Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="productForm.name" #name="ngModel" required />
+            <label>Product Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="productForm.name" #name="ngModel" required />
           </div>
           <div *ngIf="!productForm.variant_types.length" class="col-md-3 form-group mb-3">
-            <label for="sku">Product SKU</label>
-            <input type="text" name="sku" id="sku" class="form-control" [(ngModel)]="productForm.sku" #sku="ngModel" required />
+            <label>Product SKU</label>
+            <input type="text" name="sku" class="form-control" [(ngModel)]="productForm.sku" #sku="ngModel" required />
           </div>
           <div class="form-group mb-3" [ngClass]="(productForm.variant_types.length)? 'col-md-6': 'col-md-3'">
-            <label for="hsn_code">HSN Code</label>
-            <input type="text" name="hsn_code" id="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
+            <label>HSN Code</label>
+            <input type="text" name="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="productForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
           <div *ngIf="productForm?.seo_details?.modified" class="col-md-12 form-group mb-3">
@@ -102,31 +102,31 @@
             </label>
           </div>
           <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
-            <label for="selling_price">Selling Price</label>
-            <input type="text" name="selling_price" id="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
+            <label>Selling Price</label>
+            <input type="text" name="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
               (input)="discountCalc(productForm)" appNumberOnly required />
           </div>
           <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
-            <label for="stock">Stock</label>
-            <input type="text" name="stock" id="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly
+            <label>Stock</label>
+            <input type="text" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly
               required />
           </div>
           <div class="col-md-3 form-group mb-3">
-            <label for="type">Unit</label>
-            <select name="unit" id="unit" class="form-control" [(ngModel)]="productForm.unit" #unit="ngModel" required>
+            <label>Unit</label>
+            <select name="unit" class="form-control" [(ngModel)]="productForm.unit" #unit="ngModel" required>
               <option value="Pcs">Unit (Pcs)</option>
               <option value="Mts">Length (Mts)</option>
               <option value="Kgs">Weight (Kgs)</option>
             </select>
           </div>
           <div class="col-md-3 form-group mb-3">
-            <label for="weight">Shipping Weight for 1 {{productForm.unit}} (in Kg)</label>
-            <input type="text" name="weight" id="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly
+            <label>Shipping Weight for 1 {{productForm.unit}} (in Kg)</label>
+            <input type="text" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly
               required />
           </div>
           <div class="form-group mb-3" [ngClass]="(taxRates.length && !productForm.variant_types.length)? 'col-md-3': 'col-md-6'">
-            <label for="rank">Rank</label>
-            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="productForm.rank" #rank="ngModel" min="1" max="{{maxRank}}"
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" [(ngModel)]="productForm.rank" #rank="ngModel" min="1" max="{{maxRank}}"
               appNumberOnly required />
           </div>
           <div *ngIf="!productForm.variant_types.length && taxRates.length" class="col-md-3 form-group mb-3">
@@ -170,15 +170,15 @@
                   <div class="row ml-3">
                     <div class="col-md-6 form-group mb-3">
                       <div class="card card-in-card p-3">
-                        <label for="disc_percentage">Discount (in %)</label>
-                        <input type="text" name="disc_percentage" id="disc_percentage" class="form-control" [(ngModel)]="productForm.disc_percentage"
+                        <label>Discount (in %)</label>
+                        <input type="text" name="disc_percentage" class="form-control" [(ngModel)]="productForm.disc_percentage"
                           #disc_percentage="ngModel" (input)="discountCalc(productForm)" appNumberOnly />
                       </div>
                     </div>
                     <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
                       <div class="card card-in-card p-3">
-                        <label for="discounted_price">Price after Discount</label>
-                        <input type="text" name="discounted_price" id="discounted_price" class="form-control" [(ngModel)]="productForm.discounted_price"
+                        <label>Price after Discount</label>
+                        <input type="text" name="discounted_price" class="form-control" [(ngModel)]="productForm.discounted_price"
                           #discounted_price="ngModel" appNumberOnly required />
                       </div>
                     </div>
@@ -211,9 +211,8 @@
                 </ng-container>
                 <div class="row">
                   <div class="col-md-4 form-group mb-3">
-                    <label for="name">Name</label>
-                    <input type="text" name="name{{i}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" (focusout)="onCreateVariantList(productForm.variant_types)"
-                      required />
+                    <label>Name</label>
+                    <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" (focusout)="onCreateVariantList(productForm.variant_types)" required />
                   </div>
                   <div class="col-md-8 form-group mb-3">
                     <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
@@ -257,22 +256,22 @@
                     </select>
                   </div>
                   <div class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
-                    <label for="sku">SKU</label>
-                    <input type="text" name="sku{{i}}" id="sku" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" required />
+                    <label>SKU</label>
+                    <input type="text" name="sku{{i}}" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" required />
                   </div>
                   <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
-                    <label for="selling_price">Selling Price</label>
-                    <input type="text" name="selling_price{{i}}" id="selling_price" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
+                    <label>Selling Price</label>
+                    <input type="text" name="selling_price{{i}}" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
                       (input)="discountCalc(productForm)" appNumberOnly required />
                   </div>
                   <div *ngIf="productForm.disc_status" class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
-                    <label for="discounted_price">Price after Discount</label>
-                    <input type="text" name="discounted_price{{i}}" id="discounted_price" class="form-control" [(ngModel)]="x.discounted_price"
+                    <label>Price after Discount</label>
+                    <input type="text" name="discounted_price{{i}}" class="form-control" [(ngModel)]="x.discounted_price"
                       #discounted_price="ngModel" appNumberOnly required />
                   </div>
                   <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
-                    <label for="stock">Stock</label>
-                    <input type="text" name="stock{{i}}" id="stock" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly
+                    <label>Stock</label>
+                    <input type="text" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly
                       required />
                   </div>
                 </div>
@@ -588,9 +587,8 @@
                 />
               </label>
               <div class="mt-1" align="left">
-                <label for="video_src">Product Video Source Link</label>
-                <input type="text" name="video_src" class="form-control" [(ngModel)]="productForm.video_details.src" #video_src="ngModel"
-                />
+                <label>Product Video Source Link</label>
+                <input type="text" name="video_src" class="form-control" [(ngModel)]="productForm.video_details.src" #video_src="ngModel" />
               </div>
             </div>
           </div>

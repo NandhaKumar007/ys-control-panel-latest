@@ -8,7 +8,7 @@
         <h1 class="mb-3 text-18">Control Panel</h1>
         <form autocomplete="off" (ngSubmit)="errorMsg=null; storePanel();" ngNativeValidate>
           <div class="form-group">
-            <label for="store_id">Store List</label>
+            <label>Store List</label>
             <select name="store_id" class="form-control form-control-rounded select-arrow" [(ngModel)]="store_id" (change)="errorMsg=null;" required>
               <option [ngValue]="x._id" *ngFor="let x of commonService.store_list">{{x.name}}</option>
             </select>

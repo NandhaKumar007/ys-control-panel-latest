@@ -74,14 +74,14 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="country">Code</label>
-            <select name="country" id="country" class="form-control" [(ngModel)]="addForm.country" #country="ngModel" required>
+            <label>Code</label>
+            <select name="country" class="form-control" [(ngModel)]="addForm.country" #country="ngModel" required>
               <option [ngValue]="x" *ngFor="let x of currencyList | orderAsc:'name';">{{x.name}}</option>
             </select>
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="additional_charges">Markup (%)</label>
-            <input type="text" name="additional_charges" id="additional_charges" class="form-control" [(ngModel)]="addForm.additional_charges" #additional_charges="ngModel" maxlength="3" appNumberOnly required />
+            <label>Markup (%)</label>
+            <input type="text" name="additional_charges" class="form-control" [(ngModel)]="addForm.additional_charges" #additional_charges="ngModel" maxlength="3" appNumberOnly required />
           </div>
         </div>
       </div>
@@ -106,8 +106,8 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="additional_charges">Markup (%)</label>
-            <input type="text" name="additional_charges" id="additional_charges" class="form-control" [(ngModel)]="editForm.additional_charges" #additional_charges="ngModel" maxlength="3" appNumberOnly required />
+            <label>Markup (%)</label>
+            <input type="text" name="additional_charges" class="form-control" [(ngModel)]="editForm.additional_charges" #additional_charges="ngModel" maxlength="3" appNumberOnly required />
           </div>
         </div>
       </div>

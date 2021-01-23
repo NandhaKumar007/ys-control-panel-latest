@@ -78,8 +78,8 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
         </div>
       </div>
@@ -104,8 +104,8 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
           <div *ngIf="editForm?.seo_details?.modified" class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">

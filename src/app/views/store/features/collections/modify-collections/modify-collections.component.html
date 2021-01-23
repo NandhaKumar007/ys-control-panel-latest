@@ -14,12 +14,12 @@
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
       <div class="col-md-6 form-group mb-3">
-        <label for="name">Name</label>
-        <input type="text" name="addon_name" id="name" class="form-control" [(ngModel)]="collectionForm.name" #name="ngModel" required />
+        <label>Name</label>
+        <input type="text" name="addon_name" class="form-control" [(ngModel)]="collectionForm.name" #name="ngModel" required />
       </div>
       <div class="col-md-6 form-group mb-3">
-        <label for="rank">Rank</label>
-        <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="collectionForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
+        <label>Rank</label>
+        <input type="number" name="rank" class="form-control" [(ngModel)]="collectionForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
       </div>
       <!-- Options List -->
       <div class="col-md-6 mb-3" *ngFor="let x of collectionForm.option_list; let i=index;">
@@ -29,8 +29,8 @@
               <span (click)="collectionForm.option_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label for="name">{{i+1}}) Option Name</label>
-              <input type="text" name="custom_name{{i}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
+              <label>{{i+1}}) Option Name</label>
+              <input type="text" name="custom_name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
             </div>
             <div class="col-md-12 form-group mb-3">
               <label class="checkbox checkbox-primary">

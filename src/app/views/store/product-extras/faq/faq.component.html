@@ -74,12 +74,12 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label for="rank">Rank</label>
-            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
           </div>
         </div>
 
@@ -87,19 +87,12 @@
           <div class="col-md-12" *ngFor="let x of addForm.answer_list; let i=index;">
             <div class="row">
               <div class="col-md-12 form-group mb-3">
-
                 <div class="card p-2">
-                <label for="name">Answer {{i+1}}</label>
-
-                <ng-container *ngIf="addForm.answer_list.length > 1">
-                  <span (click)="addForm.answer_list.splice(i, 1);"
-                    class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
-                </ng-container>
-
-                <textarea class="form-control" aria-label="With textarea" name="answer{{i}}" [(ngModel)]="x.answer" #answer="ngModel" required></textarea>
+                  <label>Answer {{i+1}}</label>
+                  <span *ngIf="addForm.answer_list.length > 1" (click)="addForm.answer_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                  <textarea class="form-control" aria-label="With textarea" name="answer{{i}}" [(ngModel)]="x.answer" #answer="ngModel" required></textarea>
+                </div>
               </div>
-              </div>
-             
             </div>
           </div>
           <div class="col-md-12 form-group">
@@ -128,12 +121,12 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label for="name">Title</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label for="rank">Rank</label>
-            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
         </div>
 
@@ -142,17 +135,11 @@
             <div class="row">
               <div class="col-md-12 form-group mb-3">
                 <div class="card p-2">
-                <label for="name">Answer {{i+1}}</label>
-
-                <ng-container *ngIf="editForm.answer_list.length > 1">
-                  <span (click)="editForm.answer_list.splice(i, 1);"
-                    class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
-                </ng-container>
-
-                <textarea class="form-control" aria-label="With textarea" name="answer{{i}}" [(ngModel)]="x.answer" #answer="ngModel" required></textarea>
+                  <label>Answer {{i+1}}</label>
+                  <span *ngIf="editForm.answer_list.length > 1" (click)="editForm.answer_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                  <textarea class="form-control" aria-label="With textarea" name="answer{{i}}" [(ngModel)]="x.answer" #answer="ngModel" required></textarea>
+                </div>
               </div>
-              </div>
-           
             </div>
           </div>
           <div class="col-md-12 form-group">

@@ -407,11 +407,9 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="search_keyword_list">Search Keywords</label>
-            <tag-input class="w-100" name="search_keyword_list" id="search_keyword_list"
-              [(ngModel)]="app_setting.search_keyword_list" #search_keyword_list="ngModel" placeholder=""
-              [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]">
-            </tag-input>
+            <label>Search Keywords</label>
+            <tag-input class="w-100" name="search_keyword_list"[(ngModel)]="app_setting.search_keyword_list" #search_keyword_list="ngModel" placeholder=""
+            [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"></tag-input>
           </div>
         </div>
       </div>

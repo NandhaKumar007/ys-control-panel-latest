@@ -82,15 +82,15 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label for="name">Title</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label for="author">Author</label>
-            <input type="text" name="author" id="author" class="form-control" [(ngModel)]="addForm.author" #author="ngModel" required />
+            <label>Author</label>
+            <input type="text" name="author" class="form-control" [(ngModel)]="addForm.author" #author="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
         </div>
@@ -152,15 +152,15 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label for="name">Title</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label for="author">Author</label>
-            <input type="text" name="author" id="author" class="form-control" [(ngModel)]="editForm.author" #author="ngModel" required />
+            <label>Author</label>
+            <input type="text" name="author" class="form-control" [(ngModel)]="editForm.author" #author="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
           <div *ngIf="editForm?.seo_details?.modified" class="col-md-12 form-group mb-3">

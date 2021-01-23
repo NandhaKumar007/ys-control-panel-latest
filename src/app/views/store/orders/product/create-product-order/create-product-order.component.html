@@ -794,9 +794,8 @@
                     *ngIf="productDetails.stock>0 && productDetails?.addon_status && productDetails?.addon_list?.length"
                     class="customization border-btm pt-3 pb-3">
                     <!-- addon list -->
-                    <label for="selected_addon">Addons</label>
-                    <select class="form-control" id="selected_addon" name="selected_addon"
-                      [(ngModel)]="productDetails.selected_addon" (change)="onChangeAddon();">
+                    <label>Addons</label>
+                    <select class="form-control" name="selected_addon" [(ngModel)]="productDetails.selected_addon" (change)="onChangeAddon();">
                       <option value="undefined" selected hidden>-- Please Select --</option>
                       <option *ngFor="let x of productDetails.addon_list | orderAsc: 'rank'; let i=index;" [ngValue]="x">
                         {{x.name}}</option>
@@ -1214,14 +1213,11 @@
                           <div class="row">
                             <div class="form-group col-sm-12">
                               <div class="gray-card-two">
-                                <label for="value{{mmIndex}}{{i}}">{{i+1}}.
-                                  {{x.name}}<sup class="req-star">*</sup>
+                                <label>{{i+1}}. {{x.name}}<sup class="req-star">*</sup>
                                 </label>
                                 <div class="input-group mb-3">
-                                  <input class="form-control" type="tel" name="value{{mmIndex}}{{i}}"
-                                    id="value{{mmIndex}}{{i}}" (input)="addonForm.alert_msg=null; x.alert_msg='';"
-                                    [(ngModel)]="x.value" #value="ngModel" (focusout)="mmFocusOut(x);" appNumberOnly
-                                    required />
+                                  <input class="form-control" type="tel" name="value{{mmIndex}}{{i}}" (input)="addonForm.alert_msg=null; x.alert_msg='';"
+                                  [(ngModel)]="x.value" #value="ngModel" (focusout)="mmFocusOut(x);" appNumberOnly required />
                                   <div class="input-group-append">
                                     <span class="input-group-text">{{addonForm.mm_unit}}</span>
                                   </div>

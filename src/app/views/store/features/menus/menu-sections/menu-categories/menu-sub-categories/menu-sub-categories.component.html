@@ -87,12 +87,12 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="rank">Rank</label>
-            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
@@ -176,12 +176,12 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="rank">Rank</label>
-            <input type="number" name="rank" id="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">

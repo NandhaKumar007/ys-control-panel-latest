@@ -79,12 +79,12 @@
 
         <div *ngIf="seoForm.content_status" class="row">
           <div class="col-md-12 form-group mb-3">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="form-control" [(ngModel)]="seoForm.content_details.title" #title="ngModel"
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" [(ngModel)]="seoForm.content_details.title" #title="ngModel"
               required />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label for="description">Description</label>
+            <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="seoForm.content_details.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
         </div>

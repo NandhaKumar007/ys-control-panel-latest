@@ -8,8 +8,8 @@
         <h1 class="mb-3 text-18">Forgot Password</h1>
         <form autocomplete="off" (ngSubmit)="submit()" ngNativeValidate>
           <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" name="email" id="email" class="form-control" [(ngModel)]="forgotForm.email" (input)="successMsg=null; errorMsg=null;" #email="ngModel" required />
+            <label>Email address</label>
+            <input type="email" name="email" class="form-control" [(ngModel)]="forgotForm.email" (input)="successMsg=null; errorMsg=null;" #email="ngModel" required />
           </div>
           <div *ngIf="successMsg || errorMsg" align="center" style="margin: 20px 0 10px 0;">
             <div *ngIf="successMsg"><b class="text-success">{{ successMsg }}</b></div>
