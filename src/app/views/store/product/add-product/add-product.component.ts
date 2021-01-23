@@ -168,6 +168,7 @@ export class AddProductComponent implements OnInit {
         meta_desc: this.commonService.stripHtml(this.productForm.description).substring(0, 320)
       };
     }
+    if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.productForm.limited_products = 12;
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.btnLoader = false;

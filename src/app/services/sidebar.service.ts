@@ -276,6 +276,10 @@ export class SidebarService {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
       }
+      if(ysFeatures.indexOf('branches') !== -1) {
+        accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
+        routePermissionList.push("branches");
+      }
       sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }
     this.commonService.route_permission_list = routePermissionList;

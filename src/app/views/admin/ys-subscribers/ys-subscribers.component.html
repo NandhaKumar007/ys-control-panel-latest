@@ -8,9 +8,8 @@
     <ul><li>View and manage your subscribers</li></ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
-  <div *ngIf="list?.length" class="row mb-4">
+  <div class="row mb-4">
     <div class="col-6"></div>
-    <!-- search box -->
     <div class="col-md-6">
       <div class="form-group">
         <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
@@ -40,8 +39,9 @@
   </div>
 
   <div *ngIf="!list?.length" class="row">
-    <div class="col-md-12">
-      <p align="center">No records found</p>
-    </div>
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display.</p>
+    </div>>
   </div>
 </div>
