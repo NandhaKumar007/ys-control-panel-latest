@@ -66,7 +66,7 @@ export class SidebarService {
     // whats new
 		let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
-    if(ysFeatures.indexOf('pincode_service') !== -1) routePermissionList.push("pincodes");
+    if(ysFeatures.indexOf('pincode_service') != -1) routePermissionList.push("pincodes");
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
       routePermissionList.push("dashboard", "customers", "profile");
@@ -74,27 +74,27 @@ export class SidebarService {
       sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
       // product extras
       let prodExtraList: IChildItem[] = [];
-      if(ysFeatures.indexOf('measurements') !== -1) {
+      if(ysFeatures.indexOf('measurements') != -1) {
         prodExtraList.push({ name: 'Measurement Sets', state: '/product-extras/measurement-sets', type: 'link' });
         routePermissionList.push("measurements");
       }
-      if(ysFeatures.indexOf('addons') !== -1) {
+      if(ysFeatures.indexOf('addons') != -1) {
         prodExtraList.push({ name: 'Addons', state: '/product-extras/addons', type: 'link' });
         routePermissionList.push("addons");
       }
-      if(ysFeatures.indexOf('product_filters') !== -1) {
+      if(ysFeatures.indexOf('product_filters') != -1) {
         prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
         routePermissionList.push("tags");
       }
-      if(ysFeatures.indexOf('foot_note') !== -1) {
+      if(ysFeatures.indexOf('foot_note') != -1) {
         prodExtraList.push({ name: 'Footnote', state: '/product-extras/footnote', type: 'link' });
         routePermissionList.push("foot_note");
       }
-      if(ysFeatures.indexOf('size_chart') !== -1) {
+      if(ysFeatures.indexOf('size_chart') != -1) {
         prodExtraList.push({ name: 'Size Chart', state: '/product-extras/size-chart', type: 'link' });
         routePermissionList.push("size_chart");
       }
-      if(ysFeatures.indexOf('faq') !== -1) {
+      if(ysFeatures.indexOf('faq') != -1) {
         prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
         routePermissionList.push("faq");
       }
@@ -105,7 +105,7 @@ export class SidebarService {
         { icon: 'category', name: 'All Products', state: '/products', type: 'link' }
       ];
       if(prodExtraList.length) prodList.push({ name: 'Product Extras', type: 'dropDown', icon: 'extension', sub: prodExtraList });
-      if(ysFeatures.indexOf('product_archive') !== -1) {
+      if(ysFeatures.indexOf('product_archive') != -1) {
         prodList.push({ icon: 'archive', name: 'Archived Products', state: '/product-extras/archive', type: 'link' });
         routePermissionList.push("product_archive");
       }
@@ -158,31 +158,31 @@ export class SidebarService {
       // marketing tools
       routePermissionList.push("offers");
       let toolList: IChildItem[] = [{ icon: 'local_offer', name: 'Offers', state: '/features/coupon-codes', type: 'link' }];
-      if(ysFeatures.indexOf('giftcard') !== -1) {
+      if(ysFeatures.indexOf('giftcard') != -1) {
         toolList.push({ icon: 'redeem', name: 'Gift Cards', state: '/features/giftcard', type: 'link' });
         routePermissionList.push("giftcard", "giftcard_orders");
       }
-      if(ysFeatures.indexOf('newsletter') !== -1) {
+      if(ysFeatures.indexOf('newsletter') != -1) {
         toolList.push({ icon: 'mail', name: 'Newsletter', state: '/newsletter', type: 'link' });
         routePermissionList.push("newsletter");
       }
-      if(ysFeatures.indexOf('customer_feedback') !== -1) {
+      if(ysFeatures.indexOf('customer_feedback') != -1) {
         toolList.push({ icon: 'feedback', name: 'Feedback', state: '/feedback', type: 'link' });
         routePermissionList.push("feedback");
       }
       sidePanelList.push({ name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle', sub: toolList });
       // website
       let seoList: IChildItem[] = [];
-      if(ysFeatures.indexOf('advanced_seo') !== -1) {
+      if(ysFeatures.indexOf('advanced_seo') != -1) {
         routePermissionList.push("store_seo", "catalog_seo", "product_seo");
         seoList.push({ name: 'Store', state: '/seo/store', type: 'link' });
         seoList.push({ name: 'Catalog', state: '/seo/catalog', type: 'link' });
-        if(ysFeatures.indexOf('catalog_page_content') !== -1) {
+        if(ysFeatures.indexOf('catalog_page_content') != -1) {
           seoList.push({ name: 'Catalog Page Content', state: '/seo/catalog-page-content', type: 'link' });
           routePermissionList.push("catalog_page_content");
         }
         seoList.push({ name: 'Product', state: '/seo/product', type: 'link' });
-        if(ysFeatures.indexOf('blogs') !== -1) {
+        if(ysFeatures.indexOf('blogs') != -1) {
           seoList.push({ name: 'Blog', state: '/seo/blog', type: 'link' });
           routePermissionList.push("blog_seo");
         }
@@ -219,27 +219,27 @@ export class SidebarService {
       sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
       // store modules
       let moduleList: IChildItem[] = [];
-      if(ysFeatures.indexOf('shopping_assistant') !== -1) {
+      if(ysFeatures.indexOf('shopping_assistant') != -1) {
         moduleList.push({ icon: 'assistant', name: 'Shopping Assistant', state: '/product-extras/shop-assistant', type: 'link' });
         routePermissionList.push("shopping_assistant");
       }
-      if(ysFeatures.indexOf('sizing_assistant') !== -1) {
+      if(ysFeatures.indexOf('sizing_assistant') != -1) {
         moduleList.push({ icon: 'straighten', name: 'Sizing Assistant', state: '/product-extras/sizing-assistant', type: 'link' });
         routePermissionList.push("sizing_assistant");
       }
-      if(ysFeatures.indexOf('currency_variation') !== -1) {
+      if(ysFeatures.indexOf('currency_variation') != -1) {
         moduleList.push({ icon: 'attach_money', name: 'Currency Convertor', state: '/setup/currency-types', type: 'link' });
         routePermissionList.push("currency_types");
       }
-      if(ysFeatures.indexOf('blogs') !== -1) {
+      if(ysFeatures.indexOf('blogs') != -1) {
         moduleList.push({ icon: 'art_track', name: 'Blogs', state: '/features/blogs', type: 'link' });
         routePermissionList.push("blogs");
       }
-      if(ysFeatures.indexOf('discounts_page') !== -1) {
+      if(ysFeatures.indexOf('discounts_page') != -1) {
         moduleList.push({ icon: 'local_atm', name: 'Discounts Page', state: '/features/discounts-page', type: 'link' });
         routePermissionList.push("discounts_page");
       }
-      if(ysFeatures.indexOf('collections') !== -1) {
+      if(ysFeatures.indexOf('collections') != -1) {
         moduleList.push({ icon: 'view_carousel', name: 'Collections', state: '/features/collections', type: 'link' });
         routePermissionList.push("collections");
       }
@@ -247,11 +247,11 @@ export class SidebarService {
       // setting
       routePermissionList.push("tax_rates");
       let settingList: IChildItem[] = [{ icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' }];
-      if(ysFeatures.indexOf('courier_partners') !== -1) {
+      if(ysFeatures.indexOf('courier_partners') != -1) {
         settingList.push({ icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' });
         routePermissionList.push("courier_partners");
       }
-      if(ysFeatures.indexOf('time_based_delivery') !== -1) {
+      if(ysFeatures.indexOf('time_based_delivery') != -1) {
         settingList.push({ icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' });
         routePermissionList.push("delivery_methods");
       }
@@ -272,11 +272,11 @@ export class SidebarService {
         { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
         { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' }
       ];
-      if(ysFeatures.indexOf('vendors') !== -1) {
+      if(ysFeatures.indexOf('vendors') != -1) {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
       }
-      if(ysFeatures.indexOf('branches') !== -1) {
+      if(ysFeatures.indexOf('branches') != -1) {
         accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
         routePermissionList.push("branches");
       }

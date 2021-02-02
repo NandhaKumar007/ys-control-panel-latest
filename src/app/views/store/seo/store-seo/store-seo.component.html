@@ -37,16 +37,16 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-12 form-group mb-3">
-            <label>Tile Color</label>
-            <input type="color" name="tile_color" class="form-control" [(ngModel)]="seoForm.tile_color" #tile_color="ngModel" required
-            />
-          </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-8 form-group mb-3">
             <label>H1 Tag</label>
             <span *ngIf="seoForm?.h1_tag?.length" class="label_hint">{{seoForm?.h1_tag?.length}} of 70 characters used</span>
-            <input type="text" name="h1_tag" class="form-control" [(ngModel)]="seoForm.h1_tag" #h1_tag="ngModel" maxlength="70"
-              required />
+            <input type="text" name="h1_tag" class="form-control" [(ngModel)]="seoForm.h1_tag" #h1_tag="ngModel" maxlength="70" required />
+          </div>
+          <div class="col-md-4 form-group mb-3">
+            <label>Tile Color</label>
+            <input name="tile_color" class="form-control" [colorPicker]="seoForm.tile_color" (colorPickerChange)="seoForm.tile_color=$event;"
+            [style.background]="seoForm.tile_color" [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]= "'btn btn-primary'"
+            [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]= "'btn black-outline-btn'" />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Page Title</label>

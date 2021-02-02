@@ -100,6 +100,10 @@
             <label>Rank</label>
             <input type="number" name="rank" class="form-control" [(ngModel)]="payForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
+          <div *ngIf="payForm.name=='COD'" class="col-md-6 form-group mb-3">
+            <label>COD Charges</label>
+            <input type="number" name="cod_charges" class="form-control" [(ngModel)]="payForm.cod_charges" #cod_charges="ngModel" appNumberOnly required />
+          </div>
           <!-- razorpay -->
           <ng-container *ngIf="payForm.name=='Razorpay'">
             <div class="col-md-6 form-group mb-3">

@@ -20,7 +20,7 @@ export class ModifyProductComponent implements OnInit {
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = [];
-  addonList: any; tagList: any; noteList: any; taxRates: any; sizingList: any;
+  addonList: any; tagList: any; noteList: any; taxRates: any;
   sizeCharts: any; faqList: any; aiStyleList: any = this.commonService.aistyle_list;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
@@ -58,7 +58,6 @@ export class ModifyProductComponent implements OnInit {
           let tempTagList = result.data.tag_list.filter(obj => obj.status=='active');
           let tempFaqList = result.data.faq_list.filter(obj => obj.status=='active');
           let tempNoteList = result.data.footnote_list;
-          this.sizingList = result.data.sizing_assistant.filter(obj => obj.status=='active');
           if(this.taxRates.length) {
             let taxIndex = this.taxRates.findIndex(obj => obj.primary);
             if(taxIndex!=-1) this.primary_tax = this.taxRates[taxIndex]._id;

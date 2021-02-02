@@ -65,6 +65,7 @@ export class PaymentMethodsComponent implements OnInit {
 	// EDIT
   onEdit(x, modalName) {
     this.payForm = { form_type: 'update', _id: x._id, name: x.name, btn_name: x.btn_name, status: x.status, prev_rank: x.rank, rank: x.rank };
+    if(x.cod_charges) this.payForm.cod_charges = x.cod_charges;
     if(x.mode) this.payForm.mode = x.mode;
     if(x.name=='Razorpay') {
       this.payForm.store_name = x.app_config.name;
@@ -160,6 +161,7 @@ export class PaymentMethodsComponent implements OnInit {
 
   structureFormData() {
     let paymentData: any = { name: this.payForm.name, btn_name: this.payForm.btn_name, status: this.payForm.status };
+    if(this.payForm.cod_charges) paymentData.cod_charges = this.payForm.cod_charges;
     if(this.payForm.form_type=='update') {
       paymentData._id = this.payForm._id;
       paymentData.rank = this.payForm.rank;

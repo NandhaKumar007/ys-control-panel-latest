@@ -124,7 +124,6 @@ export class GeneralSettingComponent implements OnInit {
 
   onUpdateStore() {
     let sendData: any = { application_setting: {} };
-    sendData.application_setting.cod_charges = this.app_setting.cod_charges;
     sendData.application_setting.gift_wrapping_charges = this.app_setting.gift_wrapping_charges;
     sendData.application_setting.max_shipping_weight = this.app_setting.max_shipping_weight;
     sendData.application_setting.min_checkout_value = this.app_setting.min_checkout_value;

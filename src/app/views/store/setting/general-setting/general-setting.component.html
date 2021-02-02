@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 col-lg-4 d-flex">
+    <div *ngIf="commonService.ys_features.indexOf('product_search')!=-1" class="col-md-6 col-lg-4 d-flex">
       <div (click)="onOpenSettingModal(keywordModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title">Search Keywords</label>
@@ -161,7 +161,9 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Theme Color</label>
-            <input type="color" name="theme_color" class="form-control" [(ngModel)]="settingForm.template_config.theme_color" required />
+            <input name="theme_color" class="form-control" [colorPicker]="settingForm.template_config.theme_color" (colorPickerChange)="settingForm.template_config.theme_color=$event;"
+            [style.background]="settingForm.template_config.theme_color" [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]= "'btn btn-primary'"
+            [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]= "'btn black-outline-btn'" />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Text Mode</label>
@@ -184,7 +186,9 @@
             <ng-container *ngIf="settingForm.band_status">
               <div class="col-md-6 form-group mb-3">
                 <label>Background Color</label>
-                <input type="color" name="bg_color" class="form-control" [(ngModel)]="settingForm.band_config.bg_color" required />
+                <input name="bg_color" class="form-control" [colorPicker]="settingForm.band_config.bg_color" (colorPickerChange)="settingForm.band_config.bg_color=$event;"
+                [style.background]="settingForm.band_config.bg_color" [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]= "'btn btn-primary'"
+                [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]= "'btn black-outline-btn'" />
               </div>
               <div class="col-md-6 form-group mb-3">
                 <label>Text Mode</label>
@@ -269,12 +273,12 @@
           </div>
           <div class="col-md-12 mb-3 border-top"></div>
           <div class="col-md-6 form-group mb-3">
-            <label>COD Charges</label>
-            <input type="tel" name="cod_charges" class="form-control" [(ngModel)]="app_setting.cod_charges" #cod_charges="ngModel" appNumberOnly required />
+            <label>Enquiry Email</label>
+            <input type="email" name="enquiry_email" class="form-control" [(ngModel)]="app_setting.enquiry_email" #enquiry_email="ngModel" />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label>Gift Wrapping Charges</label>
-            <input type="tel" name="gift_wrapping_charges" class="form-control" [(ngModel)]="app_setting.gift_wrapping_charges" #gift_wrapping_charges="ngModel" appNumberOnly required />
+            <label>Cancel Order Email</label>
+            <input type="email" name="cancel_order_email" class="form-control" [(ngModel)]="app_setting.cancel_order_email" #cancel_order_email="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Maximum Shipping Weight</label>
@@ -285,12 +289,8 @@
             <input type="tel" name="min_checkout_value" class="form-control" [(ngModel)]="app_setting.min_checkout_value" #min_checkout_value="ngModel" appNumberOnly required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label>Enquiry Email</label>
-            <input type="email" name="enquiry_email" class="form-control" [(ngModel)]="app_setting.enquiry_email" #enquiry_email="ngModel" />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Cancel Order Email</label>
-            <input type="email" name="cancel_order_email" class="form-control" [(ngModel)]="app_setting.cancel_order_email" #cancel_order_email="ngModel" required />
+            <label>Gift Wrapping Charges</label>
+            <input type="tel" name="gift_wrapping_charges" class="form-control" [(ngModel)]="app_setting.gift_wrapping_charges" #gift_wrapping_charges="ngModel" appNumberOnly required />
           </div>
         </div>
       </div>
@@ -484,10 +484,16 @@
             <label>Google ID</label>
             <input type="text" name="google_id" class="form-control" [(ngModel)]="app_setting.google_id" #google_id="ngModel" />
           </div>
+          <p class="ml-3">
+            <b>Redirect URL:</b> {{commonService.store_details.base_url}}/account/google
+          </p>
           <div class="col-md-12 form-group mb-3">
             <label>Facebook ID</label>
             <input type="tel" name="facebook_id" class="form-control" [(ngModel)]="app_setting.facebook_id" #facebook_id="ngModel" />
           </div>
+          <p class="ml-3">
+            <b>Redirect URL:</b> {{commonService.store_details.base_url}}/account/facebook
+          </p>
         </div>
       </div>
       <div *ngIf="app_setting.errorMsg"><p class="text-danger">{{ app_setting.errorMsg }}</p></div>
