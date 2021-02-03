@@ -1,0 +1,283 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>Footer Content</h1>
+    <ul>
+      <li>Manage your footer contents</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="row" class="list-horizontal">
+
+    <!-- Address -->
+    <div class="card p-3 mb-3">
+      <div class="row mb-3">
+        <div class="col-8">
+          <h4>{{footer_config.address_config.title}}</h4>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <i class="material-icons edit-icon" (click)="onEditDetails('address', detailsModal);">edit</i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p *ngIf="!footer_config.address_config.content" class="mt-1 mb-0">NA</p>
+                <p *ngIf="footer_config.address_config.content" class="mt-2 mb-0" style="line-height: 5px;" [innerHtml]="footer_config.address_config.content"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="card p-3 mb-3">
+      <div class="row mb-3">
+        <div class="col-8">
+          <h4>{{footer_config.contact_config.title}}</h4>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <i class="material-icons edit-icon" (click)="onEditDetails('contact', detailsModal);">edit</i>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p *ngIf="!footer_config.contact_config.content" class="mt-1 mb-0">NA</p>
+                <p *ngIf="footer_config.contact_config.content" class="mt-2 mb-0" style="line-height: 5px;" [innerHtml]="footer_config.contact_config.content"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="card p-3 mb-3">
+      <div class="row mb-3">
+        <div class="col-8">
+          <h4>{{footer_config.social_media_title}}</h4>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <i class="material-icons edit-icon">edit</i>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="let x of footer_config.social_media_links;" class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-30 w-sm-100 m-b-0">{{x.type}}</p>
+                <p class="m-0 text-muted text-small w-30 w-sm-100">{{x.url}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!footer_config.social_media_links.length" class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-100 w-sm-100 m-b-0" align="center">No records found.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="card p-3 mb-3">
+      <div class="row mb-3">
+        <div class="col-8">
+          <h4>Payment Methods</h4>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <i class="material-icons edit-icon" (click)="onEditPayment(paymentModal);">edit</i>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="let x of footer_config.payment_methods;" class="col-md-3">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body d-flex flex-column">
+                <img src="assets/images/payment/{{x}}.svg" height="40px;" alt="{{x}}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!footer_config.payment_methods.length" class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-100 w-sm-100 m-b-0" align="center">No records found.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="card p-3 mb-3">
+      <div class="row mb-3">
+        <div class="col-8">
+          <h4>Footer Links</h4>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <i class="material-icons edit-icon">edit</i>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="let x of footer_config.other_links;" class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-30 w-sm-100 m-b-0">{{x.type}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!footer_config.other_links.length" class="col-md-12">
+          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-100 w-sm-100 m-b-0" align="center">No records found.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Edit address & contact modal -->
+<ng-template #detailsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{editForm.title}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateDetails();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" [(ngModel)]="editForm.title" #title="ngModel" required />
+          </div>
+          <div class="col-md-12 form-group mb-3 quill-mb-5">
+            <label>Content</label>
+            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.content" [ngModelOptions]="{standalone: true}"></quill-editor>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Payment Methods modal -->
+<ng-template #paymentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Payment Methods</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdatePayment();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8 form-group mb-3">
+            <label>Payment Types</label>
+            <select name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel">
+              <option [ngValue]="x" *ngFor="let x of paymentTypes;">{{x | titlecase}}</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group mb-3">
+            <p class="c-w-10 w-sm-100 mt-4 pull-right">
+              <span class="badge badge-primary badge-green" (click)="editForm.payment_methods.push(editForm.name);">Add</span>
+            </p>
+          </div>
+          <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.payment_methods; let i=index;">
+            <div class="card p-2">
+              <span (click)="editForm.payment_methods.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <img src="assets/images/payment/{{x}}.svg" height="40px;" alt="{{x}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Footer link modal -->
+<ng-template #paymentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Footer Links</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdatePayment();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8 form-group mb-3">
+            <label>Payment Types</label>
+            <select name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel">
+              <option [ngValue]="x" *ngFor="let x of paymentTypes;">{{x | titlecase}}</option>
+            </select>
+          </div>
+          <div class="col-md-4 form-group mb-3">
+            <p class="c-w-10 w-sm-100 mt-4 pull-right">
+              <span class="badge badge-primary badge-green" (click)="editForm.payment_methods.push(editForm.name);">Add</span>
+            </p>
+          </div>
+          <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.payment_methods; let i=index;">
+            <div class="card p-2">
+              <span (click)="editForm.payment_methods.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <img src="assets/images/payment/{{x}}.svg" height="40px;" alt="{{x}}">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>

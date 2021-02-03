@@ -9,6 +9,7 @@ const routes: Routes = [
   { path: 'store-locator', loadChildren: () => import('./store-locator/store-locator.module').then(m => m.StoreLocatorModule), canActivate: [PermissionGuard], data: { name: "store_locator" } },
   { path: 'policies/:type', loadChildren: () => import('./policies/policies.module').then(m => m.PoliciesModule), canActivate: [PermissionGuard], data: { name: "policies" } },
   { path: 'extra-pages', loadChildren: () => import('./extra-pages/extra-pages.module').then(m => m.ExtraPagesModule), canActivate: [PermissionGuard], data: { name: "extra_pages" } },
+  { path: 'footer-content', loadChildren: () => import('./footer-content/footer-content.module').then(m => m.FooterContentModule), canActivate: [PermissionGuard], data: { name: "footer_content" } },
 ];
 
 @NgModule({

@@ -22,10 +22,23 @@ export class StoreSeoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pageLoader = true;
+  }
+
+  onEdit(modalName) {
     this.api.STORE_DETAILS().subscribe(result => {
-      setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) this.setFormData(result.data);
+      if(result.status) {
+        let storeDetails = result.data;
+        if(storeDetails.seo_details) {
+          this.seoForm = storeDetails.seo_details;
+          this.seoForm.meta_keyword_list = [];
+          if(this.seoForm.meta_keywords.length) {
+            this.seoForm.meta_keywords.forEach(obj => {
+              this.seoForm.meta_keyword_list.push({display: obj, value: obj});
+            });
+          }
+        }
+        this.modalService.open(modalName, { size: 'lg'});
+      }
       else console.log("response", result);
     });
   }
@@ -44,27 +57,12 @@ export class StoreSeoComponent implements OnInit {
       });
     }
     this.api.STORE_UPDATE({ seo_details: seoDetails }).subscribe(result => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.setFormData(result.data);
-      }
+      if(result.status) document.getElementById('closeModal').click();
       else {
 				this.seoForm.errorMsg = result.message;
         console.log("response", result);
       }
     });
-  }
-
-  setFormData(storeDetails) {
-    if(storeDetails.seo_details) {
-      this.seoForm = storeDetails.seo_details;
-      this.seoForm.meta_keyword_list = [];
-      if(this.seoForm.meta_keywords.length) {
-        this.seoForm.meta_keywords.forEach(obj => {
-          this.seoForm.meta_keyword_list.push({display: obj, value: obj});
-        });
-      }
-    }
   }
 
 }

@@ -90,7 +90,7 @@
             <label>HSN Code</label>
             <input type="text" name="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-12 form-group mb-3 quill-mb-5">
             <label>Description</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="productForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
@@ -101,16 +101,17 @@
               <span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
-            <label>Selling Price</label>
-            <input type="text" name="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
-              (input)="discountCalc(productForm)" appNumberOnly required />
-          </div>
-          <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
-            <label>Stock</label>
-            <input type="text" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly
-              required />
-          </div>
+          <ng-container *ngIf="!productForm.variant_types.length">
+            <div class="col-md-6 form-group mb-3">
+              <label>Selling Price</label>
+              <input type="text" name="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
+                (input)="discountCalc(productForm)" appNumberOnly required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Stock</label>
+              <input type="text" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly required />
+            </div>
+          </ng-container>
           <div class="col-md-3 form-group mb-3">
             <label>Unit</label>
             <select name="unit" class="form-control" [(ngModel)]="productForm.unit" #unit="ngModel" required>

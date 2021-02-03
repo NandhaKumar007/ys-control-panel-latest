@@ -3542,3 +3542,10 @@ p svg:hover {
   font-size: medium !important;
   font-weight: 700;
 }
+
+#time-picker-wrapper {
+  z-index: 1500 !important;
+}
+.quill-mb-5 {
+  margin-bottom: 5rem !important;
+}

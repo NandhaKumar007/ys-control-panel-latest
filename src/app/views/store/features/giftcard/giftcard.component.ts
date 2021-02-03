@@ -15,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
 export class GiftcardComponent implements OnInit {
 
   page = 1; pageSize = 10;
-  list: any = []; step_num: any; search_bar: any;
+  list: any = []; search_bar: any;
   addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; btnLoader: boolean;
   imgBaseUrl = environment.img_baseurl;
@@ -52,14 +52,13 @@ export class GiftcardComponent implements OnInit {
   // EDIT
   onEdit(x, modalName) {
     this.btnLoader = false;
-    this.step_num = 1;
     this.api.GIFTCARD_LIST().subscribe(result => {
       if(result.status) {
         let index = result.list.findIndex(obj => obj._id==x._id);
         if(index!=-1) {
           this.editForm = result.list[index];
           this.editForm.exist_image = this.editForm.image;
-          this.modalService.open(modalName, {size: 'lg'});
+          this.modalService.open(modalName);
         }
         else console.log("Invalid giftcard");
       }

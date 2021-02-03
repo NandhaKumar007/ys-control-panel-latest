@@ -14,7 +14,7 @@
   <div class="top-filter-sec">
   <div class="row mb-4">
     <div class="col-6">
-      <button type="button" class="btn btn-primary" (click)="step_num=1; addForm={price_type: 'fixed'}; btnLoader=false; modalService.open(addModal, { size: 'lg'});">
+      <button type="button" class="btn btn-primary" (click)="addForm={price_type: 'fixed'}; btnLoader=false; modalService.open(addModal);">
         Add New Gift Card
       </button>
     </div>
@@ -72,67 +72,9 @@
 <!-- ADD MODAL -->
 <ng-template #addModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">New Gift Card (Step {{step_num}} of 2)</h4>
-    <p *ngIf="step_num==1">Add your gift card details</p>
-    <p *ngIf="step_num==2">Edit your gift card's appearance</p>
+    <h4 class="modal-title" id="modal-basic-title">New Gift Card</h4>
   </div>
-  <!-- Step 1 -->
-  <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="addForm.image=null; step_num=2;" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-12 form-group mb-3">
-            <label>Gift Card Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
-          </div>
-
-          <div class="col-md-4 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="fixed" (change)="addForm.min_price=null; addForm.max_price=null;" [(ngModel)]="addForm.price_type">
-              <span>Fixed Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div class="col-md-8 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="flexible" (change)="addForm.price=null;" [(ngModel)]="addForm.price_type">
-              <span>Flexible Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div *ngIf="addForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
-            <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="addForm.price" #price="ngModel" appNumberOnly required />
-          </div>
-
-          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Minimum Price Limit</label>
-            <input type="text" name="min_price" class="form-control" [(ngModel)]="addForm.min_price" #min_price="ngModel" appNumberOnly required />
-          </div>
-
-          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Maximum Price Limit</label>
-            <input type="text" name="max_price" class="form-control" [(ngModel)]="addForm.max_price" #max_price="ngModel" appNumberOnly required />
-          </div>
-
-          <div class="col-md-12 form-group mb-3">
-            <label>Description</label>
-            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
-      </button>
-      <button type="submit" class="btn btn-wide btn-primary">Next</button>
-    </div>
-  </form>
-  <!-- Step 2 -->
-  <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onAdd(addModal);" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onAdd(addModal);" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
@@ -152,6 +94,40 @@
               </label>
             </div>
           </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Gift Card Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="price_type" value="fixed" (change)="addForm.min_price=null; addForm.max_price=null;" [(ngModel)]="addForm.price_type">
+              <span>Fixed Price</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-8 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="price_type" value="flexible" (change)="addForm.price=null;" [(ngModel)]="addForm.price_type">
+              <span>Flexible Price</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="addForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
+            <label>Price</label>
+            <input type="text" name="price" class="form-control" [(ngModel)]="addForm.price" #price="ngModel" appNumberOnly required />
+          </div>
+          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+            <label>Minimum Price Limit</label>
+            <input type="text" name="min_price" class="form-control" [(ngModel)]="addForm.min_price" #min_price="ngModel" appNumberOnly required />
+          </div>
+          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+            <label>Maximum Price Limit</label>
+            <input type="text" name="max_price" class="form-control" [(ngModel)]="addForm.max_price" #max_price="ngModel" appNumberOnly required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Description</label>
+            <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="addForm.description" #description="ngModel"></textarea>
+          </div>
         </div>
       </div>
       <div *ngIf="addForm.errorMsg">
@@ -159,9 +135,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
-      <button type="button" class="btn btn-wide black-outline-txt" (click)="step_num=1;">
-       <span class="black-outline-txt">Go Back</span>
+      <button type="button" class="btn btn-wide black-outline-btn" id="closeModal" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Add</button>
     </div>
@@ -171,67 +146,9 @@
 <!-- EDIT MODAL -->
 <ng-template #editModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Edit Gift Card (Step {{step_num}} of 2)</h4>
-    <p *ngIf="step_num==1">Edit your gift card details</p>
-    <p *ngIf="step_num==2">Edit your gift card's appearance</p>
+    <h4 class="modal-title" id="modal-basic-title">Edit Gift Card</h4>
   </div>
-  <!-- Step 1 -->
-  <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="step_num=2;" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-12 form-group mb-3">
-            <label>Gift Card Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
-          </div>
-
-          <div class="col-md-4 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="fixed" (change)="editForm.min_price=null; editForm.max_price=null;" [(ngModel)]="editForm.price_type">
-              <span>Fixed Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div class="col-md-8 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="flexible" (change)="editForm.price=null;" [(ngModel)]="editForm.price_type">
-              <span>Flexible Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-
-          <div *ngIf="editForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
-            <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="editForm.price" #price="ngModel" appNumberOnly required />
-          </div>
-
-          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Minimum Price Limit</label>
-            <input type="text" name="min_price" class="form-control" [(ngModel)]="editForm.min_price" #min_price="ngModel" appNumberOnly required />
-          </div>
-
-          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Maximum Price Limit</label>
-            <input type="text" name="max_price" class="form-control" [(ngModel)]="editForm.max_price" #max_price="ngModel" appNumberOnly required />
-          </div>
-
-          <div class="col-md-12 form-group mb-3">
-            <label>Description</label>
-            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
-      </button>
-      <button type="submit" class="btn btn-wide btn-primary">Next</button>
-    </div>
-  </form>
-  <!-- Step 2 -->
-  <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onUpdate(editModal);" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdate(editModal);" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
@@ -252,6 +169,40 @@
               </label>
             </div>
           </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Gift Card Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="price_type" value="fixed" (change)="editForm.min_price=null; editForm.max_price=null;" [(ngModel)]="editForm.price_type">
+              <span>Fixed Price</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-8 mb-3">
+            <label class="radio radio-primary">
+              <input type="radio" name="price_type" value="flexible" (change)="editForm.price=null;" [(ngModel)]="editForm.price_type">
+              <span>Flexible Price</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="editForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
+            <label>Price</label>
+            <input type="text" name="price" class="form-control" [(ngModel)]="editForm.price" #price="ngModel" appNumberOnly required />
+          </div>
+          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+            <label>Minimum Price Limit</label>
+            <input type="text" name="min_price" class="form-control" [(ngModel)]="editForm.min_price" #min_price="ngModel" appNumberOnly required />
+          </div>
+          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+            <label>Maximum Price Limit</label>
+            <input type="text" name="max_price" class="form-control" [(ngModel)]="editForm.max_price" #max_price="ngModel" appNumberOnly required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Description</label>
+            <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="editForm.description" #description="ngModel"></textarea>
+          </div>
         </div>
       </div>
       <div *ngIf="editForm.errorMsg">
@@ -259,9 +210,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="step_num=1;">
-       <span class="black-outline-txt">Go Back</span>
+      <button type="button" class="btn btn-wide black-outline-btn" id="closeModal" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
     </div>

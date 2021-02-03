@@ -250,10 +250,10 @@ export class GeneralSettingComponent implements OnInit {
     });
   }
 
-  timePicker(x) {
+  timePicker() {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.settingForm[x] = this.timeConversion(time);
+      this.app_setting.announcebar_config.end_time = this.timeConversion(time);
     });
   }
   timeConversion(timeString) {

@@ -24,7 +24,7 @@ export class ContactPageComponent implements OnInit {
   }
 
   onEdit() {
-    this.editForm = { heading: this.formData.heading, sub_heading: this.formData.heading, address: "" };
+    this.editForm = { heading: this.formData.heading, sub_heading: this.formData.sub_heading, address: "" };
     if(this.formData._id) {
       this.editForm = {
         heading: this.formData.heading, sub_heading: this.formData.sub_heading,

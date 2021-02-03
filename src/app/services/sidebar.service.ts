@@ -188,7 +188,7 @@ export class SidebarService {
         }
       }
       else { routePermissionList.push("store_seo"); }
-      routePermissionList.push("home_layout", "catalog_layout", "product_layout", "menus", "policies", "contact_page", "store_locator", "extra_pages");
+      routePermissionList.push("home_layout", "catalog_layout", "product_layout", "menus", "policies", "contact_page", "store_locator", "extra_pages", "footer_content");
       let webList: IChildItem[] = [
         {
           name: 'Website Design', type: 'dropDown', icon: 'format_paint',
@@ -214,7 +214,8 @@ export class SidebarService {
       webList.push(
         { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
         { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' },
-        { icon: 'note_add', name: 'Extra Pages', state: '/setup/extra-pages', type: 'link' }
+        { icon: 'note_add', name: 'Extra Pages', state: '/setup/extra-pages', type: 'link' },
+        { icon: 'wysiwyg', name: 'Footer Content', state: '/setup/footer-content', type: 'link' }
       );
       sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
       // store modules

@@ -73,8 +73,7 @@
 <!-- PAY MODAL -->
 <ng-template #payModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" *ngIf="payForm.form_type=='add'">Add Payment Gateway</h4>
-    <h4 class="modal-title" *ngIf="payForm.form_type!='add'">{{ payForm.name }}</h4>
+    <h4 class="modal-title" *ngIf="">{{ (payForm.form_type=='add')? 'Add Payment Gateway': payForm.name }}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="(payForm.form_type=='add')? onAdd(): onUpdate();" ngNativeValidate>
     <div class="modal-body">

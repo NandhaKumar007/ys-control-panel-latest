@@ -44,7 +44,7 @@
             <label>Map URL</label>
             <input type="text" name="map_url" class="form-control" [(ngModel)]="editForm.map_url" #map_url="ngModel" />
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-12 form-group mb-3 quill-mb-5">
             <label>Contact Info</label>
             <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.address" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
