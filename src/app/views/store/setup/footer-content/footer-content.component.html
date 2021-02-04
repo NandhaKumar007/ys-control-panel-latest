@@ -4,9 +4,9 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>Footer Content</h1>
+    <h1>Footer Configuration</h1>
     <ul>
-      <li>Manage your footer contents</li>
+      <li>Manage your footer</li>
     </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -17,7 +17,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4>{{footer_config.address_config.title}}</h4>
+          <h4 class="add-another">{{footer_config.address_config.title}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditDetails('address', detailsModal);">edit</i>
@@ -41,7 +41,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4>{{footer_config.contact_config.title}}</h4>
+          <h4 class="add-another">{{footer_config.contact_config.title}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditDetails('contact', detailsModal);">edit</i>
@@ -65,7 +65,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4>{{footer_config.social_media_title}}</h4>
+          <h4 class="add-another">{{footer_config.social_media_title}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon">edit</i>
@@ -100,7 +100,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4>Payment Methods</h4>
+          <h4 class="add-another">Payment Methods</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditPayment(paymentModal);">edit</i>
@@ -134,18 +134,18 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4>Footer Links</h4>
+          <h4 class="add-another">Footer Links</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
-          <i class="material-icons edit-icon">edit</i>
+          <i class="material-icons edit-icon" (click)="onEditFooterLink(linkModal);">edit</i>
         </div>
       </div>
       <div class="row">
-        <div *ngFor="let x of footer_config.other_links;" class="col-md-12">
+        <div *ngFor="let x of footer_config.other_links;" class="col-md-6">
           <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
             <div class="flex-grow-1 pl-2 d-flex">
               <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                <p class="w-30 w-sm-100 m-b-0">{{x.type}}</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
               </div>
             </div>
           </div>
@@ -242,32 +242,49 @@
 </ng-template>
 
 <!-- Footer link modal -->
-<ng-template #paymentModal let-modal>
+<ng-template #linkModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Footer Links</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdatePayment();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdateFooterLink();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-8 form-group mb-3">
-            <label>Payment Types</label>
-            <select name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel">
-              <option [ngValue]="x" *ngFor="let x of paymentTypes;">{{x | titlecase}}</option>
-            </select>
-          </div>
-          <div class="col-md-4 form-group mb-3">
-            <p class="c-w-10 w-sm-100 mt-4 pull-right">
-              <span class="badge badge-primary badge-green" (click)="editForm.payment_methods.push(editForm.name);">Add</span>
-            </p>
-          </div>
-          <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.payment_methods; let i=index;">
-            <div class="card p-2">
-              <span (click)="editForm.payment_methods.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
-              <img src="assets/images/payment/{{x}}.svg" height="40px;" alt="{{x}}">
+          <div class="col-md-6" *ngFor="let x of editForm.other_links; let i=index;">
+            <div class="card w-100 p-3 mb-3">
+              <span (click)="editForm.other_links.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                  <label>Name</label>
+                  <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label class="radio radio-primary">
+                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="internal">
+                    <span>Link to Internal Link</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label class="radio radio-primary">
+                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="external">
+                    <span>Link to External Link</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
+                  <label *ngIf="x.link_type=='external'">External Link</label>
+                  <input type="text" name="link{{i}}" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
+                </div>
+              </div>
             </div>
           </div>
+          <div class="col-md-12">
+            <p class="add-another" (click)="editForm.other_links.push({link_type: 'internal'});">ADD NEW</p>
+          </div>
         </div>
+            
       </div>
       <div *ngIf="editForm.errorMsg">
         <p class="text-danger">{{ editForm.errorMsg }}</p>

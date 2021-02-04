@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CommonService } from '../../../../services/common.service';
-import { StoreApiService } from '../../../../services/store-api.service';
+import { CommonService } from '../../../services/common.service';
+import { StoreApiService } from '../../../services/store-api.service';
 
 @Component({
-  selector: 'app-general-setting',
-  templateUrl: './general-setting.component.html',
-  styleUrls: ['./general-setting.component.scss']
+  selector: 'app-setting',
+  templateUrl: './setting.component.html',
+  styleUrls: ['./setting.component.scss']
 })
 
-export class GeneralSettingComponent implements OnInit {
+export class SettingComponent implements OnInit {
 
   settingForm: any = {};
   mailTypes: any = [

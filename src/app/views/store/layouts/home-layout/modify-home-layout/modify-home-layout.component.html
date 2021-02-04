@@ -215,7 +215,7 @@
                 <div *ngIf="x.link_type=='internal' || x.link_type=='external'" class="col-md-12 form-group mb-3">
                   <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
                   <label *ngIf="x.link_type=='external'">External Link</label>
-                  <input type="text" name="link" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
+                  <input type="text" name="link{{i}}" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
                 </div>
 
                 <!-- Btn -->

@@ -215,7 +215,7 @@ export class SidebarService {
         { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
         { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' },
         { icon: 'note_add', name: 'Extra Pages', state: '/setup/extra-pages', type: 'link' },
-        { icon: 'wysiwyg', name: 'Footer Content', state: '/setup/footer-content', type: 'link' }
+        { icon: 'wysiwyg', name: 'Footer Configuration', state: '/setup/footer-content', type: 'link' }
       );
       sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
       // store modules

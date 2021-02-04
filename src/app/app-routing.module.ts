@@ -54,7 +54,7 @@ const storeRoutes: Routes = [
   { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule), canActivate: [PermissionGuard], data: { name: "courier_partners" } },
   { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule), canActivate: [PermissionGuard], data: { name: "donations" } },
 
-  { path: 'store-setting', loadChildren: () => import('./views/store/setting/general-setting/general-setting.module').then(m => m.GeneralSettingModule), canActivate: [PermissionGuard], data: { name: "store_setting" } },
+  { path: 'store-setting', loadChildren: () => import('./views/store/setting/setting.module').then(m => m.SettingModule), canActivate: [PermissionGuard], data: { name: "store_setting" } },
   { path: 'store-logos', loadChildren: () => import('./views/store/setting/logo-management/logo-management.module').then(m => m.LogoManagementModule), canActivate: [PermissionGuard], data: { name: "store_setting" } }
 ];
 
