@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  ws_url: 'http://localhost:4000',
+  ws_url: 'https://yourstore.io/api',
   img_baseurl: 'https://yourstore.io/api/',
   quill_config: {
     modules: {

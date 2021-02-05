@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
-import { send } from 'q';
 
 @Component({
   selector: 'app-footer-content',
@@ -53,16 +52,40 @@ export class FooterContentComponent implements OnInit {
     });
   }
 
+  // social media
+  onEditSocialMedia(modalName) {
+    let smLink = [];
+    this.footer_config.social_media_links.forEach(obj => {
+      smLink.push({ type: obj.type, url: obj.url });
+    });
+    this.editForm = { social_media_title: this.footer_config.social_media_title, social_media_links: smLink };
+    this.modalService.open(modalName, {size: 'lg'});
+  }
+  onUpdateSocialMedia() {
+    this.api.UPDATE_STORE_PROPERTY_DETAILS({ "footer_config.social_media_title": this.editForm.social_media_title, "footer_config.social_media_links": this.editForm.social_media_links }).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.footer_config = result.data.footer_config;
+      }
+      else {
+        this.editForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
   // payment methods
   onEditPayment(modalName) {
-    this.editForm = { name: "", payment_methods: [] };
+    this.editForm = { payment_methods: [] };
     this.footer_config.payment_methods.forEach(obj => {
-      this.editForm.payment_methods.push(obj);
+      this.editForm.payment_methods.push({ type: obj });
     });
     this.modalService.open(modalName, {size: 'lg'});
   }
   onUpdatePayment() {
-    this.api.UPDATE_STORE_PROPERTY_DETAILS({ "footer_config.payment_methods": this.editForm.payment_methods }).subscribe(result => {
+    let paymentTypes = [];
+    this.editForm.payment_methods.forEach(obj => { paymentTypes.push(obj.type); });
+    this.api.UPDATE_STORE_PROPERTY_DETAILS({ "footer_config.payment_methods": paymentTypes }).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.footer_config = result.data.footer_config;

@@ -97,6 +97,10 @@ export class PaymentMethodsComponent implements OnInit {
       this.payForm.key = x.config.key;
       this.payForm.ivp_store = x.config.ivp_store;
     }
+    else if(x.name=='Foloosi') {
+      this.payForm.merchant_key = x.config.merchant_key;
+      this.payForm.secret_key = x.config.secret_key;
+    }
     this.modalService.open(modalName, {size: 'lg'});
   }
 
@@ -196,6 +200,10 @@ export class PaymentMethodsComponent implements OnInit {
     else if(paymentData.name=='Telr') {
       paymentData.mode = this.payForm.mode;
       paymentData.config = { key: this.payForm.key, ivp_store: this.payForm.ivp_store };
+    }
+    else if(paymentData.name=='Foloosi') {
+      paymentData.config = { merchant_key: this.payForm.merchant_key, secret_key: this.payForm.secret_key };
+      paymentData.app_config = { merchant_key: this.payForm.merchant_key };
     }
     return paymentData;
   }

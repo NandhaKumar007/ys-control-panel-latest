@@ -68,7 +68,7 @@
           <h4 class="add-another">{{footer_config.social_media_title}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
-          <i class="material-icons edit-icon">edit</i>
+          <i class="material-icons edit-icon" (click)="onEditSocialMedia(socialMediaModal);">edit</i>
         </div>
       </div>
       <div class="row">
@@ -76,7 +76,7 @@
           <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
             <div class="flex-grow-1 pl-2 d-flex">
               <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                <p class="w-30 w-sm-100 m-b-0">{{x.type}}</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.type | titlecase}}</p>
                 <p class="m-0 text-muted text-small w-30 w-sm-100">{{x.url}}</p>
               </div>
             </div>
@@ -200,6 +200,55 @@
   </form>
 </ng-template>
 
+<!-- Social Media modal -->
+<ng-template #socialMediaModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">{{editForm.social_media_title}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSocialMedia();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label>Title</label>
+            <input type="text" name="social_media_title" class="form-control" [(ngModel)]="editForm.social_media_title" #social_media_title="ngModel" required />
+          </div>
+          <div class="col-md-12 mb-3 border-top"></div>
+          <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.social_media_links; let i=index;">
+            <div class="card p-2">
+              <span (click)="editForm.social_media_links.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                  <label>Type</label>
+                  <select name="type{{i}}" class="form-control" [(ngModel)]="x.type" #type="ngModel" required>
+                    <option [ngValue]="x" *ngFor="let x of socialTypes;">{{x | titlecase}}</option>
+                  </select>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label>Link</label>
+                  <input type="text" name="url{{i}}" class="form-control" [(ngModel)]="x.url" #url="ngModel" required />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <p class="add-another" (click)="editForm.social_media_links.push({});">ADD NEW</p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
 <!-- Payment Methods modal -->
 <ng-template #paymentModal let-modal>
   <div class="modal-header">
@@ -209,22 +258,26 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-8 form-group mb-3">
-            <label>Payment Types</label>
-            <select name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel">
-              <option [ngValue]="x" *ngFor="let x of paymentTypes;">{{x | titlecase}}</option>
-            </select>
-          </div>
-          <div class="col-md-4 form-group mb-3">
-            <p class="c-w-10 w-sm-100 mt-4 pull-right">
-              <span class="badge badge-primary badge-green" (click)="editForm.payment_methods.push(editForm.name);">Add</span>
-            </p>
-          </div>
           <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.payment_methods; let i=index;">
             <div class="card p-2">
               <span (click)="editForm.payment_methods.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
-              <img src="assets/images/payment/{{x}}.svg" height="40px;" alt="{{x}}">
+              <div class="row">
+                <div class="col-md-8 form-group mb-3">
+                  <label>Type</label>
+                  <select name="type{{i}}" class="form-control" [(ngModel)]="x.type" #type="ngModel" required>
+                    <option [ngValue]="x" *ngFor="let x of paymentTypes;">{{x | titlecase}}</option>
+                  </select>
+                </div>
+                <div class="col-md-4 form-group mb-3">
+                  <div *ngIf="x.type" class="pull-right">
+                    <img src="assets/images/payment/{{x.type}}.svg" class="mt-4" height="30px;" alt="{{x.type}}">
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="col-md-12">
+            <p class="add-another" (click)="editForm.payment_methods.push({});">ADD NEW</p>
           </div>
         </div>
       </div>

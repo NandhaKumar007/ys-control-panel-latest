@@ -73,7 +73,7 @@
 <!-- PAY MODAL -->
 <ng-template #payModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" *ngIf="">{{ (payForm.form_type=='add')? 'Add Payment Gateway': payForm.name }}</h4>
+    <h4 class="modal-title">{{ (payForm.form_type=='add')? 'Add Payment Gateway': payForm.name }}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="(payForm.form_type=='add')? onAdd(): onUpdate();" ngNativeValidate>
     <div class="modal-body">
@@ -83,12 +83,17 @@
             <label>Payment Types</label>
             <select name="name" class="form-control" [(ngModel)]="payForm.name" #name="ngModel" required>
               <option value="COD">COD</option>
-              <option *ngIf="commonService.store_details?.country=='India'" value="Razorpay">Razorpay</option>
-              <option *ngIf="commonService.store_details?.country=='India'" value="CCAvenue">CCAvenue</option>
+              <ng-container *ngIf="commonService.store_details?.country=='India'">
+                <option value="Razorpay">Razorpay</option>
+                <option value="CCAvenue">CCAvenue</option>
+              </ng-container>
               <option value="PayPal">PayPal</option>
               <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square</option>
-              <option *ngIf="commonService.store_details?.country=='United Arab Emirates'" value="Fatoorah">Fatoorah</option>
-              <option *ngIf="commonService.store_details?.country=='United Arab Emirates'" value="Telr">Telr</option>
+              <ng-container *ngIf="commonService.store_details?.country=='United Arab Emirates'">
+                <option value="Fatoorah">Fatoorah</option>
+                <option value="Telr">Telr</option>
+                <option value="Foloosi">Foloosi</option>
+              </ng-container>
             </select>
           </div>
           <div class="col-md-6 form-group mb-3">
@@ -196,6 +201,21 @@
             <div class="col-md-6 form-group mb-3">
               <label>IVP Store</label>
               <input type="text" name="ivp_store" class="form-control" [(ngModel)]="payForm.ivp_store" #ivp_store="ngModel" required />
+            </div>
+          </ng-container>
+          <!-- foloosi -->
+          <ng-container *ngIf="payForm.name=='Foloosi'">
+            <div class="col-md-6 form-group mb-3">
+              <label>Merchant Key</label>
+              <input type="text" name="merchant_key" class="form-control" [(ngModel)]="payForm.merchant_key" #merchant_key="ngModel" required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Secret Key</label>
+              <input type="text" name="secret_key" class="form-control" [(ngModel)]="payForm.secret_key" #secret_key="ngModel" required />
+            </div>
+            <div class="col-md-12 mt-3">
+              <p><strong class="add-another">Domain Name:</strong> {{ commonService.store_details?.base_url }}</p>
+              <p><strong class="add-another">Authorization Callback URL:</strong> https://yourstore.io/api/store_details/foloosi_payment/{{commonService.store_details._id}}</p>
             </div>
           </ng-container>
           <!-- mode -->
