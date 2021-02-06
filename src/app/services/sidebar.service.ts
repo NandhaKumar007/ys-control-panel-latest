@@ -186,6 +186,8 @@ export class SidebarService {
           seoList.push({ name: 'Blog', state: '/seo/blog', type: 'link' });
           routePermissionList.push("blog_seo");
         }
+        seoList.push({ name: 'Extra Pages', state: '/seo/extra-pages', type: 'link' });
+        routePermissionList.push("extra_page_seo");
       }
       else { routePermissionList.push("store_seo"); }
       routePermissionList.push("home_layout", "catalog_layout", "product_layout", "menus", "policies", "contact_page", "store_locator", "extra_pages", "footer_content");

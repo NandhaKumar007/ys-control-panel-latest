@@ -71,6 +71,28 @@ export class SetupService {
     return this.http.put<any>(environment.ws_url+'/store/contact_page', x, httpOptions);
   }
 
+  // extra pages
+  EXTRA_PAGE_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/extra_page', httpOptions);
+  }
+  EXTRA_PAGE_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/extra_page?_id='+x, httpOptions);
+  }
+  ADD_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
+  }
+  UPDATE_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
+  }
+  DELETE_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
+  }
+
   // locations
   LOCATION_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
