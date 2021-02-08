@@ -19,10 +19,11 @@
       class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">
+        <div [ngClass]="x.store_base? 'find-band': ''"></div>
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <!-- OTHER DATA -->
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.base}}</p>
+            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.country_code}}</p>
           </div>
         </div>
       </div>

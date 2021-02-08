@@ -11,26 +11,58 @@ export class SetupService {
 
   constructor(private http: HttpClient) { }
 
-  // CURRENCY TYPES
-  CURRENCY_DETAILS(x) {
+  // contact page
+  CONTACT_PAGE_DETAILS() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/currency/details?country_code='+x, httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/contact_page', httpOptions);
   }
-  CURRENCY_LIST() {
+  UPDATE_CONTACT_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/contact_page', x, httpOptions);
+  }
+
+  // CURRENCY TYPES
+  YS_CURRENCY_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/others/ys_currency_list', httpOptions);
+  }
+  STORE_CURRENCY_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/currency', httpOptions);
   }
-  ADD_CURRENCY(x) {
+  ADD_STORE_CURRENCY(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/currency', x, httpOptions);
   }
-  UPDATE_CURRENCY(x) {
+  UPDATE_STORE_CURRENCY(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/currency', x, httpOptions); 
   }
-  DELETE_CURRENCY(x) {
+  DELETE_STORE_CURRENCY(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/currency', x, httpOptions);
+  }
+
+  // extra pages
+  EXTRA_PAGE_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/extra_page', httpOptions);
+  }
+  EXTRA_PAGE_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/extra_page?_id='+x, httpOptions);
+  }
+  ADD_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
+  }
+  UPDATE_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
+  }
+  DELETE_EXTRA_PAGE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
   }
 
   // payment types
@@ -59,38 +91,6 @@ export class SetupService {
   UPDATE_POLICY(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/policies', x, httpOptions);
-  }
-
-  // contact page
-  CONTACT_PAGE_DETAILS() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/contact_page', httpOptions);
-  }
-  UPDATE_CONTACT_PAGE(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/contact_page', x, httpOptions);
-  }
-
-  // extra pages
-  EXTRA_PAGE_LIST() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/extra_page', httpOptions);
-  }
-  EXTRA_PAGE_DETAILS(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/extra_page?_id='+x, httpOptions);
-  }
-  ADD_EXTRA_PAGE(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
-  }
-  UPDATE_EXTRA_PAGE(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
-  }
-  DELETE_EXTRA_PAGE(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.patch<any>(environment.ws_url+'/store/extra_page', x, httpOptions);
   }
 
   // locations

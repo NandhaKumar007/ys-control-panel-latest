@@ -15,8 +15,7 @@ import { CommonService } from '../../../../services/common.service';
 export class CurrencyTypesComponent implements OnInit {
 
   page = 1; pageSize = 10;
-  list: any = []; currencyList: any = [];
-  live_currencies: any = {};
+  list: any = []; ys_currency_list: any = [];
 	addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
 
@@ -26,20 +25,31 @@ export class CurrencyTypesComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true;
-    this.api.CURRENCY_DETAILS(this.commonService.store_currency.country_code).subscribe(result => {
-      this.currencyList = result.currency_list;
-      this.live_currencies = result.live_currencies;
+    if(localStorage.getItem("ys_currency_list")) {
+      this.ys_currency_list = this.commonService.decryptData(localStorage.getItem("ys_currency_list"));
       this.getCurrencyList();
-    });
+    }
+    else {
+      this.api.YS_CURRENCY_LIST().subscribe(result => {
+        if(result.status) {
+          this.ys_currency_list = result.list;
+          this.commonService.updateLocalData('ys_currency_list', this.ys_currency_list);
+          this.getCurrencyList();
+        }
+      });
+    }
   }
 
   getCurrencyList() {
     this.pageLoader = true;
-    this.api.CURRENCY_LIST().subscribe(result => {
+    this.api.STORE_CURRENCY_LIST().subscribe(result => {
 			if(result.status) {
         this.list = result.list;
+        let currencyIndex = this.list.findIndex(obj => obj.default_currency);
+        let storeCurrency = this.list[currencyIndex].country_code;
         this.list.forEach(element => {
-          element.inr_rate = this.live_currencies[element.country_code];
+          let liveIndex = this.ys_currency_list.findIndex(obj => obj.name==element.country_code);
+          element.inr_rate = parseFloat(this.ys_currency_list[liveIndex].rates[storeCurrency].toFixed(2));
         });
       }
 			else console.log("response", result);
@@ -51,7 +61,7 @@ export class CurrencyTypesComponent implements OnInit {
 	onAdd() {
     this.addForm.country_code = this.addForm.country.name;
     this.addForm.html_code = this.addForm.country.html_code;
-		this.api.ADD_CURRENCY(this.addForm).subscribe(result => {
+		this.api.ADD_STORE_CURRENCY(this.addForm).subscribe(result => {
 			if(result.status) {
 				document.getElementById('closeModal').click();
 				this.getCurrencyList();
@@ -65,7 +75,7 @@ export class CurrencyTypesComponent implements OnInit {
 
 	// EDIT
   onEdit(x, modalName) {
-    this.api.CURRENCY_LIST().subscribe(result => {
+    this.api.STORE_CURRENCY_LIST().subscribe(result => {
       if(result.status) {
         let index = result.list.findIndex(obj => obj._id==x._id);
         if(index!=-1) {
@@ -80,7 +90,7 @@ export class CurrencyTypesComponent implements OnInit {
 
   // UPDATE
 	onUpdate() {
-		this.api.UPDATE_CURRENCY(this.editForm).subscribe(result => {
+		this.api.UPDATE_STORE_CURRENCY(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.getCurrencyList();
@@ -94,7 +104,7 @@ export class CurrencyTypesComponent implements OnInit {
   
   // DELETE
   onDelete() {
-    this.api.DELETE_CURRENCY(this.deleteForm).subscribe(result => {
+    this.api.DELETE_STORE_CURRENCY(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.getCurrencyList();

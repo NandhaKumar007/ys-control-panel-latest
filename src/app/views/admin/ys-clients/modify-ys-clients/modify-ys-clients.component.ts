@@ -19,6 +19,7 @@ export class ModifyYsClientsComponent implements OnInit {
   free_features_list: any = []; paid_features_list: any = [];
   clientForm: any; step_num: number; params: any = {};
   imgBaseUrl = environment.img_baseurl;
+  currencyList: any = this.commonService.currency_types.filter(obj => obj.store_base);
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, private api: ApiService, public commonService: CommonService) { }
 

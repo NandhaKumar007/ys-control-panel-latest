@@ -14,7 +14,7 @@
   <div class="row mb-4">
     <div class="col-md-3 col-6">
       <div class="form-group">
-        <select name="type" class="form-control select-arrow" [(ngModel)]="listType" (change)="ngOnInit();">
+        <select name="type" class="form-control select-arrow" [(ngModel)]="listType" (change)="page=1; ngOnInit();">
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
@@ -22,7 +22,7 @@
     </div>
     <div class="col-md-3 col-6">
       <div class="form-group">
-        <select name="type" class="form-control select-arrow" [(ngModel)]="accountType" (change)="changeAccType();">
+        <select name="type" class="form-control select-arrow" [(ngModel)]="accountType" (change)="page=1; changeAccType();">
           <option value="all">All</option>
           <option value="demo">Demo Accounts</option>
           <option value="client">Live Accounts</option>

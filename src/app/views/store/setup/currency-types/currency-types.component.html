@@ -76,7 +76,7 @@
           <div class="col-md-12 form-group mb-3">
             <label>Code</label>
             <select name="country" class="form-control" [(ngModel)]="addForm.country" #country="ngModel" required>
-              <option [ngValue]="x" *ngFor="let x of currencyList | orderAsc:'name';">{{x.name}}</option>
+              <option [ngValue]="x" *ngFor="let x of ys_currency_list | orderAsc:'name';">{{x.name}}</option>
             </select>
           </div>
           <div class="col-md-12 form-group mb-3">

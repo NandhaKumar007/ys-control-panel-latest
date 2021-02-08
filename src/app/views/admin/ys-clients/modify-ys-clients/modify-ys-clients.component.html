@@ -103,7 +103,7 @@
           <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
             <label>Currency</label>
             <select name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types" #currency_types="ngModel" required>
-              <option *ngFor="let x of commonService.currency_types;" [ngValue]="x">{{x.country_code}}</option>
+              <option *ngFor="let x of currencyList;" [ngValue]="x">{{x.country_code}}</option>
             </select>
           </div>
           <div *ngIf="params.client_id" class="col-md-6 form-group mb-3">

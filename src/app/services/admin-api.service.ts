@@ -11,9 +11,9 @@ export class AdminApiService {
 
   constructor(private http: HttpClient) { }
 
-  LIVE_CURRENCIES() {
+  YS_CURRENCY_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
-    return this.http.get<any>(environment.ws_url+'/admin/live_currencies', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/others/ys_currency_list', httpOptions);
   }
   GENERATE_STORE_TOKEN(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
