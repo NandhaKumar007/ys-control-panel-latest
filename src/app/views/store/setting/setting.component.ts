@@ -116,6 +116,12 @@ export class SettingComponent implements OnInit {
             this.app_setting.search_keyword_list.push({display: obj, value: obj});
           });
         }
+        // newsletter
+        if(!this.app_setting.newsletter_config) {
+          this.app_setting.newsletter_config = {
+            heading: "NEWSLETTER", sub_heading: "Subscribe now to get updates on latest trends and offers", btn_text: "SUBSCRIBE"
+          }
+        }
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
