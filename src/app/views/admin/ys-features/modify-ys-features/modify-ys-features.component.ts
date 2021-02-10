@@ -12,7 +12,7 @@ import { CommonService } from '../../../../services/common.service';
 export class ModifyYsFeaturesComponent implements OnInit {
 
   pageLoader: boolean; featureForm: any = {};
-  currencyList: any = this.commonService.currency_types;
+  currencyList: any = this.commonService.currency_types.filter(obj => obj.store_base);
   discountCurrencyList: any =[];
   packageList: any = [];
   params: any = {};

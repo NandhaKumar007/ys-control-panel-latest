@@ -17,7 +17,7 @@ export class YsPackagesComponent implements OnInit {
   pageLoader: boolean; list: any = [];
   packageForm: any; deleteForm: any;
   formType: string; search_bar: string;
-  currency_list: any = this.commonService.currency_types;
+  currency_list: any = this.commonService.currency_types.filter(obj => obj.store_base);
   featuresList: any = this.commonService.admin_features;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {

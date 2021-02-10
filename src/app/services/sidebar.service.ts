@@ -246,6 +246,10 @@ export class SidebarService {
         moduleList.push({ icon: 'view_carousel', name: 'Collections', state: '/features/collections', type: 'link' });
         routePermissionList.push("collections");
       }
+      if(ysFeatures.indexOf('dinamic_offers') != -1) {
+        moduleList.push({ icon: 'local_dining', name: 'DiNAMIC Offers', state: '/features/dinamic-offers', type: 'link' });
+        routePermissionList.push("dinamic_offers");
+      }
       if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting
       routePermissionList.push("tax_rates");

@@ -209,4 +209,26 @@ export class FeaturesApiService {
     return this.http.patch<any>(environment.ws_url+'/store/menu_sub_category', x, httpOptions);
   }
 
+  // DiNAMIC Offers
+  DINAMIC_OFFER_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/dinamic_offers', httpOptions);
+  }
+  DINAMIC_OFFER_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/dinamic_offers?_id='+x, httpOptions);
+  }
+  ADD_DINAMIC_OFFER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/dinamic_offers', x, httpOptions);
+  }
+  UPDATE_DINAMIC_OFFER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/dinamic_offers', x, httpOptions);
+  }
+  DELETE_DINAMIC_OFFER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/dinamic_offers', x, httpOptions);
+  }
+
 }

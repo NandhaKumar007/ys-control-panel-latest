@@ -112,7 +112,7 @@ export class ControlPanelComponent implements OnInit {
     // live currency
     this.adminApi.YS_CURRENCY_LIST().subscribe(result => {
       this.commonService.currency_types = [];
-      if(result.status) result.list.forEach(element => { this.commonService.currency_types.push({ country_code: element.name, html_code: element.html_code, store_base: element.store_base }); });
+      if(result.status) result.list.forEach(element => { this.commonService.currency_types.push({ base: element.name, country_code: element.name, html_code: element.html_code, store_base: element.store_base }); });
       this.commonService.updateLocalData('currency_types', this.commonService.currency_types);
     });
     // country list
