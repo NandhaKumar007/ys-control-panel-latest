@@ -77,8 +77,7 @@
           <ng-container *ngIf="!seoForm.default_setting">
             <div class="col-md-12 form-group mb-3">
               <label>New Page URL - {{commonService.store_details?.base_url}}/blogs/{{seoForm?.page_url}}</label>
-              <input type="text" name="page_url" class="form-control" [(ngModel)]="seoForm.page_url" #page_url="ngModel"
-                required />
+              <input type="text" name="page_url" class="form-control" [(ngModel)]="seoForm.page_url" #page_url="ngModel" appNoSplChar required />
             </div>
             <div class="col-md-12 form-group mb-3">
               <label>H1 Tag</label>

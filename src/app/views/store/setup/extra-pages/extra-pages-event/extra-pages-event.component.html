@@ -26,7 +26,7 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Page URL - {{commonService.store_details?.base_url}}/pages/{{formData.page_url}}</label>
-            <input type="text" name="page_url" class="form-control" [(ngModel)]="formData.page_url" #page_url="ngModel" required />
+            <input type="text" name="page_url" class="form-control" [(ngModel)]="formData.page_url" #page_url="ngModel" appNoSplChar required />
           </div>
           <div class="col-md-12 form-group mb-3 quill-mb-5">
             <label>Content</label>
