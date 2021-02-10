@@ -13,7 +13,11 @@ const routes: Routes = [
   { path: 'inactive-gift-coupons', loadChildren: () => import('./giftcard/inactive-giftcard-orders/inactive-giftcard-orders.module').then(m => m.InactiveGiftcardOrdersModule), canActivate: [PermissionGuard], data: { name: "inactive_gift_orders" } },
   { path: 'gift-coupon/:coupon_id', loadChildren: () => import('./giftcard/giftcard-order-details/giftcard-order-details.module').then(m => m.GiftcardOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "giftcard_orders" } },
 
-  { path: 'gift-coupon/:coupon_id/:order_id', loadChildren: () => import('./product/product-order-details/product-order-details.module').then(m => m.ProductOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "giftcard_orders" } }
+  { path: 'gift-coupon/:coupon_id/:order_id', loadChildren: () => import('./product/product-order-details/product-order-details.module').then(m => m.ProductOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "giftcard_orders" } },
+
+  { path: 'dinamic-offers', loadChildren: () => import('./dinamic/dinamic-orders/dinamic-orders.module').then(m => m.DinamicOrdersModule), canActivate: [PermissionGuard], data: { name: "dinamic_offer_orders" } },
+  { path: 'inactive-dinamic-offers', loadChildren: () => import('./dinamic/inactive-dinamic-orders/inactive-dinamic-orders.module').then(m => m.InactiveDinamicOrdersModule), canActivate: [PermissionGuard], data: { name: "inactive_dinamic_offer_orders" } },
+  { path: 'dinamic-offers/:order_id', loadChildren: () => import('./dinamic/dinamic-order-details/dinamic-order-details.module').then(m => m.DinamicOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "dinamic_offer_orders" } }
 ];
 
 @NgModule({

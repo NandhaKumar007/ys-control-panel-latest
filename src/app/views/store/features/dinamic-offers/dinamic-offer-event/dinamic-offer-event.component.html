@@ -50,6 +50,10 @@
         <label>Validity in days</label>
         <input type="text" name="valid_in_days" class="form-control" [(ngModel)]="offerForm.valid_in_days" #valid_in_days="ngModel" appNumberOnly required />
       </div>
+      <div class="col-md-12 form-group mb-3 quill-mb-5">
+        <label>Description</label>
+        <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="offerForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+      </div>
 
       <div align="center" class="col-md-6 col-lg-4 form-group mb-3" *ngFor="let x of offerForm.image_list; let i=index;">
         <div class="card p-3 mt-3 mb-3">

@@ -124,28 +124,31 @@ export class SidebarService {
       }
       // orders
       if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based') {
+        // product
         let orderList: IChildItem[] = [
           { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
           { icon: 'check_circle_outline', name: 'Completed Orders', state: '/orders/product/delivered/all', type: 'link' },
           { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' }
         ];
+        let inactiveOrders: IChildItem[] = [{ name: 'Product', state: '/orders/inactive-orders', type: 'link' }];
+        // gift card
         if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
-          orderList.push(
-            { icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' },
-            {
-              name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline',
-              sub: [
-                { name: 'Product', state: '/orders/inactive-orders', type: 'link' },
-                { name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' }
-              ]
-            }
-          );
+          orderList.push({ icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' });
+          inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
           routePermissionList.push("inactive_gift_orders");
         }
-        else {
-          orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
+        // dinamic offers
+        if(ysFeatures.indexOf('dinamic_offers')!=-1) {
+          orderList.push({ icon: 'local_dining', name: 'DiNAMIC Orders', state: '/orders/dinamic-offers', type: 'link' });
+          inactiveOrders.push({ name: 'DiNAMIC', state: '/orders/inactive-dinamic-offers', type: 'link' })
+          routePermissionList.push("inactive_dinamic_offer_orders");
         }
+        // inactive orders
+        if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
+        else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
+        // abandoned
         orderList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
+        // customer
         if(this.commonService.store_details.type == 'order_based') orderList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
         sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
         routePermissionList.push("orders", "abandoned_cart", "inactive_orders");
@@ -248,7 +251,7 @@ export class SidebarService {
       }
       if(ysFeatures.indexOf('dinamic_offers') != -1) {
         moduleList.push({ icon: 'local_dining', name: 'DiNAMIC Offers', state: '/features/dinamic-offers', type: 'link' });
-        routePermissionList.push("dinamic_offers");
+        routePermissionList.push("dinamic_offers", "dinamic_offer_orders");
       }
       if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting
