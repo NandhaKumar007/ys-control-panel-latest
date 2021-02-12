@@ -36,6 +36,7 @@ export class DinamicOfferEventComponent implements OnInit {
 
   onSubmit() {
     this.offerForm.btnLoader = true;
+    this.offerForm.page_url = this.commonService.urlFormat(this.offerForm.name+' '+this.offerForm.sku);
     if(this.params.id) {
       this.api.UPDATE_DINAMIC_OFFER(this.offerForm).subscribe(result => {
         this.offerForm.btnLoader = false;

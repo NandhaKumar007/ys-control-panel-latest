@@ -12,41 +12,24 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
-
-    <!-- <div class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-4" align="center">
-        <div *ngIf="offerForm.image" class="mb-3">
-          <span (click)="offerForm.img_change=null; offerForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
-          <img [src]="offerForm.image" height="100px;" width="auto;">
-        </div>
-        <div *ngIf="!offerForm.image">
-          <label>
-            <div>
-              <i class="material-icons add-img">add_photo_alternate</i>
-              <p>Click to upload image</p>
-            </div>
-            <input type="file" name="image" style="display: none;" (change)="mainFileChangeListener($event)" accept="image/jpeg, image/png"
-            />
-          </label>
-        </div>
-      </div>
-    </div> -->
     <div class="row">
-      <div class="col-md-3 form-group mb-3">
-        <label>Name</label>
-        <input type="text" name="addon_name" class="form-control" [(ngModel)]="offerForm.name" #name="ngModel" required
-        />
+      <div class="col-md-6 form-group mb-3">
+        <label>SKU</label>
+        <input type="text" name="sku" class="form-control" [(ngModel)]="offerForm.sku" #sku="ngModel" required />
       </div>
-      <div class="col-md-3 form-group mb-3">
+      <div class="col-md-6 form-group mb-3">
+        <label>Name</label>
+        <input type="text" name="name" class="form-control" [(ngModel)]="offerForm.name" #name="ngModel" required />
+      </div>
+      <div class="col-md-4 form-group mb-3">
         <label>Purchase Amount</label>
         <input type="text" name="purchase_amount" class="form-control" [(ngModel)]="offerForm.purchase_amount" #purchase_amount="ngModel" appNumberOnly required />
       </div>
-      <div class="col-md-3 form-group mb-3">
+      <div class="col-md-4 form-group mb-3">
         <label>Redeem Amount</label>
         <input type="text" name="redeem_amount" class="form-control" [(ngModel)]="offerForm.redeem_amount" #redeem_amount="ngModel" appNumberOnly required />
       </div>
-      <div class="col-md-3 form-group mb-3">
+      <div class="col-md-4 form-group mb-3">
         <label>Validity in days</label>
         <input type="text" name="valid_in_days" class="form-control" [(ngModel)]="offerForm.valid_in_days" #valid_in_days="ngModel" appNumberOnly required />
       </div>

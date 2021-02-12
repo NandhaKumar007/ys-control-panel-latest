@@ -41,6 +41,7 @@
         <div class="flex-grow-1 pl-2 d-flex">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+            <p class="w-30 w-sm-100 m-b-0">{{commonService.store_details?.base_url}}/offers/{{x.page_url}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
               <button class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="/features/dinamic-offers/modify/{{x._id}}">
                <span class="black-outline-txt">Edit</span> 
