@@ -17,7 +17,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4 class="add-another">{{footer_config.address_config.title}}</h4>
+          <h4 class="add-another">{{footer_config.address_config.title? footer_config.address_config.title: 'Primary'}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditDetails('address', detailsModal);">edit</i>
@@ -41,7 +41,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4 class="add-another">{{footer_config.contact_config.title}}</h4>
+          <h4 class="add-another">{{footer_config.contact_config.title? footer_config.contact_config.title: 'Secondary'}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditDetails('contact', detailsModal);">edit</i>
@@ -65,7 +65,7 @@
     <div class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
-          <h4 class="add-another">{{footer_config.social_media_title}}</h4>
+          <h4 class="add-another">{{footer_config.social_media_title? footer_config.social_media_title: 'SOCIAL MEDIA'}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
           <i class="material-icons edit-icon" (click)="onEditSocialMedia(socialMediaModal);">edit</i>
@@ -179,7 +179,7 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Title</label>
-            <input type="text" name="title" class="form-control" [(ngModel)]="editForm.title" #title="ngModel" required />
+            <input type="text" name="title" class="form-control" [(ngModel)]="editForm.title" #title="ngModel" />
           </div>
           <div class="col-md-12 form-group mb-3 quill-mb-5">
             <label>Content</label>
@@ -211,7 +211,7 @@
         <div class="row">
           <div class="col-md-6 form-group mb-3">
             <label>Title</label>
-            <input type="text" name="social_media_title" class="form-control" [(ngModel)]="editForm.social_media_title" #social_media_title="ngModel" required />
+            <input type="text" name="social_media_title" class="form-control" [(ngModel)]="editForm.social_media_title" #social_media_title="ngModel" />
           </div>
           <div class="col-md-12 mb-3 border-top"></div>
           <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.social_media_links; let i=index;">

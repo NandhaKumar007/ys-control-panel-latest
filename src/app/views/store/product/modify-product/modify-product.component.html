@@ -295,6 +295,13 @@
           </div>
           <div class="row ml-3" *ngIf="productForm.addon_status">
             <div class="col-md-12 form-group mb-3">
+              <div class="mb-3">
+                <label class="checkbox checkbox-primary">
+                  <input class="form-check-input" type="checkbox" name="addon_must" [(ngModel)]="productForm.addon_must" #addon_must="ngModel">
+                  <span>Choose Add-On Mandatory</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
               <div class="card card-in-card p-3">
                 <label class="checkbox checkbox-success">
                   <input class="form-check-input" type="checkbox" name="select_all" [(ngModel)]="productForm.select_all" (change)="selectAllAddons(productForm.select_all);"

@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button *ngIf="commonService.master_token" type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+        <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
       </div>
     </div>
   </div>

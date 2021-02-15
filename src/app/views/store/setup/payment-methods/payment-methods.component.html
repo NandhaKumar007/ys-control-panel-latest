@@ -81,7 +81,7 @@
         <div class="row">
           <div *ngIf="payForm.form_type=='add'" class="col-md-6 form-group mb-3">
             <label>Payment Types</label>
-            <select name="name" class="form-control" [(ngModel)]="payForm.name" #name="ngModel" required>
+            <select name="name" class="form-control" [(ngModel)]="payForm.name" (change)="(!payForm.cod_config)? payForm.cod_config={} : ''" #name="ngModel" required>
               <option value="COD">COD</option>
               <ng-container *ngIf="commonService.store_details?.country=='India'">
                 <option value="Razorpay">Razorpay</option>
@@ -104,10 +104,55 @@
             <label>Rank</label>
             <input type="number" name="rank" class="form-control" [(ngModel)]="payForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
-          <div *ngIf="payForm.name=='COD'" class="col-md-6 form-group mb-3">
-            <label>COD Charges</label>
-            <input type="number" name="cod_charges" class="form-control" [(ngModel)]="payForm.cod_charges" #cod_charges="ngModel" appNumberOnly required />
-          </div>
+          <!-- COD -->
+          <ng-container *ngIf="payForm.name=='COD' && payForm.cod_config">
+            <div class="col-md-6 form-group mb-3">
+              <label>COD Charges</label>
+              <input type="number" name="cod_charges" class="form-control" [(ngModel)]="payForm.cod_config.cod_charges" #cod_charges="ngModel" appNumberOnly required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Maximum Order Amount</label>
+              <input type="number" name="max_amount" class="form-control" [(ngModel)]="payForm.cod_config.max_amount" #max_amount="ngModel" appNumberOnly required />
+            </div>
+            <ng-container *ngIf="commonService.store_details?.country=='India'">
+              <div class="col-md-12 form-group mb-3">
+                <label class="checkbox checkbox-primary">
+                  <input class="form-check-input" type="checkbox" name="sms_status" (change)="(!payForm.sms_config)? payForm.sms_config={}: ''" [(ngModel)]="payForm.cod_config.sms_status">
+                  <span>Enable SMS Validation</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <!-- sms config -->
+              <ng-container *ngIf="payForm.cod_config.sms_status && payForm.sms_config">
+                <div class="col-md-6 form-group mb-3">
+                  <label>Provider</label>
+                  <select name="provider" class="form-control" [(ngModel)]="payForm.sms_config.provider" required>
+                    <option value="24x7SMS">24x7SMS</option>
+                  </select>
+                </div>
+                <div class="col-md-6"></div>
+                <!-- 24x7SMS -->
+                <ng-container *ngIf="payForm.sms_config.provider=='24x7SMS'">
+                  <div class="col-md-6 form-group mb-3">
+                    <label>API Key</label>
+                    <input type="text" name="api_key" class="form-control" [(ngModel)]="payForm.sms_config.api_key" required />
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label>Sender ID</label>
+                    <input type="text" name="sender_id" class="form-control" [(ngModel)]="payForm.sms_config.sender_id" required />
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label>Service Name</label>
+                    <input type="text" name="service_name" class="form-control" [(ngModel)]="payForm.sms_config.service_name" required />
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label>Template ID</label>
+                    <input type="text" name="template_id" class="form-control" [(ngModel)]="payForm.sms_config.template_id" required />
+                  </div>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
           <!-- razorpay -->
           <ng-container *ngIf="payForm.name=='Razorpay'">
             <div class="col-md-6 form-group mb-3">

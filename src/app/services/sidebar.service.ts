@@ -139,7 +139,7 @@ export class SidebarService {
         }
         // dinamic offers
         if(ysFeatures.indexOf('dinamic_offers')!=-1) {
-          orderList.push({ icon: 'local_dining', name: 'DiNAMIC Orders', state: '/orders/dinamic-offers', type: 'link' });
+          orderList.push({ icon: 'local_dining', name: 'DiNAMIC Offers', state: '/orders/dinamic-offers', type: 'link' });
           inactiveOrders.push({ name: 'DiNAMIC', state: '/orders/inactive-dinamic-offers', type: 'link' })
           routePermissionList.push("inactive_dinamic_offer_orders");
         }
