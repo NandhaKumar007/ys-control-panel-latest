@@ -387,13 +387,13 @@
           </div>
 
           <!-- gift wrapper -->
-          <div *ngIf="store_details?.application_setting?.gift_wrapping_charges>0" class="col-md-12 mt-2">
+          <div *ngIf="commonService.application_setting?.gift_wrapping_charges>0" class="col-md-12 mt-2">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="gift_status" [(ngModel)]="orderForm.gift_status"
                 #gift_status="ngModel"
-                (change)="orderForm.gift_status? orderForm.gift_wrapper=store_details.application_setting.gift_wrapping_charges: orderForm.gift_wrapper=0; resetDiscount();">
+                (change)="orderForm.gift_status? orderForm.gift_wrapper=commonService.application_setting.gift_wrapping_charges: orderForm.gift_wrapper=0; resetDiscount();">
               <span>Gift wrapping
-                ({{ store_details.application_setting.gift_wrapping_charges | currency:commonService.store_currency.country_code }})</span>
+                ({{ commonService.application_setting.gift_wrapping_charges | currency:commonService.store_currency.country_code }})</span>
               <span class="checkmark"></span>
             </label>
           </div>
@@ -1109,7 +1109,7 @@
 
   <div class="modal-body lg-modal-body slim-scroll">
     <form id="addon-form" name="addon-form" autocomplete="off">
-      <ng-container *ngIf="store_details?.additional_features?.custom_model">
+      <ng-container *ngIf="commonService.store_details?.additional_features?.custom_model">
         <div class="row">
           <div class="col-md-12">
             <div>
@@ -1371,7 +1371,7 @@
       (click)="(customized_model?.mm_view)? customized_model.mm_view=false: customized_model.mm_view=true; commonService?.scrollModalTop(0);">
       {{ customized_model?.mm_view? 'GO BACK': 'VIEW MEASUREMENTS' }}
     </button>
-    <button type="button" *ngIf="store_details?.additional_features?.custom_model"
+    <button type="button" *ngIf="commonService.store_details?.additional_features?.custom_model"
       (click)="modal.dismiss('Cross click'); onCreateCustomization(existingListModal, createNewModal);"
       class="btn btn-wide btn-primary">CHOOSE ANOTHER MODEL</button>
   </div>

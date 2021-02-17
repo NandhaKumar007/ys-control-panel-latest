@@ -90,6 +90,7 @@ export class CommonService {
 
   admin_packages: any = [];
   admin_features: any = [];
+  application_setting: any;
 
   store_list: any = [];
   ys_features: any = [];

@@ -113,6 +113,7 @@ export class AddProductComponent implements OnInit {
         if(object.addon_checked) this.productForm.addon_list.push({ addon_id: object._id });
       });
     }
+    if(!this.productForm.addon_status || !this.addonList.length) this.productForm.addon_must = false;
     // tag
     this.productForm.tag_list = [];
     if(this.productForm.tag_status) {

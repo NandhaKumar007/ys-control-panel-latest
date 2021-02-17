@@ -14,12 +14,13 @@
 
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
 
-    <div *ngIf="commonService.store_details?.additional_features?.addon_image" class="row">
+    <div class="row">
       <div class="col-md-4"></div>
       <div class="col-md-4" align="center">
         <div *ngIf="addonForm.image" class="mb-3">
           <span (click)="addonForm.img_change=null; addonForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
-          <img [src]="addonForm.image" height="100px;" width="auto;">
+          <img *ngIf="addonForm.image && addonForm?.img_change" [src]="addonForm.image" height="100px;" width="auto;">
+          <img *ngIf="addonForm.image && !addonForm?.img_change" [src]="imgBaseUrl+addonForm.image" height="100px;" width="auto;">
         </div>
         <div *ngIf="!addonForm.image">
           <label>
@@ -132,6 +133,7 @@
                   <p>Click to upload image (Resolution: 150 x 150)</p>
                 </div>
                 <img *ngIf="y.image && y?.img_change" [src]="y.image" height="100px;" width="auto;">
+                <img *ngIf="y.image && !y?.img_change" [src]="imgBaseUrl+y.image" height="100px;" width="auto;">
                 <input type="file" name="y.image{{i+1}}{{j+1}}" style="display: none;" (change)="fileChangeListener(i, j, $event)" accept="image/jpeg, image/png"
                 />
               </label>
@@ -197,7 +199,9 @@
         <button type="button" routerLink="/product-extras/addons" class="btn btn-wide black-outline-btn">
           <span class="black-outline-txt">Cancel</span>
         </button>&nbsp; &nbsp; &nbsp;
-        <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Save</button>
+        <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">
+            {{router.url.includes('modify')? 'Update': 'Save'}}
+        </button>
       </div>
     </div>
   </form>

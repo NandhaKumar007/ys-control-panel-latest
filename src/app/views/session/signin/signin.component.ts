@@ -54,7 +54,6 @@ export class SigninComponent implements OnInit {
           currency_types: result.data.currency_types,
           country: result.data.country,
           created_on: result.data.created_on,
-          application_setting: result.data.application_setting,
           additional_features: result.data.additional_features
         };
         if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;

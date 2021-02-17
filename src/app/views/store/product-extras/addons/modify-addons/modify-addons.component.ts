@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ProductExtrasApiService } from '../../product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-modify-addons',
@@ -13,6 +14,7 @@ export class ModifyAddonsComponent implements OnInit {
 
   pageLoader: boolean; btnLoader: boolean;
   addonForm: any; maxRank: any = 0; measurementList: any = [];
+  imgBaseUrl = environment.img_baseurl;
 
   constructor(private api: ProductExtrasApiService, public commonService: CommonService, public router: Router, private activeRoute: ActivatedRoute) { }
 

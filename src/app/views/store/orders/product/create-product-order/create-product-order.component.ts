@@ -18,8 +18,7 @@ import { Location } from '@angular/common';
 
 export class CreateProductOrderComponent implements OnInit {
 
-  imgBaseUrl = environment.img_baseurl;
-  orderForm: any; page = 1; store_details: any = this.commonService.store_details;
+  imgBaseUrl = environment.img_baseurl; orderForm: any; page = 1;
   customer_list: any = []; customer_list_modal_config: any; selected_customer: any;
   product_list: any = []; product_list_modal_config: any; productDetails: any;
   shipping_list: any = []; shipping_list_modal_config: any; selected_shipping: any;
@@ -76,6 +75,12 @@ export class CreateProductOrderComponent implements OnInit {
         };
       }
     });
+    // application setting
+    if(!this.commonService.application_setting) {
+      this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
+        if(result.status) this.commonService.application_setting = result.data.application_setting;
+      });
+    }
   }
 
   placeOrder() {

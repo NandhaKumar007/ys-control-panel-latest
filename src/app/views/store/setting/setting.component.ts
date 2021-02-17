@@ -109,6 +109,7 @@ export class SettingComponent implements OnInit {
       if(result.status) {
         this.app_setting = result.data.application_setting;
         this.checkout_setting = result.data.checkout_setting;
+        this.commonService.application_setting = this.app_setting;
         // search keywords
         this.app_setting.search_keyword_list = [];
         if(this.app_setting.search_keywords.length) {
@@ -225,6 +226,7 @@ export class SettingComponent implements OnInit {
     this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
       if(result.status) {
         this.app_setting = result.data.application_setting;
+        this.commonService.application_setting = this.app_setting;
         // announcement bar
         if(this.app_setting.announcebar_config && this.app_setting.announcebar_config.timer_date) {
           this.app_setting.announcebar_config.end_date = new Date(this.app_setting.announcebar_config.timer_date);
