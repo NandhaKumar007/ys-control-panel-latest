@@ -16,7 +16,19 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="row">
-    <div class="col-md-6 col-lg-4 d-flex">
+    <div class="col-md-3 d-flex">
+      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column">
+          <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/favicon.png?v='+verNum" height="100px;" width="auto;">
+          <label class="text-title">
+            Favicon 
+            <i class="material-icons" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 d-flex">
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
@@ -28,7 +40,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 col-lg-4 d-flex">
+    <div class="col-md-3 d-flex">
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
@@ -40,7 +52,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 col-lg-4 d-flex">
+    <div class="col-md-3 d-flex">
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/mail_logo.png?v='+verNum" height="100px;" width="auto;">

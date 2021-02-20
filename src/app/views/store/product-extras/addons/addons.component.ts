@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductExtrasApiService } from '../product-extras-api.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
@@ -17,8 +18,12 @@ export class AddonsComponent implements OnInit {
   list: any = []; maxRank: any = 0;
 	deleteForm: any; search_bar: string;
   pageLoader: boolean; scrollPos: number = 0;
+  btnForm: any = {};
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService,
+    public commonService: CommonService, private storeApi: StoreApiService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -47,6 +52,25 @@ export class AddonsComponent implements OnInit {
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos); }, 500);
 		});
+  }
+
+  openBtnModal(modalName) {
+    this.storeApi.STORE_PROPERTY_DETAILS().subscribe((result) => {
+      if(result.status) {
+        this.btnForm = result.data.application_setting.customize_name;
+        this.modalService.open(modalName);
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdateSetting() {
+    this.storeApi.UPDATE_STORE_PROPERTY_DETAILS({ "application_setting.customize_name": this.btnForm }).subscribe(result => {
+      if(result.status) document.getElementById('closeModal').click();
+      else {
+        this.btnForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // DELETE

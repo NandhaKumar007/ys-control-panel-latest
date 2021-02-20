@@ -3,11 +3,17 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Add-Ons</h1>
-    <ul>
-      <li>Edit your added features and services</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Add-Ons</h1>
+        <ul><li>Edit your added features and services</li></ul>
+      </div>
+
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" (click)="openBtnModal(btnSettingModal);">Button Setting</button>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
@@ -74,6 +80,40 @@
     </div>
   </div>
 </div>
+
+<!-- Button Setting -->
+<ng-template #btnSettingModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Button Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSetting();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Pcs</label>
+            <input type="text" name="Pcs" class="form-control" [(ngModel)]="btnForm.Pcs" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Mts</label>
+            <input type="text" name="Mts" class="form-control" [(ngModel)]="btnForm.Mts" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Kgs</label>
+            <input type="text" name="Kgs" class="form-control" [(ngModel)]="btnForm.Kgs" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="btnForm.errorMsg"><p class="text-danger">{{ btnForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
 
 <!-- DELETE MODAL -->
 <ng-template #deleteModal let-modal>

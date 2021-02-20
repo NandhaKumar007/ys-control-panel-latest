@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <div class="col-md-6 col-lg-4 d-flex">
+    <div *ngIf="commonService.ys_features.indexOf('whatsapp_chat')!=-1 || commonService.ys_features.indexOf('messenger')!=-1" class="col-md-6 col-lg-4 d-flex">
       <div (click)="onOpenSettingModal(chatModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title">Chat Configuration</label>
@@ -577,8 +577,8 @@
             <div class="col-md-6 form-group mb-3">
               <label>Type</label>
               <select name="host_type" class="form-control select-arrow" [(ngModel)]="app_setting.chat_config.type" required>
-                <option value="whatsapp">Whatsapp</option>
-                <option value="third_party">Third Party</option>
+                <option *ngIf="commonService.ys_features.indexOf('whatsapp_chat')!=-1" value="whatsapp">Whatsapp</option>
+                <option *ngIf="commonService.ys_features.indexOf('messenger')!=-1" value="third_party">Third Party</option>
               </select>
             </div>
             <ng-container *ngIf="app_setting.chat_config.type=='whatsapp'">
