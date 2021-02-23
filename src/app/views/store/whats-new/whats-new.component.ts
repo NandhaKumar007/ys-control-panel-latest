@@ -16,6 +16,7 @@ export class WhatsNewComponent implements OnInit {
     let countryList: any = [];
     this.api.COUNTRIES_LIST().subscribe(result => {
       if(result.status) countryList = result.list;
+      this.commonService.country_list = countryList;
       this.commonService.updateLocalData('country_list', countryList);
     });
   }

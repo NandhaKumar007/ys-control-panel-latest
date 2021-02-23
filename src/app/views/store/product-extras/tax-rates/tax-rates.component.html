@@ -124,7 +124,7 @@
           <div class="col-md-6 form-group mb-3">
             <label>Home State</label>
             <select name="home_state" class="form-control select-arrow" [(ngModel)]="addForm.home_state" #home_state="ngModel" required>
-              <option [ngValue]="x.name" *ngFor="let x of commonService.country_list;">{{x.name}}</option>
+              <option [ngValue]="x.name" *ngFor="let x of state_list;">{{x.name}}</option>
             </select>
           </div>
         </div>
@@ -185,7 +185,7 @@
           <div class="col-md-6 form-group mb-3">
             <label>Home State</label>
             <select name="home_state" class="form-control select-arrow" [(ngModel)]="editForm.home_state" #home_state="ngModel" required>
-              <option [ngValue]="x.name" *ngFor="let x of commonService.country_list;">{{x.name}}</option>
+              <option [ngValue]="x.name" *ngFor="let x of state_list;">{{x.name}}</option>
             </select>
           </div>
         </div>

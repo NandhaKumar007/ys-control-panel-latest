@@ -16,6 +16,7 @@ export class TaxRatesComponent implements OnInit {
   page = 1; pageSize = 10; list: any = [];
   addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
+  state_list: any = [];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -28,6 +29,9 @@ export class TaxRatesComponent implements OnInit {
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
+    // state list
+    let index = this.commonService.country_list.findIndex(obj => obj.name==this.commonService.store_details.country);
+    if(index!=-1) this.state_list = this.commonService.country_list[index].states;
   }
 
   onAdd() {
