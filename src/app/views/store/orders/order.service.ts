@@ -99,4 +99,14 @@ export class OrderService {
     return this.http.post<any>(environment.ws_url+'/store/coupon/resend_email', x, httpOptions);
   }
 
+  // appointment
+  APPOINTMENT_LIST(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/appointment', x, httpOptions);
+  }
+  APPOINTMENT_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/appointment', x, httpOptions);
+  }
+
 }
