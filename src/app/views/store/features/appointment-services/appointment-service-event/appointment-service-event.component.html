@@ -4,7 +4,7 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>Appointment Service</h1>
+    <h1>{{ params.id? serviceForm.name: 'New Service' }}</h1>
     <ul><li>{{ params.id? 'Update': 'Add' }} your service details</li></ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -119,7 +119,7 @@
           <p class="text-danger" align="center">{{ serviceForm.errorMsg }}</p>
         </div>
         <div align="center" class="col-md-12 z-i-0">
-          <button type="button" routerLink="/features/appointment-scheduler" class="btn btn-wide black-outline-btn">
+          <button type="button" routerLink="/features/appointment-services" class="btn btn-wide black-outline-btn">
             <span class="black-outline-txt">Cancel</span>
           </button>&nbsp; &nbsp; &nbsp;
           <button type="submit" class="btn btn-wide btn-primary ladda-buatton m-1" [disabled]="btnLoader" [ladda]="btnLoader">

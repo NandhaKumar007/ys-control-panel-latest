@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'discounts-page', loadChildren: () => import('./discounts-page/discounts-page.module').then(m => m.DiscountsPageModule), canActivate: [PermissionGuard], data: { name: "discounts_page" } },
   { path: 'giftcard', loadChildren: () => import('./giftcard/giftcard.module').then(m => m.GiftcardModule), canActivate: [PermissionGuard], data: { name: "giftcard" } },
   { path: 'menus', loadChildren: () => import('./menus/menus.module').then(m => m.MenusModule), canActivate: [PermissionGuard], data: { name: "menus" } },
-  { path: 'appointment-scheduler', loadChildren: () => import('./appointment-scheduler/appointment-scheduler.module').then(m => m.AppointmentSchedulerModule), canActivate: [PermissionGuard], data: { name: "appointment_scheduler" } },
+  { path: 'appointment-services', loadChildren: () => import('./appointment-services/appointment-services.module').then(m => m.AppointmentServicesModule), canActivate: [PermissionGuard], data: { name: "appointment_services" } },
   { path: 'dinamic-offers', loadChildren: () => import('./dinamic-offers/dinamic-offers.module').then(m => m.DinamicOffersModule), canActivate: [PermissionGuard], data: { name: "dinamic_offers" } }
 ];
 

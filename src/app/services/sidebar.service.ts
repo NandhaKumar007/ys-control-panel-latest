@@ -143,6 +143,11 @@ export class SidebarService {
           inactiveOrders.push({ name: 'DiNAMIC', state: '/orders/inactive-dinamic-offers', type: 'link' })
           routePermissionList.push("inactive_dinamic_offer_orders");
         }
+        // appointments
+        if(ysFeatures.indexOf('appointment_scheduler') != -1) {
+          orderList.push({ icon: 'book_online', name: 'Appointments', state: '/orders/appointments', type: 'link' });
+          routePermissionList.push("appointments");
+        }
         // inactive orders
         if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
         else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
@@ -254,8 +259,8 @@ export class SidebarService {
         routePermissionList.push("dinamic_offers", "dinamic_offer_orders");
       }
       if(ysFeatures.indexOf('appointment_scheduler') != -1) {
-        moduleList.push({ icon: 'book_online', name: 'Appointment', state: '/features/appointment-scheduler', type: 'link' });
-        routePermissionList.push("appointment_scheduler");
+        moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-services', type: 'link' });
+        routePermissionList.push("appointment_services");
       }
       if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting

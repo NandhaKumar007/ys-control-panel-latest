@@ -4,7 +4,7 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>Appointment Scheduler</h1>
+    <h1>Appointment Services</h1>
     <ul>
       <li>Manage your appointment services</li>
     </ul>
@@ -14,7 +14,7 @@
   <div class="top-filter-sec">
   <div class="row mb-4">
     <div class="col-md-6">
-      <button type="button" class="btn btn-primary" routerLink="/features/appointment-scheduler/add/{{maxRank+1}}">ADD NEW SERVICE</button>
+      <button type="button" class="btn btn-primary" routerLink="/features/appointment-services/add/{{maxRank+1}}">ADD NEW SERVICE</button>
     </div>
     <!-- search box -->
     <div class="col-md-6 mt-sm-15">
@@ -42,7 +42,7 @@
             <!-- OTHER DATA -->
             <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="/features/appointment-scheduler/modify/{{x._id}}/{{maxRank}}">
+              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="/features/appointment-services/modify/{{x._id}}/{{maxRank}}">
                <span class="black-outline-txt">Edit</span>
               </button>
               <button class="btn orng-outline-btn w-md-100" (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">

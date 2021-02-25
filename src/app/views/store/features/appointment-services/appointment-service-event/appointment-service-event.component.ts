@@ -7,12 +7,12 @@ import { FeaturesApiService } from '../../features-api.service';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
-  selector: 'app-appointment-scheduler-event',
-  templateUrl: './appointment-scheduler-event.component.html',
-  styleUrls: ['./appointment-scheduler-event.component.scss']
+  selector: 'app-appointment-service-event',
+  templateUrl: './appointment-service-event.component.html',
+  styleUrls: ['./appointment-service-event.component.scss']
 })
 
-export class AppointmentSchedulerEventComponent implements OnInit {
+export class AppointmentServiceEventComponent implements OnInit {
 
   pageLoader: boolean; btnLoader: boolean;
   serviceForm: any; maxRank: any = 0; params: any;
@@ -52,7 +52,7 @@ export class AppointmentSchedulerEventComponent implements OnInit {
     if(this.params.id) {
       this.api.UPDATE_APPOINTMENT_SERVICES(this.serviceForm).subscribe(result => {
         this.btnLoader = false;
-        if(result.status) this.router.navigate(['/features/appointment-scheduler']);
+        if(result.status) this.router.navigate(['/features/appointment-services']);
         else {
           this.serviceForm.errorMsg = result.message;
           console.log("response", result);
@@ -62,7 +62,7 @@ export class AppointmentSchedulerEventComponent implements OnInit {
     else {
       this.api.ADD_APPOINTMENT_SERVICES(this.serviceForm).subscribe(result => {
         this.btnLoader = false;
-        if(result.status) this.router.navigate(['/features/appointment-scheduler']);
+        if(result.status) this.router.navigate(['/features/appointment-services']);
         else {
           this.serviceForm.errorMsg = result.message;
           console.log("response", result);

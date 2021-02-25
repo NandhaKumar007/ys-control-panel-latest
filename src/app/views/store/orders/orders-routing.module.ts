@@ -17,7 +17,9 @@ const routes: Routes = [
 
   { path: 'dinamic-offers', loadChildren: () => import('./dinamic/dinamic-orders/dinamic-orders.module').then(m => m.DinamicOrdersModule), canActivate: [PermissionGuard], data: { name: "dinamic_offer_orders" } },
   { path: 'inactive-dinamic-offers', loadChildren: () => import('./dinamic/inactive-dinamic-orders/inactive-dinamic-orders.module').then(m => m.InactiveDinamicOrdersModule), canActivate: [PermissionGuard], data: { name: "inactive_dinamic_offer_orders" } },
-  { path: 'dinamic-offers/:order_id', loadChildren: () => import('./dinamic/dinamic-order-details/dinamic-order-details.module').then(m => m.DinamicOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "dinamic_offer_orders" } }
+  { path: 'dinamic-offers/:order_id', loadChildren: () => import('./dinamic/dinamic-order-details/dinamic-order-details.module').then(m => m.DinamicOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "dinamic_offer_orders" } },
+
+  { path: 'appointments', loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule), canActivate: [PermissionGuard], data: { name: "appointments" } }
 ];
 
 @NgModule({
