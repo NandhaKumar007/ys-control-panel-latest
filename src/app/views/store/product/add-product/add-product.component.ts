@@ -5,6 +5,7 @@ import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-add-product',
@@ -45,7 +46,7 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.image_count = 5;
+      if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = 30;
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;
       this.productForm = { rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs', allow_cod: true, video_details: {} };
@@ -56,12 +57,14 @@ export class AddProductComponent implements OnInit {
           this.tagList = result.data.tag_list.filter(obj => obj.status=='active');
           this.noteList = result.data.footnote_list;
           this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
-          this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
-          if(this.taxRates.length) {
-            let taxIndex = this.taxRates.findIndex(obj => obj.primary);
-            if(taxIndex!=-1) {
-              this.primary_tax = this.taxRates[taxIndex]._id;
-              this.productForm.taxrate_id = this.primary_tax;
+          if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
+            this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
+            if(this.taxRates.length) {
+              let taxIndex = this.taxRates.findIndex(obj => obj.primary);
+              if(taxIndex!=-1) {
+                this.primary_tax = this.taxRates[taxIndex]._id;
+                this.productForm.taxrate_id = this.primary_tax;
+              }
             }
           }
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
@@ -168,7 +171,7 @@ export class AddProductComponent implements OnInit {
         meta_desc: this.commonService.stripHtml(this.productForm.description).substring(0, 320)
       };
     }
-    if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.productForm.limited_products = 12;
+    if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.productForm.limited_products = environment.limited_product_count;
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.btnLoader = false;

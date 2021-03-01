@@ -142,6 +142,13 @@
     <div class="row">
       <div class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">
+          <input class="form-check-input" type="checkbox" name="abandoned_status" [(ngModel)]="clientForm.abandoned_status" #abandoned_status="ngModel">
+          <span>Enable abandoned cart recovery email alert</span>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <div class="form-group mb-3 col-md-12">
+        <label class="checkbox checkbox-primary">
           <input class="form-check-input" type="checkbox" name="billing_status" [(ngModel)]="clientForm.package_details.billing_status" #billing_status="ngModel">
           <span>Enable Billing</span>
           <span class="checkmark"></span>

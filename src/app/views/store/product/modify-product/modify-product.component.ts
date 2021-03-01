@@ -52,15 +52,17 @@ export class ModifyProductComponent implements OnInit {
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
-          this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
           let tempAddonList = result.data.addon_list.filter(obj => obj.status=='active');
           let tempTagList = result.data.tag_list.filter(obj => obj.status=='active');
           let tempFaqList = result.data.faq_list.filter(obj => obj.status=='active');
           let tempNoteList = result.data.footnote_list;
-          if(this.taxRates.length) {
-            let taxIndex = this.taxRates.findIndex(obj => obj.primary);
-            if(taxIndex!=-1) this.primary_tax = this.taxRates[taxIndex]._id;
+          if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
+            this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
+            if(this.taxRates.length) {
+              let taxIndex = this.taxRates.findIndex(obj => obj.primary);
+              if(taxIndex!=-1) this.primary_tax = this.taxRates[taxIndex]._id;
+            }
           }
           this.api.PRODUCT_DETAILS(params.product_id).subscribe(result => {
             if(result.status) {

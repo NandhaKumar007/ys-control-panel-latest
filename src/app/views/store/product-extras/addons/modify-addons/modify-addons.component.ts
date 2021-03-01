@@ -35,6 +35,7 @@ export class ModifyAddonsComponent implements OnInit {
               this.mmListModify(tempMmList, this.addonForm.mm_list).then((list) => {
                 this.measurementList = list;
               });
+              if(this.addonForm.notes_list && this.addonForm.notes_list.length) this.addonForm.notes_status = true;
             }
             else console.log("addon response", result);
             setTimeout(() => { this.pageLoader = false; }, 500);
@@ -60,6 +61,10 @@ export class ModifyAddonsComponent implements OnInit {
       this.measurementList.forEach(object => {
         if(object.mm_checked) this.addonForm.mm_list.push({ mmset_id: object._id });
       });
+    }
+    if(!this.addonForm.notes_status) {
+      delete this.addonForm.notes_title;
+      delete this.addonForm.notes_list;
     }
     if(this.router.url.includes("modify")) {
       this.api.UPDATE_ADDON(this.addonForm).subscribe(result => {

@@ -34,7 +34,7 @@
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
           <label class="text-title">
             Site Logo 
-            <i class="material-icons" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>

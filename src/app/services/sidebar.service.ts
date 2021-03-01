@@ -152,11 +152,14 @@ export class SidebarService {
         if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
         else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
         // abandoned
-        orderList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
+        if(ysFeatures.indexOf('abandoned_cart') != -1) {
+          orderList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
+          routePermissionList.push("abandoned_cart");
+        }
         // customer
         if(this.commonService.store_details.type == 'order_based') orderList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
         sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
-        routePermissionList.push("orders", "abandoned_cart", "inactive_orders");
+        routePermissionList.push("orders", "inactive_orders");
         if(ysFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
       }
       // customers
@@ -164,8 +167,11 @@ export class SidebarService {
         sidePanelList.push({ name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' });
       }
       // marketing tools
-      routePermissionList.push("offers");
-      let toolList: IChildItem[] = [{ icon: 'local_offer', name: 'Offers', state: '/features/coupon-codes', type: 'link' }];
+      let toolList: IChildItem[] = [];
+      if(ysFeatures.indexOf('basic_discount')!=-1 || ysFeatures.indexOf('advanced_discount')!=-1) {
+        toolList.push({ icon: 'local_offer', name: 'Offers', state: '/features/coupon-codes', type: 'link' });
+        routePermissionList.push("offers");
+      }
       if(ysFeatures.indexOf('giftcard') != -1) {
         toolList.push({ icon: 'redeem', name: 'Gift Cards', state: '/features/giftcard', type: 'link' });
         routePermissionList.push("giftcard", "giftcard_orders");
@@ -197,8 +203,7 @@ export class SidebarService {
         seoList.push({ name: 'Extra Pages', state: '/seo/extra-pages', type: 'link' });
         routePermissionList.push("extra_page_seo");
       }
-      else { routePermissionList.push("store_seo"); }
-      routePermissionList.push("home_layout", "catalog_layout", "product_layout", "menus", "policies", "contact_page", "store_locator", "extra_pages", "footer_content");
+      routePermissionList.push("home_layout", "catalog_layout", "product_layout", "policies", "contact_page", "footer_content");
       let webList: IChildItem[] = [
         {
           name: 'Website Design', type: 'dropDown', icon: 'format_paint',
@@ -207,26 +212,36 @@ export class SidebarService {
             { name: 'Catalog', state: '/layouts/catalog', type: 'link' },
             { name: 'Product', state: '/layouts/product', type: 'link' }
           ]
-        },
-        { icon: 'menu_book', name: 'Menu', state: '/features/menus', type: 'link' },
-        {
-          name: 'Policies', type: 'dropDown', icon: 'policy',
-          sub: [
-            { name: 'Privacy Policy', state: '/setup/policies/privacy', type: 'link' },
-            { name: 'Shipping Policy', state: '/setup/policies/shipping', type: 'link' },
-            { name: 'Cancellation Policy', state: '/setup/policies/cancellation', type: 'link' },
-            { name: 'Terms & Conditions', state: '/setup/policies/terms_conditions', type: 'link' }
-          ]
         }
       ];
+      if(ysFeatures.indexOf('single_menu')!=-1 || ysFeatures.indexOf('multi_menu')!=-1) {
+        webList.push({ icon: 'menu_book', name: 'Menu', state: '/features/menus', type: 'link' });
+        routePermissionList.push("menus");
+      }
+      webList.push({
+        name: 'Policies', type: 'dropDown', icon: 'policy',
+        sub: [
+          { name: 'Privacy Policy', state: '/setup/policies/privacy', type: 'link' },
+          { name: 'Shipping Policy', state: '/setup/policies/shipping', type: 'link' },
+          { name: 'Cancellation Policy', state: '/setup/policies/cancellation', type: 'link' },
+          { name: 'Terms & Conditions', state: '/setup/policies/terms_conditions', type: 'link' }
+        ]
+      });
       if(seoList.length) webList.push({ name: 'SEO', type: 'dropDown', icon: 'track_changes', sub: seoList });
-      else webList.push({ name: 'SEO', type: 'link', icon: 'track_changes', state: '/seo/store' });
-      webList.push(
-        { icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' },
-        { icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' },
-        { icon: 'note_add', name: 'Extra Pages', state: '/setup/extra-pages', type: 'link' },
-        { icon: 'wysiwyg', name: 'Footer Configuration', state: '/setup/footer-content', type: 'link' }
-      );
+      else if(ysFeatures.indexOf('basic_seo')!=-1) {
+        webList.push({ name: 'SEO', type: 'link', icon: 'track_changes', state: '/seo/store' });
+        routePermissionList.push("store_seo");
+      }
+      webList.push({ icon: 'contact_phone', name: 'Contact Page', state: '/setup/contact-page', type: 'link' });
+      if(ysFeatures.indexOf('store_locator')!=-1) {
+        webList.push({ icon: 'location_on', name: 'Store Locator', state: '/setup/store-locator', type: 'link' });
+        routePermissionList.push("store_locator");
+      }
+      if(ysFeatures.indexOf('extra_pages')!=-1) {
+        webList.push({ icon: 'note_add', name: 'Extra Pages', state: '/setup/extra-pages', type: 'link' });
+        routePermissionList.push("extra_pages");
+      }
+      webList.push({ icon: 'wysiwyg', name: 'Footer Configuration', state: '/setup/footer-content', type: 'link' });
       sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
       // store modules
       let moduleList: IChildItem[] = [];
@@ -264,8 +279,11 @@ export class SidebarService {
       }
       if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting
-      routePermissionList.push("tax_rates");
-      let settingList: IChildItem[] = [{ icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' }];
+      let settingList: IChildItem[] = [];
+      if(ysFeatures.indexOf('tax_rates') != -1) {
+        settingList.push({ icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' });
+        routePermissionList.push("tax_rates");
+      }
       if(ysFeatures.indexOf('courier_partners') != -1) {
         settingList.push({ icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' });
         routePermissionList.push("courier_partners");

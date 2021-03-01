@@ -14,13 +14,13 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-wide btn-h-wide btn-primary"
+        <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || list?.length<1" type="button" class="btn btn-wide btn-h-wide btn-primary"
           (click)="maxRank=list.length; formType='menu'; addForm = { rank: list.length+1 }; modalService.open(addModal);">
           Add New Menu
         </button>
       </div>
       <!-- search box -->
-      <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+      <div class="col-md-6 mt-sm-15">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -51,7 +51,7 @@
                 class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                 <p class="w-30 w-sm-100 m-b-0">{{y.name}}</p>
                 <p class="m-0 text-muted text-small w-30 w-sm-100">{{y.categories?.length}} Categories</p>
-                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                <div *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1" class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
                   <button class="btn btn-primary w-md-100" (click)="onViewCategories(x, y);">View Categories</button>
                 </div>
                 <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
@@ -83,7 +83,7 @@
         </div>
 
         <div class="col-md-12 ml-2 mb-2">
-          <span class="add-another x-close"
+          <span class="add-another x-close" *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || x?.sections?.length<4"
             (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; addForm = { rank: x.sections.length+1 }; modalService.open(addModal);">
             <b>ADD NEW SECTION</b>
           </span>

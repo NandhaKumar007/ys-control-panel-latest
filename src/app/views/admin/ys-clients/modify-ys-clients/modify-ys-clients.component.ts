@@ -54,7 +54,7 @@ export class ModifyYsClientsComponent implements OnInit {
       this.clientForm.btnLoader = true;
       let formData = {
         _id: this.clientForm._id, name: this.clientForm.name, company_details: this.clientForm.company_details,
-        gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details
+        gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details, abandoned_status: this.clientForm.abandoned_status
       }
       this.adminApi.UPDATE_STORE(formData).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);

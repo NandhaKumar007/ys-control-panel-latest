@@ -2,6 +2,7 @@ export const environment = {
   production: false,
   ws_url: 'https://yourstore.io/api',
   img_baseurl: 'https://yourstore.io/api/',
+  limited_product_count: 500,
   quill_config: {
     modules: {
       syntax: false,
