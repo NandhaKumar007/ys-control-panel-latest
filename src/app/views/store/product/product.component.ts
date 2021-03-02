@@ -26,6 +26,7 @@ export class ProductComponent implements OnInit {
   filterForm: any = {}; exportLoader: boolean;
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
+  limitedProdCount = environment.limited_product_count;
   categoryList: any = []; vendorList: any = [];
   product_filter: any = "all"; sort_by: any = null; scrollPos: number = 0;
 

@@ -25,7 +25,7 @@ export class ModifyProductComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
-  image_count: number = 15;
+  image_count: number = environment.default_img_count;
 
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
@@ -46,7 +46,7 @@ export class ModifyProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.image_count = 5;
+      if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.btnLoader = false; this.pageLoader = true;
       this.maxRank = params.rank; this.step_num = params.step;
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = [];

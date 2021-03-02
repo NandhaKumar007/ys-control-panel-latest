@@ -87,7 +87,7 @@
     <div class="row mb-4">
       <!-- add btn -->
       <div class="col-6" [ngClass]="vendorList.length? 'col-md-3': 'col-md-6'">
-        <ng-container *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || productCount<12">
+        <ng-container *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || productCount<limitedProdCount">
           <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary" routerLink="/products/add/{{productCount+1}}">Add New Product</button>
         </ng-container>
       </div>

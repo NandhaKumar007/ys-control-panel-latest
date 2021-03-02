@@ -25,7 +25,7 @@ export class AddProductComponent implements OnInit {
   aiStyleList: any = this.commonService.aistyle_list;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
-  image_count: number = 15;
+  image_count: number = environment.default_img_count;
 
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
@@ -46,7 +46,7 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = 30;
+      if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;
       this.productForm = { rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs', allow_cod: true, video_details: {} };

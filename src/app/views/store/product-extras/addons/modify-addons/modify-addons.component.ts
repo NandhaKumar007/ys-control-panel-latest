@@ -64,7 +64,7 @@ export class ModifyAddonsComponent implements OnInit {
     }
     if(!this.addonForm.notes_status) {
       delete this.addonForm.notes_title;
-      delete this.addonForm.notes_list;
+      this.addonForm.notes_list = [];
     }
     if(this.router.url.includes("modify")) {
       this.api.UPDATE_ADDON(this.addonForm).subscribe(result => {
