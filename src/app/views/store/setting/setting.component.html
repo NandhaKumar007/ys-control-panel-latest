@@ -640,6 +640,9 @@
               </label>
             </div>
             <ng-container *ngIf="app_setting.announcebar_config.timer">
+              <div class="col-md-12">
+                <p><b class="add-another">Note:</b> Use <b>TIMER</b> keyword in the above content to display the countdown</p>
+              </div>
               <div class="col-md-6 form-group mb-3">
                 <label>End Date</label>
                 <input type="text" class="form-control" name="end_date" autocomplete="off" [(ngModel)]="app_setting.announcebar_config.end_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />

@@ -282,6 +282,24 @@ export class ProductOrderDetailsComponent implements OnInit {
       else console.log("response", result);
     });
   }
+  onEditCustomization(customization, modalName) {
+    this.updateErrorMsg = null;
+    this.customizationForm = customization;
+    this.existing_custom_list = customization.custom_list;
+    this.extrasApi.ADDON_DETAILS(this.order_details.item_list[this.itemIndex].selected_addon._id).subscribe(result => {
+      if(result.status) {
+        this.customIndex = 0;
+        this.custom_list = result.data.custom_list;
+        this.selected_custom_list = [];
+        this.onSelectOption(this.existing_custom_list[this.customIndex].value);
+        this.modalService.open(modalName, { size: 'lg'});
+      }
+      else {
+        this.updateErrorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
   onEditMeasurement(modalName) {
     this.updateErrorMsg = null;
     this.mmIndex = 0;
@@ -297,17 +315,13 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
     });
   }
-  onEditCustomization(customization, modalName) {
+  onEditNotes(modalName) {
     this.updateErrorMsg = null;
-    this.customizationForm = customization;
-    this.existing_custom_list = customization.custom_list;
-    this.extrasApi.ADDON_DETAILS(this.order_details.item_list[this.itemIndex].selected_addon._id).subscribe(result => {
+    this.customizationForm = {};
+    this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
       if(result.status) {
-        this.customIndex = 0;
-        this.custom_list = result.data.custom_list;
-        this.selected_custom_list = [];
-        this.onSelectOption(this.existing_custom_list[this.customIndex].value);
-        this.modalService.open(modalName, { size: 'lg'});
+        this.customizationForm = result.data.item_list[this.itemIndex].customized_model;
+        this.modalService.open(modalName);
       }
       else {
         this.updateErrorMsg = result.message;
@@ -360,6 +374,15 @@ export class ProductOrderDetailsComponent implements OnInit {
     else document.getElementById(reqInput).focus();
   }
   onUpdateMeasurement() {
+    let reqInput = this.validateForm();
+    if(reqInput===undefined) {
+      let fieldName = "item_list."+this.itemIndex+".customized_model";
+      let formData: any = { _id: this.order_details._id, [fieldName]: this.customizationForm };
+      this.onUpdate(formData);
+    }
+    else document.getElementById(reqInput).focus();
+  }
+  onUpdateNotes() {
     let reqInput = this.validateForm();
     if(reqInput===undefined) {
       let fieldName = "item_list."+this.itemIndex+".customized_model";

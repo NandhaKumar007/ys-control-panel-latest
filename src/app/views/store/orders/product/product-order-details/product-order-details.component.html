@@ -98,10 +98,13 @@
                         <div class="dropdown-menu" ngbDropdownMenu>
                           <button *ngIf="x.customized_model?.custom_list?.length"
                             (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
-                            class="dropdown-item">Appearance</button>
+                            class="dropdown-item">Customization</button>
                           <button *ngIf="x.customized_model?.mm_sets?.length"
                             (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                             class="dropdown-item">Measurement</button>
+                          <button *ngIf="x.customized_model?.notes_list?.length"
+                            (click)="itemIndex=i; onEditNotes(editNotesModal);"
+                            class="dropdown-item">Notes</button>
                         </div>
                       </div>
                     </div>
@@ -162,10 +165,13 @@
                         <div class="dropdown-menu" ngbDropdownMenu>
                           <button *ngIf="x.customized_model?.custom_list?.length"
                             (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
-                            class="dropdown-item">Appearance</button>
+                            class="dropdown-item">Customization</button>
                           <button *ngIf="x.customized_model?.mm_sets?.length"
                             (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                             class="dropdown-item">Measurement</button>
+                          <button *ngIf="x.customized_model?.notes_list?.length"
+                            (click)="itemIndex=i; onEditNotes(editNotesModal);"
+                            class="dropdown-item">Notes</button>
                         </div>
                       </div>
                     </div>
@@ -238,10 +244,13 @@
                             <div class="dropdown-menu" ngbDropdownMenu>
                               <button *ngIf="x.customized_model?.custom_list?.length"
                                 (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
-                                class="dropdown-item">Appearance</button>
+                                class="dropdown-item">Customization</button>
                               <button *ngIf="x.customized_model?.mm_sets?.length"
                                 (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                                 class="dropdown-item">Measurement</button>
+                              <button *ngIf="x.customized_model?.notes_list?.length"
+                                (click)="itemIndex=i; onEditNotes(editNotesModal);"
+                                class="dropdown-item">Notes</button>
                             </div>
                           </div>
                         </div>
@@ -1173,10 +1182,10 @@
   </form>
 </ng-template>
 
-<!-- edit appearance -->
+<!-- edit customization -->
 <ng-template #editCustomModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Update Appearance</h4>
+    <h4 class="modal-title" id="modal-basic-title">Update Customization</h4>
     <p id="closeModal" (click)="modal.dismiss('cancel');">
       <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <path
@@ -1320,6 +1329,41 @@
   </form>
 </ng-template>
 
+<!-- edit notes -->
+<ng-template #editNotesModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Notes</h4>
+    <p id="closeModal" (click)="modal.dismiss('cancel');">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        <path d="M0 0h24v24H0z" fill="none" />
+      </svg>
+    </p>
+  </div>
+  <form id="addon-form" name="addon-form" autocomplete="off">
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div *ngFor="let x of customizationForm.notes_list; let i=index;" class="col-md-12 form-group mb-3">
+            <label>{{x.name}}</label>
+            <input type="text" id="value{{i}}" name="value{{i}}" [(ngModel)]="x.value" #value="ngModel" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="updateErrorMsg">
+        <p class="text-danger">{{ updateErrorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.dismiss('cancel');" type="button" id="closeModal" class="btn btn-wide black-outline-btn">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button (click)="onUpdateNotes();" type="button" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
 <!-- Update status -->
 <ng-template #updateStatusModal let-modal>
   <div class="modal-body">
@@ -1444,26 +1488,25 @@
 <ng-template #customizationModal let-modal>
   <div class="modal-header m-3">
     <h5 class="modal-title blouse-model-head">
-      <strong>{{custom_model?.name}}</strong>
-      <br>
-      <span>These are the details of this model</span>
+      <strong>{{custom_model?.name}}</strong><br>
+      <span>These are the details of this customization</span>
     </h5>
     <p class="m-close-btn">
-      <a (click)="modal.dismiss('Cross click');">CLOSE</a>
+      <button type="button" class="btn btn-wide black-outline-btn mr-3" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Close</span>
+      </button>
+      <button kendo-button class="btn btn-wide btn-primary" (click)="pdf.saveAs('customization.pdf')">Save as pdf</button>
+    </p>
   </div>
-  <div class="modal-body modal-scroll slim-scroll m-3">
-    <div class="row">
-      <div class="col-12" align="right">
-        <button kendo-button class="btn btn-wide btn-primary" (click)="pdf.saveAs('customization.pdf')">Save as
-          pdf</button>
-      </div>
-    </div>
-    <div class="clearfix">&nbsp;</div>
+  <div class="modal-body modal-scroll slim-scroll ml-3 mr-3">
     <kendo-pdf-export #pdf paperSize="A4" margin="2cm" forcePageBreak=".d_measure">
       <!-- custom list -->
-      <div class="row">
-        <ng-container *ngFor="let x of custom_model?.custom_list; let i=index;">
-          <div class="col-md-6 flex" *ngFor="let y of x.value; let j=index;">
+      <div *ngIf="custom_model?.custom_list?.length" class="row">
+        <div class="col-md-12">
+          <b class="add-another mb-3">CUSTOMIZATION</b>
+        </div>
+        <ng-container *ngFor="let x of custom_model?.custom_list;">
+          <div class="col-md-6 flex" *ngFor="let y of x.value;">
             <div class="blouse-model-col flex-dir-column">
               <img *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="">
               <img class="addon-icon opacity6" *ngIf="!y.image" src="assets/images/addon_big.svg" alt="addon">
@@ -1474,30 +1517,47 @@
             </div>
           </div>
         </ng-container>
+        <div *ngIf="custom_model?.mm_sets?.length || custom_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
       </div>
-      <!-- #custom list -->
       <!-- measurement list -->
-      <div class="row d_measure">
-        <ng-container>
-          <div *ngFor="let x of custom_model?.mm_sets; let i=index;" class="col-md-6">
-            <div class="card o-hidden mb-4 d-flex flex-row" align="center">
-              <div class="blouse-model-col w-100">
-                <div align="center">
-                  <p style="padding: 10px; background-color: dimgray; color:#fff; font-size: 16px;">{{x.name}}</p>
-                  <img [src]="imgBaseUrl+x.image" alt="" class="img-responsive blouse-mrs" style="height:150px;">
-                </div>
-                <div *ngFor="let y of x.list; let j=index;"
-                  class="blouse-model-col-name align-self-center d-flex flex-column justify-content-between align-items-lg-center">
-                  <p>{{y.name}}:
-                    <span class="text-primary">{{y.value}} {{ custom_model?.mm_unit }}</span>
-                  </p>
-                </div>
+      <div *ngIf="custom_model?.mm_sets?.length" class="row d_measure">
+        <div class="col-md-12">
+          <b class="add-another mb-3">MEASUREMENTS</b>
+        </div>
+        <div *ngFor="let x of custom_model?.mm_sets;" [ngClass]="(custom_model?.mm_sets?.length>1)? 'col-md-6': 'col-md-12'">
+          <div class="card o-hidden mb-4 d-flex flex-row" align="center">
+            <div class="blouse-model-col w-100">
+              <div align="center">
+                <p style="padding: 10px; background-color: dimgray; color:#fff; font-size: 16px;">{{x.name}}</p>
+                <img [src]="imgBaseUrl+x.image" alt="" class="img-responsive blouse-mrs" style="height:150px;">
+              </div>
+              <div *ngFor="let y of x.list; let j=index;"
+                class="blouse-model-col-name align-self-center d-flex flex-column justify-content-between align-items-lg-center">
+                <p>{{y.name}}:
+                  <span class="text-primary">{{y.value}} {{ custom_model?.mm_unit }}</span>
+                </p>
               </div>
             </div>
           </div>
-        </ng-container>
+        </div>
+        <div *ngIf="custom_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
       </div>
-      <!-- #measurement list -->
+      <!-- notes list -->
+      <div *ngIf="custom_model?.notes_list?.length" class="row">
+        <div class="col-md-12">
+          <b class="add-another mb-3">NOTES</b>
+        </div>
+        <div *ngFor="let x of custom_model?.notes_list;" class="col-md-12">
+          <div class="card o-hidden mb-4">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div class="card-body">
+                <b class="w-30 w-sm-100 m-b-0">{{x.name}}</b>
+                <p class="w-30 w-sm-100 m-b-0">{{x.value}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </kendo-pdf-export>
   </div>
 </ng-template>

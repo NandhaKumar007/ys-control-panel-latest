@@ -62,7 +62,7 @@
       <div class="row">
         <div class="form-group mb-3 col-md-12">
           <label class="checkbox checkbox-primary">
-            <input class="form-check-input" type="checkbox" name="notes_status" [(ngModel)]="addonForm.notes_status" (change)="!addonForm.notes_list? addonForm.notes_list=[{}]: '';" #notes_status="ngModel">
+            <input class="form-check-input" type="checkbox" name="notes_status" [(ngModel)]="addonForm.notes_status" (change)="(!addonForm.notes_list?.length)? addonForm.notes_list=[{}]: '';" #notes_status="ngModel">
             <span>Include Customization Notes</span>
             <span class="checkmark"></span>
           </label>
