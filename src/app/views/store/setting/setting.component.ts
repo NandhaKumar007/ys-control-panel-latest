@@ -20,7 +20,7 @@ export class SettingComponent implements OnInit {
     },
     {
       name: "Ezveb", value: "ezveb",
-      transporter : { host: "mail.ezveb.com", port: 25, secureConnection: false }
+      transporter : { host: "lin.ezveb.com", port: 25, secureConnection: false }
     },
     {
       name: "Godaddy", value: "godaddy",
@@ -143,6 +143,7 @@ export class SettingComponent implements OnInit {
     sendData.application_setting.min_stock = this.app_setting.min_stock;
 
     if(this.commonService.ys_features.indexOf('customer_feedback')!=-1) sendData.application_setting.feedback = this.app_setting.feedback;
+    if(this.commonService.ys_features.indexOf('appointment_scheduler')!=-1) sendData.application_setting.appointment = this.app_setting.appointment;
     if(this.commonService.ys_features.indexOf('addons')!=-1) sendData.application_setting.product_addon = this.app_setting.product_addon;
     if(this.commonService.ys_features.indexOf('currency_variation')!=-1) sendData.application_setting.hide_currency = this.app_setting.hide_currency;
 

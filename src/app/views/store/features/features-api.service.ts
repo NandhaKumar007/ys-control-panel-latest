@@ -118,6 +118,19 @@ export class FeaturesApiService {
   }
 
   // APPOINTMENT SERVICES
+  ADD_APPOINTMENT_CATEGORY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/appointment_category', x, httpOptions);
+  }
+  UPDATE_APPOINTMENT_CATEGORY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/appointment_category', x, httpOptions); 
+  }
+  DELETE_APPOINTMENT_CATEGORY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/appointment_category', x, httpOptions);
+  }
+
   APPOINTMENT_SERVICES_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/appointment_services', httpOptions);

@@ -49,6 +49,7 @@ export class AppointmentServiceEventComponent implements OnInit {
 
   onSubmit() {
     this.btnLoader = true;
+    this.serviceForm.category_id = this.params.category_id;
     if(this.params.id) {
       this.api.UPDATE_APPOINTMENT_SERVICES(this.serviceForm).subscribe(result => {
         this.btnLoader = false;

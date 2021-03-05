@@ -16,7 +16,7 @@ import { environment } from '../../../../../environments/environment';
 
 export class MenusComponent implements OnInit {
 
-	page = 1; pageSize = 10; formType: string;
+	page = 1; pageSize = 5; formType: string;
 	list: any = []; maxRank: any = 0; menuId: string;
 	addForm: any; editForm: any; deleteForm: any; imgForm: any;
 	pageLoader: boolean; search_bar: string;
