@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbandonedComponent } from './abandoned.component';
+import { GuestUsersComponent } from './guest-users.component';
 
-describe('AbandonedComponent', () => {
-  let component: AbandonedComponent;
-  let fixture: ComponentFixture<AbandonedComponent>;
+describe('GuestUsersComponent', () => {
+  let component: GuestUsersComponent;
+  let fixture: ComponentFixture<GuestUsersComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AbandonedComponent ]
+      declarations: [ GuestUsersComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AbandonedComponent);
+    fixture = TestBed.createComponent(GuestUsersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

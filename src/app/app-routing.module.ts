@@ -36,9 +36,10 @@ const storeRoutes: Routes = [
   { path: 'catalogs', loadChildren: () => import('./views/store/catalogs/catalogs.module').then(m => m.CatalogsModule), canActivate: [PermissionGuard], data: { name: "catalogs" } },
   { path: 'products', loadChildren: () => import('./views/store/product/product.module').then(m => m.ProductModule) },
   { path: 'customers', loadChildren: () => import('./views/store/customers/customers.module').then(m => m.CustomersModule), canActivate: [PermissionGuard], data: { name: "customers" } },
+  { path: 'guest-users', loadChildren: () => import('./views/store/guest-users/guest-users.module').then(m => m.GuestUsersModule), canActivate: [PermissionGuard], data: { name: "customers" } },
 
-  { path: 'abandoned-carts', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_cart" } },
-  { path: 'abandoned-quotes', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_quotes" } },
+  { path: 'abandoned-cart', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_cart" } },
+  { path: 'abandoned-quote', loadChildren: () => import('./views/store/abandoned/abandoned.module').then(m => m.AbandonedModule), canActivate: [PermissionGuard], data: { name: "abandoned_quotes" } },
   { path: 'quotations/:type/:customer_id', loadChildren: () => import('./views/store/quotations/quotations.module').then(m => m.QuotationsModule), canActivate: [PermissionGuard], data: { name: "quotations" } },
   { path: 'orders', loadChildren: () => import('./views/store/orders/orders.module').then(m => m.OrdersModule) },
 

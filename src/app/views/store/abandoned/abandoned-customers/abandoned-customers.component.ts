@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
-import { CustomerApiService } from '../../../services/customer-api.service';
-import { CommonService } from '../../../services/common.service';
+import { CustomerApiService } from '../../../../services/customer-api.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
-  selector: 'app-abandoned',
-  templateUrl: './abandoned.component.html',
-  styleUrls: ['./abandoned.component.scss'],
+  selector: 'app-abandoned-customers',
+  templateUrl: './abandoned-customers.component.html',
+  styleUrls: ['./abandoned-customers.component.scss'],
   animations: [SharedAnimations]
 })
 
-export class AbandonedComponent implements OnInit {
+export class AbandonedCustomersComponent implements OnInit {
 
   search_bar: string;
   page = 1; pageSize = 10;
@@ -33,6 +33,7 @@ export class AbandonedComponent implements OnInit {
             if(filteredAddress[0].dial_code) element.mobile = filteredAddress[0].dial_code+" "+element.mobile;
           }
           else if(!element.mobile) element.mobile = "NA";
+          element.cart_total = this.calcCartTotal(element.cart_list);
         });
       }
       else console.log("response", result);

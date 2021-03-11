@@ -72,4 +72,18 @@ export class CustomerApiService {
     return this.http.post<any>(environment.ws_url+'/user/validate_offercoupon', x, httpOptions);
   }
 
+  // guest users
+  GUEST_USERS_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/guest-user', httpOptions);
+  }
+  GUEST_USER_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/guest-user?id='+x, httpOptions);
+  }
+  ABANDONED_GUEST_USERS() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/abandoned-guest-user', httpOptions);
+  }
+
 }

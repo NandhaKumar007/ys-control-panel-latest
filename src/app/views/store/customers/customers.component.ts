@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { CustomerApiService } from '../../../services/customer-api.service';
@@ -26,50 +26,29 @@ export class CustomersComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private excelService: ExcelService,
-    private customerApi: CustomerApiService, private api: ApiService, private activeRoute: ActivatedRoute, public commonService: CommonService
+    private customerApi: CustomerApiService, private api: ApiService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
-    // country list
-    this.activeRoute.queryParams.subscribe((params: Params) => {
-      this.pageLoader = true; this.list = [];
-      if(params.customer_id) {
-        this.customerApi.CUSTOMER_DETAILS(params.customer_id).subscribe(result => {
-          if(result.status) {
-            this.list = [result.data];
-            this.modifyList();
-          }
-          else console.log("response", result);
-          setTimeout(() => { this.pageLoader = false; }, 500);
-        });
-      }
-      else this.loadCustomerList();
-    });
-  }
-
-  loadCustomerList() {
     this.pageLoader = true;
     this.customerApi.CUSTOMER_LIST().subscribe(result => {
       if(result.status) {
         this.list = result.list;
-        this.modifyList();
+        this.list.forEach(element => {
+          if(!element.mobile) {
+            if(element.address_list.length) {
+              let filteredAddress = element.address_list.filter(obj => obj.billing_address);
+              if(filteredAddress.length) element.mobile = filteredAddress[0].dial_code+" "+filteredAddress[0].mobile;
+              else element.mobile = "NA";
+            }
+            else element.mobile = "NA";
+          }
+        });
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
-    });
-  }
-  modifyList() {
-    this.list.forEach(element => {
-      if(!element.mobile) {
-        if(element.address_list.length) {
-          let filteredAddress = element.address_list.filter(obj => obj.billing_address);
-          if(filteredAddress.length) element.mobile = filteredAddress[0].dial_code+" "+filteredAddress[0].mobile;
-          else element.mobile = "NA";
-        }
-        else element.mobile = "NA";
-      }
     });
   }
 
@@ -90,7 +69,7 @@ export class CustomersComponent implements OnInit {
       this.customerForm.submit = false;
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.loadCustomerList();
+        this.ngOnInit();
       }
       else {
         console.log("response", result);
@@ -160,7 +139,7 @@ export class CustomersComponent implements OnInit {
         this.btnLoader = false;
         if(result.status) {
           document.getElementById("closeModal").click();
-          this.loadCustomerList();
+          this.ngOnInit();
         }
         else {
           this.addressForm.error_msg = result.message;
@@ -173,7 +152,7 @@ export class CustomersComponent implements OnInit {
         this.btnLoader = false;
         if(result.status) {
           document.getElementById("closeModal").click();
-          this.loadCustomerList();
+          this.ngOnInit();
         }
         else {
           this.addressForm.error_msg = result.message;
@@ -192,7 +171,7 @@ export class CustomersComponent implements OnInit {
       this.btnLoader = false;
       if(result.status) {
         document.getElementById("closeModal").click();
-        this.loadCustomerList();
+        this.ngOnInit();
       }
       else {
         this.deleteForm.error_msg = result.message;

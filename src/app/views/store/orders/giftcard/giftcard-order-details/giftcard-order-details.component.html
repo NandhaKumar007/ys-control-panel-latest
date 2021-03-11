@@ -103,7 +103,7 @@
 
       <!-- withdrawal details -->
       <div *ngIf="details.order_list?.length" class="order-section">
-        <p class="sec-desc" style="display: inline-block;">Withdrawal Details</p>
+        <p class="sec-desc mb-2" style="display: inline-block;">Withdrawal Details</p>
         <div class="col-md-12 list-item p-0">
           <div *ngFor="let x of details.order_list;" class="card o-hidden mb-4 d-flex flex-row">
             <div class="flex-grow-1 pl-2 d-flex">
@@ -112,12 +112,6 @@
                 <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
                 <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
                 <p class="w-30 w-sm-100 m-b-0">{{x.redeemed_amount | currency:commonService.store_currency?.country_code}}</p>
-                <div class="m-0 text-muted text-small w-15 w-sm-100 d-none d-lg-block item-actions">
-                  <button routerLink="/gift-coupons/{{params?.coupon_id}}/{{x.order_id}}"
-                    class="btn btn-wide black-outline-btn mr-3">
-                   <span class="black-outline-txt">View</span>
-                  </button>
-                </div>
               </div>
             </div>
           </div>

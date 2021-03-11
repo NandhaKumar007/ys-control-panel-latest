@@ -53,47 +53,85 @@ export class ProductOrdersComponent implements OnInit {
     if(this.filterForm.from_date && this.filterForm.to_date) {
       this.pageLoader = true;
       this.filterForm.date_type = 'created_on';
-      this.api.ORDER_LIST(this.filterForm).subscribe(result => {
-        if(result.status) {
-          let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-          this.list = [];
-          orderList.forEach(obj => {
-            if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
-            if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
-            if(obj.customerDetails.length) {
-              obj.customer_name = obj.customerDetails[0].name;
-              obj.customer_email = obj.customerDetails[0].email;
-              obj.customer_mobile = 'NA';
-              if(obj.customerDetails[0].mobile) { obj.customer_mobile = obj.customerDetails[0].mobile; }
-            }
-            else {
+      if(this.filterForm.customer_id.indexOf('@')!=-1) {
+        this.filterForm.guest_email = this.filterForm.customer_id;
+        this.api.GUEST_ORDER_LIST(this.filterForm).subscribe(result => {
+          if(result.status) {
+            let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+            this.list = [];
+            orderList.forEach(obj => {
+              if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
+              if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
               obj.customer_name = obj.shipping_address.name;
               obj.customer_email = obj.guest_email;
-              obj.customer_mobile = 'NA';
-            }
-            // delivery time
-            if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
-              let delDate = obj.shipping_method.delivery_date.split(" (")[0];
-              let delTime = obj.shipping_method.delivery_time.split(" - ")[0];
-              obj.delivery_time = new Date(delDate+" "+delTime);
-            }
-            // vendor
-            if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
-              let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
-              if(venIndex!=-1) {
-                obj.vendor_order_status = obj.vendor_list[venIndex].status;
-                obj.vendor_order_amount = obj.vendor_list[venIndex].total;
+              obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
+              // delivery time
+              if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
+                let delDate = obj.shipping_method.delivery_date.split(" (")[0];
+                let delTime = obj.shipping_method.delivery_time.split(" - ")[0];
+                obj.delivery_time = new Date(delDate+" "+delTime);
               }
-            }
-            if(this.filterForm.vendor_id!='all') {
-              if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
-            }
-            else this.list.push(obj);
-          });
-        }
-        else console.log("response", result);
-        setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos) }, 500);
-      });
+              // vendor
+              if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
+                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+                if(venIndex!=-1) {
+                  obj.vendor_order_status = obj.vendor_list[venIndex].status;
+                  obj.vendor_order_amount = obj.vendor_list[venIndex].total;
+                }
+              }
+              if(this.filterForm.vendor_id!='all') {
+                if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
+              }
+              else this.list.push(obj);
+            });
+          }
+          else console.log("response", result);
+          setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos) }, 500);
+        });
+      }
+      else {
+        this.api.ORDER_LIST(this.filterForm).subscribe(result => {
+          if(result.status) {
+            let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+            this.list = [];
+            orderList.forEach(obj => {
+              if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
+              if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
+              if(obj.customerDetails.length) {
+                obj.customer_name = obj.customerDetails[0].name;
+                obj.customer_email = obj.customerDetails[0].email;
+                obj.customer_mobile = 'NA';
+                if(obj.customerDetails[0].mobile) { obj.customer_mobile = obj.customerDetails[0].mobile; }
+              }
+              else {
+                obj.customer_name = obj.shipping_address.name;
+                obj.customer_email = obj.guest_email;
+                obj.customer_mobile = 'NA';
+              }
+              // delivery time
+              if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
+                let delDate = obj.shipping_method.delivery_date.split(" (")[0];
+                let delTime = obj.shipping_method.delivery_time.split(" - ")[0];
+                obj.delivery_time = new Date(delDate+" "+delTime);
+              }
+              // vendor
+              if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
+                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+                if(venIndex!=-1) {
+                  obj.vendor_order_status = obj.vendor_list[venIndex].status;
+                  obj.vendor_order_amount = obj.vendor_list[venIndex].total;
+                }
+              }
+              if(this.filterForm.vendor_id!='all') {
+                if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
+              }
+              else this.list.push(obj);
+            });
+          }
+          else console.log("response", result);
+          setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos) }, 500);
+        });
+      }
     }
   }
 

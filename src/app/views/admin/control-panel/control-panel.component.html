@@ -10,7 +10,7 @@
           <div class="form-group">
             <label>Store List</label>
             <select name="store_id" class="form-control form-control-rounded select-arrow" [(ngModel)]="store_id" (change)="errorMsg=null;" required>
-              <option [ngValue]="x._id" *ngFor="let x of commonService.store_list">{{x.name}}</option>
+              <option [ngValue]="x._id" *ngFor="let x of commonService.store_list | orderAsc:'created_on';">{{x.name}}</option>
             </select>
           </div>
           <div *ngIf="errorMsg" align="center" style="margin: 20px 0 10px 0;">

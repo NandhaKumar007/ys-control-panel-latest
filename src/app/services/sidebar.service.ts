@@ -153,11 +153,19 @@ export class SidebarService {
         else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
         // abandoned
         if(ysFeatures.indexOf('abandoned_cart') != -1) {
-          orderList.push({ icon: 'remove_shopping_cart', name: 'Abandoned Carts', state: '/abandoned-carts', type: 'link' });
+          orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
+            { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
+            { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }
+          ] });
           routePermissionList.push("abandoned_cart");
         }
         // customer
-        if(this.commonService.store_details.type == 'order_based') orderList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
+        if(this.commonService.store_details.type == 'order_based') {
+          orderList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
+            { name: 'Customers', state: '/customers', type: 'link' },
+            { name: 'Guest Users', state: '/guest-users', type: 'link' }
+          ] });
+        }
         sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
         routePermissionList.push("orders", "inactive_orders");
         if(ysFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
@@ -165,6 +173,7 @@ export class SidebarService {
       // customers
       if(this.commonService.store_details.type == 'quot_with_order_based') {
         sidePanelList.push({ name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' });
+        sidePanelList.push({ name: 'Guest Users', type: 'link', icon: 'no_accounts', state: '/guest-users' });
       }
       // marketing tools
       let toolList: IChildItem[] = [];
