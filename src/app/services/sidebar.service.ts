@@ -313,11 +313,12 @@ export class SidebarService {
       sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
       // my account
       routePermissionList.push("billing", "sub_users");
-      let accountList: IChildItem[] = [
+      let accountList: IChildItem[] = [];
+      accountList.push(
         { icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' },
-        { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
-        { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' }
-      ];
+        // { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
+        // { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' }
+      );
       if(ysFeatures.indexOf('vendors') != -1) {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
@@ -326,7 +327,7 @@ export class SidebarService {
         accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
         routePermissionList.push("branches");
       }
-      sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
+      if(accountList.length) sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }
     this.commonService.route_permission_list = routePermissionList;
     this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);

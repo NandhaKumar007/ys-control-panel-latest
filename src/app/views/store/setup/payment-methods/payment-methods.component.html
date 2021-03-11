@@ -149,6 +149,10 @@
                     <label>Template ID</label>
                     <input type="text" name="template_id" class="form-control" [(ngModel)]="payForm.sms_config.template_id" required />
                   </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Message (Use <strong>#OTP#</strong> keyword)</label>
+                    <textarea name="msg_content" class="form-control" [(ngModel)]="payForm.sms_config.msg_content" required></textarea>
+                  </div>
                 </ng-container>
               </ng-container>
             </ng-container>
