@@ -46,6 +46,7 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
+      this.categoryList.forEach(element => { element.selected = false; });
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;

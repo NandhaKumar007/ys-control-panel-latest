@@ -45,6 +45,7 @@ export class SettingComponent implements OnInit {
   ];
   codExist: boolean; app_setting: any;
   checkout_setting: any; productList: any = [];
+  curr_date: any = new Date();
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: StoreApiService, private atp: AmazingTimePickerService) {
     config.backdrop = 'static'; config.keyboard = false;

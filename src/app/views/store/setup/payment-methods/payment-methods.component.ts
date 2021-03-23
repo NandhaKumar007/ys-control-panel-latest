@@ -66,7 +66,12 @@ export class PaymentMethodsComponent implements OnInit {
   onEdit(x, modalName) {
     this.payForm = { form_type: 'update', _id: x._id, name: x.name, btn_name: x.btn_name, status: x.status, prev_rank: x.rank, rank: x.rank };
     if(x.cod_config) this.payForm.cod_config = x.cod_config;
-    if(x.sms_config) this.payForm.sms_config = x.sms_config;
+    if(x.sms_config) {
+      this.payForm.sms_config = {};
+      for (let key in x.sms_config) {
+        this.payForm.sms_config[key] = x.sms_config[key];
+      }
+    }
     if(x.mode) this.payForm.mode = x.mode;
     if(x.name=='Razorpay') {
       this.payForm.store_name = x.app_config.name;
