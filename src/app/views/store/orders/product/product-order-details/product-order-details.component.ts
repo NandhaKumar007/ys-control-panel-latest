@@ -253,7 +253,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       if(result.status) {
         this.updateCourierDetailsOnly(this.order_details.shipping_method.name, true);
         document.getElementById('closeModal').click();
-        this.router.navigate(["/orders/cancelled/"+this.params.customer_id]);
+        this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
       }
       else {
         this.errorMsg = result.message;

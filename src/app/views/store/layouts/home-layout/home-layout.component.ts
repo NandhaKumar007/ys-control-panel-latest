@@ -26,8 +26,10 @@ export class HomeLayoutComponent implements OnInit {
     { name: "Featured Sections", value: "featured_section" },
     { name: "Featured Products", value: "featured_product" },
     { name: "Highlighted Section", value: "highlighted_section" },
+    { name: "Multi-Highlighted Section", value: "multiple_highlighted_section" },
     { name: "Multi-tab Featured Products", value: "multiple_featured_product" },
-    { name: "Secondary Banner", value: "secondary" }
+    { name: "Secondary Banner", value: "secondary" },
+    { name: "Flexible Segment", value: "flexible" }
   ];
   multiTabOptions: any = [
     { type: "featured", disp_name: "Featured" },

@@ -108,9 +108,9 @@
           <!-- #Testimonial Content -->
 
           <!-- Content -->
-          <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+          <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
             <div class="card w-100 p-3 mb-3">
-              <div class="row">
+              <div *ngIf="layoutDetails?.type!='multiple_highlighted_section'" class="row">
                 <div class="col-md-12 form-group mb-3">
                   <label class="checkbox checkbox-primary">
                     <input class="form-check-input" type="checkbox" name="content_status{{i}}" [(ngModel)]="x.content_status" (change)="x.content_details={};" #content_status="ngModel">
@@ -120,7 +120,7 @@
                 </div>
               </div>
               <div *ngIf="x.content_status" class="row">
-                <ng-container *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider'">
+                <ng-container *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='multiple_highlighted_section'">
                   <div class="col-md-12 form-group mb-3">
                     <label>Heading</label>
                     <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" #heading="ngModel" required />
@@ -129,24 +129,30 @@
                     <label>Sub-heading</label>
                     <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
                   </div>
+                  <div *ngIf="layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
+                    <label>Description</label>
+                    <textarea class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel"></textarea>
+                  </div>
                 </ng-container>
-                <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
-                  <label>Title</label>
-                  <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label>Text Color</label>
-                  <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                  </select>
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label>Position</label>
-                  <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
-                    <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
-                  </select>
-                </div>
+                <ng-container *ngIf="layoutDetails?.type!='multiple_highlighted_section'">
+                  <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
+                    <label>Title</label>
+                    <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />
+                  </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Text Color</label>
+                    <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Position</label>
+                    <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
+                      <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
+                    </select>
+                  </div>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -156,7 +162,7 @@
           <div *ngIf="layoutDetails?.type!='testimonial'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
             <div class="card w-100 p-3 mb-3">
               <div class="row">
-                <div *ngIf="layoutDetails.type=='highlighted_section'" class="col-md-12 form-group mb-3">
+                <div *ngIf="layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
                   <label>Image Position</label>
                   <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
                     <option value="left">Left</option>
@@ -219,7 +225,7 @@
                 </div>
 
                 <!-- Btn -->
-                <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails.type=='highlighted_section'" class="col-md-12 form-group mb-3">
+                <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
                   <label class="checkbox checkbox-primary">
                     <input class="form-check-input" type="checkbox" name="btn_status{{i}}" [(ngModel)]="x.btn_status" (change)="x.btn_text='';" #btn_status="ngModel">
                     <span>Enable Button</span>
@@ -251,9 +257,7 @@
 
     <div *ngIf="layoutDetails?.image_list?.length<10 && layoutDetails.type!='section' && layoutDetails.type!='highlighted_section' && layoutDetails.type!='secondary' && layoutDetails.type!='shopping_assistant'" style="margin-top: 50px;" class="row">
       <div class="col-md-4">
-        <p (click)="(layoutDetails?.type=='testimonial')? layoutDetails.image_list.push({ rank: layoutDetails.image_list.length+1, content_details: {} }): layoutDetails.image_list.push({ rank: layoutDetails.image_list.length+1 });">
-          <b class="add-another">ADD NEW</b>
-        </p>
+        <p (click)="addNewImg();"><b class="add-another">ADD NEW</b></p>
       </div>
     </div>
 

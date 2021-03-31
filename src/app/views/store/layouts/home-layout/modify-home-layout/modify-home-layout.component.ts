@@ -51,7 +51,10 @@ export class ModifyHomeLayoutComponent implements OnInit {
             if(this.shopping_assist_config.image) this.shopping_assist_config.exist_image = this.shopping_assist_config.image;
             if(!this.shopping_assist_config.changing_text.length) this.shopping_assist_config.changing_text = [{ value: ''}];
           }
-          else if(!this.layoutDetails.image_list.length) this.layoutDetails.image_list.push({ rank: 1 });
+          else if(!this.layoutDetails.image_list.length) {
+            if(this.layoutDetails.type=='multiple_highlighted_section') this.layoutDetails.image_list.push({ rank: 1, content_status: true, content_details: {} });
+            else this.layoutDetails.image_list.push({ rank: 1 });
+          }
           // product list
           this.api.PRODUCT_LIST({ category_id: 'all' }).subscribe(result => {
             if(result.status) this.productList = result.list;
@@ -64,6 +67,18 @@ export class ModifyHomeLayoutComponent implements OnInit {
         }
       });
     });
+  }
+
+  addNewImg() {
+    if(this.layoutDetails.type=='testimonial') {
+      this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1, content_details: {} });
+    }
+    else if(this.layoutDetails.type=='multiple_highlighted_section') {
+      this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1, content_status: true, content_details: {} });
+    }
+    else {
+      this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1 });
+    }
   }
 
   onUpdateLayout() {

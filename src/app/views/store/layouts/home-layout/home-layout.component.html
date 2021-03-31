@@ -38,7 +38,7 @@
               </span>
             </p>
             <div class="w-30 m-0 text-muted text-small w-md-100 d-lg-block item-actions" align="center">
-              <div *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product' && x.type!='blogs'" class="product-btn-group btn-group w-md-100 mr-3">
+              <div *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product' && x.type!='blogs' && x.type!='flexible'" class="product-btn-group btn-group w-md-100 mr-3">
                 <div class="btn-group w-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                   <button class="btn black-outline-btn w-md-100" ngbDropdownToggle>
                    <span class="black-outline-txt">
@@ -51,7 +51,7 @@
                   </div>
                 </div>
               </div>
-              <button *ngIf="x.type=='featured_product' || x.type=='multiple_featured_product' || x.type=='blogs'" class="btn black-outline-btn w-md-100 mr-3" (click)="onEditDetails(x, editModal);">
+              <button *ngIf="x.type=='featured_product' || x.type=='multiple_featured_product' || x.type=='blogs' || x.type=='flexible'" class="btn black-outline-btn w-md-100 mr-3" (click)="onEditDetails(x, editModal);">
                 <span class="black-outline-txt">
                   Edit
                  </span>
@@ -121,7 +121,7 @@
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
-          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider'">
+          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible'">
             <div class="form-group mb-3" [ngClass]="(addForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel" />
@@ -149,7 +149,13 @@
               </div>
             </div>
           </ng-container>
+          <!-- flexible -->
+          <div *ngIf="addForm.type=='flexible'" class="col-md-12 form-group mb-3 quill-mb-5">
+            <label>Content</label>
+            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.content" [ngModelOptions]="{standalone: true}"></quill-editor>
+          </div>
         </div>
+        <!-- multiple_featured_product -->
         <ng-container *ngIf="addForm.type=='multiple_featured_product'">
           <div class="row">
             <div class="col-md-12">
@@ -237,7 +243,7 @@
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
-          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider'">
+          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible'">
             <div class="form-group mb-3" [ngClass]="(editForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel" />
@@ -265,7 +271,13 @@
               </div>
             </div>
           </ng-container>
+          <!-- flexible -->
+          <div *ngIf="editForm.type=='flexible'" class="col-md-12 form-group mb-3 quill-mb-5">
+            <label>content</label>
+            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.content" [ngModelOptions]="{standalone: true}"></quill-editor>
+          </div>
         </div>
+        <!-- multiple_featured_product -->
         <ng-container *ngIf="editForm.type=='multiple_featured_product'">
           <div class="row">
             <div class="col-md-12">
