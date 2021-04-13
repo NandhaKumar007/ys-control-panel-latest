@@ -234,9 +234,32 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.UPDATE_ORDER_STATUS(sendData).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
-        document.getElementById('closeModal').click();
-        if(this.order_details.order_status=='delivered') this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
-        else this.location.back();
+        if(this.order_details.order_status=='delivered') {
+          if(this.commonService.ys_features.indexOf('product_reviews')!=-1) {
+            this.btnLoader = true; let customerEmail = "";
+            if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
+            else customerEmail = this.order_details.customerDetails[0].email;
+            this.api.RESEND_ORDER_MAIL({ _id: this.order_details._id, type: 'review', email: customerEmail }).subscribe(result => {
+              this.btnLoader = false;
+              if(result.status) {
+                document.getElementById('closeModal').click();
+                this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
+              }
+              else {
+                this.errorMsg = result.message;
+                console.log("response", result);
+              }
+            });
+          }
+          else {
+            document.getElementById('closeModal').click();
+            this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
+          }
+        }
+        else {
+          document.getElementById('closeModal').click();
+          this.location.back();
+        }
       }
       else {
         this.errorMsg = result.message;
@@ -423,13 +446,14 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   onResendMail(modalName) {
     this.errorMsg=null; this.btnLoader=false;
-    let customStatus = false;
-    let index = this.order_details.item_list.findIndex(object => object.customization_status);
-    if(index!=-1) customStatus = true;
+    // let customStatus = false;
+    // let index = this.order_details.item_list.findIndex(object => object.customization_status);
+    // if(index!=-1) customStatus = true;
     let customerEmail = "";
     if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
     else customerEmail = this.order_details.customerDetails[0].email;
-    this.mailForm = { email: customerEmail, custom_status: customStatus };
+    // this.mailForm = { email: customerEmail, custom_status: customStatus };
+    this.mailForm = { email: customerEmail };
     this.modalService.open(modalName);
   }
 

@@ -67,7 +67,8 @@ export class CatalogSeoComponent implements OnInit {
         this.seoForm.meta_keywords.push(obj.value);
       });
     }
-    let formData = { _id: this.catalog_details._id, seo_status: true, seo_details: this.seoForm };
+    let formData: any = { _id: this.catalog_details._id, seo_status: true, seo_details: this.seoForm };
+    if(!this.seoForm.modified) formData.name = this.catalog_details.name;
     this.storeApi.UPDATE_CATALOG(formData).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

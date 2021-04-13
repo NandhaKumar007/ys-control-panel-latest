@@ -1462,9 +1462,10 @@
             <select name="type" class="form-control select-arrow" [(ngModel)]="mailForm.type" required>
               <ng-container *ngIf="params?.type!='cancelled'">
                 <option value="confirmed">Order Confirmed</option>
-                <!-- <option *ngIf="mailForm.custom_status" value="customization">Customization Confirmation</option> -->
+                <option *ngIf="mailForm.custom_status" value="customization">Customization Confirmation</option>
                 <option value="dispatched">Order Dispatched</option>
                 <option value="delivered">Order Delivered</option>
+                <option *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" value="review">Order Review</option>
               </ng-container>
               <option *ngIf="params?.type=='cancelled'" value="cancelled">Order Cancelled</option>
             </select>

@@ -244,7 +244,21 @@ export class FeaturesApiService {
     return this.http.patch<any>(environment.ws_url+'/store/menu_sub_category', x, httpOptions);
   }
 
-  // DiNAMIC Offers
+  // PRODUCT REVIEWS
+  REVIEWED_PRODUCT_LIST(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/product_reviews', x, httpOptions);
+  }
+  UPDATE_REVIEW(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/product_reviews', x, httpOptions);
+  }
+  DELETE_REVIEW(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/product_reviews', x, httpOptions);
+  }
+
+  // DiNAMIC OFFERS
   DINAMIC_OFFER_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/dinamic_offers', httpOptions);

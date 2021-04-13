@@ -109,6 +109,10 @@ export class SidebarService {
         prodList.push({ icon: 'archive', name: 'Archived Products', state: '/product-extras/archive', type: 'link' });
         routePermissionList.push("product_archive");
       }
+      if(ysFeatures.indexOf('product_reviews') != -1) {
+        prodList.push({ icon: 'rate_review', name: 'Product Reviews', state: '/features/product-reviews', type: 'link' });
+        routePermissionList.push("product_reviews");
+      }
       sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
       // quotations
       if(this.commonService.store_details.type == 'quot_based' || this.commonService.store_details.type == 'quot_with_order_based') {
@@ -218,8 +222,8 @@ export class SidebarService {
           name: 'Website Design', type: 'dropDown', icon: 'format_paint',
           sub: [
             { name: 'Home Page', state: '/layouts/home', type: 'link' },
-            { name: 'Catalog', state: '/layouts/catalog', type: 'link' },
-            { name: 'Product', state: '/layouts/product', type: 'link' }
+            { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
+            { name: 'Product Page', state: '/layouts/product', type: 'link' }
           ]
         }
       ];

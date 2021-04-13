@@ -58,7 +58,7 @@
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
             <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <a *ngIf="x.status=='active'" href={{x.base_url}} target="_blank">
+              <a href={{x.base_url}} target="_blank">
                 <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
               </a>
               <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">

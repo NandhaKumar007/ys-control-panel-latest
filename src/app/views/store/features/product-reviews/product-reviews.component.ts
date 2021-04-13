@@ -1,0 +1,43 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { FeaturesApiService } from '../features-api.service';
+import { CommonService } from '../../../../services/common.service';
+import { environment } from '../../../../../environments/environment';
+
+@Component({
+  selector: 'app-product-reviews',
+  templateUrl: './product-reviews.component.html',
+  styleUrls: ['./product-reviews.component.scss'],
+  animations: [SharedAnimations]
+})
+
+export class ProductReviewsComponent implements OnInit {
+
+  pageLoader: boolean; search_bar: string;
+  page = 1; pageSize = 10; list: any = [];
+  filterForm: any = {};
+  imgBaseUrl = environment.img_baseurl;
+
+  constructor(private api: FeaturesApiService, public commonService: CommonService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all' };
+    this.getReviewProducts();
+  }
+
+  getReviewProducts() {
+    this.pageLoader = true;
+    this.api.REVIEWED_PRODUCT_LIST(this.filterForm).subscribe(result => {
+      setTimeout(() => { this.pageLoader = false; }, 500);
+      if(result.status) this.list = result.list;
+      else console.log("response", result);
+		});
+  }
+
+  onSelect(x) {
+    localStorage.setItem("review_filter", JSON.stringify(this.filterForm));
+    this.router.navigate(["/features/product-reviews/"+x._id]);
+  }
+
+}

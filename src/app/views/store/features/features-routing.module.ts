@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'giftcard', loadChildren: () => import('./giftcard/giftcard.module').then(m => m.GiftcardModule), canActivate: [PermissionGuard], data: { name: "giftcard" } },
   { path: 'menus', loadChildren: () => import('./menus/menus.module').then(m => m.MenusModule), canActivate: [PermissionGuard], data: { name: "menus" } },
   { path: 'appointment-services', loadChildren: () => import('./appointment-services/appointment-services.module').then(m => m.AppointmentServicesModule), canActivate: [PermissionGuard], data: { name: "appointment_services" } },
+  { path: 'product-reviews', loadChildren: () => import('./product-reviews/product-reviews.module').then(m => m.ProductReviewsModule), canActivate: [PermissionGuard], data: { name: "product_reviews" } },
   { path: 'dinamic-offers', loadChildren: () => import('./dinamic-offers/dinamic-offers.module').then(m => m.DinamicOffersModule), canActivate: [PermissionGuard], data: { name: "dinamic_offers" } }
 ];
 
