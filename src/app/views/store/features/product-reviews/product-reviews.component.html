@@ -30,7 +30,7 @@
     <!-- search -->
     <div class="col-md-3 col-6">
       <div class="form-group">
-        <input type="text" name="search_bar" placeholder="Search" class="form-control" autocomplete="off" [(ngModel)]="search_bar" />
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" autocomplete="off" [(ngModel)]="filterForm.search_bar" />
       </div>
     </div>
 
@@ -54,7 +54,7 @@
 
   <!-- DATA LIST -->
   <div class="row list-horizontal">
-    <div *ngFor="let x of list | orderDesc:'_id' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+    <div *ngFor="let x of list | orderDesc:'_id' | gridSearch: { product_sku: filterForm.search_bar, product_name: filterForm.search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card mb-4 mtb-0-60 d-flex flex-row">
@@ -64,8 +64,8 @@
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
           <div
             class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="m-0 prod-card-content">{{x.productDetails[0]?.name}}</p>
-            <p class="m-0 text-muted text-small w-sm-100">{{x.productDetails[0]?.sku}}</p>
+            <p class="m-0 prod-card-content">{{x.product_name}}</p>
+            <p class="m-0 text-muted text-small w-sm-100">{{x.product_sku}}</p>
             <p class="m-0 text-muted text-small w-sm-100">
               {{ x.reviews?.length }} {{ (x.reviews?.length>1)? 'Reviews': 'Review' }}
             </p>

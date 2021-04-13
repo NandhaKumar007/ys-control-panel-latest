@@ -14,7 +14,7 @@ import { environment } from '../../../../../environments/environment';
 
 export class ProductReviewsComponent implements OnInit {
 
-  pageLoader: boolean; search_bar: string;
+  pageLoader: boolean;
   page = 1; pageSize = 10; list: any = [];
   filterForm: any = {};
   imgBaseUrl = environment.img_baseurl;
@@ -22,7 +22,13 @@ export class ProductReviewsComponent implements OnInit {
   constructor(private api: FeaturesApiService, public commonService: CommonService, private router: Router) { }
 
   ngOnInit(): void {
-    this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all' };
+    if(localStorage.getItem("review_filter")) {
+      this.filterForm = JSON.parse(localStorage.getItem("review_filter"));
+      this.filterForm.from_date = new Date(this.filterForm.from_date);
+      this.filterForm.to_date = new Date(this.filterForm.to_date);
+      localStorage.removeItem("review_filter");
+    }
+    else this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all', search_bar: "" };
     this.getReviewProducts();
   }
 
@@ -30,7 +36,13 @@ export class ProductReviewsComponent implements OnInit {
     this.pageLoader = true;
     this.api.REVIEWED_PRODUCT_LIST(this.filterForm).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) this.list = result.list;
+      if(result.status) {
+        this.list = result.list;
+        this.list.forEach(obj => {
+          obj.product_sku = obj.productDetails[0].sku;
+          obj.product_name = obj.productDetails[0].name;
+        });
+      }
       else console.log("response", result);
 		});
   }

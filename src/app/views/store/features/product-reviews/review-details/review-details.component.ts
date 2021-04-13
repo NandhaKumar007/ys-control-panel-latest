@@ -5,6 +5,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { FeaturesApiService } from '../../features-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-review-details',
@@ -23,7 +24,7 @@ export class ReviewDetailsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute,
-    private api: FeaturesApiService, public commonService: CommonService
+    private api: FeaturesApiService, public commonService: CommonService, public location: Location
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -37,7 +38,12 @@ export class ReviewDetailsComponent implements OnInit {
         this.api.REVIEWED_PRODUCT_LIST(filterForm).subscribe(result => {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if(result.status) {
-            if(result.list.length) this.reviewDetails = result.list[0];
+            if(result.list.length) {
+              this.reviewDetails = result.list[0];
+              this.reviewDetails.reviews.forEach(obj => {
+                obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />");
+              });
+            }
             else this.router.navigate(['/features/product-reviews']);
           }
           else console.log("response", result);
