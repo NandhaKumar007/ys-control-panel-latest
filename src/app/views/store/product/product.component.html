@@ -113,7 +113,7 @@
   <!-- DATA LIST -->
   <div class="row list-horizontal">
     <div
-      *ngFor="let x of list | orderDesc:'rank' | gridSearch: { name: search_bar, sku: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+      *ngFor="let x of list | gridSearch: { name: search_bar, sku: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card mb-4 mtb-0-60 d-flex flex-row">

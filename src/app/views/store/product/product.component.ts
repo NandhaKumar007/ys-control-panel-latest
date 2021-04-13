@@ -28,7 +28,7 @@ export class ProductComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl;
   limitedProdCount = environment.limited_product_count;
   categoryList: any = []; vendorList: any = [];
-  product_filter: any = "all"; sort_by: any = null; scrollPos: number = 0;
+  product_filter: any = "all"; sort_by: any = 'created_desc'; scrollPos: number = 0;
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService,

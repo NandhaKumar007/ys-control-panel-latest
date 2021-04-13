@@ -45,7 +45,9 @@
         <div *ngIf="x.order_by=='admin'" class="find-band"></div>
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="m-0 prod-card-content">{{x.rating}} Star</p>
+            <span class="review-star-container" [ngClass]="{ 'review-good': x.rating>2, 'review-avg': x.rating===2, 'review-bad': x.rating===1 }">
+              {{x.rating}} <i class="material-icons">star</i>
+            </span>
             <p class="m-0 text-muted text-small w-sm-100">{{x.customer_name}}</p>
             <p class="m-0 text-muted text-small w-sm-100">{{ x.created_on | date: "dd MMM y hh:mm a" }}</p>
             <p class="c-w-15 w-md-100 m-b-0">
@@ -86,26 +88,54 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="form-group">
+    <div class="form-group card p-3">
       <div class="row">
         <div class="col-md-12 mb-3">
-          <p>{{selectedReview.customer_name}}</p>
-          <p>{{ selectedReview.created_on | date: "dd MMM y hh:mm a" }}</p>
+          <span class="review-star-container" [ngClass]="{ 'review-good': selectedReview.rating>2, 'review-avg': selectedReview.rating===2, 'review-bad': selectedReview.rating===1 }">
+            {{selectedReview.rating}} <i class="material-icons">star</i>
+          </span>
         </div>
-        <div class="col-md-12 mb-3">
-          <p>{{selectedReview.rating}} Star</p>
-          <p>{{selectedReview.title}}</p>
-          <p [innerHtml]="selectedReview.description"></p>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="review-details-mdl-inner mb-3">
+            <h6>Customer Name</h6>
+            <p>{{selectedReview.customer_name}}</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="review-details-mdl-inner mb-3">
+            <h6>Created on</h6>
+            <p>{{ selectedReview.created_on | date: "dd MMM y hh:mm a" }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="review-details-mdl-inner mb-3">
+            <h6>Title</h6>
+            <p>{{selectedReview.title}}</p>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="review-details-mdl-inner mb-3">
+            <h6>Description</h6>
+            <p [innerHtml]="selectedReview.description"></p>
+          </div>
         </div>
       </div>
     </div>
-    <div *ngIf="selectedReview.errorMsg"><p class="text-danger">{{ selectedReview.errorMsg }}</p></div>
+    <div *ngIf="selectedReview.errorMsg">
+      <p class="text-danger">{{ selectedReview.errorMsg }}</p>
+    </div>
   </div>
   <div class="modal-footer">
-    <button type="button" (click)="updateStatus(selectedReview);" class="btn btn-wide black-outline-btn">
-      <span class="black-outline-txt">{{selectedReview.status=='active'? 'Unpublish': 'Publish'}}</span>
+    <button type="button" (click)="updateStatus(selectedReview);" class="btn btn-wide blue-outline-btn">
+      <span class="blue-outline-txt">{{selectedReview.status=='active'? 'Unpublish': 'Publish'}}</span>
     </button>
-    <button type="button" (click)="deleteForm=selectedReview; modalService.open(deleteModal, { centered: true });" class="btn btn-wide btn-primary">Delete</button>
+    <button type="button" (click)="deleteForm=selectedReview; modalService.open(deleteModal, { centered: true });" class="btn btn-wide orng-outline-btn">
+     <span class="orng-outline-txt">Delete</span>
+    </button>
   </div>
 </ng-template>
 
@@ -121,10 +151,10 @@
   </div>
   <div class="modal-footer">
     <button type="button" id="closeDeleteModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
-     <span class="black-outline-txt">No</span>
+      <span class="black-outline-txt">No</span>
     </button>
     <button type="button" class="btn btn-wide orng-outline-btn" (click)="onDelete();">
-     <span class="orng-outline-txt">Yes</span>
+      <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
 </ng-template>
