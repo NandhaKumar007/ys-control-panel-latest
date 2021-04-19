@@ -20,15 +20,20 @@
     <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="step_num=2;" ngNativeValidate>
 
       <div class="row">
-        <ng-container *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1">
-          <div class="col-md-6 form-group mb-3">
+        <div class="col-md-6 form-group mb-3">
+          <label>Product Taxonomy</label>
+          <select name="taxonomy_id" class="form-control" [(ngModel)]="productForm.taxonomy_id" #taxonomy_id="ngModel">
+            <option *ngFor="let x of taxonomyList;" [ngValue]="x._id">{{x.name}}</option>
+          </select>
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <ng-container *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1">
             <label>Vendor</label>
             <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel">
               <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.name}}</option>
             </select>
-          </div>
-          <div class="col-md-6"></div>
-        </ng-container>
+          </ng-container>
+        </div>
         <div class="col-md-3 form-group mb-3">
           <label>Brand</label>
           <input type="text" name="brand" class="form-control" [(ngModel)]="productForm.brand" #brand="ngModel" />

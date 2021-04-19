@@ -21,7 +21,7 @@ export class AddProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.catalog_list;
   addonList: any; tagList: any; noteList: any; taxRates: any;
-  sizeCharts: any; faqList: any;
+  sizeCharts: any; faqList: any; taxonomyList: any;
   aiStyleList: any = this.commonService.aistyle_list;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
@@ -51,7 +51,7 @@ export class AddProductComponent implements OnInit {
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;
       this.productForm = { rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs', allow_cod: true, video_details: {} };
-      this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = [];
+      this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
@@ -69,6 +69,8 @@ export class AddProductComponent implements OnInit {
             }
           }
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
+          this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
+          if(this.taxonomyList.length) this.productForm.taxonomy_id = this.taxonomyList[0]._id;
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);

@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'sizing-assistant', loadChildren: () => import('./sizing-assistant/sizing-assistant.module').then(m => m.SizingAssistantModule), canActivate: [PermissionGuard], data: { name: "sizing_assistant" } },
   { path: 'size-chart', loadChildren: () => import('./size-chart/size-chart.module').then(m => m.SizeChartModule), canActivate: [PermissionGuard], data: { name: "size_chart" } },
   { path: 'tags', loadChildren: () => import('./tag/tag.module').then(m => m.TagModule), canActivate: [PermissionGuard], data: { name: "tags" } },
-  { path: 'tax-rates', loadChildren: () => import('./tax-rates/tax-rates.module').then(m => m.TaxRatesModule), canActivate: [PermissionGuard], data: { name: "tax_rates" } }
+  { path: 'tax-rates', loadChildren: () => import('./tax-rates/tax-rates.module').then(m => m.TaxRatesModule), canActivate: [PermissionGuard], data: { name: "tax_rates" } },
+  { path: 'product-taxonomy', loadChildren: () => import('./product-taxonomy/product-taxonomy.module').then(m => m.ProductTaxonomyModule), canActivate: [PermissionGuard], data: { name: "product_taxonomy" } }
 ];
 
 @NgModule({

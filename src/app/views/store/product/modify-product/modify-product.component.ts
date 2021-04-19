@@ -20,7 +20,7 @@ export class ModifyProductComponent implements OnInit {
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = [];
-  addonList: any; tagList: any; noteList: any; taxRates: any;
+  addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
   sizeCharts: any; faqList: any; aiStyleList: any = this.commonService.aistyle_list;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
@@ -64,6 +64,7 @@ export class ModifyProductComponent implements OnInit {
               if(taxIndex!=-1) this.primary_tax = this.taxRates[taxIndex]._id;
             }
           }
+          this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
           this.api.PRODUCT_DETAILS(params.product_id).subscribe(result => {
             if(result.status) {
               this.productForm = result.data;

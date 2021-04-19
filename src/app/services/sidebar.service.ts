@@ -98,6 +98,8 @@ export class SidebarService {
         prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
         routePermissionList.push("faq");
       }
+      prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
+      routePermissionList.push("product_taxonomy");
       // products
       routePermissionList.push("catalogs", "products", "product_add", "product_edit");
       let prodList: IChildItem[] = [
