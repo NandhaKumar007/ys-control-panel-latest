@@ -28,7 +28,7 @@ export class CreateProductOrderComponent implements OnInit {
   product_features: any = { addon_list: [], measurement_set: [], tax_rates: [] };
   country_list: any = this.commonService.country_list; cart_list: any = [];
   cart_weight: any = 0; cart_total: any = 0; cart_qty: any = 0;
-  discount: any = 0; shipping_cost: any = 0;
+  discount: any = 0; shipping_cost: any = 0; wo_disc_sub_total: any = 0;
   payment_type: string; payment_status: string;
 
   existing_model_list: any = []; selected_model: any = {};
@@ -127,8 +127,14 @@ export class CreateProductOrderComponent implements OnInit {
     this.orderForm.final_price = this.orderForm.grand_total - this.orderForm.discount_amount;
     this.OrderApi.CREATE_ORDER(this.orderForm).subscribe(result => {
       this.orderForm.submit = true;
-      if(result.status) this.location.back();
-      else console.log("response", result);
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.location.back();
+      }
+      else {
+        console.log("response", result);
+        this.orderForm.errorMsg = result.message;
+      }
     });
   }
 
@@ -142,14 +148,14 @@ export class CreateProductOrderComponent implements OnInit {
           this.couponForm.status = 'valid';
           let codeDetails = result.data;
           this.couponForm.id = codeDetails._id;
-          if(this.cart_total >= codeDetails.min_order_amt && this.cart_qty >= codeDetails.min_order_qty) {
+          if(this.wo_disc_sub_total >= codeDetails.min_order_amt && this.cart_qty >= codeDetails.min_order_qty) {
             if(codeDetails.discount_type=='buy_x_get_y') {
               this.cart_list.forEach(item => { delete item.dup_qty; });
               this.onFindBuyXGetY(codeDetails);
             }
             else {
               if(codeDetails.apply_to=='order') {
-                this.onCalcOfferAmount(this.cart_total, codeDetails);
+                this.onCalcOfferAmount(this.wo_disc_sub_total, codeDetails);
               }
               else if(codeDetails.apply_to=='shipping') {
                 if(codeDetails.shipping_type=='all')
@@ -191,15 +197,25 @@ export class CreateProductOrderComponent implements OnInit {
 
   findCategoryUnderOffer(offerCategoryList) {
     let sumOfferProduct = 0;
-    this.cart_list.forEach(element => {
-      if(offerCategoryList.findIndex(obj =>  element.category_id.indexOf(obj.category_id) != -1) != -1) sumOfferProduct += (element.final_price*element.quantity);
+    this.cart_list.forEach(item => {
+      if(this.checkout_setting.offer_except_disc_products) {
+        if(offerCategoryList.findIndex(obj => !item.disc_status && item.category_id.indexOf(obj.category_id)!=-1) != -1) sumOfferProduct += (item.final_price*item.quantity);
+      }
+      else {
+        if(offerCategoryList.findIndex(obj => item.category_id.indexOf(obj.category_id)!=-1) != -1) sumOfferProduct += (item.final_price*item.quantity);
+      }
     });
     return sumOfferProduct;
   }
   findProductUnderOffer(offerProductList) {
     let sumOfferProduct = 0;
-    this.cart_list.forEach(element => {
-      if(offerProductList.findIndex(obj => obj.product_id==element.product_id) != -1) sumOfferProduct += (element.final_price*element.quantity);
+    this.cart_list.forEach(item => {
+      if(this.checkout_setting.offer_except_disc_products) {
+        if(offerProductList.findIndex(obj => !item.disc_status && item.product_id==obj.product_id) != -1) sumOfferProduct += (item.final_price*item.quantity);
+      }
+      else {
+        if(offerProductList.findIndex(obj => obj.product_id==item.product_id) != -1) sumOfferProduct += (item.final_price*item.quantity);
+      }
     });
     return sumOfferProduct;
   }
@@ -223,6 +239,9 @@ export class CreateProductOrderComponent implements OnInit {
     if(codeDetails.buy_properties.apply_to=='category') {
       this.cart_list.forEach(item => {
         let itemIndex = codeDetails.buy_properties.category_list.findIndex(obj => item.category_id.indexOf(obj.category_id)!=-1);
+        if(this.checkout_setting.offer_except_disc_products) {
+          itemIndex = codeDetails.buy_properties.category_list.findIndex(obj => !item.disc_status && item.category_id.indexOf(obj.category_id)!=-1);
+        }
         if(itemIndex != -1) {
           buyQty += item.quantity;
           buyAmount += (item.final_price*item.quantity);
@@ -237,6 +256,9 @@ export class CreateProductOrderComponent implements OnInit {
     else if(codeDetails.buy_properties.apply_to=='product') {
       this.cart_list.forEach(item => {
         let itemIndex = codeDetails.buy_properties.product_list.findIndex(obj => item.product_id==obj.product_id);
+        if(this.checkout_setting.offer_except_disc_products) {
+          itemIndex = codeDetails.buy_properties.product_list.findIndex(obj => !item.disc_status && item.product_id==obj.product_id);
+        }
         if(itemIndex != -1) {
           buyQty += item.quantity;
           buyAmount += (item.final_price*item.quantity);
@@ -251,6 +273,9 @@ export class CreateProductOrderComponent implements OnInit {
     else if(codeDetails.buy_properties.apply_to=='all_product') {
       this.cart_list.forEach(item => {
         let itemIndex = 0;
+        if(this.checkout_setting.offer_except_disc_products) {
+          if(item.disc_status) itemIndex = -1;
+        }
         if(itemIndex != -1) {
           buyQty += item.quantity;
           buyAmount += (item.final_price*item.quantity);
@@ -266,6 +291,9 @@ export class CreateProductOrderComponent implements OnInit {
     if(codeDetails.get_properties.apply_to=='category') {
       this.cart_list.forEach(item => {
         let itemIndex = codeDetails.get_properties.category_list.findIndex(obj => item.category_id.indexOf(obj.category_id)!=-1);
+        if(this.checkout_setting.offer_except_disc_products) {
+          itemIndex = codeDetails.get_properties.category_list.findIndex(obj => !item.disc_status && item.category_id.indexOf(obj.category_id)!=-1);
+        }
         if(itemIndex != -1) {
           getQty += item.quantity;
           let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
@@ -279,6 +307,9 @@ export class CreateProductOrderComponent implements OnInit {
     else if(codeDetails.get_properties.apply_to=='product') {
       this.cart_list.forEach(item => {
         let itemIndex = codeDetails.get_properties.product_list.findIndex(obj => item.product_id==obj.product_id);
+        if(this.checkout_setting.offer_except_disc_products) {
+          itemIndex = codeDetails.get_properties.product_list.findIndex(obj => !item.disc_status && item.product_id==obj.product_id);
+        }
         if(itemIndex != -1) {
           getQty += item.quantity;
           let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
@@ -291,11 +322,17 @@ export class CreateProductOrderComponent implements OnInit {
     }
     else if(codeDetails.get_properties.apply_to=='all_product') {
       this.cart_list.forEach(item => {
-        getQty += item.quantity;
-        let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
-        if(checkIndex == -1) {
-          item.dup_qty = item.quantity;
-          buyXgetYitemList.push(item);
+        let itemIndex = 0;
+        if(this.checkout_setting.offer_except_disc_products) {
+          if(item.disc_status) itemIndex = -1;
+        }
+        if(itemIndex != -1) {
+          getQty += item.quantity;
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
         }
       });
     }
@@ -705,10 +742,24 @@ export class CreateProductOrderComponent implements OnInit {
   }
 
   calcCartTotal() {
-    this.cart_total = 0; this.cart_weight = 0;
+    this.cart_total = 0; this.cart_weight = 0; this.wo_disc_sub_total = 0;
     this.cart_list.forEach((product) => {
       this.cart_total += (product.final_price * product.quantity);
-      if(product.unit!="Pcs") { this.cart_total += product.addon_price; }
+      if(this.checkout_setting.offer_except_disc_products) {
+        if(!product.disc_status) this.wo_disc_sub_total += (product.final_price * product.quantity);
+      }
+      else {
+        this.wo_disc_sub_total += (product.final_price * product.quantity);
+      }
+      if(product.unit!="Pcs") {
+        this.cart_total += product.addon_price;
+        if(this.checkout_setting.offer_except_disc_products) {
+          if(!product.disc_status) this.wo_disc_sub_total += product.addon_price;
+        }
+        else {
+          this.wo_disc_sub_total += product.addon_price;
+        }
+      }
       this.cart_weight += (parseFloat(product.weight)*parseFloat(product.quantity));
     });
     Math.round(this.cart_weight);

@@ -408,31 +408,31 @@
                 placeholder="Order Notes"></textarea>
             </div>
           </div>
+          
+          <!-- Apply Coupon -->
+          <div class="card p-3 mb-3">
+            <label *ngIf="!couponForm.coupon_status" class="checkbox checkbox-primary m-0">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="couponForm.coupon_status" (change)="offerAmount=0; manualDiscount=0; orderForm.apply_disc=false; orderForm.manual_discount={};" name="coupon_status"/>
+              <span>Apply Coupon</span>
+              <span class="checkmark"></span>
+            </label>
+            <ng-container *ngIf="couponForm.coupon_status">
+              <div class="mb-3">
+                <label>Coupon Code</label>
+                <input type="text" class="form-control" [(ngModel)]="couponForm.code" name="coupon_code" placeholder="Enter Coupon Code" appUppercase
+                [ngClass]="{ 'input-success': couponForm.status=='valid', 'input-error': couponForm.status=='invalid' }" (input)="offerAmount=0; couponForm.alert_msg=null; couponForm.status=null;" required>
+              </div>
+              <button type="button" (click)="onApplyCoupon();" class="btn btn-primary w-100 mb-3">Apply</button>
+              <!-- error msg -->
+              <p *ngIf="couponForm.alert_msg" class="error-msg m-0">{{couponForm.alert_msg}}</p>
+              <p *ngIf="!couponForm.alert_msg && couponForm.status=='valid' && offerAmount<=0" class="error-msg m-0">
+                Items in your cart does not satisfy the conditions of the coupon code.
+              </p>
+              <span (click)="resetDiscount();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+            </ng-container>
+          </div>
 
-          <form *ngIf="selected_shipping" autocomplete="off" (ngSubmit)="placeOrder();" ngNativeValidate>
-            <!-- Apply Coupon -->
-            <div class="card p-3 mb-3">
-              <label *ngIf="!couponForm.coupon_status" class="checkbox checkbox-primary m-0">
-                <input class="form-check-input" type="checkbox" [(ngModel)]="couponForm.coupon_status" (change)="offerAmount=0; manualDiscount=0; orderForm.apply_disc=false; orderForm.manual_discount={};" name="coupon_status"/>
-                <span>Apply Coupon</span>
-                <span class="checkmark"></span>
-              </label>
-              <ng-container *ngIf="couponForm.coupon_status">
-                <div class="mb-3">
-                  <label>Coupon Code</label>
-                  <input type="text" class="form-control" [(ngModel)]="couponForm.code" name="coupon_code" placeholder="Enter Coupon Code" appUppercase
-                  [ngClass]="{ 'input-success': couponForm.status=='valid', 'input-error': couponForm.status=='invalid' }" (input)="offerAmount=0; couponForm.alert_msg=null; couponForm.status=null;" required>
-                </div>
-                <button type="button" (click)="onApplyCoupon();" class="btn btn-primary w-100 mb-3">Apply</button>
-                <!-- error msg -->
-                <p *ngIf="couponForm.alert_msg" class="error-msg m-0">{{couponForm.alert_msg}}</p>
-                <p *ngIf="!couponForm.alert_msg && couponForm.status=='valid' && offerAmount<=0" class="error-msg m-0">
-                  Items in your cart does not satisfy the conditions of the coupon code.
-                </p>
-                <span (click)="resetDiscount();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
-              </ng-container>
-            </div>
-
+          <form *ngIf="selected_shipping" autocomplete="off" (ngSubmit)="modalService.open(placeOrderModal, { centered: true });" ngNativeValidate>
             <!-- Apply Discount -->
             <div class="card p-3 mb-3">
               <label class="checkbox checkbox-primary m-0">
@@ -527,7 +527,7 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 mtb-10 ladda-button" [disabled]="orderForm.submit" [ladda]="orderForm.submit">Place Order</button>
+            <button type="submit" class="btn btn-primary w-100">Place Order</button>
           </form>
         </div>
       </div>
@@ -1478,5 +1478,23 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-wide btn-primary" type="button" (click)="modal.dismiss('Cross click');">CLOSE</button>
+  </div>
+</ng-template>
+
+<!-- PLACE ORDER MODAL -->
+<ng-template #placeOrderModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to place this order?</strong></p>
+    <div *ngIf="orderForm.errorMsg">
+      <p class="text-danger">{{ orderForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="placeOrder();" class="btn btn-wide orng-outline-btn ladda-button" [disabled]="orderForm.submit" [ladda]="orderForm.submit">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
   </div>
 </ng-template>
