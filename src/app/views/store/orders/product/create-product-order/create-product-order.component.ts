@@ -35,7 +35,10 @@ export class CreateProductOrderComponent implements OnInit {
   addonForm: any = {}; customized_model: any; measurementView: boolean;
   custom_list: any = []; customIndex: number; selected_unit: any = {};
   measurement_sets: any = []; mmIndex: number; mm_section: boolean;
+  notes_list: any = [];
+  customSection: boolean; mmSection: boolean; noteSection: boolean;
   couponForm: any = {}; offerAmount: any = 0; manualDiscount: any = 0;
+  application_setting: any = {}; checkout_setting: any = {};
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: StoreApiService, private shippingApi: ShippingService,
@@ -76,11 +79,12 @@ export class CreateProductOrderComponent implements OnInit {
       }
     });
     // application setting
-    if(!this.commonService.application_setting) {
-      this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
-        if(result.status) this.commonService.application_setting = result.data.application_setting;
-      });
-    }
+    this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
+      if(result.status) {
+        this.application_setting = result.data.application_setting;
+        this.checkout_setting = result.data.checkout_setting;
+      }
+    });
   }
 
   placeOrder() {
@@ -139,31 +143,37 @@ export class CreateProductOrderComponent implements OnInit {
           let codeDetails = result.data;
           this.couponForm.id = codeDetails._id;
           if(this.cart_total >= codeDetails.min_order_amt && this.cart_qty >= codeDetails.min_order_qty) {
-            if(codeDetails.apply_to=='order') {
-              this.onCalcOfferAmount(this.cart_total, codeDetails);
-            }
-            else if(codeDetails.apply_to=='shipping') {
-              if(codeDetails.shipping_type=='all')
-                this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
-              else if(codeDetails.shipping_type=='domestic' && this.selected_customer.shipping_address.country==this.commonService.store_details.country)
-                this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
-              else if(codeDetails.shipping_type=='international' && this.selected_customer.shipping_address.country!=this.commonService.store_details.country)
-                this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
-              else
-                this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
-            }
-            else if(codeDetails.apply_to=='category') {
-              let sumAmount = this.findCategoryUnderOffer(codeDetails.category_list);
-              if(sumAmount > 0) this.onCalcOfferAmount(sumAmount, codeDetails);
-              else this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
-            }
-            else if(codeDetails.apply_to=='product') {
-              let sumAmount = this.findProductUnderOffer(codeDetails.product_list);
-              if(sumAmount > 0) this.onCalcOfferAmount(sumAmount, codeDetails);
-              else this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+            if(codeDetails.discount_type=='buy_x_get_y') {
+              this.cart_list.forEach(item => { delete item.dup_qty; });
+              this.onFindBuyXGetY(codeDetails);
             }
             else {
-              this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+              if(codeDetails.apply_to=='order') {
+                this.onCalcOfferAmount(this.cart_total, codeDetails);
+              }
+              else if(codeDetails.apply_to=='shipping') {
+                if(codeDetails.shipping_type=='all')
+                  this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
+                else if(codeDetails.shipping_type=='domestic' && this.selected_customer.shipping_address.country==this.commonService.store_details.country)
+                  this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
+                else if(codeDetails.shipping_type=='international' && this.selected_customer.shipping_address.country!=this.commonService.store_details.country)
+                  this.onCalcOfferAmount(this.selected_shipping.shipping_price, codeDetails);
+                else
+                  this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+              }
+              else if(codeDetails.apply_to=='category') {
+                let sumAmount = this.findCategoryUnderOffer(codeDetails.category_list);
+                if(sumAmount > 0) this.onCalcOfferAmount(sumAmount, codeDetails);
+                else this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+              }
+              else if(codeDetails.apply_to=='product') {
+                let sumAmount = this.findProductUnderOffer(codeDetails.product_list);
+                if(sumAmount > 0) this.onCalcOfferAmount(sumAmount, codeDetails);
+                else this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+              }
+              else {
+                this.couponForm.alert_msg = "You are not eligible to redeem this coupon";
+              }
             }
           }
           else {
@@ -200,6 +210,182 @@ export class CreateProductOrderComponent implements OnInit {
     if(codeDetails.discount_type=='percentage') {
       offerAmt = Math.round(amount*(codeDetails.discount_value/100));
     }
+    if(codeDetails.restrict_discount && offerAmt > codeDetails.discount_upto) offerAmt = codeDetails.discount_upto;
+    let payableAmount = parseFloat(this.cart_total)+parseFloat(this.selected_shipping.shipping_price)+parseFloat(this.orderForm.gift_wrapper);
+    this.offerAmount = offerAmt;
+    if(offerAmt > payableAmount) this.offerAmount = payableAmount;
+  }
+
+  onFindBuyXGetY(codeDetails) {
+    let offerAmt = 0; let buyXgetYitemList = [];
+    let buyQty = 0; let buyAmount = 0; let getQty = 0;
+    // buy products
+    if(codeDetails.buy_properties.apply_to=='category') {
+      this.cart_list.forEach(item => {
+        let itemIndex = codeDetails.buy_properties.category_list.findIndex(obj => item.category_id.indexOf(obj.category_id)!=-1);
+        if(itemIndex != -1) {
+          buyQty += item.quantity;
+          buyAmount += (item.final_price*item.quantity);
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
+        }
+      });
+    }
+    else if(codeDetails.buy_properties.apply_to=='product') {
+      this.cart_list.forEach(item => {
+        let itemIndex = codeDetails.buy_properties.product_list.findIndex(obj => item.product_id==obj.product_id);
+        if(itemIndex != -1) {
+          buyQty += item.quantity;
+          buyAmount += (item.final_price*item.quantity);
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
+        }
+      });
+    }
+    else if(codeDetails.buy_properties.apply_to=='all_product') {
+      this.cart_list.forEach(item => {
+        let itemIndex = 0;
+        if(itemIndex != -1) {
+          buyQty += item.quantity;
+          buyAmount += (item.final_price*item.quantity);
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
+        }
+      });
+    }
+    // get products
+    if(codeDetails.get_properties.apply_to=='category') {
+      this.cart_list.forEach(item => {
+        let itemIndex = codeDetails.get_properties.category_list.findIndex(obj => item.category_id.indexOf(obj.category_id)!=-1);
+        if(itemIndex != -1) {
+          getQty += item.quantity;
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
+        }
+      });
+    }
+    else if(codeDetails.get_properties.apply_to=='product') {
+      this.cart_list.forEach(item => {
+        let itemIndex = codeDetails.get_properties.product_list.findIndex(obj => item.product_id==obj.product_id);
+        if(itemIndex != -1) {
+          getQty += item.quantity;
+          let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+          if(checkIndex == -1) {
+            item.dup_qty = item.quantity;
+            buyXgetYitemList.push(item);
+          }
+        }
+      });
+    }
+    else if(codeDetails.get_properties.apply_to=='all_product') {
+      this.cart_list.forEach(item => {
+        getQty += item.quantity;
+        let checkIndex = buyXgetYitemList.findIndex(obj => obj.cart_id==item.cart_id);
+        if(checkIndex == -1) {
+          item.dup_qty = item.quantity;
+          buyXgetYitemList.push(item);
+        }
+      });
+    }
+    // end
+
+    if(codeDetails.buy_properties.type=='quantity') {
+      let offeredItemsQty = 0
+      buyXgetYitemList.forEach(item => { offeredItemsQty += item.quantity; })
+      let setItemsCount = codeDetails.buy_properties.value + codeDetails.get_properties.quantity;
+      let x = offeredItemsQty%setItemsCount;
+      let loopCount = (offeredItemsQty-x)/setItemsCount;
+      if(codeDetails.buy_x_get_y_usage_limit>0 && codeDetails.buy_x_get_y_usage_limit<loopCount) loopCount = codeDetails.buy_x_get_y_usage_limit;
+
+      buyXgetYitemList.sort((a, b) => 0 - (a.final_price > b.final_price ? -1 : 1));
+      for(let i=0; i<loopCount; i++)
+      {
+        if(buyQty>=codeDetails.buy_properties.value && getQty>=codeDetails.get_properties.quantity)
+        {
+          buyQty -= codeDetails.buy_properties.value;
+          getQty -= codeDetails.get_properties.quantity;
+          for(let j=0; j<codeDetails.get_properties.quantity; j++)
+          {
+            let offIndex = buyXgetYitemList.findIndex(obj => obj.dup_qty>=1);
+            if(offIndex!=-1) {
+              let selectedItem = buyXgetYitemList[offIndex];
+              selectedItem.dup_qty -= 1;
+              if(codeDetails.get_properties.discount_type=='quantity') offerAmt += selectedItem.final_price;
+              else offerAmt += Math.round(selectedItem.final_price*(codeDetails.get_properties.discount_value/100));
+            }
+            else break;
+          }
+        }
+        else break;
+      }
+    }
+    if(codeDetails.buy_properties.type=='amount') {
+      let x = buyAmount%codeDetails.buy_properties.value;
+      let loopCount = (buyAmount-x)/codeDetails.buy_properties.value;
+      if(codeDetails.buy_x_get_y_usage_limit>0 && codeDetails.buy_x_get_y_usage_limit<loopCount) loopCount = codeDetails.buy_x_get_y_usage_limit;
+      
+      for(let i=0; i<loopCount; i++)
+      {
+        let maxPrice = codeDetails.buy_properties.value;
+        if(buyAmount>=maxPrice && getQty>=codeDetails.get_properties.quantity) {
+          buyXgetYitemList.sort((a, b) => 0 - (a.final_price > b.final_price ? 1 : -1));
+          for(let i=0; i<buyXgetYitemList.length; i++)
+          {
+            let item = buyXgetYitemList[i];
+            if(maxPrice>0) {
+              let loopCount = Math.ceil(item.dup_qty);
+              for(let j=0; j<loopCount; j++)
+              {
+                if(item.dup_qty>0) {
+                  if(item.dup_qty>=1) {
+                    maxPrice -= item.final_price;
+                    item.dup_qty -= 1;
+                  }
+                  else {
+                    maxPrice -= (item.final_price*item.dup_qty);
+                    item.dup_qty = 0;
+                    break;
+                  }
+                }
+              }
+            }
+            else break;
+          }
+
+          let filteredItemList = buyXgetYitemList.filter(obj => obj.dup_qty>0).sort((a, b) => 0 - (a.final_price > b.final_price ? -1 : 1));
+          let remainingQty = 0;
+          filteredItemList.forEach(item => { remainingQty += item.quantity });
+          if(remainingQty>=codeDetails.get_properties.quantity) {
+            for(let i=0; i<codeDetails.get_properties.quantity; i++)
+            {
+              let offIndex = filteredItemList.findIndex(obj => obj.dup_qty>=1);
+              if(offIndex!=-1) {
+                let selectedItem = filteredItemList[offIndex];
+                selectedItem.dup_qty -= 1;
+                getQty -= 1;
+                if(codeDetails.get_properties.discount_type=='quantity') offerAmt += selectedItem.final_price;
+                else offerAmt += Math.round(selectedItem.final_price*(codeDetails.get_properties.discount_value/100));
+              }
+              else break;
+            }
+          }
+        }
+        else break;
+      }
+    }
+
     if(codeDetails.restrict_discount && offerAmt > codeDetails.discount_upto) offerAmt = codeDetails.discount_upto;
     let payableAmount = parseFloat(this.cart_total)+parseFloat(this.selected_shipping.shipping_price)+parseFloat(this.orderForm.gift_wrapper);
     this.offerAmount = offerAmt;
@@ -279,8 +465,7 @@ export class CreateProductOrderComponent implements OnInit {
     this.shipping_list_modal_config = { pageLoader: true };
     this.modalService.open(modalName, { windowClass:'xlModal' });
     let shippingAddress = this.selected_customer.shipping_address;
-    this.cart_total = this.totalCartAmount(this.cart_list);
-    this.cart_weight = this.calcCartWeight(this.cart_list);
+    this.calcCartTotal();
     // shipping methods
     this.shippingApi.SHIPPING_LIST().subscribe(result => {
       setTimeout(() => { this.shipping_list_modal_config.pageLoader = false; }, 500);
@@ -366,8 +551,7 @@ export class CreateProductOrderComponent implements OnInit {
     this.delivery_list = []; this.delivery_list_modal_config = { pageLoader: true };
     this.modalService.open(modalName, { windowClass:'xlModal' });
     let shippingAddress = this.selected_customer.shipping_address;
-    this.cart_total = this.totalCartAmount(this.cart_list);
-    this.cart_weight = this.calcCartWeight(this.cart_list);
+    this.calcCartTotal();
     // delivery methods
     this.shippingApi.DELIVERY_METHODS().subscribe(result => {
       setTimeout(() => { this.delivery_list_modal_config.pageLoader = false; }, 500);
@@ -520,21 +704,14 @@ export class CreateProductOrderComponent implements OnInit {
     });
   }
 
-  calcCartWeight(itemList) {
-    let sum = 0;
-    itemList.forEach(element => { sum += (parseFloat(element.weight)*parseFloat(element.quantity)); });
-    return Math.round(sum);
-  }
-
-  totalCartAmount(itemList) {
-    let totalAmount = 0;
-    if(itemList.length) {
-      itemList.forEach((product) => {
-        totalAmount += (product.final_price * product.quantity);
-        if(product.unit!="Pcs") { totalAmount += product.addon_price; }
-      });
-    }
-    return totalAmount;
+  calcCartTotal() {
+    this.cart_total = 0; this.cart_weight = 0;
+    this.cart_list.forEach((product) => {
+      this.cart_total += (product.final_price * product.quantity);
+      if(product.unit!="Pcs") { this.cart_total += product.addon_price; }
+      this.cart_weight += (parseFloat(product.weight)*parseFloat(product.quantity));
+    });
+    Math.round(this.cart_weight);
   }
 
   calcCartQty(itemList) {
@@ -697,7 +874,12 @@ export class CreateProductOrderComponent implements OnInit {
         this.addItemToCart(this.productDetails);
         document.getElementById('closeProductListModal').click();
       }
-      else this.productDetails.addon_alert = true;
+      // else this.productDetails.addon_alert = true;
+      else {
+        this.productDetails.addon_status = false;
+        this.addItemToCart(this.productDetails);
+        document.getElementById('closeProductListModal').click();
+      }
     }
     else {
       this.productDetails.addon_status = false;
@@ -708,42 +890,60 @@ export class CreateProductOrderComponent implements OnInit {
 
   // CUSTOMIZATION SECTION
   onCreateCustomization(existingListModal, createNewModal) {
-    if(this.productDetails.quantity > this.productDetails.stock) this.productDetails.quantity = this.productDetails.stock;
-    if(this.productDetails.quantity < 1) this.productDetails.quantity = 1;
-    this.customIndex = 0; this.mmIndex = 0; this.addonForm = {};
-    this.custom_list = this.productDetails.selected_addon.custom_list;
-    this.measurement_sets = this.productDetails.selected_addon.updated_mm_list;
-    if(this.custom_list.length) {
-      this.mm_section = false;
-      this.custom_list.forEach(obj => {
-        delete obj.selected_option;
-        obj.option_list.forEach(opt => { delete opt.custom_option_checked; delete opt.disabled; });
-      });
-      this.custom_list[this.customIndex].filtered_option_list = this.custom_list[this.customIndex].option_list;
-      if(this.custom_list[this.customIndex].type=='either_or') {
-        this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
-        this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
-      }
-    }
-    else {
-      this.mm_section = true;
-      this.selected_unit = this.measurement_sets[this.mmIndex].units[0];
-      this.addonForm.mm_unit = this.selected_unit.name;
-    }
-    if(this.commonService.store_details.additional_features && this.commonService.store_details.additional_features.custom_model) {
-        this.customerApi.CUSTOMER_DETAILS(this.selected_customer._id).subscribe(result => {
-          if(result.status) {
-            this.existing_model_list = result.data.model_list.filter(obj => obj.addon_id==this.productDetails.selected_addon._id);
-            if(this.existing_model_list.length) this.modalService.open(existingListModal, { windowClass:'xlModal' });
-            else this.modalService.open(createNewModal, { windowClass:'xlModal' });
-            this.commonService.scrollModalTop(500);
-          }
-          else console.log("response", result);
+    if(this.productDetails.selected_addon) {
+      if(this.productDetails.selected_addon.custom_list.length || this.productDetails.selected_addon.updated_mm_list.length ||  this.productDetails.selected_addon.notes_list.length) {
+        if(this.productDetails.quantity > this.productDetails.stock) this.productDetails.quantity = this.productDetails.stock;
+        if(this.productDetails.quantity < 1) this.productDetails.quantity = 1;
+        this.customIndex = 0; this.mmIndex = 0; this.addonForm = {};
+        this.custom_list = this.productDetails.selected_addon.custom_list;
+        this.measurement_sets = this.productDetails.selected_addon.updated_mm_list;
+        this.measurement_sets.forEach(mm => {
+          mm.list.forEach(li => { delete li.value });
         });
-    }
-    else {
-      this.modalService.open(createNewModal, { windowClass:'xlModal' });
-      this.commonService.scrollModalTop(500);
+        this.notes_list = [];
+        this.productDetails.selected_addon.notes_list.forEach(obj => {
+          this.notes_list.push({ name: obj.name, required: obj.required });
+        });
+        this.customSection = false; this.mmSection = false; this.noteSection = false;
+        // customization
+        if(this.custom_list.length) {
+          this.customSection = true;
+          this.custom_list.forEach(obj => {
+            delete obj.selected_option;
+            obj.option_list.forEach(opt => { delete opt.custom_option_checked; delete opt.disabled; });
+          });
+          this.custom_list[this.customIndex].filtered_option_list = this.custom_list[this.customIndex].option_list;
+          if(this.custom_list[this.customIndex].type=='either_or') {
+            this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+            this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
+          }
+        }
+        // measurement
+        else if(this.measurement_sets.length) {
+          this.mmSection = true;
+          this.selected_unit = this.measurement_sets[this.mmIndex].units[0];
+          this.addonForm.mm_unit = this.selected_unit.name;
+        }
+        // notes
+        else this.noteSection = true;
+        if(this.commonService.store_details.additional_features && this.commonService.store_details.additional_features.custom_model) {
+          this.productDetails.custom_loader = true;
+          this.customerApi.CUSTOMER_DETAILS(this.selected_customer._id).subscribe(result => {
+            this.productDetails.custom_loader = false;
+            if(result.status) {
+              this.existing_model_list = result.data.model_list.filter(obj => obj.addon_id==this.productDetails.selected_addon._id);
+              if(this.existing_model_list.length) this.modalService.open(existingListModal, { windowClass:'xlModal' });
+              else this.modalService.open(createNewModal, { windowClass:'xlModal' });
+              this.commonService.scrollModalTop(500);
+            }
+            else console.log("response", result);
+          });
+        }
+        else {
+          this.modalService.open(createNewModal, { windowClass:'xlModal' });
+          this.commonService.scrollModalTop(500);
+        }
+      }
     }
   }
 
@@ -795,6 +995,8 @@ export class CreateProductOrderComponent implements OnInit {
         }
         this.addonForm.mm_sets = this.measurement_sets;
         if(this.commonService.store_details.additional_features && this.commonService.store_details.additional_features.custom_model) {
+          let noteIndex = this.notes_list.findIndex(obj => obj.value && obj.value!="");
+          if(noteIndex!=-1) this.addonForm.notes_list = this.notes_list;
           this.addonForm.submit = true;
           this.addonForm.customer_id = this.selected_customer._id;
           this.customerApi.ADD_MODEL(this.addonForm).subscribe(result => {
@@ -807,6 +1009,7 @@ export class CreateProductOrderComponent implements OnInit {
           });
         }
         else {
+          this.addonForm.notes_list = this.notes_list.filter(obj => obj.value && obj.value!="");
           this.addonForm.name = this.productDetails.selected_addon.name;
           this.customized_model = this.addonForm;
           this.calcAddonPrice();
@@ -853,41 +1056,59 @@ export class CreateProductOrderComponent implements OnInit {
     }
   }
 
-  onCustomNext() {
+  customPrev() {
+    if(this.customSection) {
+      this.customIndex -= 1;
+    }
+    else if(this.mmSection) {
+      if(this.mmIndex>0) this.mmIndex -= 1;
+      else if(this.custom_list.length) {
+        this.mmSection = false;
+        this.customSection = true;
+      }
+    }
+    else if(this.noteSection) {
+      this.noteSection = false;
+      if(this.measurement_sets.length) this.mmSection = true;
+      else this.customSection = true;
+    }
+    this.addonForm.alert_msg = null;
+    this.commonService.scrollModalTop(0);
+  }
+  onCustomNext(gotoNext) {
     let reqInput = this.validateForm();
     if(reqInput===undefined) {
       let customAlert = this.checkCustomSelection();
       if(!customAlert) {
-        this.customIndex = this.customIndex+1;
-        if(this.custom_list[this.customIndex].type=='either_or') {
-          if(this.custom_list[this.customIndex].selected_option) {
-            if(this.custom_list[this.customIndex].filtered_option_list.findIndex(obj => obj.name==this.custom_list[this.customIndex].selected_option) == -1) {
+        // customization next level
+        if(!gotoNext) {
+          this.mmSection = false; this.noteSection = false;
+          this.customIndex = this.customIndex+1;
+          if(this.custom_list[this.customIndex].type=='either_or') {
+            if(this.custom_list[this.customIndex].selected_option) {
+              if(this.custom_list[this.customIndex].filtered_option_list.findIndex(obj => obj.name==this.custom_list[this.customIndex].selected_option) == -1) {
+                this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+              }
+            }
+            else {
               this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
             }
+            this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
           }
-          else {
-            this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
-          }
-          this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
+          else this.disableOption();
         }
-        else this.disableOption();
-        this.commonService.scrollModalTop(0);
-      }
-      else this.addonForm.alert_msg = customAlert;
-    }
-    else {
-      this.addonForm.alert_msg = "Please fill out the mandatory fields";
-      document.getElementById(reqInput).focus();
-    }
-  }
-  onSelectMeasurement() {
-    let reqInput = this.validateForm();
-    if(reqInput===undefined) {
-      let customAlert = this.checkCustomSelection();
-      if(!customAlert) {
-        this.mmIndex = 0; this.mm_section = true;
-        this.selected_unit = this.measurement_sets[this.mmIndex].units[0];
-        this.addonForm.mm_unit = this.selected_unit.name;
+        // measurement or custom note
+        else {
+          this.customSection = false; this.mmSection = false; this.noteSection = false;
+          // measurement
+          if(this.measurement_sets.length) {
+            this.mmIndex = 0; this.mmSection = true;
+            this.selected_unit = this.measurement_sets[this.mmIndex].units[0];
+            this.addonForm.mm_unit = this.selected_unit.name;
+          }
+          // custom note
+          else this.noteSection = true;
+        }
         this.commonService.scrollModalTop(0);
       }
       else this.addonForm.alert_msg = customAlert;
@@ -916,7 +1137,12 @@ export class CreateProductOrderComponent implements OnInit {
           }
         }
       }
-      this.mmIndex = this.mmIndex+1;
+      if((this.measurement_sets.length-1) > this.mmIndex) this.mmIndex = this.mmIndex+1;
+      else {
+        this.customSection = false;
+        this.mmSection = false;
+        this.noteSection = true;
+      }
       this.commonService.scrollModalTop(0);
     }
     else {
@@ -967,14 +1193,17 @@ export class CreateProductOrderComponent implements OnInit {
     }
   }
   checkCustomSelection() {
-    let checkedLen = this.custom_list[this.customIndex].filtered_option_list.filter(obj => obj.custom_option_checked).length;
-    if(this.custom_list[this.customIndex].type=='mandatory') {
-      if(this.custom_list[this.customIndex].limit==checkedLen) return null;
-      else return "Must choose "+this.custom_list[this.customIndex].limit+" options";
-    }
-    else if(this.custom_list[this.customIndex].type=='limited') {
-      if(this.custom_list[this.customIndex].limit >= checkedLen) return null;
-      else return "Choose maximum "+this.custom_list[this.customIndex].limit+" options";
+    if(this.custom_list.length) {
+      let checkedLen = this.custom_list[this.customIndex].filtered_option_list.filter(obj => obj.custom_option_checked).length;
+      if(this.custom_list[this.customIndex].type=='mandatory') {
+        if(this.custom_list[this.customIndex].limit==checkedLen) return null;
+        else return "Must choose "+this.custom_list[this.customIndex].limit+" options";
+      }
+      else if(this.custom_list[this.customIndex].type=='limited') {
+        if(this.custom_list[this.customIndex].limit >= checkedLen) return null;
+        else return "Choose maximum "+this.custom_list[this.customIndex].limit+" options";
+      }
+      else return null;
     }
     else return null;
   }
@@ -1021,18 +1250,22 @@ export class CreateProductOrderComponent implements OnInit {
     // remove product, if already exist
     if(cartIndex != -1) this.cart_list.splice(cartIndex, 1);
     this.cart_list.push(productDetails);
+    this.cart_list.forEach((obj, index) => {
+      obj.cart_id = index+1;
+    });
     this.shipping_cost = 0;
     this.selected_shipping = '';
-    this.cart_total = this.totalCartAmount(this.cart_list);
-    this.cart_weight = this.calcCartWeight(this.cart_list);
+    this.calcCartTotal();
     this.resetDiscount();
   }
   removeItemFromCart(index) {
     this.shipping_cost = 0;
     this.selected_shipping = '';
     this.cart_list.splice(index, 1);
-    this.cart_total = this.totalCartAmount(this.cart_list);
-    this.cart_weight = this.calcCartWeight(this.cart_list);
+    this.cart_list.forEach((obj, index) => {
+      obj.cart_id = index+1;
+    });
+    this.calcCartTotal();
     this.resetDiscount();
   }
 

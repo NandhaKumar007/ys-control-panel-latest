@@ -387,13 +387,13 @@
           </div>
 
           <!-- gift wrapper -->
-          <div *ngIf="commonService.application_setting?.gift_wrapping_charges>0" class="col-md-12 mt-2">
+          <div *ngIf="application_setting?.gift_wrapping_charges>0" class="col-md-12 mt-2">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="gift_status" [(ngModel)]="orderForm.gift_status"
                 #gift_status="ngModel"
-                (change)="orderForm.gift_status? orderForm.gift_wrapper=commonService.application_setting.gift_wrapping_charges: orderForm.gift_wrapper=0; resetDiscount();">
+                (change)="orderForm.gift_status? orderForm.gift_wrapper=application_setting.gift_wrapping_charges: orderForm.gift_wrapper=0; resetDiscount();">
               <span>Gift wrapping
-                ({{ commonService.application_setting.gift_wrapping_charges | currency:commonService.store_currency.country_code }})</span>
+                ({{ application_setting.gift_wrapping_charges | currency:commonService.store_currency.country_code }})</span>
               <span class="checkmark"></span>
             </label>
           </div>
@@ -420,11 +420,15 @@
               <ng-container *ngIf="couponForm.coupon_status">
                 <div class="mb-3">
                   <label>Coupon Code</label>
-                  <input type="text" class="form-control" [(ngModel)]="couponForm.code" name="coupon_code" placeholder="Enter Coupon Code"
+                  <input type="text" class="form-control" [(ngModel)]="couponForm.code" name="coupon_code" placeholder="Enter Coupon Code" appUppercase
                   [ngClass]="{ 'input-success': couponForm.status=='valid', 'input-error': couponForm.status=='invalid' }" (input)="offerAmount=0; couponForm.alert_msg=null; couponForm.status=null;" required>
                 </div>
                 <button type="button" (click)="onApplyCoupon();" class="btn btn-primary w-100 mb-3">Apply</button>
-                <p *ngIf="couponForm.alert_msg" class="error-msg mb-3" align="center">{{couponForm.alert_msg}}</p>
+                <!-- error msg -->
+                <p *ngIf="couponForm.alert_msg" class="error-msg m-0">{{couponForm.alert_msg}}</p>
+                <p *ngIf="!couponForm.alert_msg && couponForm.status=='valid' && offerAmount<=0" class="error-msg m-0">
+                  Items in your cart does not satisfy the conditions of the coupon code.
+                </p>
                 <span (click)="resetDiscount();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
               </ng-container>
             </div>
@@ -1134,11 +1138,11 @@
       <div class="row">
         <div class="col-md-12 mt-4">
           <!-- custom section -->
-          <ng-container *ngIf="!mm_section">
+          <ng-container *ngIf="customSection">
             <h5>{{custom_list[customIndex]?.name}}</h5>
             <div class="row">
               <div *ngFor="let x of custom_list[customIndex]?.filtered_option_list; let i=index;"
-                class="col-lg-3 col-md-4 col-6 d-flex justify-content-center mb-3">
+              class="col-lg-3 col-md-4 col-6 d-flex justify-content-center mb-3">
                 <div class="card customize-model p-3">
                   <label class="m-0 p-0" [ngClass]="(custom_list[customIndex]?.type=='either_or')? 'radio radio-primary': 'checkbox checkbox-primary'">
                     <!-- Radio -->
@@ -1158,18 +1162,16 @@
               </div>
             </div>
           </ng-container>
-          <!-- #custom section -->
-
           <!-- measurement section -->
-          <ng-container *ngIf="mm_section && measurement_sets[mmIndex]">
+          <ng-container *ngIf="mmSection">
             <h5>Measurements</h5>
             <div class="row">
-              <div class="col-lg-4">
+              <div *ngIf="measurement_sets[mmIndex].image" class="col-lg-4">
                 <div class="d-flex align-items-center justify-content-center mb-3">
                   <img imgBroken [src]="imgBaseUrl+measurement_sets[mmIndex].image" alt="model">
                 </div>
               </div>
-              <div class="col-lg-8">
+              <div [ngClass]="(measurement_sets[mmIndex].image)? 'col-lg-8': 'col-lg-12'">
                 <div class="card p-3">
 
                   <div class="row">
@@ -1234,7 +1236,28 @@
               </div>
             </div>
           </ng-container>
-          <!-- #measurement section -->
+          <!-- notes section -->
+          <ng-container *ngIf="noteSection">
+            <h5>{{productDetails.selected_addon?.notes_title}}</h5>
+            <div class="card card-in-card modal-inner-div-scroll slim-scroll p-3">
+              <div class="row mt-4">
+                <ng-container *ngFor="let x of notes_list; let i=index;">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="form-group col-sm-12">
+                        <div class="gray-card-two">
+                          <label>{{x.name}}<sup *ngIf="x.required" class="req-star">*</sup></label>
+                          <div class="input-group mb-3">
+                            <input class="form-control" type="text" id="notes_name{{i}}" name="notes_name{{i}}" [(ngModel)]="x.value" [required]="x.required">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
     </form>
@@ -1254,41 +1277,41 @@
     <section class="proceed-sec d-flex justify-content-between w-100 m-0">
       <!-- left side -->
       <!-- custom section -->
-      <ng-container *ngIf="!mm_section">
-        <button *ngIf="customIndex==0" (click)="modal.dismiss('Cross click');"
-          class="btn btn-wide btn-primary">CLOSE</button>
-        <button *ngIf="customIndex>0"
-          (click)="mm_section? mm_section=false: customIndex=customIndex-1; addonForm.alert_msg=null; commonService?.scrollModalTop(0);"
-          class="btn btn-wide btn-primary">PREVIOUS</button>
+      <ng-container *ngIf="customSection">
+        <button *ngIf="customIndex==0" (click)="modal.dismiss('Cross click');" class="btn btn-wide btn-primary">CLOSE</button>
+        <button *ngIf="customIndex>0" (click)="customPrev();" class="btn btn-wide btn-primary">PREVIOUS</button>
       </ng-container>
       <!-- measurement section -->
-      <ng-container *ngIf="mm_section && measurement_sets[mmIndex]">
-        <button
-          (click)="mmIndex>0? mmIndex=mmIndex-1: mm_section=false; addonForm.alert_msg=null; commonService?.scrollModalTop(0);"
-          class="btn btn-wide btn-primary">PREVIOUS</button>
+      <ng-container *ngIf="mmSection">
+        <button *ngIf="mmIndex==0 && !custom_list?.length" (click)="modal.dismiss('Cross click');" class="btn btn-wide btn-primary">CLOSE</button>
+        <button *ngIf="custom_list?.length || mmIndex>0" (click)="customPrev();" class="btn btn-wide btn-primary">PREVIOUS</button>
+      </ng-container>
+      <!-- note section -->
+      <ng-container *ngIf="noteSection">
+        <button *ngIf="!custom_list?.length && !measurement_sets?.length" (click)="modal.dismiss('Cross click');" class="btn btn-wide btn-primary">CLOSE</button>
+        <button *ngIf="custom_list?.length || measurement_sets?.length" (click)="customPrev();" class="btn btn-wide btn-primary">PREVIOUS</button>
       </ng-container>
       <!-- #left side -->
 
       <!-- right side -->
       <!-- custom section -->
-      <ng-container *ngIf="!mm_section">
-        <button *ngIf="custom_list[customIndex+1]?.filtered_option_list?.length || measurement_sets?.length" (click)="(custom_list[customIndex+1]?.filtered_option_list?.length)? onCustomNext(): onSelectMeasurement();"
-        class="btn btn-wide btn-primary">NEXT</button>
-        <button *ngIf="!custom_list[customIndex+1]?.filtered_option_list?.length && !measurement_sets?.length" (click)="onSaveNewModal();"
-          [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
+      <ng-container *ngIf="customSection">
+        <button *ngIf="custom_list[customIndex+1]?.filtered_option_list?.length || measurement_sets.length || notes_list.length" (click)="(custom_list[customIndex+1]?.filtered_option_list?.length)? onCustomNext(false): onCustomNext(true);" class="btn btn-wide btn-primary">NEXT</button>
+        <button *ngIf="!custom_list[customIndex+1]?.filtered_option_list?.length && !measurement_sets.length && !notes_list.length" (click)="onSaveNewModal();" [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
           SUBMIT
         </button>
       </ng-container>
       <!-- measurement section -->
-      <ng-container *ngIf="mm_section && measurement_sets[mmIndex]">
-        <button *ngIf="(measurement_sets?.length-1) > mmIndex" (click)="onMmNext();"
-          class="btn btn-wide btn-primary">NEXT</button>
-        <button *ngIf="(measurement_sets?.length-1) == mmIndex" (click)="onSaveNewModal();"
-          [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
+      <ng-container *ngIf="mmSection">
+        <button *ngIf="(measurement_sets?.length-1)>mmIndex || notes_list.length" (click)="onMmNext();" class="btn btn-wide btn-primary">NEXT</button>
+        <button *ngIf="(measurement_sets?.length-1)==mmIndex && !notes_list.length" (click)="onSaveNewModal();" [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
           SUBMIT
-
         </button>
       </ng-container>
+      <!-- note section -->
+      <button *ngIf="noteSection" (click)="onSaveNewModal();" [disabled]="addonForm.submit" class="btn btn-wide btn-primary">
+        SUBMIT
+      </button>
       <!-- #right side -->
     </section>
   </div>
@@ -1310,70 +1333,73 @@
 
   <div class="modal-body lg-modal-body slim-scroll">
     <!-- custom list -->
-    <div *ngIf="!customized_model?.mm_view" class="row">
-      <ng-container *ngFor="let x of customized_model?.custom_list; let i=index;">
-        <div class="col-lg-4 col-md-6 d-flex mb-3" *ngFor="let y of x.value; let j=index;">
-          <div class="card d-flex align-items-center w-100 p-3">
-            <div class="d-flex flex-row">
-              <div class="modal-img">
-                <img class="modal-addon-img mr-3" imgBroken *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="model">
-                <i class="material-icons add-img mr-3" *ngIf="!y.image">library_add</i>
-                <!-- <img imgBroken class="addon-icon opacity6" *ngIf="!y.image" src="assets/images/addon.svg" alt="addon"> -->
-              </div>
-              <div class="d-flex flex-column justify-content-center">
-                <h6>{{x.name}}</h6>
-                <p class="m-0">{{y.name}}</p>
-              </div>
+    <div *ngIf="customized_model?.custom_list?.length" class="row">
+      <div class="col-md-12">
+        <b class="add-another mb-3">CUSTOMIZATION</b>
+      </div>
+      <ng-container *ngFor="let x of customized_model?.custom_list;">
+        <div class="col-md-6 flex" *ngFor="let y of x.value;">
+          <div class="blouse-model-col flex-dir-column">
+            <img *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="">
+            <img class="addon-icon opacity6" *ngIf="!y.image" src="assets/images/addon_big.svg" alt="addon">
+            <div class="blouse-model-col-name" align="center">
+              <h6>{{x.name}}</h6>
+              <p>{{y.name}}</p>
             </div>
           </div>
         </div>
       </ng-container>
+      <div *ngIf="customized_model?.mm_sets?.length || customized_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
     </div>
-    <!-- #custom list -->
-
     <!-- measurement list -->
-    <ng-container *ngIf="customized_model?.mm_view">
-      <div class="row">
-        <ng-container *ngFor="let x of customized_model?.mm_sets; let i=index;">
-          <div class="col-md-6 d-flex">
-            <div class="card w-100 p-3 mb-3">
-              <div class="card card-in-card p-3" align="center">
-                <h5 class="m-0">{{x.name}}</h5>
-              </div>
-              <div>
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                  <img class="modal-measurement-img" imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image"
-                    alt="measurement_img">
-                </div>
-                <ng-container>
-                  <div class="card p-3">
-                    <div class="row measurement-table pr-1 pl-1" *ngFor="let y of x.list; let j=index;">
-                      <div class="col-6 d-flex justify-content-start align-items-center border">
-                        <p class="m-0">{{y.name}}:</p>
-                      </div>
-                      <div class="col-6 d-flex justify-content-start align-items-center border">
-                        <p class="m-0">{{y.value}} {{ customized_model?.mm_unit }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
+    <div *ngIf="customized_model?.mm_sets?.length" class="row d_measure">
+      <div class="col-md-12">
+        <b class="add-another mb-3">MEASUREMENTS</b>
+      </div>
+      <div *ngFor="let x of customized_model?.mm_sets;" [ngClass]="(customized_model?.mm_sets?.length>1)? 'col-md-6': 'col-md-12'">
+        <div class="card o-hidden mb-4 d-flex flex-row" align="center">
+          <div class="blouse-model-col w-100">
+            <div align="center">
+              <p style="padding: 10px; background-color: dimgray; color:#fff; font-size: 16px;">{{x.name}}</p>
+              <img [src]="imgBaseUrl+x.image" alt="" class="img-responsive blouse-mrs" style="height:150px;">
+            </div>
+            <div *ngFor="let y of x.list; let j=index;"
+              class="blouse-model-col-name align-self-center d-flex flex-column justify-content-between align-items-lg-center">
+              <p>{{y.name}}:
+                <span class="text-primary">{{y.value}} {{ customized_model?.mm_unit }}</span>
+              </p>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
-    </ng-container>
-    <!-- #measurement list -->
+      <div *ngIf="customized_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
+    </div>
+    <!-- notes list -->
+    <div *ngIf="customized_model?.notes_list?.length" class="row">
+      <div class="col-md-12">
+        <b class="add-another mb-3">NOTES</b>
+      </div>
+      <div *ngFor="let x of customized_model?.notes_list;" class="col-md-12">
+        <div class="card o-hidden mb-4">
+          <div class="flex-grow-1 pl-2 d-flex">
+            <div class="card-body">
+              <b class="w-30 w-sm-100 m-b-0">{{x.name}}</b>
+              <p class="w-30 w-sm-100 m-b-0">{{x.value}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="modal-footer">
-    <button *ngIf="customized_model?.mm_sets?.length" class="btn btn-wide btn-primary" type="button"
-      (click)="(customized_model?.mm_view)? customized_model.mm_view=false: customized_model.mm_view=true; commonService?.scrollModalTop(0);">
-      {{ customized_model?.mm_view? 'GO BACK': 'VIEW MEASUREMENTS' }}
-    </button>
     <button type="button" *ngIf="commonService.store_details?.additional_features?.custom_model"
-      (click)="modal.dismiss('Cross click'); onCreateCustomization(existingListModal, createNewModal);"
-      class="btn btn-wide btn-primary">CHOOSE ANOTHER MODEL</button>
+      (click)="modal.dismiss('Cross click'); onCreateCustomization(existingListModal, createNewModal);" class="btn btn-wide btn-primary">
+      CHOOSE ANOTHER MODEL
+    </button>
+    <button class="btn btn-wide btn-primary" type="button" (click)="modal.dismiss('Cross click');">
+      CLOSE
+    </button>
   </div>
 </ng-template>
 
@@ -1392,67 +1418,65 @@
   </div>
   <div class="modal-body lg-modal-body slim-scroll">
     <!-- custom list -->
-    <div *ngIf="!measurementView;" class="row">
-      <ng-container *ngFor="let x of selected_model?.custom_list; let i=index;">
-        <div class="col-lg-4 col-md-6 d-flex mb-3" *ngFor="let y of x.value; let j=index;">
-          <div class="card d-flex align-items-center w-100 p-3">
-            <div class="d-flex flex-row">
-              <div class="modal-img">
-                <img class="modal-addon-img mr-3" imgBroken *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="model">
-                <i class="material-icons add-img mr-3" *ngIf="!y.image">library_add</i>
-                <!-- <img imgBroken *ngIf="!y.image" class="addon-icon opacity6" src="assets/images/addon.svg" alt="model"> -->
-              </div>
-              <div class="d-flex flex-column justify-content-center">
-                <h6>{{x.name}}</h6>
-                <p class="m-0">{{y.name}}</p>
-              </div>
+    <div *ngIf="selected_model?.custom_list?.length" class="row">
+      <div class="col-md-12">
+        <b class="add-another mb-3">CUSTOMIZATION</b>
+      </div>
+      <ng-container *ngFor="let x of selected_model?.custom_list;">
+        <div class="col-md-6 flex" *ngFor="let y of x.value;">
+          <div class="blouse-model-col flex-dir-column">
+            <img *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="">
+            <img class="addon-icon opacity6" *ngIf="!y.image" src="assets/images/addon_big.svg" alt="addon">
+            <div class="blouse-model-col-name" align="center">
+              <h6>{{x.name}}</h6>
+              <p>{{y.name}}</p>
             </div>
           </div>
         </div>
       </ng-container>
+      <div *ngIf="selected_model?.mm_sets?.length || selected_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
     </div>
-    <!-- #custom list -->
     <!-- measurement list -->
-    <ng-container *ngIf="measurementView;">
-      <div class="row">
-        <ng-container *ngFor="let x of selected_model?.mm_sets; let i=index;">
-          <div class="col-md-6 d-flex">
-            <div class="card w-100 p-3 mb-3">
-              <div class="card card-in-card p-3" align="center">
-                <h5 class="m-0">{{x.name}}</h5>
-              </div>
-              <div>
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                  <img class="modal-measurement-img" imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="model">
-                </div>
-                <ng-container>
-                  <div class="card p-3">
-                    <div class="row measurement-table pr-1 pl-1" *ngFor="let y of x.list; let j=index;">
-                      <div class="col-6 d-flex justify-content-start align-items-center border">
-                        <p class="m-0">{{y.name}}:</p>
-                      </div>
-                      <div class="col-6 d-flex justify-content-start align-items-center border">
-                        <p class="m-0">{{y.value}} {{ selected_model?.mm_unit }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
+    <div *ngIf="selected_model?.mm_sets?.length" class="row d_measure">
+      <div class="col-md-12">
+        <b class="add-another mb-3">MEASUREMENTS</b>
+      </div>
+      <div *ngFor="let x of selected_model?.mm_sets;" [ngClass]="(selected_model?.mm_sets?.length>1)? 'col-md-6': 'col-md-12'">
+        <div class="card o-hidden mb-4 d-flex flex-row" align="center">
+          <div class="blouse-model-col w-100">
+            <div align="center">
+              <p style="padding: 10px; background-color: dimgray; color:#fff; font-size: 16px;">{{x.name}}</p>
+              <img [src]="imgBaseUrl+x.image" alt="" class="img-responsive blouse-mrs" style="height:150px;">
+            </div>
+            <div *ngFor="let y of x.list; let j=index;"
+              class="blouse-model-col-name align-self-center d-flex flex-column justify-content-between align-items-lg-center">
+              <p>{{y.name}}:
+                <span class="text-primary">{{y.value}} {{ selected_model?.mm_unit }}</span>
+              </p>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
-    </ng-container>
-    <!-- #measurement list -->
+      <div *ngIf="selected_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
+    </div>
+    <!-- notes list -->
+    <div *ngIf="selected_model?.notes_list?.length" class="row">
+      <div class="col-md-12">
+        <b class="add-another mb-3">NOTES</b>
+      </div>
+      <div *ngFor="let x of selected_model?.notes_list;" class="col-md-12">
+        <div class="card o-hidden mb-4">
+          <div class="flex-grow-1 pl-2 d-flex">
+            <div class="card-body">
+              <b class="w-30 w-sm-100 m-b-0">{{x.name}}</b>
+              <p class="w-30 w-sm-100 m-b-0">{{x.value}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="modal-footer" *ngIf="selected_model?.custom_list?.length && selected_model?.mm_sets?.length">
-    <ng-container>
-      <div class="d-flex">
-        <button class="btn btn-wide btn-primary" type="button"
-          (click)="commonService?.scrollModalTop(0); measurementView? measurementView=false: measurementView=true;">
-          {{ measurementView? 'GO BACK': 'VIEW MEASUREMENTS' }}
-        </button>
-      </div>
-    </ng-container>
+  <div class="modal-footer">
+    <button class="btn btn-wide btn-primary" type="button" (click)="modal.dismiss('Cross click');">CLOSE</button>
   </div>
 </ng-template>

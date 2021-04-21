@@ -25,10 +25,7 @@ export class FooterContentComponent implements OnInit {
     this.pageLoader = true;
     this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
       setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) {
-        this.footer_config = result.data.footer_config;
-        this.commonService.application_setting = result.data.application_setting;
-      }
+      if(result.status) this.footer_config = result.data.footer_config;
       else console.log("response", result);
     });
   }
@@ -106,7 +103,6 @@ export class FooterContentComponent implements OnInit {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.editForm = result.data.footer_config;
-        this.commonService.application_setting = result.data.application_setting;
         if(!this.editForm.other_links.length) this.editForm.other_links = [{ link_type: 'internal' }];
         this.modalService.open(modalName, {size: 'lg'});
       }
