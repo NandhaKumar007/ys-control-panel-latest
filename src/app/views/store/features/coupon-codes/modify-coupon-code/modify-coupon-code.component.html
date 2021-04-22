@@ -149,7 +149,7 @@
                 <input type="text" name="buy_value" class="form-control" [(ngModel)]="offerForm.buy_properties.value" appNumberOnly required />
               </div>
               <div class="col-md-8 form-group pl-0 mb-3">
-                <label>Any items from {{ offerForm.buy_properties.apply_to }}</label>
+                <label>Any items from</label>
                 <select name="buy_apply_to" class="form-control select-arrow" (change)="offerForm.buy_properties.category_list=[]; offerForm.buy_properties.product_list=[];" [(ngModel)]="offerForm.buy_properties.apply_to" required>
                   <option value="category">Specific Catalog</option>
                   <option value="product">Specific Products</option>

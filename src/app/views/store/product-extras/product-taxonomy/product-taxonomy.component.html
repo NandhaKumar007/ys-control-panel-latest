@@ -36,13 +36,16 @@
         <div class="flex-grow-1 pl-2 d-flex">
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-4 d-flex align-items-center">
+              <div class="col-lg-3 d-flex align-items-center">
                 <p class="w-15 w-sm-50 mb-0">{{x.name}}</p>
+              </div>
+              <div class="col-lg-3 d-flex align-items-center">
+                <p class="w-15 w-sm-50 mb-0">{{x._id}}</p>
               </div>
               <div class="col-lg-3 d-flex align-items-center">
                 <p class="w-15 w-sm-50 mb-0">{{x.category_id}}</p>
               </div>
-              <div class="col-lg-5 d-flex align-items-center justify-content-end">
+              <div class="col-lg-3 d-flex align-items-center justify-content-end">
                 <p class="m-0 text-muted text-small w-15 w-md-100 d-lg-block item-actions">
                   <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, taxonomyModal);">
                    <span class="black-outline-txt">Edit</span>

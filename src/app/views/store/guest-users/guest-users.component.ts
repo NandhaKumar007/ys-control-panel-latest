@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { CustomerApiService } from '../../../services/customer-api.service';
 import { ApiService } from '../../../services/api.service';
@@ -18,12 +19,15 @@ export class GuestUsersComponent implements OnInit {
   search_bar: string;
   page = 1; pageSize = 10;
   pageLoader: boolean; exportLoader: boolean;
-  list: any = []; selected_customer: any;
+  list: any = []; selected_customer: any; addressForm: any;
+  country_details: any; address_fields: any = [];
 
   constructor(
-    private router: Router, private excelService: ExcelService,
+    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private excelService: ExcelService,
     private customerApi: CustomerApiService, private api: ApiService, public commonService: CommonService
-  ) { }
+  ) {
+    config.backdrop = 'static'; config.keyboard = false;
+  }
 
   ngOnInit() {
     this.pageLoader = true;
@@ -42,6 +46,33 @@ export class GuestUsersComponent implements OnInit {
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
+  }
+
+  onViewCustomer(x, modalName) {
+    this.selected_customer = x;
+    if(x.address_list.length) {
+      this.addressForm = {};
+      let addrData = x.address_list[0];
+      this.onEditCountryChange(addrData.country);
+      for(let key in addrData) {
+        if(addrData.hasOwnProperty(key)) this.addressForm[key] = addrData[key];
+      }
+      this.address_fields.forEach(element => {
+        element.value = this.addressForm[element.keyword];
+      });
+    }
+    this.modalService.open(modalName, {size: 'lg'});
+  }
+
+  onEditCountryChange(x) {
+    this.address_fields = [];
+    delete this.country_details;
+    let index = this.commonService.country_list.findIndex(object => object.name==x);
+    if(index!=-1) {
+      this.country_details = this.commonService.country_list[index];
+      this.addressForm.dial_code = this.country_details.dial_code;
+      this.address_fields = this.country_details.address_fields;
+    }
   }
 
   goOrdersPage(customer, type) {
