@@ -69,6 +69,7 @@ export class ProductOrderDetailsComponent implements OnInit {
           if(this.order_details.existing_status=='confirmed') this.order_details.order_status='dispatched';
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
           // address
+          if(this.order_details.order_type=='pickup') this.order_details.billing_address = this.order_details.shipping_address;
           if(this.order_details.shipping_address) {
             this.onGetAddrDetails(this.order_details.shipping_address);
           }
@@ -291,10 +292,12 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(type=='address') {
           this.addressForm = result.data.shipping_address;
           if(this.addressType=='billing') this.addressForm = result.data.billing_address;
-          this.onCountryChange(this.addressForm.country);
-          this.address_fields.forEach(element => {
-            element.value = this.addressForm[element.keyword];
-          });
+          if(this.addressType!='pickup') {
+            this.onCountryChange(this.addressForm.country);
+            this.address_fields.forEach(element => {
+              element.value = this.addressForm[element.keyword];
+            });
+          }
           this.modalService.open(modalName, { size: 'lg'});
         }
         else {
@@ -366,9 +369,11 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.onUpdate(sendData);
   }
   onUpdateAddress() {
-    this.address_fields.forEach(element => {
-      if(element.value) this.addressForm[element.keyword] = element.value;
-    });
+    if(this.addressType!='pickup') {
+      this.address_fields.forEach(element => {
+        if(element.value) this.addressForm[element.keyword] = element.value;
+      });
+    }
     let formData: any = {_id: this.order_details._id, shipping_address: this.addressForm };
     if(this.addressType=='billing') formData = {_id: this.order_details._id, billing_address: this.addressForm };
     // this.onUpdate(formData);

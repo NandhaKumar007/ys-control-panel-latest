@@ -68,6 +68,7 @@ export class ProductComponent implements OnInit {
 
   importProduct() {
     this.processBeforeImport(jsonProducts).then((prodList) => {
+      // console.log("-------", prodList);
       // this.storeApi.PRODUCT_BULK_UPLOAD({ product_list: prodList }).subscribe(result => {
       //   console.log("-------result", result);
       // });
@@ -192,6 +193,8 @@ export class ProductComponent implements OnInit {
       sendData['SKU'] = productList[i].sku;
       sendData['Price'] = productList[i].discounted_price;
       sendData['Stock'] = productList[i].stock;
+      sendData['URL'] = this.commonService.store_details.base_url+'/product/'+productList[i].seo_details.page_url;
+      sendData['Description'] = productList[i].description;
       sendData['Category'] = await this.processArrayList('category', overallCategoryList, productList[i].category_id);
       sendData['Image'] = await this.processArrayList('image', overallCategoryList, productList[i].image_list);
       updatedList.push(sendData);

@@ -104,6 +104,28 @@ export class SettingComponent implements OnInit {
     }
   }
 
+  // invoice configuration
+  onOpenInvoiceModal(modalName) {
+    this.api.STORE_DETAILS().subscribe((result) => {
+      if(result.status) {
+        this.app_setting = { invoice_status: result.data.invoice_status, invoice_config: result.data.invoice_config };
+        this.modalService.open(modalName, {size: 'lg'});
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdateInvoiceConfig() {
+    this.api.STORE_UPDATE(this.app_setting).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+      }
+      else {
+        this.app_setting.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
   // setting
   onOpenSettingModal(modalName) {
     this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {

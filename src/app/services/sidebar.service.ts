@@ -66,7 +66,7 @@ export class SidebarService {
     // whats new
 		let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
-    if(ysFeatures.indexOf('pincode_service') != -1) routePermissionList.push("pincodes");
+    if(ysFeatures.indexOf('store_pickup') != -1) routePermissionList.push("store_pickup");
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
       routePermissionList.push("dashboard", "customers", "profile");
@@ -310,6 +310,10 @@ export class SidebarService {
       else {
         settingList.push({ icon: 'local_shipping', name: 'Shipping Methods', state: '/shipping/shipping-methods', type: 'link' });
         routePermissionList.push("shipping_methods");
+      }
+      if(ysFeatures.indexOf('pincode_service') != -1) {
+        settingList.push({ icon: 'fmd_good', name: 'Pincode Service', state: '/shipping/pincodes', type: 'link' });
+        routePermissionList.push("pincodes");
       }
       routePermissionList.push("payment_gateway", "store_setting");
       settingList.push(

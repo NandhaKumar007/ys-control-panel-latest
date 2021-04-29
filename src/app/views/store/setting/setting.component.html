@@ -57,7 +57,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 d-flex">
-      <div (click)="onOpenSettingModal(invoiceModal);" class="card setting-card w-100 p-3 mb-4 cursor">
+      <div (click)="onOpenInvoiceModal(invoiceModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title">Invoice Setting</label>
         </div>
@@ -146,6 +146,10 @@
           <div class="col-md-6 form-group mb-3">
             <label>CC Mail</label>
             <input type="email" name="cc_mail" class="form-control" [(ngModel)]="settingForm.cc_mail" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Contact No</label>
+            <input type="text" name="contact_no" class="form-control" [(ngModel)]="settingForm.contact_no" />
           </div>
           <div class="col-md-12 border-top"></div>
           <div class="mb-3 mt-3 col-md-12">
@@ -425,7 +429,7 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Invoice Setting</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdateInvoice();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdateInvoiceConfig();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">

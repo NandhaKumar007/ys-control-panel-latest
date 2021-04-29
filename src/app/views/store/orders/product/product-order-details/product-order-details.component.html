@@ -375,7 +375,7 @@
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">
+                    <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
                       <span
                         *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}</span>
                       <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
@@ -410,9 +410,9 @@
               </div>
             </div>
           </div>
-          <!-- shipping & billing address -->
+          <!-- shipping & billing & pickup address -->
           <div class="order-section">
-            <div class="row">
+            <div *ngIf="order_details.order_type=='delivery'" class="row">
               <!-- shipping address -->
               <div class="col-md-6 d-flex">
                 <div class="summary-section mtb-10">
@@ -572,6 +572,105 @@
                 </div>
               </div>
             </div>
+            <div *ngIf="order_details.order_type=='pickup'" class="row">
+              <!-- pickup address -->
+              <div class="col-md-6 d-flex">
+                <div class="summary-section mtb-10">
+                  <div class="order-summary-header pb-2">
+                    <p class="sec-desc" style="display: inline-block;">Pickup Address</p>
+                    <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
+                      (click)="addressType='pickup'; onEdit('address', addressModal);"
+                      class="material-icons edit-icon">edit</i>
+                  </div>
+                  <div class="card order-summary-details h-100">
+                    <div class="row mtb-20">
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Name</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.name}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Contact No</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.mobile}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Country</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.country}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>State</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.state}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>City</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.city}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Pincode</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.pincode}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Address</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right" align="end">{{order_details.shipping_address?.address}}</p>
+                        </div>
+                      </div>
+                      <ng-container *ngIf="order_details?.shipping_address?.location_url">
+                        <div class="col-6">
+                          <div class="box-card card-head">
+                            <p>Location URL</p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="box-card">
+                            <p class="pull-right text-right">{{order_details.shipping_address.location_url}}</p>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </ng-container>
       </div>
@@ -608,17 +707,19 @@
                   </div>
                 </div>
               </ng-container>
-              <div class="col-6">
-                <div class="box-card card-head">
-                  <p>Shipping</p>
+              <ng-container *ngIf="order_details.order_type=='delivery'">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Shipping</p>
+                  </div>
                 </div>
-              </div>
-              <div class="col-6">
-                <div class="box-card">
-                  <p class="pull-right text-right">
-                    {{order_details.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      {{order_details.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
                 </div>
-              </div>
+              </ng-container>
               <ng-container *ngIf="order_details?.cod_charges > 0">
                 <div class="col-6">
                   <div class="box-card card-head">
@@ -1009,7 +1110,7 @@
             <input type="text" name="delivery_time" class="form-control"
               [(ngModel)]="editForm.shipping_method.delivery_time" #delivery_time="ngModel" required />
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div *ngIf="order_details.order_type=='delivery'" class="col-md-12 form-group mb-3">
             <label>Shipping Cost</label>
             <input type="text" name="shipping_price" class="form-control"
               [(ngModel)]="editForm.shipping_method.shipping_price" #shipping_price="ngModel" required />
@@ -1097,17 +1198,16 @@
 <!-- update address -->
 <ng-template #addressModal let-modal>
   <div class="modal-header">
-    <h4 *ngIf="addressType=='shipping'" class="modal-title" id="modal-basic-title">Update Shipping Address</h4>
-    <h4 *ngIf="addressType=='billing'" class="modal-title" id="modal-basic-title">Update Billing Address</h4>
+    <h4 class="modal-title" id="modal-basic-title">Update {{addressType | titlecase}} Address</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdateAddress();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
-        <div class="row">
+        <!-- shipping & billing -->
+        <div *ngIf="addressType!='pickup'" class="row">
           <div class="col-md-6 form-group mb-3">
             <label>Name</label>
-            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control"
-              required />
+            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control" required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
@@ -1166,6 +1266,41 @@
             <label>Landmark</label>
             <input type="text" name="landmark" [(ngModel)]="addressForm.landmark" #landmark="ngModel"
               class="form-control" />
+          </div>
+        </div>
+        <!-- pickup -->
+        <div *ngIf="addressType=='pickup'" class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Contact No</label>
+            <input type="text" name="mobile" [(ngModel)]="addressForm.mobile" #mobile="ngModel" class="form-control" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Country</label>
+            <input type="text" name="country" [(ngModel)]="addressForm.country" #country="ngModel" class="form-control" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>State</label>
+            <input type="text" name="state" [(ngModel)]="addressForm.state" #state="ngModel" class="form-control" />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>City</label>
+            <input type="text" name="city" [(ngModel)]="addressForm.city" #city="ngModel" class="form-control" />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Pincode</label>
+            <input type="text" name="pincode" [(ngModel)]="addressForm.pincode" #pincode="ngModel" class="form-control" />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Complete Address</label>
+            <textarea class="form-control" rows="3" aria-label="With textarea" name="address" [(ngModel)]="addressForm.address" #address="ngModel" required></textarea>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Location URL</label>
+            <input type="text" name="location_url" [(ngModel)]="addressForm.location_url" #location_url="ngModel" class="form-control" />
           </div>
         </div>
       </div>
@@ -1600,7 +1735,7 @@
         <!-- address section -->
         <div class="col-12">
           <div class="row">
-            <div class="col-md-6 flex m-info-head flex-col">
+            <div *ngIf="invoice_details.order_type=='delivery'" class="col-md-6 flex m-info-head flex-col">
               <div class="w-100 flex gray-bg">
                 <h4>Billing Information</h4>
               </div>
@@ -1616,7 +1751,7 @@
             </div>
             <div class="col-md-6 flex m-info-head flex-col">
               <div class="w-100 flex gray-bg">
-                <h4>Shipping Information</h4>
+                <h4>{{ (invoice_details.order_type=='delivery')? 'Shipping': 'Pickup' }} Information</h4>
               </div>
               <div class="p-10">
                 <p>{{invoice_details.shipping_address?.name}}</p>
@@ -1759,7 +1894,7 @@
                 <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.gift_wrapper)"></p>
               </td>
             </tr>
-            <tr class="invoice-total">
+            <tr *ngIf="invoice_details.order_type=='delivery'" class="invoice-total">
               <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Shipping and Handling</p>
               </td>

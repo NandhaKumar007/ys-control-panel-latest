@@ -32,7 +32,7 @@ export class CreateProductOrderComponent implements OnInit {
   payment_type: string; payment_status: string;
 
   existing_model_list: any = []; selected_model: any = {};
-  addonForm: any = {}; customized_model: any; measurementView: boolean;
+  addonForm: any = {}; customized_model: any;
   custom_list: any = []; customIndex: number; selected_unit: any = {};
   measurement_sets: any = []; mmIndex: number; mm_section: boolean;
   notes_list: any = [];
@@ -999,8 +999,6 @@ export class CreateProductOrderComponent implements OnInit {
   }
 
   onViewModel(x, modalName) {
-    this.measurementView = false;
-    if(!x.custom_list.length) this.measurementView = true;
     this.selected_model = x;
     this.modalService.open(modalName, { windowClass:'xlModal' });
     this.commonService.scrollModalTop(500);

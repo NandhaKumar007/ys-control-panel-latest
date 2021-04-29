@@ -9,8 +9,8 @@
         <h1>Delivery Methods</h1>
         <ul><li>Manage your delivery times</li></ul>
       </div>
-      <div *ngIf="!params?.type && commonService.ys_features.indexOf('pincode_service')!=-1" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" class="btn btn-primary" routerLink="/shipping/pincodes">Pincodes</button>
+      <div *ngIf="!params?.type && commonService.ys_features.indexOf('store_pickup')!=-1" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" routerLink="/shipping/pickup-locations">Pickup Location</button>
       </div>
     </div>
   </div>
