@@ -168,6 +168,7 @@ export class SettingComponent implements OnInit {
     if(this.commonService.ys_features.indexOf('appointment_scheduler')!=-1) sendData.application_setting.appointment = this.app_setting.appointment;
     if(this.commonService.ys_features.indexOf('addons')!=-1) sendData.application_setting.product_addon = this.app_setting.product_addon;
     if(this.commonService.ys_features.indexOf('currency_variation')!=-1) sendData.application_setting.hide_currency = this.app_setting.hide_currency;
+    if(this.commonService.ys_features.indexOf('store_pickup')!=-1) sendData.application_setting.disable_delivery = this.app_setting.disable_delivery;
 
     this.api.UPDATE_STORE_PROPERTY_DETAILS(sendData).subscribe(result => {
       if(result.status) document.getElementById('closeModal').click();

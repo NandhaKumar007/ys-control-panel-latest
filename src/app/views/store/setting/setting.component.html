@@ -255,6 +255,13 @@
               <span class="checkmark"></span>
             </label>
           </div>
+          <div *ngIf="commonService.ys_features.indexOf('store_pickup')!=-1" class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="disable_delivery" [(ngModel)]="app_setting.disable_delivery" #disable_delivery="ngModel">
+              <span>Disable Order Delivery</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
           <div class="col-md-12 mb-3 border-top"></div>
           <div class="col-md-12">
             <div class="row">
@@ -379,7 +386,14 @@
             <div class="form-group mb-3 col-md-4">
               <label class="checkbox checkbox-primary">
                 <input class="form-check-input" type="checkbox" name="disable_cod_custom_items" [(ngModel)]="checkout_setting.disable_cod_custom_items" #disable_cod_custom_items="ngModel">
-                <span>Disable COD for custom products</span>
+                <span>Disable COD for Custom Products</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+            <div *ngIf="commonService.ys_features.indexOf('store_pickup')!=-1" class="form-group mb-3 col-md-4">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="cod_store_pickup" [(ngModel)]="checkout_setting.cod_store_pickup" #cod_store_pickup="ngModel">
+                <span>Enable COD for Store Pickup</span>
                 <span class="checkmark"></span>
               </label>
             </div>
