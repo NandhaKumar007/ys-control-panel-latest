@@ -65,6 +65,25 @@ export class PickupLocationsComponent implements OnInit {
     }
   }
 
+  onUpdateStatus() {
+    let formData: any = {};
+    for(let key in this.locForm) {
+      if(this.locForm.hasOwnProperty(key)) formData[key] = this.locForm[key];
+    }
+    formData.status = this.locForm.new_status;
+    this.api.UPDATE_PICKUP_LOC(formData).subscribe(result => {
+			if(result.status) {
+        document.getElementById('closeModal').click();
+        this.list = result.list;
+        this.maxRank = this.list.length;
+      }
+			else {
+				this.locForm.errorMsg = result.message;
+				console.log("response", result);
+      }
+		});
+  }
+
   // Edit
   onEdit(x, modal) {
     this.locForm = { form_type: 'edit' };

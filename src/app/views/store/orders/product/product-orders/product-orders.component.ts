@@ -100,13 +100,14 @@ export class ProductOrdersComponent implements OnInit {
               if(obj.customerDetails.length) {
                 obj.customer_name = obj.customerDetails[0].name;
                 obj.customer_email = obj.customerDetails[0].email;
-                obj.customer_mobile = 'NA';
-                if(obj.customerDetails[0].mobile) { obj.customer_mobile = obj.customerDetails[0].mobile; }
+                obj.customer_mobile = obj.shipping_address.mobile;
+                if(obj.customerDetails[0].mobile) obj.customer_mobile = obj.customerDetails[0].mobile;
+                else if(obj.order_type=='pickup') obj.customer_mobile = 'NA';
               }
               else {
                 obj.customer_name = obj.shipping_address.name;
                 obj.customer_email = obj.guest_email;
-                obj.customer_mobile = 'NA';
+                obj.customer_mobile = obj.shipping_address.mobile;
               }
               // delivery time
               if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
@@ -160,6 +161,7 @@ export class ProductOrdersComponent implements OnInit {
       sendData['Customer Email'] = order.customer_email;
       sendData['Customer Mobile'] = order.customer_mobile;
       sendData['Address'] = order.shipping_address.address;
+      sendData['City'] = order.shipping_address.city;
       sendData['State'] = order.shipping_address.state;
       sendData['Pincode'] = order.shipping_address.pincode;
       if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1) {

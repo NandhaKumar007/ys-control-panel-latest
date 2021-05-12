@@ -36,12 +36,16 @@
             <p class="w-30 w-md-100 m-b-0">{{x.mobile}}</p>
             <p class="m-0 text-muted text-small w-15 w-md-100 d-lg-block item-actions">
               <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, locationModal);">
-               <span class="black-outline-txt">
-                Edit
-               </span>
+                <span class="black-outline-txt">Edit</span>
+              </button>
+              <button *ngIf="x.status=='active'" class="btn btn-wide orng-outline-btn w-md-100 mr-3" (click)="x.new_status='inactive'; locForm=x; modalService.open(statusModal, { centered: true });">
+                <span class="orng-outline-txt">Disable</span>
+              </button>
+              <button *ngIf="x.status!='active'" class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="x.new_status='active'; locForm=x; modalService.open(statusModal, { centered: true });">
+                <span class="blue-outline-txt">Enable</span>
               </button>
               <button class="btn btn-wide orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
-               <span class="orng-outline-txt">Remove</span>
+                <span class="orng-outline-txt">Remove</span>
               </button>
             </p>
           </div>
@@ -127,6 +131,20 @@
       <button type="submit" class="btn btn-wide btn-primary">{{ locForm.form_type=='add'? 'Add': 'Update' }}</button>
     </div>
   </form>
+</ng-template>
+
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to {{ (locForm.status=='active')? 'Disable': 'Enable' }} the <span class="txt-grdint-highlight">"{{locForm.name}}"</span> location?</strong></p>
+    <div *ngIf="locForm.errorMsg"><p class="text-danger">{{ locForm.errorMsg }}</p></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span> 
+    </button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-wide btn-primary">Yes</button>
+  </div>
 </ng-template>
   
 <!-- DELETE MODAL -->

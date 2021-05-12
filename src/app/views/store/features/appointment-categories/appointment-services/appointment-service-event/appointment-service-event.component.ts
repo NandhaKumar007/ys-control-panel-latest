@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker';
-import { StoreApiService } from '../../../../../services/store-api.service';
-import { CommonService } from '../../../../../services/common.service';
-import { FeaturesApiService } from '../../features-api.service';
-import { environment } from '../../../../../../environments/environment';
+import { StoreApiService } from '../../../../../../services/store-api.service';
+import { CommonService } from '../../../../../../services/common.service';
+import { FeaturesApiService } from '../../../features-api.service';
+import { environment } from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'app-appointment-service-event',
@@ -53,7 +53,7 @@ export class AppointmentServiceEventComponent implements OnInit {
     if(this.params.id) {
       this.api.UPDATE_APPOINTMENT_SERVICES(this.serviceForm).subscribe(result => {
         this.btnLoader = false;
-        if(result.status) this.router.navigate(['/features/appointment-services']);
+        if(result.status) this.router.navigate(['/features/appointment-categories/'+this.params.category_id]);
         else {
           this.serviceForm.errorMsg = result.message;
           console.log("response", result);
@@ -63,7 +63,7 @@ export class AppointmentServiceEventComponent implements OnInit {
     else {
       this.api.ADD_APPOINTMENT_SERVICES(this.serviceForm).subscribe(result => {
         this.btnLoader = false;
-        if(result.status) this.router.navigate(['/features/appointment-services']);
+        if(result.status) this.router.navigate(['/features/appointment-categories/'+this.params.category_id]);
         else {
           this.serviceForm.errorMsg = result.message;
           console.log("response", result);

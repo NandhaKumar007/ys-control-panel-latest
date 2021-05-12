@@ -4,8 +4,8 @@ import { AppointmentServicesComponent } from './appointment-services.component';
 
 const routes: Routes = [
   { path: "", component: AppointmentServicesComponent },
-  { path: 'add/:category_id/:rank', loadChildren: () => import('./appointment-service-event/appointment-service-event.module').then(m => m.AppointmentServiceEventModule) },
-  { path: 'modify/:category_id/:id/:rank', loadChildren: () => import('./appointment-service-event/appointment-service-event.module').then(m => m.AppointmentServiceEventModule) }
+  { path: 'add/:rank', loadChildren: () => import('./appointment-service-event/appointment-service-event.module').then(m => m.AppointmentServiceEventModule) },
+  { path: 'modify/:id/:rank', loadChildren: () => import('./appointment-service-event/appointment-service-event.module').then(m => m.AppointmentServiceEventModule) }
 ];
 
 @NgModule({

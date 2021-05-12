@@ -289,7 +289,7 @@ export class SidebarService {
         routePermissionList.push("dinamic_offers", "dinamic_offer_orders");
       }
       if(ysFeatures.indexOf('appointment_scheduler') != -1) {
-        moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-services', type: 'link' });
+        moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-categories', type: 'link' });
         routePermissionList.push("appointment_services");
       }
       if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });

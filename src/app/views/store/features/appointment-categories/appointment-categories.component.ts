@@ -7,13 +7,13 @@ import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
-  selector: 'app-appointment-services',
-  templateUrl: './appointment-services.component.html',
-  styleUrls: ['./appointment-services.component.scss'],
+  selector: 'app-appointment-categories',
+  templateUrl: './appointment-categories.component.html',
+  styleUrls: ['./appointment-categories.component.scss'],
   animations: [SharedAnimations]
 })
 
-export class AppointmentServicesComponent implements OnInit {
+export class AppointmentCategoriesComponent implements OnInit {
 
   page = 1; pageSize = 5;
 	list: any = [];
@@ -27,7 +27,7 @@ export class AppointmentServicesComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true;
-    this.api.APPOINTMENT_SERVICES_LIST().subscribe(result => {
+    this.api.APPOINTMENT_CATEGORY_LIST().subscribe(result => {
 			if(result.status) this.list = result.list;
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
@@ -36,40 +36,29 @@ export class AppointmentServicesComponent implements OnInit {
 
   // DELETE
   onDelete() {
-    if(this.deleteForm.category_id) {
-      this.api.DELETE_APPOINTMENT_SERVICES(this.deleteForm).subscribe(result => {
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.ngOnInit();
-        }
-        else {
-          this.deleteForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-    else {
-      this.api.DELETE_APPOINTMENT_CATEGORY(this.deleteForm).subscribe(result => {
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.ngOnInit();
-        }
-        else {
-          this.deleteForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
+    this.api.DELETE_APPOINTMENT_CATEGORY(this.deleteForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.deleteForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   onEdit(x, modalName) {
     this.catForm = { form_type: 'edit' };
-    this.catForm._id = x._id;
-    this.catForm.name = x.name;
-    this.catForm.page_url = x.page_url;
+    for(let key in x) {
+      if(x.hasOwnProperty(key)) this.catForm[key] = x[key];
+    }
+    if(this.catForm.image) this.catForm.exist_image = this.catForm.image;
+    this.catForm.prev_rank = this.catForm.rank;
     this.modalService.open(modalName);
   }
   onSubmit() {
+    this.catForm.submit = true;
     if(this.catForm.form_type=='add') {
       this.api.ADD_APPOINTMENT_CATEGORY(this.catForm).subscribe(result => {
         if(result.status) {
@@ -77,6 +66,7 @@ export class AppointmentServicesComponent implements OnInit {
           this.ngOnInit();
         }
         else {
+          this.catForm.submit = false;
           this.catForm.errorMsg = result.message;
           console.log("response", result);
         }
@@ -89,10 +79,22 @@ export class AppointmentServicesComponent implements OnInit {
           this.ngOnInit();
         }
         else {
+          this.catForm.submit = false;
           this.catForm.errorMsg = result.message;
           console.log("response", result);
         }
       });
+    }
+  }
+
+  fileChangeListener(event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.catForm.image = (<FileReader>event.target).result;
+        this.catForm.img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
     }
   }
 
