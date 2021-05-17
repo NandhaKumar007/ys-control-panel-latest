@@ -15,7 +15,6 @@ export class FooterContentComponent implements OnInit {
   footer_config: any = {};
   editForm: any;
   paymentTypes: any = ["amex", "maestro", "mastercard", "paypal", "paytm", "upi", "visa"];
-  socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp"];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;

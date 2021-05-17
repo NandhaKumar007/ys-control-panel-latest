@@ -41,6 +41,7 @@ export class AppointmentServicesComponent implements OnInit {
 
   // DELETE
   onDelete() {
+    this.deleteForm.category_id = this.category_details._id;
     this.api.DELETE_APPOINTMENT_SERVICES(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

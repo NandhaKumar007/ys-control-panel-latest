@@ -31,7 +31,8 @@ export class ProductOrderDetailsComponent implements OnInit {
   courier_partners: any; hsncode_exist: boolean;
   country_details: any; address_fields: any = [];
   order_vendor_details: any; selected_vendor: any;
-  tax_config: any = { tax: 0 };
+  tax_config: any = { tax: 0 }; itemList: any = [];
+  groupForm: any; remaining_items: any = [];
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
@@ -43,15 +44,24 @@ export class ProductOrderDetailsComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
-      this.courier_partners = this.commonService.courier_partners;
+      this.courier_partners = this.commonService.courier_partners; this.remaining_items = [];
       this.courier_partners.push({name: "Others"});
       this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
       // order details
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
           this.order_details = result.data;
+          this.itemList = this.order_details.item_list;
           this.order_details.vendors_confirmed = true;
-          if(this.order_details.vendor_list) {
+          this.order_details.existing_status = this.order_details.order_status;
+          if(this.order_details.existing_status=='placed') this.order_details.order_status='confirmed';
+          if(this.order_details.existing_status=='confirmed') {
+            if(this.order_details.item_groups.length) this.order_details.order_status='delivered';
+            else this.order_details.order_status='dispatched';
+          }
+          if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
+          // vendor orders
+          if(this.order_details.vendor_list && this.order_details.vendor_list.length) {
             this.order_details.vendor_list.forEach(element => {
               if(element.status!='confirmed') this.order_details.vendors_confirmed = false;
               element.vendor_name = "NA";
@@ -64,10 +74,24 @@ export class ProductOrderDetailsComponent implements OnInit {
               if(vendorIndex!=-1) this.order_vendor_details = this.order_details.vendor_list[vendorIndex];
             }
           }
-          this.order_details.existing_status = this.order_details.order_status;
-          if(this.order_details.existing_status=='placed') this.order_details.order_status='confirmed';
-          if(this.order_details.existing_status=='confirmed') this.order_details.order_status='dispatched';
-          if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
+          else if(this.order_details.order_type=='delivery' && this.commonService.ys_features.indexOf('partial_fulfillment')!=-1) {
+            let itemIndexList = [];
+            this.order_details.item_groups.forEach(obj => {
+              itemIndexList = itemIndexList.concat(obj.items);
+              obj.item_list = [];
+              obj.items.forEach(index => {
+                obj.item_list.push(this.order_details.item_list[index]);
+              });
+            });
+            // find items not in group
+            this.order_details.item_list.forEach((elem, index) => {
+              if(itemIndexList.indexOf(index)==-1) {
+                elem.prod_index = index;
+                this.remaining_items.push(elem);
+              }
+            });
+            this.itemList = this.remaining_items;
+          }
           // address
           if(this.order_details.order_type=='pickup') this.order_details.billing_address = this.order_details.shipping_address;
           if(this.order_details.shipping_address) {
@@ -472,6 +496,67 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
       else {
         this.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  openUpdateItemGroupModal(modalName) {
+    if(!this.order_details.shipping_method.delivery_method) {
+      if(!this.groupForm.carrier_name) this.groupForm.carrier_name = this.order_details.shipping_method.name;
+      if(!this.groupForm.tracking_link) this.groupForm.tracking_link = this.order_details.shipping_method.tracking_link;
+    }
+    this.modalService.open(modalName, {size: 'lg'});
+  }
+  onCreateNewGroup() {
+    let selectedItems = [];
+    this.remaining_items.forEach(obj => {
+      if(obj.checked) selectedItems.push(obj.prod_index);
+    });
+    if(selectedItems.length) {
+      this.groupForm.submit = true;
+      this.groupForm.items = selectedItems;
+      this.groupForm.order_id = this.order_details._id;
+      this.api.CREATE_ITEM_GROUP(this.groupForm).subscribe(result => {
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.groupForm.submit = false;
+          this.groupForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+    else this.groupForm.errorMsg = "Please select any item from list";
+  }
+  onUpdateNewGroup() {
+    this.groupForm.submit = true;
+    this.groupForm.order_id = this.order_details._id;
+    this.api.UPDATE_ITEM_GROUP(this.groupForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.groupForm.submit = false;
+        this.groupForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+  onRemoveNewGroup() {
+    this.groupForm.submit = true;
+    this.groupForm.order_id = this.order_details._id;
+    this.api.DELETE_ITEM_GROUP(this.groupForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.groupForm.submit = false;
+        this.groupForm.errorMsg = result.message;
         console.log("response", result);
       }
     });

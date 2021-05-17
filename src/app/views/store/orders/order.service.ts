@@ -57,6 +57,20 @@ export class OrderService {
     return this.http.post<any>(environment.ws_url+'/store/resend_order_email', x, httpOptions);
   }
 
+  // order item group
+  CREATE_ITEM_GROUP(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/order_item_group', x, httpOptions);
+  }
+  UPDATE_ITEM_GROUP(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/order_item_group', x, httpOptions);
+  }
+  DELETE_ITEM_GROUP(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/order_item_group', x, httpOptions);
+  }
+
   // payment status
   CCAVENUE_PAYMENT_STATUS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

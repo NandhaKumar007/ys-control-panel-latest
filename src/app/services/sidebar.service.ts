@@ -206,10 +206,6 @@ export class SidebarService {
         routePermissionList.push("store_seo", "catalog_seo", "product_seo");
         seoList.push({ name: 'Store', state: '/seo/store', type: 'link' });
         seoList.push({ name: 'Catalog', state: '/seo/catalog', type: 'link' });
-        if(ysFeatures.indexOf('catalog_page_content') != -1) {
-          seoList.push({ name: 'Catalog Page Content', state: '/seo/catalog-page-content', type: 'link' });
-          routePermissionList.push("catalog_page_content");
-        }
         seoList.push({ name: 'Product', state: '/seo/product', type: 'link' });
         if(ysFeatures.indexOf('blogs') != -1) {
           seoList.push({ name: 'Blog', state: '/seo/blog', type: 'link' });

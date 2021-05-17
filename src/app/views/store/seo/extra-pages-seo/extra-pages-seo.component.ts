@@ -8,7 +8,8 @@ import { CommonService } from '../../../../services/common.service';
 @Component({
   selector: 'app-extra-pages-seo',
   templateUrl: './extra-pages-seo.component.html',
-  styleUrls: ['./extra-pages-seo.component.scss']
+  styleUrls: ['./extra-pages-seo.component.scss'],
+  animations: [SharedAnimations]
 })
 export class ExtraPagesSeoComponent implements OnInit {
 

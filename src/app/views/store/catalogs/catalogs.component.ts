@@ -38,6 +38,8 @@ export class CatalogsComponent implements OnInit {
 
   // ADD
 	onAdd() {
+    if(!this.addForm.social_media_status) this.addForm.social_media_links = [];
+    if(!this.addForm.content_status) this.addForm.content_details = {};
     this.storeApi.ADD_CATALOG(this.addForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -55,10 +57,18 @@ export class CatalogsComponent implements OnInit {
     this.storeApi.CATALOG_DETAILS({ _id: x._id }).subscribe(result => {
       if(result.status) {
         let catalogData = result.data;
-        this.editForm = { _id: catalogData._id, name: catalogData.name, seo_status: catalogData.seo_status };
+        this.editForm = {
+          _id: catalogData._id, name: catalogData.name, social_media_links: catalogData.social_media_links,
+          seo_status: catalogData.seo_status, content_status: catalogData.content_status
+        };
+        if(this.editForm.social_media_links.length) this.editForm.social_media_status = true;
+        // seo
         this.editForm.seo_details = {};
         if(this.editForm.seo_status) this.editForm.seo_details = catalogData.seo_details;
-        this.modalService.open(modalName);
+        // page content
+        this.editForm.content_details = {};
+        if(this.editForm.content_status && this.editForm.content_details) this.editForm.content_details = catalogData.content_details;
+        this.modalService.open(modalName, { size: 'lg'});
       }
       else console.log("response", result);
     });
@@ -67,6 +77,8 @@ export class CatalogsComponent implements OnInit {
   // UPDATE
 	onUpdate() {
     if(this.editForm.seo_status && this.editForm.update_seo) this.editForm.seo_details.modified = false;
+    if(!this.editForm.social_media_status) this.editForm.social_media_links = [];
+    if(!this.editForm.content_status) this.editForm.content_details = {};
     this.storeApi.UPDATE_CATALOG(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

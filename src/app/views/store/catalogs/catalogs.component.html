@@ -12,7 +12,7 @@
   <div class="top-filter-sec">
   <div class="row mb-4">
     <div class="col-md-6">
-      <button type="button" class="btn btn-primary" (click)="addForm = {}; modalService.open(addModal);">
+      <button type="button" class="btn btn-primary" (click)="addForm = { social_media_links: [] }; modalService.open(addModal, { size: 'lg'});">
         Add New Catalog
       </button>
     </div>
@@ -82,6 +82,54 @@
             <label>Name</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
+          <!-- page content -->
+          <div *ngIf="commonService.ys_features.indexOf('catalog_page_content')!=-1" class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="content_status" [(ngModel)]="addForm.content_status" (change)="(!addForm.content_details) ? addForm.content_details={}: ''" #content_status="ngModel">
+              <span>Enable Page Content</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="addForm.content_status && commonService.ys_features.indexOf('catalog_page_content')!=-1">
+            <div class="col-md-12 form-group mb-3">
+              <label>Title</label>
+              <input type="text" name="title" class="form-control" [(ngModel)]="addForm.content_details.title" #title="ngModel" required />
+            </div>
+            <div class="col-md-12 form-group mb-3 quill-mb-5">
+              <label>Description</label>
+              <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.content_details.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+            </div>
+          </ng-container>
+          <!-- social media links -->
+          <div *ngIf="commonService.ys_features.indexOf('catalog_social_links')!=-1" class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="social_media_status" [(ngModel)]="addForm.social_media_status" #social_media_status="ngModel">
+              <span>Enable Social Media Links</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="addForm.social_media_status && commonService.ys_features.indexOf('catalog_social_links')!=-1">
+            <div class="col-md-6 form-group mb-3" *ngFor="let x of addForm.social_media_links; let i=index;">
+              <div class="card p-2">
+                <span (click)="addForm.social_media_links.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Type</label>
+                    <select name="type{{i}}" class="form-control" [(ngModel)]="x.type" #type="ngModel" required>
+                      <option [ngValue]="x" *ngFor="let x of commonService.socialTypes;">{{x | titlecase}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Link</label>
+                    <input type="text" name="url{{i}}" class="form-control" [(ngModel)]="x.url" #url="ngModel" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <p class="add-another" (click)="addForm.social_media_links.push({});">ADD NEW</p>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div *ngIf="addForm.errorMsg"><p class="text-danger">{{ addForm.errorMsg }}</p></div>
@@ -115,6 +163,54 @@
               <span class="checkmark"></span>
             </label>
           </div>
+          <!-- page content -->
+          <div *ngIf="commonService.ys_features.indexOf('catalog_page_content')!=-1" class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="content_status" [(ngModel)]="editForm.content_status" (change)="(!editForm.content_details) ? editForm.content_details={}: ''" #content_status="ngModel">
+              <span>Enable Page Content</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="editForm.content_status && commonService.ys_features.indexOf('catalog_page_content')!=-1">
+            <div class="col-md-12 form-group mb-3">
+              <label>Title</label>
+              <input type="text" name="title" class="form-control" [(ngModel)]="editForm.content_details.title" #title="ngModel" required />
+            </div>
+            <div class="col-md-12 form-group mb-3 quill-mb-5">
+              <label>Description</label>
+              <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.content_details.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+            </div>
+          </ng-container>
+          <!-- social media links -->
+          <div *ngIf="commonService.ys_features.indexOf('catalog_social_links')!=-1" class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="social_media_status" [(ngModel)]="editForm.social_media_status" #social_media_status="ngModel">
+              <span>Enable Social Media Links</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="editForm.social_media_status && commonService.ys_features.indexOf('catalog_social_links')!=-1">
+            <div class="col-md-6 form-group mb-3" *ngFor="let x of editForm.social_media_links; let i=index;">
+              <div class="card p-2">
+                <span (click)="editForm.social_media_links.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                <div class="row">
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Type</label>
+                    <select name="type{{i}}" class="form-control" [(ngModel)]="x.type" #type="ngModel" required>
+                      <option [ngValue]="x" *ngFor="let x of commonService.socialTypes;">{{x | titlecase}}</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Link</label>
+                    <input type="text" name="url{{i}}" class="form-control" [(ngModel)]="x.url" #url="ngModel" required />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <p class="add-another" (click)="editForm.social_media_links.push({});">ADD NEW</p>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div *ngIf="editForm.errorMsg"><p class="text-danger">{{ editForm.errorMsg }}</p></div>
