@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
@@ -31,7 +32,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
-    public commonService: CommonService, private customerApi: CustomerApiService
+    public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService
   ) {
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
     this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
@@ -50,7 +51,15 @@ export class AddProductComponent implements OnInit {
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;
-      this.productForm = { rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs', allow_cod: true, video_details: {} };
+      this.productForm = {
+        rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs',
+        allow_cod: true, video_details: {}, available_days: [
+          { code: 0, day: "Sunday", active: false, opening_hrs: [] }, { code: 1, day: "Monday", active: false, opening_hrs: [] },
+          { code: 2, day: "Tuesday", active: false, opening_hrs: [] }, { code: 3, day: "Wednesday", active: false, opening_hrs: [] },
+          { code: 4, day: "Thursday", active: false, opening_hrs: [] }, { code: 5, day: "Friday", active: false, opening_hrs: [] },
+          { code: 6, day: "Saturday", active: false, opening_hrs: [] }
+        ]
+      };
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
@@ -163,6 +172,7 @@ export class AddProductComponent implements OnInit {
         }
       });
     }
+    if(!this.productForm.availability_status) this.productForm.available_days = [];
     // seo
     let productUrl = this.commonService.urlFormat(this.productForm.name+' '+this.productForm.sku);
     if(productUrl) {
@@ -352,6 +362,21 @@ export class AddProductComponent implements OnInit {
   clearIdValue(idName) {
     let el: any = document.getElementById(idName);
     el.value = "";
+  }
+
+  timePicker(i, j, variable) {
+    const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.productForm.available_days[i].opening_hrs[j][variable] = this.timeConversion(time);
+    });
+  }
+  timeConversion(timeString) {
+    var H = timeString.substr(0, 2);
+    var convertedTime = (H % 12) || 12;
+    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
+    var ampm = H < 12 ? " AM" : " PM";
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return timeString;
   }
 
 }

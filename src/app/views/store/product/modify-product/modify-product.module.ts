@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { TagInputModule } from 'ngx-chips';
 import { ImageCropperModule } from 'ngx-img-cropper';
 import { QuillModule } from 'ngx-quill';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { SharedModule } from '../../../../shared/shared.module';
 import { environment } from '../../../../../environments/environment';
 
@@ -14,6 +15,7 @@ import { ModifyProductComponent } from './modify-product.component';
     QuillModule.forRoot(environment.quill_config),
     TagInputModule,
     ImageCropperModule,
+    AmazingTimePickerModule,
     SharedModule,
     ModifyProductRoutingModule
   ]

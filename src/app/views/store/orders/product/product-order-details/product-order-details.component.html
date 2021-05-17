@@ -904,14 +904,11 @@
           <div *ngIf="params?.type!='inactive'" class="order-summary-header">
             <p class="sec-desc">Order Status</p>
           </div>
-          <form *ngIf="params?.type=='live'" autocomplete="off"
-            (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });"
-            ngNativeValidate>
+          <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });" ngNativeValidate>
             <div class="card order-summary-details mtb-10">
               <div class="row mtb-10">
-
                 <!-- tracking details -->
-                <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')==-1 && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
+                <ng-container *ngIf="params?.type=='live' && commonService.ys_features.indexOf('courier_partners')==-1 && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
                   <div class="col-md-12 form-group mb-3 summary-section">
                     <label>Tracking Number</label>
                     <input type="text" name="tracking_number" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_number" #tracking_number="ngModel" required />
@@ -921,8 +918,7 @@
                     <input type="text" name="tracking_link" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_link" #tracking_link="ngModel" required />
                   </div>
                 </ng-container>
-                <!-- #tracking details -->
-
+                <!-- existing order status -->
                 <ng-container *ngIf="order_details?.created_on">
                   <div class="col-5">
                     <div class="box-card card-head">
@@ -935,162 +931,88 @@
                     </div>
                   </div>
                 </ng-container>
-
-                <!-- placed -->
-                <ng-container *ngIf="order_details?.existing_status=='placed'">
-                  <div class="col-md-12 mb-1 summary-section">
+                <ng-container *ngIf="order_details?.confirmed_on">
+                  <div class="col-5">
+                    <div class="box-card card-head">
+                      <p>Confirmed on</p>
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <div class="box-card">
+                      <p class="pull-right text-right">{{ order_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="order_details?.dispatched_on">
+                  <div class="col-5">
+                    <div class="box-card card-head">
+                      <p>Dispatched on</p>
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <div class="box-card">
+                      <p class="pull-right text-right">{{ order_details.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="order_details?.delivered_on">
+                  <div class="col-5">
+                    <div class="box-card card-head">
+                      <p>Delivered on</p>
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <div class="box-card">
+                      <p class="pull-right text-right">{{ order_details.delivered_on | date: "dd MMM y hh:mm a"}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="order_details?.cancelled_on">
+                  <div class="col-5">
+                    <div class="box-card card-head">
+                      <p>Cancelled on</p>
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <div class="box-card">
+                      <p class="pull-right text-right">{{ order_details.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+                <!-- update order status -->
+                <ng-container *ngIf="params?.type=='live'">
+                  <div *ngIf="order_details?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
                       <input type="radio" name="order_status" value="confirmed" [(ngModel)]="order_details.order_status">
                       <span>Order Confirmed</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
-                  <div *ngIf="!order_details.item_groups?.length" class="col-md-12 mb-1 summary-section">
+                  <ng-container *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
+                    <div *ngIf="!order_details.item_groups?.length" class="col-md-12 mb-1 summary-section">
+                      <label class="radio radio-primary">
+                        <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_details.order_status">
+                        <span>Order Dispatched</span>
+                        <span class="checkmark"></span>
+                      </label>
+                    </div>
+                  </ng-container>
+                  <div class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_details.order_status">
-                      <span>Order Dispatched</span>
+                      <input type="radio" name="order_status" value="delivered" [(ngModel)]="order_details.order_status">
+                      <span>Order Delivered</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
-                </ng-container>
-                <!-- # placed -->
-
-                <!-- confirmed -->
-                <ng-container *ngIf="order_details?.existing_status=='confirmed'">
-                  <ng-container *ngIf="order_details?.confirmed_on">
-                    <div class="col-5">
-                      <div class="box-card card-head">
-                        <p>Confirmed on</p>
-                      </div>
-                    </div>
-                    <div class="col-7">
-                      <div class="box-card">
-                        <p class="pull-right text-right">{{ order_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
-                      </div>
-                    </div>
-                  </ng-container>
-                  <div *ngIf="!order_details.item_groups?.length" class="col-md-12 mb-1 summary-section">
-                    <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_details.order_status">
-                      <span>Order Dispatched</span>
-                      <span class="checkmark"></span>
-                    </label>
+                  <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
                   </div>
                 </ng-container>
-                <!-- # confirmed -->
-
-                <!-- dispatched -->
-                <ng-container *ngIf="order_details?.existing_status=='dispatched'">
-                  <ng-container *ngIf="order_details?.confirmed_on">
-                    <div class="col-5">
-                      <div class="box-card card-head">
-                        <p>Confirmed on</p>
-                      </div>
-                    </div>
-                    <div class="col-7">
-                      <div class="box-card">
-                        <p class="pull-right text-right">{{ order_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
-                      </div>
-                    </div>
-                  </ng-container>
-                  <ng-container *ngIf="order_details?.dispatched_on">
-                    <div class="col-5">
-                      <div class="box-card card-head">
-                        <p>Dispatched on</p>
-                      </div>
-                    </div>
-                    <div class="col-7">
-                      <div class="box-card">
-                        <p class="pull-right text-right">{{ order_details.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
-                      </div>
-                    </div>
-                  </ng-container>
-                </ng-container>
-                <!-- # dispatched -->
-
-                <div class="col-md-12 mb-1 summary-section">
-                  <label class="radio radio-primary">
-                    <input type="radio" name="order_status" value="delivered" [(ngModel)]="order_details.order_status">
-                    <span>Order Delivered</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-
-                <div class="col-md-12">
-                  <button type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
-                </div>
               </div>
             </div>
           </form>
         </ng-container>
         <!-- # order status -->
-
-        <!-- completed order details -->
-        <div *ngIf="params?.type=='delivered' || params?.type=='cancelled'" class="card order-summary-details mtb-10">
-          <div class="row mtb-10">
-            <ng-container *ngIf="order_details?.created_on">
-              <div class="col-5">
-                <div class="box-card card-head">
-                  <p>Placed on</p>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.created_on | date: "dd MMM y hh:mm a"}}</p>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="order_details?.confirmed_on">
-              <div class="col-5">
-                <div class="box-card card-head">
-                  <p>Confirmed on</p>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="order_details?.dispatched_on">
-              <div class="col-5">
-                <div class="box-card card-head">
-                  <p>Dispatched on</p>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="order_details?.delivered_on">
-              <div class="col-5">
-                <div class="box-card card-head">
-                  <p>Delivered on</p>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.delivered_on | date: "dd MMM y hh:mm a"}}</p>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="order_details?.cancelled_on">
-              <div class="col-5">
-                <div class="box-card card-head">
-                  <p>Cancelled on</p>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-        <!-- # completed order details -->
 
         <!-- Create new item group -->
         <ng-container *ngIf="order_details.existing_status=='placed' || order_details.existing_status=='confirmed'">

@@ -509,6 +509,49 @@
           </div>
         </div>
         <!-- #AI Style Assistant -->
+
+        <!-- Availability -->
+      <div *ngIf="commonService.ys_features.indexOf('product_availability')!=-1" [ngClass]="productForm.availability_status? 'card p-3 mb-3': ''">
+          <div class="row">
+            <div class="col-md-12 form-group mb-3">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="availability_status" [(ngModel)]="productForm.availability_status" #availability_status="ngModel">
+                <span>Apply Availability</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="row ml-3" *ngIf="productForm.availability_status">
+            <div class="form-group col-md-12 mt-2 mb-2" *ngFor="let x of productForm.available_days; let i=index;">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="active{{i}}" [(ngModel)]="x.active" (change)="(x.active && !x.opening_hrs.length)? x.opening_hrs=[{}]: x.opening_hrs=[];" #active="ngModel">
+                <strong>{{x.day}}</strong>
+                <span class="checkmark"></span>
+              </label>
+              <div *ngIf="x.active" class="row ml-4 mt-3">
+                <div *ngFor="let y of x.opening_hrs; let j=index;" class="col-md-10 card card-in-card p-3 mb-3">
+                  <ng-container *ngIf="x.opening_hrs.length>1">
+                    <span (click)="x.opening_hrs.splice(j, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                  </ng-container>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label>From</label>
+                      <input type="text" name="from{{i+1}}{{j}}" class="form-control" [(ngModel)]="y.from" (click)="timePicker(i, j, 'from');" #from="ngModel" required />
+                    </div>
+                    <div class="col-md-6">
+                      <label>To</label>
+                      <input type="text" name="to{{i+1}}{{j}}" class="form-control" [(ngModel)]="y.to" (click)="timePicker(i, j, 'to');" #to="ngModel" required />
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="x.opening_hrs.length<2" class="col-md-2 ml-1">
+                  <strong (click)="x.opening_hrs.push({});" class="add-another x-close">ADD HOURS</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- #Availability -->
       </ng-container>
 
       <div class="separator-breadcrumb border-top mt-5"></div>

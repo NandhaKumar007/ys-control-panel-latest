@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
@@ -31,7 +32,7 @@ export class ModifyProductComponent implements OnInit {
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
-    public commonService: CommonService, private customerApi: CustomerApiService
+    public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService
   ) {
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
     this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
@@ -103,6 +104,20 @@ export class ModifyProductComponent implements OnInit {
                 });
               }
               else this.noteList = tempNoteList;
+              // Availability
+              if(this.commonService.ys_features.indexOf('product_availability')!=-1) {
+                if(this.productForm.available_days.length) {
+                  this.productForm.availability_status = true;
+                }
+                else {
+                  this.productForm.available_days = [
+                    { code: 0, day: "Sunday", active: false, opening_hrs: [] }, { code: 1, day: "Monday", active: false, opening_hrs: [] },
+                    { code: 2, day: "Tuesday", active: false, opening_hrs: [] }, { code: 3, day: "Wednesday", active: false, opening_hrs: [] },
+                    { code: 4, day: "Thursday", active: false, opening_hrs: [] }, { code: 5, day: "Friday", active: false, opening_hrs: [] },
+                    { code: 6, day: "Saturday", active: false, opening_hrs: [] }
+                  ];
+                }
+              }
               // AI Styles
               if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
               this.aiStyleList.forEach(section => {
@@ -202,6 +217,7 @@ export class ModifyProductComponent implements OnInit {
         }
       });
     }
+    if(!this.productForm.availability_status) this.productForm.available_days = [];
     // seo
     let productUrl = this.commonService.urlFormat(this.productForm.name+' '+this.productForm.sku);
     if(!this.productForm.seo_details) this.productForm.seo_details = {};
@@ -501,6 +517,21 @@ export class ModifyProductComponent implements OnInit {
   clearIdValue(idName) {
     let el: any = document.getElementById(idName);
     el.value = "";
+  }
+
+  timePicker(i, j, variable) {
+    const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.productForm.available_days[i].opening_hrs[j][variable] = this.timeConversion(time);
+    });
+  }
+  timeConversion(timeString) {
+    var H = timeString.substr(0, 2);
+    var convertedTime = (H % 12) || 12;
+    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
+    var ampm = H < 12 ? " AM" : " PM";
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return timeString;
   }
 
 }
