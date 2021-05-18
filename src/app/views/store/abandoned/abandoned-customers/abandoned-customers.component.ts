@@ -71,7 +71,7 @@ export class AbandonedCustomersComponent implements OnInit {
       sendData['Name'] = prod.name;
       sendData['Email ID'] = prod.email;
       sendData['Phone Number'] = prod.mobile;
-      sendData['Date'] = this.datePipe.transform(prod.cart_updated_on, 'dd MMM y hh:mm a');;
+      sendData['Date'] = this.datePipe.transform(prod.cart_updated_on, 'dd MMM y hh:mm a');
       sendData['City'] = prod.city;
       updatedList.push(sendData);
     }

@@ -1295,7 +1295,7 @@ export class CreateProductOrderComponent implements OnInit {
     productDetails.seo_details = x.seo_details;
     productDetails.image = x.image;
     // check already exist in cart
-    let cartIndex = this.cart_list.findIndex(obj => obj.product_id==x.product_id && JSON.stringify(obj.variant_types)==JSON.stringify(x.variant_types));;
+    let cartIndex = this.cart_list.findIndex(obj => obj.product_id==x.product_id && JSON.stringify(obj.variant_types)==JSON.stringify(x.variant_types));
     // remove product, if already exist
     if(cartIndex != -1) this.cart_list.splice(cartIndex, 1);
     this.cart_list.push(productDetails);
