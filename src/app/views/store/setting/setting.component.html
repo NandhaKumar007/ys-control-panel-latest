@@ -227,13 +227,6 @@
               <span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="commonService.ys_features.indexOf('appointment_scheduler')!=-1" class="form-group mb-3 col-md-4">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="appointment" [(ngModel)]="app_setting.appointment" #appointment="ngModel">
-              <span>Appointment</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
           <div *ngIf="commonService.ys_features.indexOf('addons')!=-1" class="form-group mb-3 col-md-4">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="product_addon" [(ngModel)]="app_setting.product_addon" #product_addon="ngModel">

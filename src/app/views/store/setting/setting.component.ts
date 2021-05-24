@@ -152,25 +152,11 @@ export class SettingComponent implements OnInit {
   }
 
   onUpdateStore() {
-    let sendData: any = { application_setting: {} };
-    sendData.application_setting.gift_wrapping_charges = this.app_setting.gift_wrapping_charges;
-    sendData.application_setting.max_shipping_weight = this.app_setting.max_shipping_weight;
-    sendData.application_setting.min_checkout_value = this.app_setting.min_checkout_value;
-    sendData.application_setting.enquiry_email = this.app_setting.enquiry_email;
-    sendData.application_setting.cancel_order_email = this.app_setting.cancel_order_email;
-
-    sendData.application_setting.guest_checkout = this.app_setting.guest_checkout;
-    sendData.application_setting.ship_only_in_domestic = this.app_setting.ship_only_in_domestic;
-    sendData.application_setting.disp_stock_left = this.app_setting.disp_stock_left;
-    sendData.application_setting.min_stock = this.app_setting.min_stock;
-
-    if(this.commonService.ys_features.indexOf('customer_feedback')!=-1) sendData.application_setting.feedback = this.app_setting.feedback;
-    if(this.commonService.ys_features.indexOf('appointment_scheduler')!=-1) sendData.application_setting.appointment = this.app_setting.appointment;
-    if(this.commonService.ys_features.indexOf('addons')!=-1) sendData.application_setting.product_addon = this.app_setting.product_addon;
-    if(this.commonService.ys_features.indexOf('currency_variation')!=-1) sendData.application_setting.hide_currency = this.app_setting.hide_currency;
-    if(this.commonService.ys_features.indexOf('store_pickup')!=-1) sendData.application_setting.disable_delivery = this.app_setting.disable_delivery;
-
-    this.api.UPDATE_STORE_PROPERTY_DETAILS(sendData).subscribe(result => {
+    if(this.commonService.ys_features.indexOf('customer_feedback')==-1) this.app_setting.feedback = false;
+    if(this.commonService.ys_features.indexOf('addons')==-1) this.app_setting.product_addon = false;
+    if(this.commonService.ys_features.indexOf('currency_variation')==-1) this.app_setting.hide_currency = false;
+    if(this.commonService.ys_features.indexOf('store_pickup')==-1) this.app_setting.disable_delivery = false;
+    this.api.UPDATE_STORE_PROPERTY_DETAILS({ application_setting: this.app_setting }).subscribe(result => {
       if(result.status) document.getElementById('closeModal').click();
       else {
         this.app_setting.errorMsg = result.message;
