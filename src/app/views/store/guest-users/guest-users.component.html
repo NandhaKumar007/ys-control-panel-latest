@@ -50,7 +50,7 @@
             <div *ngIf="commonService.store_details?.login_type=='admin'" class="product-btn-group text-muted text-small w-15 w-sm-100 d-lg-block item-actions mr-3 c-m-md-0">
               <div class="btn-group w-md-100">
                 <!-- orders -->
-                <div *ngIf="commonService.store_details?.type=='order_based'" class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                <div *ngIf="commonService.store_details?.type=='order_based' || commonService.store_details?.type=='restaurant_based'" class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                   <button class="btn btn-wide btn-primary w-md-100" ngbDropdownToggle>View Orders</button>
                   <div class="dropdown-menu" ngbDropdownMenu>
                     <button class="dropdown-item" (click)="goOrdersPage(x, 'live')">Live</button>

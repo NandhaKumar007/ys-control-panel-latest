@@ -33,6 +33,8 @@ export class ProductOrderDetailsComponent implements OnInit {
   order_vendor_details: any; selected_vendor: any;
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
+  addedCourier: any = { name: 'Others' };
+  courierData: any = {};
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
@@ -45,7 +47,6 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
       this.courier_partners = this.commonService.courier_partners; this.remaining_items = [];
-      this.courier_partners.push({name: "Others"});
       this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
       // order details
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
@@ -161,6 +162,7 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   // courier partner
   setCourierPartner(x) {
+    this.courierForm.btnLoader = true;
     let cpIndex = this.courier_partners.findIndex(obj => obj.name==x.name);
     if(x.name=='Delhivery') {
       let delhiveryMetadata = this.courier_partners[cpIndex].metadata;
@@ -195,6 +197,57 @@ export class ProductOrderDetailsComponent implements OnInit {
         }
       });
     }
+    else if(x.name=='Dunzo') {
+      // create task
+      if(this.order_details.shipping_method.pickup_details && this.order_details.shipping_method.pickup_details.branch_id) {
+        let compDetails = this.commonService.store_details.company_details;
+        let shippingAddr = this.order_details.shipping_address;
+        // pickup address
+        let pickupAddr: any = { street_address_1: compDetails.address, country: this.commonService.store_details.country };
+        if(compDetails.city) pickupAddr.city = compDetails.city;
+        if(compDetails.state) pickupAddr.state = compDetails.state;
+        if(compDetails.pincode) pickupAddr.pincode = compDetails.pincode;
+        // drop address
+        let dropAddr: any = { street_address_1: shippingAddr.address, country: shippingAddr.country };
+        if(shippingAddr.landmark) dropAddr.landmark = shippingAddr.landmark;
+        if(shippingAddr.city) dropAddr.city = shippingAddr.city;
+        if(shippingAddr.state) dropAddr.state = shippingAddr.state;
+        if(shippingAddr.pincode) dropAddr.pincode = shippingAddr.pincode;
+        let formData: any = {
+          request_id: this.order_details._id+'-'+Math.floor(Math.random()*(999)),
+          pickup_details: {
+            lat: parseFloat(this.order_details.shipping_method.pickup_details.lat),
+            lng: parseFloat(this.order_details.shipping_method.pickup_details.lng),
+            address: pickupAddr
+          },
+          drop_details: {
+            lat: parseFloat(shippingAddr.lat),
+            lng: parseFloat(shippingAddr.lng),
+            address: dropAddr
+          },
+          sender_details: {
+            name: compDetails.contact_person,
+            phone_number: compDetails.mobile
+          },
+          receiver_details: {
+            name: shippingAddr.name,
+            phone_number: shippingAddr.dial_code+' '+shippingAddr.mobile
+          },
+          package_content: [this.courierForm.package_content]
+        };
+        if(this.courierForm.package_approx_value) formData.package_approx_value = this.courierForm.package_approx_value*1;
+        if(this.courierForm.special_instructions) formData.special_instructions = this.courierForm.special_instructions;
+        this.api.DUNZO_CREATE_ORDER({ _id: this.order_details._id, form_data: formData }).subscribe(result => {
+          if(result.status) this.ngOnInit();
+          else {
+            this.courierForm.btnLoader = false;
+            this.courierForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
+      }
+      else this.courierForm.errorMsg = "Branch does not exists";
+    }
     else if(x.name=='Others') {
       let sendData = {
         _id: this.order_details._id, cp_status: true, "shipping_method.name": this.courierForm.name,
@@ -210,24 +263,49 @@ export class ProductOrderDetailsComponent implements OnInit {
       });
     }
   }
-  updateCourierDetailsOnly(type, cancelStatus) {
-    if(this.order_details.existing_status=='confirmed' && this.order_details.cp_orders.length) {
-      if(type=='Delhivery') {
-        this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: cancelStatus }).subscribe(result => { });
+
+  checkDunzoStatus(taskId) {
+    this.courierData.submit = true;
+    this.api.DUNZO_ORDER_STATUS(this.order_details._id, taskId).subscribe(result => {
+      this.courierData.submit = false;
+      if(result.status) this.courierData = result.data;
+      else {
+        this.courierData.errorMsg = result.message;
+        console.log("response", result);
       }
-    }
+    });
   }
-  cancelCourierPartner(type) {
-    this.editForm.btnLoader = true;
-    if(type=='Delhivery') {
+
+  cancelCourierPartner(modalName) {
+    this.courierForm = { type: 'Others' };
+    let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
+    if(cpIndex!=-1) this.courierForm.type = this.order_details.cp_orders[cpIndex].name;
+    this.modalService.open(modalName, { centered: true });
+  }
+  confirmCancelCourierPartner() {
+    this.courierForm.btnLoader = true;
+    if(this.courierForm.type=='Delhivery') {
       this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: true }).subscribe(result => {
-        this.editForm.btnLoader = false;
+        this.courierForm.btnLoader = false;
         if(result.status) {
           document.getElementById('closeModal').click();
           this.ngOnInit();
         }
         else {
-          this.editForm.errorMsg = result.message;
+          this.courierForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+    else if(this.courierForm.type=='Dunzo') {
+      this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, form_data: { cancellation_reason: this.courierForm.cancel_reason } }).subscribe(result => {
+        this.courierForm.btnLoader = false;
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.courierForm.errorMsg = result.message;
           console.log("response", result);
         }
       });
@@ -235,13 +313,13 @@ export class ProductOrderDetailsComponent implements OnInit {
     else {
       let sendData = { _id: this.order_details._id, cp_status: false, "shipping_method.name": "", "shipping_method.tracking_number": "", "shipping_method.tracking_link": "" };
       this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
-        this.editForm.btnLoader = false;
+        this.courierForm.btnLoader = false;
         if(result.status) {
           document.getElementById('closeModal').click();
           this.ngOnInit();
         }
         else {
-          this.editForm.errorMsg = result.message;
+          this.courierForm.errorMsg = result.message;
           console.log("response", result);
         }
       });
@@ -299,9 +377,26 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.CANCEL_ORDER({ _id: this.order_details._id }).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
-        this.updateCourierDetailsOnly(this.order_details.shipping_method.name, true);
-        document.getElementById('closeModal').click();
-        this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
+        // cancel courier partner
+        let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
+        if(this.order_details.existing_status=='confirmed' && cpIndex!=1) {
+          if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
+            this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: true }).subscribe(result => {
+              document.getElementById('closeModal').click();
+              this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
+            });
+          }
+          else if(this.order_details.cp_orders[cpIndex].name=='Dunzo') {
+            this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, form_data: { cancellation_reason: 'Order cancelled' } }).subscribe(result => {
+              document.getElementById('closeModal').click();
+              this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
+            });
+          }
+        }
+        else {
+          document.getElementById('closeModal').click();
+          this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
+        }
       }
       else {
         this.errorMsg = result.message;
@@ -404,7 +499,13 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.UPDATE_ORDER_DETAILS(formData).subscribe(result => {
       if(result.status) {
         if(this.addressType=='shipping') {
-          this.updateCourierDetailsOnly(this.order_details.shipping_method.name, false);
+          // update courier details
+          let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
+          if(this.order_details.existing_status=='confirmed' && cpIndex!=1) {
+            if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
+              this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: false }).subscribe(result => { });
+            }
+          }
         }
         document.getElementById('closeModal').click();
         this.ngOnInit();

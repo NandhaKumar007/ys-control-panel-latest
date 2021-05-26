@@ -47,12 +47,6 @@ export class StoreApiService {
     return this.http.post<any>(environment.ws_url+'/store/change_pwd', x, httpOptions);
   }
 
-  // Courier Partners
-  COURIER_PARTNERS() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partners', httpOptions);
-  }
-
   // product
   PRODUCT_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -139,10 +133,14 @@ export class StoreApiService {
     return this.http.patch<any>(environment.ws_url+'/store/layout', x, httpOptions);
   }
 
-  // product features
+  // features
   PRODUCT_FEATURES() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/product_features', httpOptions);
+  }
+  STORE_FEATURES() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/store_features', httpOptions);
   }
 
   // donation

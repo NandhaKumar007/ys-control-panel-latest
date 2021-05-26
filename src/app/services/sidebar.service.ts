@@ -66,7 +66,6 @@ export class SidebarService {
     // whats new
 		let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
-    if(ysFeatures.indexOf('store_pickup') != -1) routePermissionList.push("store_pickup");
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
       routePermissionList.push("dashboard", "customers", "profile");
@@ -129,7 +128,7 @@ export class SidebarService {
         routePermissionList.push("quotations", "abandoned_quotes");
       }
       // orders
-      if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based') {
+      if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based' || this.commonService.store_details.type == 'restaurant_based') {
         // product
         let orderList: IChildItem[] = [
           { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
@@ -166,7 +165,7 @@ export class SidebarService {
           routePermissionList.push("abandoned_cart");
         }
         // customer
-        if(this.commonService.store_details.type == 'order_based') {
+        if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'restaurant_based') {
           orderList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
             { name: 'Customers', state: '/customers', type: 'link' },
             { name: 'Guest Users', state: '/guest-users', type: 'link' }
@@ -318,20 +317,17 @@ export class SidebarService {
       );
       sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
       // my account
-      routePermissionList.push("billing", "sub_users");
+      routePermissionList.push("billing", "sub_users", "branches");
       let accountList: IChildItem[] = [];
       accountList.push(
         { icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' },
+        { icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' }
         // { icon: 'receipt', name: 'Billing', state: '/account/billing', type: 'link' },
         // { icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' }
       );
       if(ysFeatures.indexOf('vendors') != -1) {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
-      }
-      if(ysFeatures.indexOf('branches') != -1) {
-        accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
-        routePermissionList.push("branches");
       }
       if(accountList.length) sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }

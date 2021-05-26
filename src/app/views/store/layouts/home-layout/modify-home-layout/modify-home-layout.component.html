@@ -108,7 +108,7 @@
           <!-- #Testimonial Content -->
 
           <!-- Content -->
-          <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+          <div *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
             <div class="card w-100 p-3 mb-3">
               <div *ngIf="layoutDetails?.type!='multiple_highlighted_section'" class="row">
                 <div class="col-md-12 form-group mb-3">
@@ -120,7 +120,7 @@
                 </div>
               </div>
               <div *ngIf="x.content_status" class="row">
-                <ng-container *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='multiple_highlighted_section'">
+                <ng-container *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='multiple_highlighted_section'">
                   <div class="col-md-12 form-group mb-3">
                     <label>Heading</label>
                     <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" #heading="ngModel" required />
@@ -129,12 +129,19 @@
                     <label>Sub-heading</label>
                     <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
                   </div>
+                  <div *ngIf="layoutDetails?.type=='secondary'" class="col-md-12 form-group mb-3">
+                    <label>Text Color</label>
+                    <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                  </div>
                   <div *ngIf="layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
                     <label>Description</label>
                     <textarea class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel"></textarea>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="layoutDetails?.type!='multiple_highlighted_section'">
+                <ng-container *ngIf="layoutDetails?.type!='secondary' && layoutDetails?.type!='multiple_highlighted_section'">
                   <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
                     <label>Title</label>
                     <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />

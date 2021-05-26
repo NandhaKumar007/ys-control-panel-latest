@@ -74,25 +74,17 @@ export class ControlPanelComponent implements OnInit {
           // payment list
           this.commonService.payment_list = result.data.payment_types;
           this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
-          // courier partner
-          this.commonService.courier_partners = [];
-          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-          if(this.commonService.ys_features.indexOf('courier_partners') != -1) {
-            this.storeApi.COURIER_PARTNERS().subscribe(result => {
-              if(result.status) {
-                this.commonService.courier_partners = result.list;
-                this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-              }
-            });
-          }
-          // vendors
-          this.commonService.vendor_list = [];
+          // store features
+          this.commonService.vendor_list = []; this.commonService.courier_partners = [];
           this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
-          if(this.commonService.store_details.login_type!='vendor' && this.commonService.ys_features.indexOf('vendors') != -1) {
-            this.accountApi.VENDOR_LIST().subscribe(result => {
+          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+          if(this.commonService.ys_features.indexOf('vendors')!=-1 || this.commonService.ys_features.indexOf('courier_partners')!=-1) {
+            this.storeApi.STORE_FEATURES().subscribe(result => {
               if(result.status) {
-                this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
+                this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
+                this.commonService.courier_partners = result.data.courier_partners;
                 this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+                this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
               }
             });
           }

@@ -653,8 +653,7 @@ export class CreateProductOrderComponent implements OnInit {
     let deliveryDate = date+" "+month+" "+year+" ("+this.selected_day.day+")";
     let deliveryTime = new Date(this.selected_slot.from).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })+" - "+new Date(this.selected_slot.to).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
     this.selected_shipping = {
-      _id: this.delivery_id, delivery_method: true, delivery_date: deliveryDate, ship_method_type: 'time-based',
-      delivery_time: deliveryTime, shipping_price: this.selected_slot.price
+      _id: this.delivery_id, delivery_method: true, delivery_date: deliveryDate, delivery_time: deliveryTime, shipping_price: this.selected_slot.price
     };
     this.shipping_cost = this.selected_slot.price;
     document.getElementById("closeModal").click();

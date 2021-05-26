@@ -3,6 +3,7 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { StoreApiService } from '../../../services/store-api.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-setting',
@@ -46,6 +47,7 @@ export class SettingComponent implements OnInit {
   codExist: boolean; app_setting: any;
   checkout_setting: any; productList: any = [];
   curr_date: any = new Date();
+  imgBaseUrl = environment.img_baseurl;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: StoreApiService, private atp: AmazingTimePickerService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -53,6 +55,45 @@ export class SettingComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.commonService.payment_list.findIndex(obj => obj.name=='COD') != -1) this.codExist = true;
+  }
+
+  // opening hrs
+  onOpenStoreOpenDaysModal(modalName) {
+    this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {
+      if(result.status) {
+        let appSetting = result.data.application_setting;
+        this.settingForm = {
+          opening_days: result.data.opening_days, sp_slot_duration: appSetting.sp_slot_duration,
+          sp_delay_type: appSetting.sp_delay_type, sp_delay_duration: appSetting.sp_delay_duration
+        };
+        if(!this.settingForm.sp_slot_duration) this.settingForm.sp_slot_duration = 60;
+        if(!this.settingForm.sp_delay_type) this.settingForm.sp_delay_type = 'day';
+        if(!this.settingForm.sp_delay_duration) this.settingForm.sp_delay_duration = 1;
+        if(!this.settingForm.opening_days.length) {
+          this.settingForm.opening_days = [
+            { code: 0, day: "Sunday", active: false, opening_hrs: [] }, { code: 1, day: "Monday", active: false, opening_hrs: [] },
+            { code: 2, day: "Tuesday", active: false, opening_hrs: [] }, { code: 3, day: "Wednesday", active: false, opening_hrs: [] },
+            { code: 4, day: "Thursday", active: false, opening_hrs: [] }, { code: 5, day: "Friday", active: false, opening_hrs: [] },
+            { code: 6, day: "Saturday", active: false, opening_hrs: [] }
+          ];
+        }
+        this.modalService.open(modalName, {size: 'lg'});
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdateOpenDays() {
+    let sendData = {
+      opening_days: this.settingForm.opening_days, "application_setting.sp_slot_duration": this.settingForm.sp_slot_duration,
+      "application_setting.sp_delay_type": this.settingForm.sp_delay_type, "application_setting.sp_delay_duration": this.settingForm.sp_delay_duration
+    };
+    this.api.UPDATE_STORE_PROPERTY_DETAILS(sendData).subscribe(result => {
+      if(result.status) document.getElementById('closeModal').click();
+      else {
+        this.settingForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // mail configuration
@@ -90,9 +131,7 @@ export class SettingComponent implements OnInit {
         this.settingForm.transporter.host = this.settingForm.mail_host;
       }
       this.api.STORE_UPDATE({ mail_config: this.settingForm }).subscribe(result => {
-        if(result.status) {
-          document.getElementById('closeModal').click();
-        }
+        if(result.status) document.getElementById('closeModal').click();
         else {
           this.settingForm.errorMsg = result.message;
           console.log("response", result);
@@ -116,9 +155,7 @@ export class SettingComponent implements OnInit {
   }
   onUpdateInvoiceConfig() {
     this.api.STORE_UPDATE(this.app_setting).subscribe(result => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-      }
+      if(result.status) document.getElementById('closeModal').click();
       else {
         this.app_setting.errorMsg = result.message;
         console.log("response", result);
@@ -212,7 +249,9 @@ export class SettingComponent implements OnInit {
   }
 
   onUpdateNewsletter() {
+    this.app_setting.submit = true;
     this.api.UPDATE_STORE_PROPERTY_DETAILS({ "application_setting.newsletter_status": this.app_setting.newsletter_status, "application_setting.newsletter_config": this.app_setting.newsletter_config }).subscribe(result => {
+      this.app_setting.submit = false;
       if(result.status) document.getElementById('closeModal').click();
       else {
         this.app_setting.errorMsg = result.message;
@@ -267,6 +306,12 @@ export class SettingComponent implements OnInit {
     });
   }
 
+  openingHrsTimePicker(i, j, variable) {
+    const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.settingForm.opening_days[i].opening_hrs[j][variable] = this.timeConversion(time);
+    });
+  }
   timePicker() {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
@@ -280,6 +325,17 @@ export class SettingComponent implements OnInit {
     var ampm = H < 12 ? " AM" : " PM";
     timeString = h + timeString.substr(2, 3) + ampm;
     return timeString;
+  }
+
+  fileChangeListener(event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.app_setting.newsletter_config.image = (<FileReader>event.target).result;
+        this.app_setting.newsletter_config.img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
 }

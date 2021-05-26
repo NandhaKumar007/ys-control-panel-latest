@@ -5,8 +5,7 @@ import { PermissionGuard } from '../../../guards/permission.guard';
 const routes: Routes = [
   { path: 'shipping-methods', loadChildren: () => import('./shipping-methods/shipping-methods.module').then(m => m.ShippingMethodsModule), canActivate: [PermissionGuard], data: { name: "shipping_methods" } },
   { path: 'delivery-methods', loadChildren: () => import('./delivery-methods/delivery-methods.module').then(m => m.DeliveryMethodsModule), canActivate: [PermissionGuard], data: { name: "delivery_methods" } },
-  { path: 'pincodes', loadChildren: () => import('./pincodes/pincodes.module').then(m => m.PincodesModule), canActivate: [PermissionGuard], data: { name: "pincodes" } },
-  { path: 'pickup-locations', loadChildren: () => import('./pickup-locations/pickup-locations.module').then(m => m.PickupLocationsModule), canActivate: [PermissionGuard], data: { name: "store_pickup" } }
+  { path: 'pincodes', loadChildren: () => import('./pincodes/pincodes.module').then(m => m.PincodesModule), canActivate: [PermissionGuard], data: { name: "pincodes" } }
 ];
 
 @NgModule({

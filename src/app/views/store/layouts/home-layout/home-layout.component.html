@@ -121,7 +121,7 @@
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
-          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible'">
+          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible' && addForm.type!='secondary'">
             <div class="form-group mb-3" [ngClass]="(addForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel" />
@@ -243,7 +243,7 @@
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
             </select>
           </div>
-          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible'">
+          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible' && editForm.type!='secondary'">
             <div class="form-group mb-3" [ngClass]="(editForm.type=='blogs')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel" />

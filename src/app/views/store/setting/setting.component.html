@@ -17,6 +17,14 @@
 
   <div class="row">
     <div class="col-md-6 col-lg-4 d-flex">
+      <div (click)="onOpenStoreOpenDaysModal(openingDaysModal);" class="card setting-card w-100 p-3 mb-4 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column mt-2">
+          <label class="text-title">Opening Hours</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 d-flex">
       <div (click)="onOpenMailModal(mailConfigModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title">Mail Configuration</label>
@@ -97,6 +105,88 @@
     </div>
   </div>
 </div>
+
+<!-- opening hours -->
+<ng-template #openingDaysModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Store Opening Hours</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateOpenDays();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <b>AVAILABLE DAYS</b>
+          </div>
+          <div class="col-md-12 mt-2 mb-2" *ngFor="let x of settingForm.opening_days; let i=index;">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="active{{i}}" [(ngModel)]="x.active" (change)="(x.active && !x.opening_hrs.length)? x.opening_hrs=[{}]: x.opening_hrs=[];" #active="ngModel">
+              <strong>{{x.day}}</strong>
+              <span class="checkmark"></span>
+            </label>
+            <div *ngIf="x.active" class="row ml-4 mt-3">
+              <div *ngFor="let y of x.opening_hrs; let j=index;" class="col-md-11 card card-in-card p-3 mb-3">
+                <ng-container *ngIf="x.opening_hrs.length>1">
+                  <span (click)="x.opening_hrs.splice(j, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                </ng-container>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>From</label>
+                    <input type="text" name="from{{i+1}}{{j}}" class="form-control" [(ngModel)]="y.from" (click)="openingHrsTimePicker(i, j, 'from');" #from="ngModel" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label>To</label>
+                    <input type="text" name="to{{i+1}}{{j}}" class="form-control" [(ngModel)]="y.to" (click)="openingHrsTimePicker(i, j, 'to');" #to="ngModel" required />
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="x.opening_hrs.length<2" class="row">
+                <div class="col-md-12">
+                  <strong (click)="x.opening_hrs.push({});" class="add-another x-close">ADD HOURS</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="commonService.ys_features.indexOf('store_pickup')!=-1">
+            <div class="col-md-12 mb-3 border-top"></div>
+            <div class="col-md-12 mb-3">
+              <b>STORE PICKUP SETUP</b>
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label class="radio radio-primary">
+                <input type="radio" name="sp_delay_type" value="hour" (change)="settingForm.sp_delay_duration=0;" [(ngModel)]="settingForm.sp_delay_type" />
+                <span>Delay by hours</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label class="radio radio-primary">
+                <input type="radio" name="sp_delay_type" value="day" (change)="settingForm.sp_delay_duration=0;" [(ngModel)]="settingForm.sp_delay_type" />
+                <span>Delay by day</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="col-md-6">
+              <label>Slot Duration</label>
+              <input type="text" name="sp_slot_duration" class="form-control" [(ngModel)]="settingForm.sp_slot_duration" #from="ngModel" required />
+            </div>
+            <div class="col-md-6">
+              <label>Delay in {{settingForm.sp_delay_type}}s</label>
+              <input type="text" name="sp_delay_duration" class="form-control" [(ngModel)]="settingForm.sp_delay_duration" #to="ngModel" required />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg"><p class="text-danger">{{ settingForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" [disabled]="settingForm.submit" [ladda]="settingForm.submit" class="btn btn-wide btn-primary ladda-button">Submit</button>
+    </div>
+  </form>
+</ng-template>
 
 <!-- mail configuration -->
 <ng-template #mailConfigModal let-modal>
@@ -531,6 +621,23 @@
             </label>
           </div>
           <ng-container *ngIf="app_setting.newsletter_status && app_setting.newsletter_config">
+            <div class="col-md-12" align="center">
+              <!-- <p>Photo Resolution: 450x300</p> -->
+              <div *ngIf="app_setting.newsletter_config.image">
+                <span (click)="app_setting.newsletter_config.img_change=null; app_setting.newsletter_config.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
+                <img *ngIf="app_setting.newsletter_config.img_change" [src]="app_setting.newsletter_config.image" height="100px;" width="auto;">
+                <img *ngIf="!app_setting.newsletter_config.img_change" [src]="imgBaseUrl+app_setting.newsletter_config.image" height="100px;" width="auto;">
+              </div>
+              <div *ngIf="!app_setting.newsletter_config.image">
+                <label>
+                  <div>
+                    <i class="material-icons add-img">add_photo_alternate</i>
+                    <p>Click to upload image</p>
+                  </div>
+                  <input type="file" name="image" style="display: none;" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+                </label>
+              </div>
+            </div>
             <div class="col-md-12 form-group mb-3">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="app_setting.newsletter_config.heading" #heading="ngModel" required />
@@ -559,7 +666,7 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
        <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="app_setting.submit" [ladda]="app_setting.submit">Update</button>
     </div>
   </form>
 </ng-template>

@@ -33,4 +33,22 @@ export class AccountService {
     return this.http.put<any>(environment.ws_url+'/store/vendor/update_pwd', x, httpOptions);
   }
 
+  // pickup locations
+  BRANCH_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/branches', httpOptions);
+  }
+  ADD_BRANCH(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/branches', x, httpOptions);
+  }
+  UPDATE_BRANCH(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/branches', x, httpOptions); 
+  }
+  DELETE_BRANCH(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/branches', x, httpOptions);
+  }
+
 }

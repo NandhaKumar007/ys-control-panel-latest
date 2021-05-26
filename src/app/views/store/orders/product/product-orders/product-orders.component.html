@@ -47,7 +47,7 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="top-filter-sec">
-    <div *ngIf="params?.type=='live' && vendorList.length" class="row mb-2">
+    <div *ngIf="params?.type=='live' && commonService.vendor_list?.length" class="row mb-2">
       <div class="col-md-6"></div>
       <div class="col-md-6">
         <div class="form-group">
@@ -66,16 +66,16 @@
           </select>
         </div>
       </div>
-      <div *ngIf="vendorList.length" class="col-md-3 col-6">
+      <div *ngIf="commonService.vendor_list?.length" class="col-md-3 col-6">
         <div class="form-group">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id" (change)="getOrderList();">
             <option value="all">All Vendors</option>
-            <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.name}}</option>
+            <option [ngValue]="x._id" *ngFor="let x of commonService.vendor_list">{{x.name}}</option>
           </select>
         </div>
       </div>
       <!-- search box -->
-      <div *ngIf="!vendorList.length || params?.type!='live'" [ngClass]="(vendorList.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
+      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live'" [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>

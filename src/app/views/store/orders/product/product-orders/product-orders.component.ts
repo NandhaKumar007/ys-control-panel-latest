@@ -20,7 +20,6 @@ export class ProductOrdersComponent implements OnInit {
   page = 1; pageSize = 10; exportLoader: boolean;
   params: any = {}; filterForm: any = {};
   list: any = []; scrollPos: number = 0;
-  vendorList: any = this.commonService.vendor_list;
 
   constructor(private api: OrderService, private activeRoute: ActivatedRoute, private excelService: ExcelService, private datePipe: DatePipe, public commonService: CommonService) { }
 
