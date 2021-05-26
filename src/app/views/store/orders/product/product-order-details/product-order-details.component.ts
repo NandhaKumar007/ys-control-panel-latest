@@ -200,7 +200,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     else if(x.name=='Dunzo') {
       // create task
       if(this.order_details.shipping_method.pickup_details && this.order_details.shipping_method.pickup_details.branch_id) {
-        let compDetails = this.commonService.store_details.company_details;
+        let compDetails: any = {};
         let shippingAddr = this.order_details.shipping_address;
         // pickup address
         let pickupAddr: any = { street_address_1: compDetails.address, country: this.commonService.store_details.country };

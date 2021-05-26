@@ -428,15 +428,26 @@
           </div>
           <!-- shipping & delivery details -->
           <div class="order-section">
-            <div class="pb-2">
-              <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
-                {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
-              </p>
-              <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
-                Pickup Details
-              </p>
-              <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-              (click)="courierData={}; onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
+            <div class="row mb-2">
+              <div class="col-8">
+                <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
+                  {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
+                </p>
+                <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
+                  Pickup Details
+                </p>
+              </div>
+              <div class="col-4 d-flex justify-content-end align-items-center">
+                <!-- courier order status -->
+                <ng-container *ngFor="let x of order_details.cp_orders;">
+                  <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
+                    <button *ngIf="!courierData?.state" type="button" (click)="checkDunzoStatus(x.order_id);" class="badge badge-warning badge-green mr-3" style="border: none;"
+                    [disabled]="courierData.submit" [ladda]="courierData.submit">Check Dunzo Order Status</button>
+                  </ng-container>
+                </ng-container>
+                <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
+                (click)="courierData={}; onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
+              </div>
             </div>
             <div class="col-md-12 list-item p-0">
               <!-- shipping details -->
@@ -469,14 +480,40 @@
               <!-- delivery details -->
               <div *ngIf="order_details.shipping_method?.delivery_method" class="card o-hidden mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
                     <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
                       <span
                         *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}</span>
                       <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- courier partner - order details -->
+          <div *ngIf="courierData?.state" class="order-section">
+            <div class="pb-2">
+              <p class="sec-desc" style="display: inline-block;">Dunzo Order Details</p>
+              <i style="float:right;" (click)="courierData={};" class="material-icons edit-icon">close</i>
+            </div>
+            <div class="col-md-12 list-item p-0">
+              <div class="card o-hidden mb-4 d-flex flex-column">
+                <div class="flex-grow-1 pl-2 d-flex">
+                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                    <p class="w-50 w-sm-100 m-b-0">Status: <strong>{{courierData?.state}}</strong></p>
+                    <p class="w-50 w-sm-100 m-b-0">Contact No: <strong>{{courierData?.contact}}</strong></p>
+                    <ng-container *ngIf="courierData?.eta">
+                      <p class="w-50 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
+                      <p class="w-50 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
+                    </ng-container>
+                    <p *ngIf="courierData?.runner" class="w-50 w-sm-100 m-b-0">
+                      Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong>
+                    </p>
+                    <p *ngIf="courierData?.price" class="w-50 w-sm-100 m-b-0">
+                      Final Price: <strong>{{courierData?.price}}</strong>
                     </p>
                   </div>
                 </div>
@@ -1187,24 +1224,6 @@
               [(ngModel)]="editForm.shipping_method.tracking_link" #tracking_link="ngModel" required />
           </div>
         </div>
-        <!-- courier order status -->
-        <ng-container *ngFor="let x of order_details.cp_orders;">
-          <div *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'" class="col-md-12">
-            <button *ngIf="!courierData?.state" type="button" (click)="checkDunzoStatus(x.order_id);" class="btn btn-wide btn-primary ladda-button"
-            [disabled]="courierData.submit" [ladda]="courierData.submit">Check Dunzo Order Status</button>
-            <div *ngIf="courierData?.state" class="mt-3 card card-body">
-              <span (click)="courierData={};" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
-              <p>Status: <strong>{{courierData?.state}}</strong></p>
-              <p>Contact No: <strong>{{courierData?.contact}}</strong></p>
-              <ng-container *ngIf="courierData?.eta">
-                <p>Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
-                <p>Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
-              </ng-container>
-              <p *ngIf="courierData?.runner">Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong></p>
-              <p *ngIf="courierData?.price">Final Price: <strong>{{courierData?.price}}</strong></p>
-            </div>
-          </div>
-        </ng-container>
       </div>
       <div *ngIf="editForm.errorMsg">
         <p class="text-danger">{{ editForm.errorMsg }}</p>
