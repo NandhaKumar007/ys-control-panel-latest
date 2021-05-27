@@ -192,7 +192,6 @@ export class SettingComponent implements OnInit {
     if(this.commonService.ys_features.indexOf('customer_feedback')==-1) this.app_setting.feedback = false;
     if(this.commonService.ys_features.indexOf('addons')==-1) this.app_setting.product_addon = false;
     if(this.commonService.ys_features.indexOf('currency_variation')==-1) this.app_setting.hide_currency = false;
-    if(this.commonService.ys_features.indexOf('store_pickup')==-1) this.app_setting.disable_delivery = false;
     this.api.UPDATE_STORE_PROPERTY_DETAILS({ application_setting: this.app_setting }).subscribe(result => {
       if(result.status) document.getElementById('closeModal').click();
       else {
