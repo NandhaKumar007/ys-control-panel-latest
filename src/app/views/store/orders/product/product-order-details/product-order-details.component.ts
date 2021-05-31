@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrderService } from '../../order.service';
+import { AccountService } from '../../../account/account.service';
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
@@ -37,7 +38,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   courierData: any = {};
 
   constructor(
-    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
+    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
     private router: Router, private api: OrderService, public commonService: CommonService, public location: Location, private extrasApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -198,9 +199,39 @@ export class ProductOrderDetailsComponent implements OnInit {
       });
     }
     else if(x.name=='Dunzo') {
-      // create task
-      if(this.order_details.shipping_method.pickup_details && this.order_details.shipping_method.pickup_details.branch_id) {
-        let compDetails: any = {};
+      if(!this.commonService.branch_list.length) {
+        this.accApi.BRANCH_LIST().subscribe(result => {
+          if(result.status) {
+            this.commonService.branch_list = result.list;
+            this.commonService.updateLocalData('branch_list', this.commonService.branch_list);
+            this.createDunzoTask();
+          }
+          else this.courierForm.errorMsg = "Branch does not exists";
+        });
+      }
+      else this.createDunzoTask();
+    }
+    else if(x.name=='Others') {
+      let sendData = {
+        _id: this.order_details._id, cp_status: true, "shipping_method.name": this.courierForm.name,
+        "shipping_method.tracking_number": this.courierForm.tracking_number, "shipping_method.tracking_link": this.courierForm.tracking_link
+      };
+      this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
+        if(result.status) this.ngOnInit();
+        else {
+          this.courierForm.btnLoader = false;
+          this.courierForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+  }
+
+  createDunzoTask() {
+    if(this.order_details.shipping_method.pickup_details && this.order_details.shipping_method.pickup_details.branch_id) {
+      let branchIndex = this.commonService.branch_list.findIndex(obj => obj._id==this.order_details.shipping_method.pickup_details.branch_id);
+      if(branchIndex!=-1) {
+        let compDetails: any = this.commonService.branch_list[branchIndex];
         let shippingAddr = this.order_details.shipping_address;
         // pickup address
         let pickupAddr: any = { street_address_1: compDetails.address, country: this.commonService.store_details.country };
@@ -248,22 +279,8 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
       else this.courierForm.errorMsg = "Branch does not exists";
     }
-    else if(x.name=='Others') {
-      let sendData = {
-        _id: this.order_details._id, cp_status: true, "shipping_method.name": this.courierForm.name,
-        "shipping_method.tracking_number": this.courierForm.tracking_number, "shipping_method.tracking_link": this.courierForm.tracking_link
-      };
-      this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
-        if(result.status) this.ngOnInit();
-        else {
-          this.courierForm.btnLoader = false;
-          this.courierForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
+    else this.courierForm.errorMsg = "Branch ID does not exists";
   }
-
   checkDunzoStatus(taskId) {
     this.courierData.submit = true;
     this.api.DUNZO_ORDER_STATUS(this.order_details._id, taskId).subscribe(result => {

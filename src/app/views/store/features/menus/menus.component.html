@@ -332,7 +332,7 @@
                     <img style="max-width: 240px; width: auto;" *ngIf="x.image && !x.img_change" [src]="imgBaseUrl+x.image">
                     <div class="h-100 d-flex align-items-end">
                       <div class="custom-file mt-2">
-                        <input type="file" name="image{{i}}" style="display: none;" class="custom-file-input" [required]="!x.image" (change)="fileChangeListener(i, $event);" accept="image/jpeg">
+                        <input type="file" name="image{{i}}" class="custom-file-input" [required]="!x.image" (change)="fileChangeListener(i, $event);" accept="image/jpeg">
                         <label class="custom-file-label">Choose file</label>
                       </div>
                     </div>
