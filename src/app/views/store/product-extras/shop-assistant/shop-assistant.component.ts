@@ -28,7 +28,7 @@ export class ShopAssistantComponent implements OnInit {
         if(result.status) {
           this.list = result.data;
           this.commonService.aistyle_list = this.list;
-          this.commonService.updateLocalData('aistyle_list', this.list);
+          this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
           this.totalOptions = this.list.reduce((accumulator, currentValue) => {
             return accumulator + currentValue['option_list'].length;
           }, 0);
@@ -43,7 +43,11 @@ export class ShopAssistantComponent implements OnInit {
     this.btnLoader = true;
     this.api.UPDATE_AI_STYLE({ ai_styles: this.list }).subscribe(result => {
       this.btnLoader = false;
-			if(result.status) this.router.navigate(['/product-extras/shop-assistant']);
+			if(result.status) {
+        this.commonService.aistyle_list = result.data;
+        this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
+        this.router.navigate(['/product-extras/shop-assistant']);
+      }
 			else {
 				this.errorMsg = result.message;
 				console.log("response", result);

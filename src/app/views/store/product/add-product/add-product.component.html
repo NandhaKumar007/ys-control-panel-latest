@@ -84,16 +84,19 @@
             <option *ngFor="let x of taxRates;" [ngValue]="x._id">{{x.name}}</option>
           </select>
         </div>
-        <ng-container *ngIf="taxonomyList.length">
-          <div class="col-md-3 form-group mb-3">
-            <label>Product Taxonomy</label>
-            <select name="taxonomy_id" class="form-control" [(ngModel)]="productForm.taxonomy_id" #taxonomy_id="ngModel">
-              <option *ngFor="let x of taxonomyList;" [ngValue]="x._id">{{x.name}}</option>
-            </select>
-          </div>
-          <div class="col-md-9"></div>
-        </ng-container>
+        <div *ngIf="taxonomyList.length" class="col-md-3 form-group mb-3">
+          <label>Product Taxonomy</label>
+          <select name="taxonomy_id" class="form-control" [(ngModel)]="productForm.taxonomy_id" #taxonomy_id="ngModel">
+            <option *ngFor="let x of taxonomyList;" [ngValue]="x._id">{{x.name}}</option>
+          </select>
+        </div>
+        <div *ngIf="commonService.store_details?._id=='60b52edf58954c13bf58b5a2'" class="col-md-3 form-group mb-3">
+          <label>External Link</label>
+          <input type="text" name="external_link" class="form-control" [(ngModel)]="productForm.external_link" #external_link="ngModel" />
+        </div>
+      </div>
 
+      <div class="row">
         <!--  featured product -->
         <div class="col-md-6 form-group mb-3">
           <label class="checkbox checkbox-primary">

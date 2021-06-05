@@ -55,6 +55,27 @@ i:hover {
   padding: 0 15px 0 0;
 }
 
+.fixed-unit-wrapper {
+  position: relative;
+}
+.fixed-unit-wrapper input {
+  padding-left: 20px;
+}
+.fixed-unit-wrapper input:focus + .fixed-unit-text {
+  color: #D83967;
+}
+.fixed-unit-wrapper .fixed-unit-text { 
+  position: absolute; 
+  left: 10px;
+  top: 0px;
+  z-index: 9;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
 .primary-color {
   color: #d83967;
 }

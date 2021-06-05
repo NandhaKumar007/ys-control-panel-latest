@@ -5,6 +5,7 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
+import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -22,8 +23,7 @@ export class AddProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.catalog_list;
   addonList: any; tagList: any; noteList: any; taxRates: any;
-  sizeCharts: any; faqList: any; taxonomyList: any;
-  aiStyleList: any = this.commonService.aistyle_list;
+  sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
@@ -31,7 +31,7 @@ export class AddProductComponent implements OnInit {
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
   constructor(
-    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
+    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, private peApi: ProductExtrasApiService,
     public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService
   ) {
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -47,6 +47,8 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
+      this.aiStyleList = [];
+      if(localStorage.getItem("aistyle_list")) this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
       this.categoryList.forEach(element => { element.selected = false; });
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.maxRank = params.rank;
@@ -61,6 +63,7 @@ export class AddProductComponent implements OnInit {
         ]
       };
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
+      // product features
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
@@ -84,6 +87,15 @@ export class AddProductComponent implements OnInit {
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
       });
+      if(this.commonService.ys_features.indexOf('shopping_assistant')!=-1 && !localStorage.getItem("aistyle_list")) {
+        this.peApi.AI_STYLE_DETAILS().subscribe(result => {
+          if(result.status) {
+            this.commonService.aistyle_list = result.data;
+            this.aiStyleList = this.commonService.aistyle_list;
+            this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
+          }
+        });
+      }
     });
   }
 
@@ -142,6 +154,19 @@ export class AddProductComponent implements OnInit {
         }
       });
     }
+    // ai styles
+    this.productForm.aistyle_list = [];
+    if(this.productForm.aistyle_status) {
+      this.aiStyleList.forEach(section => {
+        if(section.aistyle_checked) {
+          let optionArray = [];
+          section.option_list.forEach(option => {
+            if(option.aistyle_option_checked) optionArray.push(option._id);
+          });
+          this.productForm.aistyle_list.push({ [section._id]: optionArray });
+        }
+      });
+    }
     // foot note
     this.productForm.footnote_list = [];
     if(this.productForm.note_status) {
@@ -155,20 +180,6 @@ export class AddProductComponent implements OnInit {
       this.faqList.forEach(faqObject => {
         if(faqObject.faq_checked) {
           this.productForm.faq_list.push({ [faqObject._id]: faqObject.selected_answer });
-        }
-      });
-    }
-    // ai styles
-    this.productForm.aistyle_list = [];
-    if(this.productForm.aistyle_status) {
-      this.aiStyleList.forEach(section => {
-        if(section.aistyle_checked) {
-          if(section.type=='either_or') this.productForm.aistyle_list.push(section.selected_option);
-          else {
-            section.option_list.forEach(option => {
-              if(option.aistyle_option_checked) this.productForm.aistyle_list.push(option._id);
-            });
-          }
         }
       });
     }

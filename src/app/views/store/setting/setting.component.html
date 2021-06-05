@@ -692,6 +692,9 @@
             </label>
           </div>
           <ng-container *ngIf="app_setting.chat_status && app_setting.chat_config">
+            <div *ngIf="app_setting.chat_config.type=='whatsapp'" class="col-md-12">
+              <p><b class="add-another">Note:</b> Please enter mobile no with country code</p>
+            </div>
             <div class="col-md-6 form-group mb-3">
               <label>Type</label>
               <select name="host_type" class="form-control select-arrow" [(ngModel)]="app_setting.chat_config.type" required>
@@ -702,11 +705,14 @@
             <ng-container *ngIf="app_setting.chat_config.type=='whatsapp'">
               <div class="col-md-6 form-group mb-3">
                 <label>Mobile</label>
-                <input type="tel" name="whatsapp_mob" class="form-control" [(ngModel)]="app_setting.chat_config.mobile" #whatsapp_mob="ngModel" required appNumberOnly />
+                <div class="fixed-unit-wrapper">
+                  <input type="tel" name="whatsapp_mob" class="form-control" [(ngModel)]="app_setting.chat_config.mobile" #whatsapp_mob="ngModel" required appNumberOnly />
+                  <span class="fixed-unit-text">+</span>
+                </div>
               </div>
               <div class="col-md-12 form-group mb-3">
                 <label>Message</label>
-                <input type="text" name="whatsapp_msg" class="form-control" [(ngModel)]="app_setting.chat_config.message" #whatsapp_msg="ngModel" required />
+                <input type="text" name="whatsapp_msg" class="form-control" [(ngModel)]="app_setting.chat_config.message" #whatsapp_msg="ngModel" />
               </div>
             </ng-container>
             <div *ngIf="app_setting.chat_config.type=='third_party'" class="col-md-12 form-group mb-3">

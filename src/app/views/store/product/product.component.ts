@@ -68,7 +68,7 @@ export class ProductComponent implements OnInit {
 
   importProduct() {
     this.processBeforeImport(jsonProducts).then((prodList) => {
-      // console.log("-------", prodList);
+      console.log("-------", prodList);
       // this.storeApi.PRODUCT_BULK_UPLOAD({ product_list: prodList }).subscribe(result => {
       //   console.log("-------result", result);
       // });
@@ -83,6 +83,17 @@ export class ProductComponent implements OnInit {
           });
           prod.variant_list = prod.variant_list.filter(obj => obj.discounted_price!=null);
         }
+        prod.category_id = prod.category_id.filter(obj => obj!='null');
+        prod.tag_list.forEach(obj => {
+          for(let key in obj) {
+            if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
+          }
+        });
+        prod.aistyle_list.forEach(obj => {
+          for(let key in obj) {
+            if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
+          }
+        });
       }
       resolve(list);
     });

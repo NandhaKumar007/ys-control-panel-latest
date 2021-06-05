@@ -7,6 +7,7 @@ import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
 import { environment } from '../../../../../environments/environment';
 import { CommonService } from '../../../../services/common.service';
+import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 
 @Component({
   selector: 'app-modify-product',
@@ -22,7 +23,7 @@ export class ModifyProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = [];
   addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
-  sizeCharts: any; faqList: any; aiStyleList: any = this.commonService.aistyle_list;
+  sizeCharts: any; faqList: any; aiStyleList: any;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
@@ -31,7 +32,7 @@ export class ModifyProductComponent implements OnInit {
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
   constructor(
-    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
+    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, private peApi: ProductExtrasApiService,
     public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService
   ) {
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -47,6 +48,8 @@ export class ModifyProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
+      this.aiStyleList = [];
+      if(localStorage.getItem("aistyle_list")) this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.btnLoader = false; this.pageLoader = true;
       this.maxRank = params.rank; this.step_num = params.step;
@@ -120,17 +123,26 @@ export class ModifyProductComponent implements OnInit {
               }
               // AI Styles
               if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
-              this.aiStyleList.forEach(section => {
-                section.option_list.forEach(option => {
-                  if(this.productForm.aistyle_list.indexOf(option._id) != -1) {
-                    section.selected_option = option._id; option.aistyle_option_checked = true; section.aistyle_checked = true;
-                  }
-                });
+              this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
+                this.aiStyleList = list;
               });
             }
             else console.log("response", result);
             setTimeout(() => { this.pageLoader = false; }, 500);
           });
+          if(this.commonService.ys_features.indexOf('shopping_assistant')!=-1 && !localStorage.getItem("aistyle_list")) {
+            this.peApi.AI_STYLE_DETAILS().subscribe(result => {
+              if(result.status) {
+                this.commonService.aistyle_list = result.data;
+                this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
+                this.aiStyleList = this.commonService.aistyle_list;
+                if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
+                this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
+                  this.aiStyleList = list;
+                });
+              }
+            });
+          }
         }
         else console.log("response", result);
       });
@@ -187,6 +199,19 @@ export class ModifyProductComponent implements OnInit {
         }
       });
     }
+    // ai styles
+    this.productForm.aistyle_list = [];
+    if(this.productForm.aistyle_status) {
+      this.aiStyleList.forEach(section => {
+        if(section.aistyle_checked) {
+          let optionArray = [];
+          section.option_list.forEach(option => {
+            if(option.aistyle_option_checked) optionArray.push(option._id);
+          });
+          this.productForm.aistyle_list.push({ [section._id]: optionArray });
+        }
+      });
+    }
     // foot note
     this.productForm.footnote_list = [];
     if(this.productForm.note_status) {
@@ -200,20 +225,6 @@ export class ModifyProductComponent implements OnInit {
       this.faqList.forEach(faqObject => {
         if(faqObject.faq_checked) {
           this.productForm.faq_list.push({ [faqObject._id]: faqObject.selected_answer });
-        }
-      });
-    }
-    // ai styles
-    this.productForm.aistyle_list = [];
-    if(this.productForm.aistyle_status) {
-      this.aiStyleList.forEach(section => {
-        if(section.aistyle_checked) {
-          if(section.type=='either_or') this.productForm.aistyle_list.push(section.selected_option);
-          else {
-            section.option_list.forEach(option => {
-              if(option.aistyle_option_checked) this.productForm.aistyle_list.push(option._id);
-            });
-          }
         }
       });
     }
@@ -318,6 +329,23 @@ export class ModifyProductComponent implements OnInit {
         }
       });
       resolve(tagList);
+    });
+  }
+
+  aiStyleModify(styleList, productStyleList) {
+    return new Promise((resolve, reject) => {
+      styleList.forEach(tagObject => {
+        let tagIndex = productStyleList.findIndex(x => Object.keys(x)[0] == tagObject._id);
+        if(tagIndex != -1) {
+          tagObject.aistyle_checked = true;
+          tagObject.option_list.forEach(optionObject => {
+            let optionIndex = productStyleList[tagIndex][tagObject._id].findIndex(x => x == optionObject._id);
+            if(optionIndex != -1)
+              optionObject.aistyle_option_checked = true;
+          });
+        }
+      });
+      resolve(styleList);
     });
   }
 
