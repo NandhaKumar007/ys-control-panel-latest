@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { QuillModule } from 'ngx-quill';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { SharedModule } from '../../../../shared/shared.module';
 import { environment } from '../../../../../environments/environment';
 
@@ -11,7 +12,8 @@ import { BlogComponent } from './blog.component';
   imports: [
     QuillModule.forRoot(environment.quill_config),
     SharedModule,
-    BlogRoutingModule
+    BlogRoutingModule,
+    BsDatepickerModule.forRoot()
   ]
 })
 

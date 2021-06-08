@@ -12,7 +12,7 @@
   <div class="top-filter-sec">
   <div class="row mb-4">
     <div class="col-6">
-      <button type="button" class="btn btn-primary" (click)="step_num=1; addForm={}; btnLoader=false; modalService.open(addModal, { size: 'lg'});">Add New Blog</button>
+      <button type="button" class="btn btn-primary" (click)="blogForm={ step_num: 1, form_type: 'add', created_on: currentDate }; modalService.open(blogModal, { size: 'lg'});">Add New Blog</button>
     </div>
     <!-- search box -->
     <div class="col-md-6 mt-sm-15">
@@ -38,7 +38,7 @@
             <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.author}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.created_on | date: "dd MMM y"}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
+              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, blogModal);">
                <span class="black-outline-txt">Edit</span>
               </button>
               <button *ngIf="x.status!='enabled'" class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="onChangeStatus(x, 'enable', statusModal);">
@@ -71,28 +71,33 @@
 </div>
 
 <!-- ADD MODAL -->
-<ng-template #addModal let-modal>
+<ng-template #blogModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add Blog (Step {{step_num}} of 2)</h4>
-    <p *ngIf="step_num==1">Add your blog details</p>
-    <p *ngIf="step_num==2">Add your blog's image</p>
+    <h4 class="modal-title" id="modal-basic-title">{{ (blogForm?.form_type=='add')? 'Add': 'Update' }} Blog (Step {{blogForm.step_num}} of 2)</h4>
+    <p *ngIf="blogForm.step_num==1">{{ (blogForm?.form_type=='add')? 'Add': 'Update' }} your blog details</p>
+    <p *ngIf="blogForm.step_num==2">{{ (blogForm?.form_type=='add')? 'Add': 'Update' }} your blog's image</p>
   </div>
   <!-- Step 1 -->
-  <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="addForm.image=null; step_num=2;" ngNativeValidate>
+  <form *ngIf="blogForm.step_num==1" autocomplete="off" (ngSubmit)="blogForm.step_num=2;" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <label>Author</label>
+            <input type="text" name="author" class="form-control" [(ngModel)]="blogForm.author" #author="ngModel" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label>Author</label>
-            <input type="text" name="author" class="form-control" [(ngModel)]="addForm.author" #author="ngModel" required />
+            <label>Created On</label>
+            <input type="text" placeholder="Select Date" class="form-control" name="created_on" autocomplete="off" [maxDate]="currentDate"
+            [(ngModel)]="blogForm.created_on" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Title</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="blogForm.name" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3 quill-mb-5">
             <label>Description</label>
-            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="addForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="blogForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
           </div>
         </div>
       </div>
@@ -105,115 +110,39 @@
     </div>
   </form>
   <!-- Step 2 -->
-  <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onAdd(addModal);" ngNativeValidate>
+  <form *ngIf="blogForm.step_num==2" autocomplete="off" (ngSubmit)="onSubmit(blogModal);" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
           <div class="col-md-12" align="center">
             <p>Photo Resolution: 900x600</p>
-            <div *ngIf="addForm.image">
-              <span (click)="addForm.img_change=null; addForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
-              <!-- <p class="x-close" *ngIf="addForm.image" style="float: right;" (click)="addForm.img_change=null; addForm.image=null">X</p> -->
-              <img [src]="addForm.image" height="100px;" width="auto;">
+            <div *ngIf="blogForm.image">
+              <span (click)="blogForm.img_change=null; blogForm.image=null;" class="material-icons item-close float-right" aria-hidden="true">close</span>
+              <img *ngIf="blogForm.img_change" [src]="blogForm.image" height="100px;" width="auto;">
+              <img *ngIf="!blogForm.img_change" [src]="imgBaseUrl+blogForm.image" height="100px;" width="auto;">
             </div>
-            <div *ngIf="!addForm.image">
+            <div *ngIf="!blogForm.image">
               <label>
                 <div>
                   <i class="material-icons add-img">add_photo_alternate</i>
                   <p>Click to upload image</p>
                 </div>
-                <input type="file" name="image" style="display: none;" (change)="fileChangeListener('add', $event)" accept="image/jpeg, image/png" />
+                <input type="file" name="image" style="display: none;" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
               </label>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="addForm.errorMsg"><p class="text-danger">{{ addForm.errorMsg }}</p></div>
+      <div *ngIf="blogForm.errorMsg"><p class="text-danger">{{ blogForm.errorMsg }}</p></div>
     </div>
     <div class="modal-footer">
       <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="step_num=1;">
-       <span class="black-outline-txt">Go Back</span>
+      <button type="button" class="btn btn-wide black-outline-btn" (click)="blogForm.step_num=1;">
+        <span class="black-outline-txt">Go Back</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Add</button>
-    </div>
-  </form>
-</ng-template>
-
-<!-- EDIT MODAL -->
-<ng-template #editModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Edit Blog (Step {{step_num}} of 2)</h4>
-    <p *ngIf="step_num==1">Edit your blog details</p>
-    <p *ngIf="step_num==2">Edit your blog's image</p>
-  </div>
-  <!-- Step 1 -->
-  <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="step_num=2;" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-6 form-group mb-3">
-            <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Author</label>
-            <input type="text" name="author" class="form-control" [(ngModel)]="editForm.author" #author="ngModel" required />
-          </div>
-          <div class="col-md-12 form-group mb-3 quill-mb-5">
-            <label>Description</label>
-            <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="editForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
-          </div>
-          <div *ngIf="editForm?.seo_details?.modified" class="col-md-12 form-group mb-3">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="update_seo" [(ngModel)]="editForm.update_seo" #update_seo="ngModel">
-              <span>Update SEO Details</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="blogForm.submit" [ladda]="blogForm.submit">
+        {{ (blogForm?.form_type=='add')? 'Add': 'Update' }}
       </button>
-      <button type="submit" class="btn btn-wide btn-primary">Next</button>
-    </div>
-  </form>
-  <!-- Step 2 -->
-  <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onUpdate(editModal);" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-12" align="center">
-            <p>Photo Resolution: 900x600</p>
-            <div *ngIf="editForm.image">
-              <span (click)="editForm.img_change=null; editForm.image=null;" class="material-icons item-close float-right" aria-hidden="true">close</span>
-              <!-- <p class="x-close" *ngIf="editForm.image" style="float: right;" (click)="editForm.img_change=null; editForm.image=null">X</p> -->
-              <img *ngIf="editForm.img_change" [src]="editForm.image" height="100px;" width="auto;">
-              <img *ngIf="!editForm.img_change" [src]="imgBaseUrl+editForm.image" height="100px;" width="auto;">
-            </div>
-            <div *ngIf="!editForm.image">
-              <label>
-                <div>
-                  <i class="material-icons add-img">add_photo_alternate</i>
-                  <p>Click to upload image</p>
-                </div>
-                <input type="file" name="image" style="display: none;" (change)="fileChangeListener('edit', $event)" accept="image/jpeg, image/png" />
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="editForm.errorMsg"><p class="text-danger">{{ editForm.errorMsg }}</p></div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
-      <button type="button" class="btn btn-wide black-outline-btn" (click)="step_num=1;">
-       <span class="black-outline-txt">Go Back</span>
-      </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
     </div>
   </form>
 </ng-template>
@@ -237,8 +166,8 @@
 <!-- STATUS MODAL -->
 <ng-template #statusModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to {{editForm.change_status}} the <span class="txt-grdint-highlight">"{{editForm.name}}"</span> blog?</strong></p>
-    <div *ngIf="editForm.errorMsg"><p class="text-danger">{{ editForm.errorMsg }}</p></div>
+    <p><strong>Are you sure you want to {{blogForm.change_status}} the <span class="txt-grdint-highlight">"{{blogForm.name}}"</span> blog?</strong></p>
+    <div *ngIf="blogForm.errorMsg"><p class="text-danger">{{ blogForm.errorMsg }}</p></div>
   </div>
   <div class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">

@@ -187,6 +187,10 @@ export class ProductComponent implements OnInit {
     this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter: this.product_filter, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/products/modify/"+product._id+"/"+this.productCount+"/"+stepNum]);
   }
+  goReviewPage(x) {
+    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter: this.product_filter, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.router.navigate(["/features/selected-product-reviews/"+x._id]);
+  }
 
   exportAsXLSX() {
     this.exportLoader = true;

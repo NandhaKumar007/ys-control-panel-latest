@@ -684,10 +684,17 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="form-group mb-3 col-md-12">
+          <div class="form-group mb-3 col-md-6">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="chat_status" [(ngModel)]="app_setting.chat_status" (change)="!app_setting.chat_config? app_setting.chat_config={}: '';" #chat_status="ngModel">
               <span>Enable Chat</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="app_setting.chat_status && app_setting.chat_config" class="form-group mb-3 col-md-6">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="only_on_home" [(ngModel)]="app_setting.chat_config.only_on_home" #only_on_home="ngModel">
+              <span>Display only on landing page</span>
               <span class="checkmark"></span>
             </label>
           </div>

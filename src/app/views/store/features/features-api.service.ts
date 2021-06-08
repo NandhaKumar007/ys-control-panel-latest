@@ -251,6 +251,10 @@ export class FeaturesApiService {
   // PRODUCT REVIEWS
   REVIEWED_PRODUCT_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/product_review_list', x, httpOptions);
+  }
+  ADD_REVIEW(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/product_reviews', x, httpOptions);
   }
   UPDATE_REVIEW(x) {

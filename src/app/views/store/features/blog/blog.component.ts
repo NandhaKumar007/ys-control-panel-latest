@@ -13,11 +13,12 @@ import { environment } from '../../../../../environments/environment';
 })
 export class BlogComponent implements OnInit {
 
+  pageLoader: boolean;
   page = 1; pageSize = 10;
-  list: any = []; step_num: any; search_bar: any;
-  addForm: any; editForm: any; deleteForm: any;
-  pageLoader: boolean; btnLoader: boolean;
+  list: any = []; search_bar: any;
+  blogForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
+  currentDate: Date = new Date();
   
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: FeaturesApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -32,86 +33,80 @@ export class BlogComponent implements OnInit {
     });
   }
 
-  // ADD
-	onAdd(modalName) {
-    this.btnLoader = true;
-    let blogUrl = this.commonService.urlFormat(this.addForm.name);
-    if(blogUrl) {
-      this.addForm.seo_status = true;
-      this.addForm.seo_details = {
-        page_url: blogUrl,
-        h1_tag: this.addForm.name.substring(0, 70),
-        page_title: this.addForm.name.substring(0, 70),
-        meta_desc: this.commonService.stripHtml(this.addForm.description).substring(0, 320)
-      };
+	onSubmit(modalName) {
+    this.blogForm.submit = true;
+    let blogUrl = this.commonService.urlFormat(this.blogForm.name);
+    if(this.blogForm.form_type=='add') {
+      if(blogUrl) {
+        this.blogForm.seo_status = true;
+        this.blogForm.seo_details = {
+          page_url: blogUrl,
+          h1_tag: this.blogForm.name.substring(0, 70),
+          page_title: this.blogForm.name.substring(0, 70),
+          meta_desc: this.commonService.stripHtml(this.blogForm.description).substring(0, 320)
+        };
+      }
+      this.api.ADD_BLOG(this.blogForm).subscribe(result => {
+        this.blogForm.submit = false;
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.blogForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
     }
-		this.api.ADD_BLOG(this.addForm).subscribe(result => {
-      this.btnLoader = false;
-			if(result.status) {
-        document.getElementById('closeModal').click();
-        this.ngOnInit();
+    else {
+      if(!this.blogForm.seo_details) this.blogForm.seo_details = {};
+      if(this.blogForm.update_seo) this.blogForm.seo_details.modified = false;
+      if(blogUrl && !this.blogForm.seo_details.modified) {
+        this.blogForm.seo_status = true;
+        this.blogForm.seo_details.page_url = blogUrl;
+        this.blogForm.seo_details.h1_tag = this.blogForm.name.substring(0, 70);
+        this.blogForm.seo_details.page_title = this.blogForm.name.substring(0, 70);
+        this.blogForm.seo_details.meta_desc = this.commonService.stripHtml(this.blogForm.description).substring(0, 320);
       }
-			else {
-				this.addForm.errorMsg = result.message;
-				console.log("response", result);
-      }
-		});
+      this.api.UPDATE_BLOG(this.blogForm).subscribe(result => {
+        this.blogForm.submit = false;
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.blogForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
   }
 
   // EDIT
   onEdit(x, modalName) {
-    this.btnLoader = false;
-    this.step_num = 1;
-    this.api.BLOG_DETAILS(x._id).subscribe(result => {
-      if(result.status) {
-        this.editForm = result.data;
-        this.editForm.exist_image = this.editForm.image;
-        this.modalService.open(modalName, {size: "lg"});
-      }
-      else console.log("response", result);
-    });
-  }
-
-  // UPDATE
-  onUpdate(modalName) {
-    this.btnLoader = true;
-    let blogUrl = this.commonService.urlFormat(this.editForm.name);
-    if(!this.editForm.seo_details) this.editForm.seo_details = {};
-    if(this.editForm.update_seo) this.editForm.seo_details.modified = false;
-    if(blogUrl && !this.editForm.seo_details.modified) {
-      this.editForm.seo_status = true;
-      this.editForm.seo_details.page_url = blogUrl;
-      this.editForm.seo_details.h1_tag = this.editForm.name.substring(0, 70);
-      this.editForm.seo_details.page_title = this.editForm.name.substring(0, 70);
-      this.editForm.seo_details.meta_desc = this.commonService.stripHtml(this.editForm.description).substring(0, 320);
+    this.blogForm = { form_type: 'edit', step_num: 1 };
+    for(let key in x) {
+      if(x.hasOwnProperty(key)) this.blogForm[key] = x[key];
     }
-    this.api.UPDATE_BLOG(this.editForm).subscribe(result => {
-      this.btnLoader = false;
-			if(result.status) {
-        document.getElementById('closeModal').click();
-        this.ngOnInit();
-      }
-			else {
-				this.editForm.errorMsg = result.message;
-				console.log("response", result);
-      }
-		});
+    this.blogForm.exist_image = this.blogForm.image;
+    this.blogForm.created_on = new Date(this.blogForm.created_on);
+    this.modalService.open(modalName, {size: "lg"});
   }
 
   // UPDATE STATUS
   onChangeStatus(x, status, modalName) {
-    this.editForm = x;
-    this.editForm.change_status = status;
+    this.blogForm = x;
+    this.blogForm.change_status = status;
     this.modalService.open(modalName, { centered: true });
   }
   onUpdateStatus() {
-    this.api.UPDATE_BLOG({ _id: this.editForm._id, status: this.editForm.change_status+"d" }).subscribe(result => {
+    this.api.UPDATE_BLOG({ _id: this.blogForm._id, status: this.blogForm.change_status+"d" }).subscribe(result => {
 			if(result.status) {
         document.getElementById('closeModal').click();
         this.ngOnInit();
       }
 			else {
-				this.editForm.errorMsg = result.message;
+				this.blogForm.errorMsg = result.message;
 				console.log("response", result);
       }
 		});
@@ -131,18 +126,12 @@ export class BlogComponent implements OnInit {
 		});
   }
 
-  fileChangeListener(type, event) {
+  fileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {
-        if(type=='add') {
-          this.addForm.image = (<FileReader>event.target).result;
-          this.addForm.img_change = true;
-        }
-        else {
-          this.editForm.image = (<FileReader>event.target).result;
-          this.editForm.img_change = true;
-        }
+        this.blogForm.image = (<FileReader>event.target).result;
+        this.blogForm.img_change = true;
       }
       reader.readAsDataURL(event.target.files[0]);
     }

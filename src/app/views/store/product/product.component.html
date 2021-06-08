@@ -140,6 +140,7 @@
                     <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
                       <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
                       <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
+                      <button *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
                     </ng-container>
                   </div>
                 </div>

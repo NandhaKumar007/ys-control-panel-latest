@@ -34,8 +34,14 @@
       </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-6">
       <h4 class="add-another">Reviews</h4>
+    </div>
+    <div class="col-md-6">
+      <button type="button" class="btn btn-wide btn-h-wide btn-primary pull-right mb-3"
+      (click)="reviewForm={ form_type: 'add', step_num: 1, rating: 5, image_list: [], created_on: currentDate }; modalService.open(reviewModal, { size: 'lg'});">
+        Add New
+      </button>
     </div>
 
     <div *ngFor="let x of reviewDetails.reviews | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
@@ -56,7 +62,10 @@
               </span>
             </p>
             <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions">
-              <button (click)="selectedReview=x; modalService.open(reviewModal, { size: 'lg'});" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
+              <button *ngIf="!x.order_id" (click)="onEdit(x, reviewModal);" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
+                <span class="black-outline-txt">Edit</span>
+              </button>
+              <button (click)="selectedReview=x; modalService.open(reviewDetailsModal, { size: 'lg'});" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
                 <span class="black-outline-txt">View</span>
               </button>
             </div>
@@ -79,8 +88,119 @@
   </div>
 </div>
 
-<!-- REVIEW MODAL -->
+<!-- ADD REVIEW MODAL -->
 <ng-template #reviewModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ (reviewForm?.form_type=='add')? 'Add Review': 'Update Review' }}</h4>
+    <button type="button" id="closeModal" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- Step 1 -->
+  <form *ngIf="reviewForm.step_num==1" autocomplete="off" (ngSubmit)="reviewForm.step_num=2;" ngNativeValidate>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <h6>Rate this product</h6>
+          <div class="rate-prod-icon-inner-wrapper">
+            <div class="rating-form mb-3">
+              <div class="rate-prod-star">
+                <input type="radio" name="rating" [ngClass]="(reviewForm.rating>=1)? 'active-rating': ''" [value]="1" [(ngModel)]="reviewForm.rating" class="rating-star">
+              </div>
+              <div class="rate-prod-star">
+                <input type="radio" name="rating" [ngClass]="(reviewForm.rating>=2)? 'active-rating': ''" [value]="2" [(ngModel)]="reviewForm.rating" class="rating-star">
+              </div>
+              <div class="rate-prod-star">
+                <input type="radio" name="rating" [ngClass]="(reviewForm.rating>=3)? 'active-rating': ''" [value]="3" [(ngModel)]="reviewForm.rating" class="rating-star">
+              </div>
+              <div class="rate-prod-star">
+                <input type="radio" name="rating" [ngClass]="(reviewForm.rating>=4)? 'active-rating': ''" [value]="4" [(ngModel)]="reviewForm.rating" class="rating-star">
+              </div>
+              <div class="rate-prod-star">
+                <input type="radio" name="rating" [ngClass]="(reviewForm.rating>=5)? 'active-rating': ''" [value]="5" [(ngModel)]="reviewForm.rating" class="rating-star">
+              </div>
+              <div class="rate-prod-star ml-3">
+                <span *ngIf="reviewForm.rating==1" class="rating-hint">Very Bad</span>
+                <span *ngIf="reviewForm.rating==2" class="rating-hint">Bad</span>
+                <span *ngIf="reviewForm.rating==3" class="rating-hint">Good</span>
+                <span *ngIf="reviewForm.rating==4" class="rating-hint">Very Good</span>
+                <span *ngIf="reviewForm.rating==5" class="rating-hint">Excellent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label>Customer Name</label>
+          <input type="text" name="customer_name" class="form-control" [(ngModel)]="reviewForm.customer_name" #customer_name="ngModel" required />
+        </div>
+        <div class="col-md-6 form-group mb-3">
+          <label>Created On</label>
+          <input type="text" placeholder="Select Date" class="form-control" name="created_on" autocomplete="off" [maxDate]="currentDate"
+          [(ngModel)]="reviewForm.created_on" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label>Title</label>
+          <input type="text" name="title" class="form-control" [(ngModel)]="reviewForm.title" #title="ngModel" required />
+        </div>
+        <div class="col-md-12 form-group mb-3 quill-mb-5">
+          <label>Description</label>
+          <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="reviewForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Next</button>
+    </div>
+  </form>
+  <!-- Step 2 -->
+  <form *ngIf="reviewForm.step_num==2" autocomplete="off" (ngSubmit)="onSubmit(reviewModal);" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div align="center" class="col-md-6 col-lg-4 form-group mb-3" *ngFor="let x of reviewForm.image_list; let i=index;">
+            <div class="card p-3 mt-3 mb-3">
+              <ng-container *ngIf="reviewForm.image_list.length>1">
+                <span (click)="reviewForm.image_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+              </ng-container>
+              <label>
+                <div *ngIf="!x.image">
+                  <i class="material-icons add-img">add_photo_alternate</i>
+                  <p>Click to upload image</p>
+                </div>
+                <ng-container *ngIf="x.image">
+                  <img *ngIf="x.img_change" [src]="x.image" height="150" width="auto">
+                  <img *ngIf="!x.img_change" [src]="imgBaseUrl+x.image" height="150" width="auto">
+                </ng-container>
+                <input type="file" name="image{{i}}" style="display: none;" (change)="fileChangeListener(i, $event);" accept="image/jpeg, image/png" />
+              </label>
+            </div>
+          </div>
+          <div *ngIf="5 > reviewForm.image_list.length" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mb-3 z-i-0">
+            <div class="add-another-opt w-100" (click)="reviewForm.image_list.push({});">
+              <p>ADD NEW IMAGE</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="reviewForm.errorMsg"><p class="text-danger">{{ reviewForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
+      <button type="button" class="btn btn-wide black-outline-btn" (click)="reviewForm.step_num=1;">
+        <span class="black-outline-txt">Go Back</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="reviewForm.submit" [ladda]="reviewForm.submit">
+        {{ (reviewForm?.form_type=='add')? 'Add': 'Update' }}
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- REVIEW MODAL -->
+<ng-template #reviewDetailsModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Review Details</h4>
     <button type="button" id="closeModal" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -88,7 +208,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <div class="form-group card p-3">
+    <div class="card p-3">
       <div class="row">
         <div class="col-md-12 mb-3">
           <span class="review-star-container" [ngClass]="{ 'review-good': selectedReview.rating>2, 'review-avg': selectedReview.rating===2, 'review-bad': selectedReview.rating===1 }">
@@ -122,6 +242,15 @@
             <h6>Description</h6>
             <p [innerHtml]="selectedReview.description"></p>
           </div>
+        </div>
+      </div>
+      <!-- images -->
+      <div *ngIf="selectedReview.image_list?.length" class="row">
+        <div class="col-md-12">
+          <h5><b>Images</b></h5>
+        </div>
+        <div *ngFor="let x of selectedReview.image_list;" class="col-md-3 mb-3">
+          <img *ngIf="x.image" [src]="imgBaseUrl+x.image" height="150" width="auto">
         </div>
       </div>
     </div>

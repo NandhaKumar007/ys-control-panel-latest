@@ -16,11 +16,12 @@ import { Location } from '@angular/common';
 
 export class ReviewDetailsComponent implements OnInit {
 
-  pageLoader: boolean;
+  pageLoader: boolean; params: any;
   page = 1; pageSize = 10;
   reviewDetails: any = {}; selectedReview: any = {};
   imgBaseUrl = environment.img_baseurl;
-  deleteForm: any = {};
+  reviewForm: any = {}; deleteForm: any = {};
+  currentDate: Date = new Date();
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute,
@@ -31,32 +32,96 @@ export class ReviewDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {
-      if(localStorage.getItem("review_filter")) {
-        let filterForm: any = JSON.parse(localStorage.getItem("review_filter"));
-        filterForm.id = params.id;
+      this.params = params;
+      if(this.router.url.includes("/selected-product-reviews/")) {
         this.pageLoader = true;
-        this.api.REVIEWED_PRODUCT_LIST(filterForm).subscribe(result => {
+        this.api.REVIEWED_PRODUCT_LIST({ product_id: this.params.id }).subscribe(result => {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if(result.status) {
-            if(result.list.length) {
-              this.reviewDetails = result.list[0];
-              this.reviewDetails.reviews.forEach(obj => {
-                obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />");
-              });
-            }
-            else this.router.navigate(['/features/product-reviews']);
+            this.reviewDetails = result.list[0];
+            this.reviewDetails.reviews.forEach(obj => {
+              obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />");
+            });
           }
           else console.log("response", result);
         });
       }
-      else this.router.navigate(['/features/product-reviews']);
+      else {
+        if(localStorage.getItem("review_filter")) {
+          let filterForm: any = JSON.parse(localStorage.getItem("review_filter"));
+          filterForm.id = this.params.id;
+          this.pageLoader = true;
+          this.api.REVIEWED_PRODUCT_LIST(filterForm).subscribe(result => {
+            setTimeout(() => { this.pageLoader = false; }, 500);
+            if(result.status) {
+              if(result.list.length) {
+                this.reviewDetails = result.list[0];
+                this.reviewDetails.reviews.forEach(obj => {
+                  obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />");
+                });
+              }
+              else this.router.navigate(['/features/product-reviews']);
+            }
+            else console.log("response", result);
+          });
+        }
+        else this.router.navigate(['/features/product-reviews']);
+      }
     });
   }
 
+  onEdit(x, modalName) {
+    let imgList = [];
+    x.image_list.forEach(obj => { imgList.push({ image: obj.image }); });
+    this.reviewForm = { form_type: 'edit', step_num: 1 };
+    for(let key in x) {
+      if(x.hasOwnProperty(key)) this.reviewForm[key] = x[key];
+    }
+    this.reviewForm.created_on = new Date(this.reviewForm.created_on);
+    this.reviewForm.image_list = imgList;
+    this.modalService.open(modalName, { size: 'lg'});
+  }
+
+  onSubmit(modalName) {
+    this.reviewForm.submit = true;
+    this.reviewForm.product_id = this.reviewDetails.productDetails[0]._id;
+    if(this.reviewForm.form_type=='add') {
+      this.reviewForm.status = "active";
+      this.api.ADD_REVIEW(this.reviewForm).subscribe(result => {
+        this.reviewForm.submit = false;
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.reviewForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+    else {
+      this.api.UPDATE_REVIEW(this.reviewForm).subscribe(result => {
+        this.reviewForm.submit = false;
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.reviewForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+  }
+
   updateStatus(x) {
-    let reviewStatus = 'active';
-    if(x.status=='active') reviewStatus = 'inactive';
-    this.api.UPDATE_REVIEW({ product_id: this.reviewDetails.productDetails[0]._id, _id: x._id, status: reviewStatus }).subscribe(result => {
+    let formData: any = { product_id: this.reviewDetails.productDetails[0]._id };
+    for(let key in x) {
+      if(x.hasOwnProperty(key)) formData[key] = x[key];
+    }
+    formData.status = 'active';
+    if(x.status=='active') formData.status = 'inactive';
+    this.api.UPDATE_REVIEW(formData).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
         this.ngOnInit();
@@ -80,6 +145,17 @@ export class ReviewDetailsComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  fileChangeListener(index, event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.reviewForm.image_list[index].image = (<FileReader>event.target).result;
+        this.reviewForm.image_list[index].img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
 }
