@@ -57,6 +57,7 @@
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
+            <p *ngIf="commonService.host_name=='localhost' && x.build_details?.build_status" class="m-0 w-15 w-sm-100 m-b-0">{{x.build_details?.build_status}}</p>
             <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
               <a href={{x.base_url}} target="_blank">
                 <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
@@ -68,6 +69,7 @@
                     <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
                     <button (click)="settingForm=x; modalService.open(settingModal);" class="dropdown-item">Setting</button>
                     <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change Password</button>
+                    <button *ngIf="commonService.host_name=='localhost' && x.build_details?.build_number" (click)="checkBuildStatus(x);" class="dropdown-item">Check Build Status</button>
                   </div>
                 </div>
               </div>

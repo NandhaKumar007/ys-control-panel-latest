@@ -107,4 +107,13 @@ export class YsClientsComponent implements OnInit {
     });
   }
 
+  checkBuildStatus(x) {
+    x.submit = true;
+    this.adminApi.CHECK_BUILD_STATUS(x._id).subscribe(result => {
+      x.submit = false;
+      if(result.status) this.ngOnInit();
+      else console.log("response", result);
+    });
+  }
+
 }

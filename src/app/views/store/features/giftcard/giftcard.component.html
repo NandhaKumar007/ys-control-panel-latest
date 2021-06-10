@@ -3,18 +3,24 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Gift Cards</h1>
-    <ul>
-      <li>Create and edit redeemable vouchers</li>
-    </ul>
-  </div>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Gift Cards</h1>
+        <ul><li>Create and edit redeemable vouchers</li></ul>
+      </div>
 
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" (click)="openSettingModal(settingModal);">Gift Card Setting</button>
+      </div>
+    </div>
+  </div>
   <div class="separator-breadcrumb border-top"></div>
+
   <div class="top-filter-sec">
   <div class="row mb-4">
     <div class="col-6">
-      <button type="button" class="btn btn-primary" (click)="addForm={price_type: 'fixed'}; btnLoader=false; modalService.open(addModal);">
+      <button type="button" class="btn btn-primary" (click)="gcForm={form_type: 'add', rank: list.length+1, price_type: 'fixed', price: 0}; modalService.open(giftCardModal);">
         Add New Gift Card
       </button>
     </div>
@@ -29,7 +35,7 @@
 
   <!-- DATA LIST -->
   <div class="row list-horizontal">
-    <div *ngFor="let x of list | orderAsc:'price' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+    <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
       class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
       <div class="card o-hidden mb-4 d-flex flex-row">
@@ -42,7 +48,7 @@
             <p *ngIf="x.price_type=='fixed'" class="m-0 text-muted text-small w-15 w-sm-100">{{x.price | currency:commonService.store_currency?.country_code}}</p>
             <p *ngIf="x.price_type=='flexible'" class="m-0 text-muted text-small w-15 w-sm-100">{{x.min_price | currency:commonService.store_currency?.country_code}} to {{x.max_price | currency:commonService.store_currency?.country_code}}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
+              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, giftCardModal);">
                <span class="black-outline-txt">Edit</span> 
               </button>
               <button class="btn orng-outline-btn w-md-100" (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
@@ -69,22 +75,23 @@
   </div>
 </div>
 
-<!-- ADD MODAL -->
-<ng-template #addModal let-modal>
+<!-- GIFTCARD MODAL -->
+<ng-template #giftCardModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">New Gift Card</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{ (gcForm?.form_type=='add')? 'Add': 'Update' }} Gift Card</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onAdd(addModal);" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onSubmit(giftCardModal);" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
           <div class="col-md-12" align="center">
             <p>Photo Resolution: 450x300</p>
-            <div *ngIf="addForm.image">
-              <span (click)="addForm.img_change=null; addForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
-              <img [src]="addForm.image" height="100px;" width="auto;">
+            <div *ngIf="gcForm.image">
+              <span (click)="gcForm.img_change=null; gcForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
+              <img *ngIf="gcForm.img_change" [src]="gcForm.image" height="100px;" width="auto;">
+              <img *ngIf="!gcForm.img_change" [src]="imgBaseUrl+gcForm.image" height="100px;" width="auto;">
             </div>
-            <div *ngIf="!addForm.image">
+            <div *ngIf="!gcForm.image">
               <label>
                 <div>
                   <i class="material-icons add-img">add_photo_alternate</i>
@@ -94,126 +101,58 @@
               </label>
             </div>
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-8 form-group mb-3">
             <label>Gift Card Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <input type="text" name="name" class="form-control" [(ngModel)]="gcForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-4 form-group mb-3">
+            <label>Rank</label>
+            <input *ngIf="gcForm?.form_type=='add'" type="number" name="rank" class="form-control" [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length+1}}" appNumberOnly required />
+            <input *ngIf="gcForm?.form_type!='add'" type="number" name="rank" class="form-control" [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length}}" appNumberOnly required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Description</label>
+            <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="gcForm.description" #description="ngModel"></textarea>
           </div>
           <div class="col-md-4 mb-3">
             <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="fixed" (change)="addForm.min_price=null; addForm.max_price=null;" [(ngModel)]="addForm.price_type">
+              <input type="radio" name="price_type" value="fixed" (change)="gcForm.min_price=null; gcForm.max_price=null;" [(ngModel)]="gcForm.price_type">
               <span>Fixed Price</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="col-md-8 mb-3">
             <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="flexible" (change)="addForm.price=null;" [(ngModel)]="addForm.price_type">
+              <input type="radio" name="price_type" value="flexible" (change)="gcForm.price=null;" [(ngModel)]="gcForm.price_type">
               <span>Flexible Price</span>
               <span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="addForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
+          <div *ngIf="gcForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
             <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="addForm.price" #price="ngModel" appNumberOnly required />
+            <input type="text" name="price" class="form-control" [(ngModel)]="gcForm.price" #price="ngModel" appNumberOnly required />
           </div>
-          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+          <div *ngIf="gcForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
             <label>Minimum Price Limit</label>
-            <input type="text" name="min_price" class="form-control" [(ngModel)]="addForm.min_price" #min_price="ngModel" appNumberOnly required />
+            <input type="text" name="min_price" class="form-control" [(ngModel)]="gcForm.min_price" #min_price="ngModel" appNumberOnly required />
           </div>
-          <div *ngIf="addForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
+          <div *ngIf="gcForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
             <label>Maximum Price Limit</label>
-            <input type="text" name="max_price" class="form-control" [(ngModel)]="addForm.max_price" #max_price="ngModel" appNumberOnly required />
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Description</label>
-            <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="addForm.description" #description="ngModel"></textarea>
+            <input type="text" name="max_price" class="form-control" [(ngModel)]="gcForm.max_price" #max_price="ngModel" appNumberOnly required />
           </div>
         </div>
       </div>
-      <div *ngIf="addForm.errorMsg">
-        <p class="text-danger">{{ addForm.errorMsg }}</p>
+      <div *ngIf="gcForm.errorMsg">
+        <p class="text-danger">{{ gcForm.errorMsg }}</p>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-wide black-outline-btn" id="closeModal" (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Add</button>
-    </div>
-  </form>
-</ng-template>
-
-<!-- EDIT MODAL -->
-<ng-template #editModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Edit Gift Card</h4>
-  </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate(editModal);" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-12" align="center">
-            <p>Photo Resolution: 450x300</p>
-            <div *ngIf="editForm.image">
-              <span (click)="editForm.img_change=null; editForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
-              <img *ngIf="editForm.img_change" [src]="editForm.image" height="100px;" width="auto;">
-              <img *ngIf="!editForm.img_change" [src]="imgBaseUrl+editForm.image" height="100px;" width="auto;">
-            </div>
-            <div *ngIf="!editForm.image">
-              <label>
-                <div>
-                  <i class="material-icons add-img">add_photo_alternate</i>
-                  <p>Click to upload image</p>
-                </div>
-                <input type="file" name="image" style="display: none;" (change)="fileChangeListener('edit', $event)" accept="image/jpeg, image/png" />
-              </label>
-            </div>
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Gift Card Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="fixed" (change)="editForm.min_price=null; editForm.max_price=null;" [(ngModel)]="editForm.price_type">
-              <span>Fixed Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div class="col-md-8 mb-3">
-            <label class="radio radio-primary">
-              <input type="radio" name="price_type" value="flexible" (change)="editForm.price=null;" [(ngModel)]="editForm.price_type">
-              <span>Flexible Price</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div *ngIf="editForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
-            <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="editForm.price" #price="ngModel" appNumberOnly required />
-          </div>
-          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Minimum Price Limit</label>
-            <input type="text" name="min_price" class="form-control" [(ngModel)]="editForm.min_price" #min_price="ngModel" appNumberOnly required />
-          </div>
-          <div *ngIf="editForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
-            <label>Maximum Price Limit</label>
-            <input type="text" name="max_price" class="form-control" [(ngModel)]="editForm.max_price" #max_price="ngModel" appNumberOnly required />
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Description</label>
-            <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="editForm.description" #description="ngModel"></textarea>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="editForm.errorMsg">
-        <p class="text-danger">{{ editForm.errorMsg }}</p>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-wide black-outline-btn" id="closeModal" (click)="modal.dismiss('Cross click');">
-        <span class="black-outline-txt">Cancel</span>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="gcForm.submit" [ladda]="gcForm.submit">
+        {{ (gcForm?.form_type=='add')? 'Add': 'Update' }}
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
     </div>
   </form>
 </ng-template>
@@ -236,4 +175,48 @@
      <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
+</ng-template>
+
+<!-- SETTING MODAL -->
+<ng-template #settingModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Gift Card Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSetting();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Price List</label>
+            <tag-input class="w-100" name="form_price_list"[(ngModel)]="settingForm.form_price_list" #form_price_list="ngModel" placeholder=""
+            [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"></tag-input>
+          </div>
+          <div class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="price_range_status" [(ngModel)]="settingForm.price_range_status" (change)="!settingForm.price_range? settingForm.price_range={}: '';">
+              <span>Enable Price Range</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="settingForm.price_range_status && settingForm.price_range">
+            <div class="col-md-6 form-group mb-3">
+              <label>From</label>
+              <input type="text" name="from" class="form-control" [(ngModel)]="settingForm.price_range.from" #from="ngModel" appNumberOnly required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>To</label>
+              <input type="text" name="to" class="form-control" [(ngModel)]="settingForm.price_range.to" #to="ngModel" appNumberOnly required />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg"><p class="text-danger">{{ settingForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
 </ng-template>

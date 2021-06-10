@@ -53,7 +53,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
           }
           else if(!this.layoutDetails.image_list.length) {
             if(this.layoutDetails.type=='multiple_highlighted_section') this.layoutDetails.image_list.push({ rank: 1, content_status: true, content_details: {} });
-            else this.layoutDetails.image_list.push({ rank: 1 });
+            else this.layoutDetails.image_list.push({ rank: 1, points_list: [] });
           }
           // product list
           this.api.PRODUCT_LIST({ category_id: 'all' }).subscribe(result => {

@@ -45,6 +45,10 @@ export class AdminApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.post<any>(environment.ws_url+'/admin/store/change_pwd', x, httpOptions);
   }
+  CHECK_BUILD_STATUS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.get<any>(environment.ws_url+'/admin/store/check_build_status?store_id='+x, httpOptions);
+  }
 
   // packages
   PACKAGE_LIST() {

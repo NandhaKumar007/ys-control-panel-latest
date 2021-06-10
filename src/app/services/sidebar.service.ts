@@ -64,7 +64,8 @@ export class SidebarService {
   getSidePanelList() {
     let routePermissionList = [];
     // whats new
-		let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
+    let sidePanelList: IMenuItem[] = [];
+    // let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
     // admin
     if(this.commonService.store_details.login_type == 'admin') {

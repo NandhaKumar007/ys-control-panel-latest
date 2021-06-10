@@ -46,6 +46,7 @@ export class HomeLayoutComponent implements OnInit {
     if(this.commonService.ys_features.indexOf('testimonials') !== -1) this.layoutTypes.push({ name: "Testimonial", value: "testimonial" });
     if(this.commonService.ys_features.indexOf('shopping_assistant') !== -1) this.layoutTypes.push({ name: "Shopping Assistant", value: "shopping_assistant" });
     if(this.commonService.ys_features.indexOf('blogs') !== -1) this.layoutTypes.push({ name: "Blogs", value: "blogs" });
+    if(this.commonService.ys_features.indexOf('shop_the_look') !== -1) this.layoutTypes.push({ name: "Shop the Look", value: "shop_the_look" });
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {
       if(result.status) {

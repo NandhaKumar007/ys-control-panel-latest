@@ -6,7 +6,7 @@
       <div class="menu-toggle" (click)="toggelSidebar()">
         <i class="material-icons">menu</i>
       </div>
-      <div class="logo">
+      <div routerLink="/whats-new" class="logo cursor">
         <img *ngIf="!commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo.svg" alt="yourstore-logo">
         <img *ngIf="commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo_white.svg" alt="yourstore-logo">
         <img class="mobile-logo" src="assets/images/yourstore_logo_only.svg" alt="yourstore-logo">
