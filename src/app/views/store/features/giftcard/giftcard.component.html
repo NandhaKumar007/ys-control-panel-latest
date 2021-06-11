@@ -110,6 +110,10 @@
             <input *ngIf="gcForm?.form_type=='add'" type="number" name="rank" class="form-control" [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length+1}}" appNumberOnly required />
             <input *ngIf="gcForm?.form_type!='add'" type="number" name="rank" class="form-control" [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length}}" appNumberOnly required />
           </div>
+          <div *ngIf="gcForm?.form_type!='add'" class="col-md-12 form-group mb-3">
+            <label>Page URL - {{commonService.store_details?.base_url}}/gift-cards/{{gcForm.page_url}}</label>
+            <input type="text" name="page_url" class="form-control" [(ngModel)]="gcForm.page_url" #page_url="ngModel" appNoSplChar required />
+          </div>
           <div class="col-md-12 form-group mb-3">
             <label>Description</label>
             <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="gcForm.description" #description="ngModel"></textarea>

@@ -16,7 +16,7 @@ export class YsClientsComponent implements OnInit {
 
   page = 1; pageSize = 10; search_bar: string;
   pageLoader: boolean; parent_list: any = []; list: any = [];
-  imgBaseUrl = environment.img_baseurl;
+  imgBaseUrl = environment.img_baseurl; buildForm: any = {};
   listType: string = 'active'; accountType: string = 'all';
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
@@ -58,7 +58,7 @@ export class YsClientsComponent implements OnInit {
       }
       else {
         console.log("response", result);
-        this.pwdForm.error_msg = result.message;
+        this.pwdForm.errorMsg = result.message;
       }
     });
   }
@@ -73,7 +73,7 @@ export class YsClientsComponent implements OnInit {
       }
       else {
         console.log("response", result);
-        this.deleteForm.error_msg = result.message;
+        this.deleteForm.errorMsg = result.message;
       }
     });
   }
@@ -87,11 +87,11 @@ export class YsClientsComponent implements OnInit {
         }
         else {
           console.log("response", result);
-          this.deleteForm.error_msg = result.message;
+          this.deleteForm.errorMsg = result.message;
         }
       });
     }
-    else this.deleteForm.error_msg = "Invalid store";
+    else this.deleteForm.errorMsg = "Invalid store";
   }
 
   onUpdateSetting() {
@@ -102,17 +102,35 @@ export class YsClientsComponent implements OnInit {
       }
       else {
         console.log("response", result);
-        this.settingForm.error_msg = result.message;
+        this.settingForm.errorMsg = result.message;
       }
     });
   }
 
-  checkBuildStatus(x) {
-    x.submit = true;
-    this.adminApi.CHECK_BUILD_STATUS(x._id).subscribe(result => {
-      x.submit = false;
+  openBuildInfoModal(x, modalName) {
+    this.buildForm = { _id: x._id, name: x.name, website: x.website, build_details: x.build_details };
+    this.modalService.open(modalName);
+  }
+  manualDeploy() {
+    this.buildForm.submit = true;
+    this.adminApi.MANUAL_DEPLOY(this.buildForm._id).subscribe(result => {
+      this.buildForm.submit = false;
       if(result.status) this.ngOnInit();
-      else console.log("response", result);
+      else {
+        console.log("response", result);
+        this.buildForm.errorMsg = result.message;
+      }
+    });
+  }
+  checkBuildStatus() {
+    this.buildForm.submit = true;
+    this.adminApi.CHECK_BUILD_STATUS(this.buildForm._id).subscribe(result => {
+      this.buildForm.submit = false;
+      if(result.status) this.ngOnInit();
+      else {
+        console.log("response", result);
+        this.buildForm.errorMsg = result.message;
+      }
     });
   }
 

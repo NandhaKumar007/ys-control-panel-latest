@@ -57,7 +57,6 @@
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
             <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
-            <p *ngIf="commonService.host_name=='localhost' && x.build_details?.build_status" class="m-0 w-15 w-sm-100 m-b-0">{{x.build_details?.build_status}}</p>
             <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
               <a href={{x.base_url}} target="_blank">
                 <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
@@ -69,10 +68,12 @@
                     <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
                     <button (click)="settingForm=x; modalService.open(settingModal);" class="dropdown-item">Setting</button>
                     <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change Password</button>
-                    <button *ngIf="commonService.host_name=='localhost' && x.build_details?.build_number" (click)="checkBuildStatus(x);" class="dropdown-item">Check Build Status</button>
                   </div>
                 </div>
               </div>
+              <button *ngIf="commonService.host_name=='localhost' && x.account_type=='client'" class="btn btn-wide btn-outline-secondary w-md-100 mr-3" (click)="openBuildInfoModal(x, buildInfoModal);">
+                Build Info
+              </button>
               <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });" class="btn btn-wide w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
                 {{ (x.status=='active')? 'Disable': 'Enable' }}
               </button>
@@ -126,6 +127,54 @@
       <button type="submit" [disabled]="pwdForm.new_pwd!=pwdForm.confirm_new_pwd" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- Build Info Pwd -->
+<ng-template #buildInfoModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Build Information</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12 mb-2">
+        <p><b>Store Name:</b> {{buildForm.name}}</p>
+      </div>
+      <div class="col-md-12 mb-2">
+        <p><b>Domain:</b> {{buildForm.website}}</p>
+      </div>
+      <ng-container *ngIf="buildForm.build_details">
+        <div class="col-md-6 mb-2">
+          <p><b>PORT:</b> {{ (buildForm.build_details?.port_number)? buildForm.build_details.port_number: 'NA' }}</p>
+        </div>
+        <div class="col-md-6 mb-2">
+          <p><b>Build Number:</b> {{ (buildForm.build_details?.build_number)? buildForm.build_details.build_number: 'NA' }}</p>
+        </div>
+        <div class="col-md-6 mb-2">
+          <p><b>Build Status:</b> {{buildForm.build_details?.build_status}}</p>
+        </div>
+        <div class="col-md-6 mb-2">
+          <p><b>SSL Status:</b> {{buildForm.build_details?.ssl_status}}</p>
+        </div>
+      </ng-container>
+      <!-- btn section -->
+      <div class="col-md-6 mb-2" *ngIf="!buildForm.build_details?.port_number && !buildForm.build_details?.build_number">
+        <button type="button" (click)="manualDeploy();" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buildForm.submit" [ladda]="buildForm.submit">
+          Deploy {{buildForm.website}}
+        </button>
+      </div>
+      <div class="col-md-6 mb-2" *ngIf="buildForm.build_details?.port_number && buildForm.build_details?.build_number && buildForm.build_details?.build_status!='success'">
+        <button type="button" (click)="checkBuildStatus();" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buildForm.submit" [ladda]="buildForm.submit">
+          Check Build Status
+        </button>
+      </div>
+    </div>
+    <div *ngIf="buildForm.errorMsg"><p class="text-danger">{{ buildForm.errorMsg }}</p></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Close</span>
+    </button>
+  </div>
 </ng-template>
 
 <!-- Status -->

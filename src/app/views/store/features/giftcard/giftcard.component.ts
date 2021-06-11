@@ -41,6 +41,7 @@ export class GiftcardComponent implements OnInit {
 	onSubmit(modalName) {
     this.gcForm.submit = true;
     if(this.gcForm.form_type=='add') {
+      this.gcForm.page_url = this.commonService.urlFormat(this.gcForm.name);
       this.api.ADD_GIFTCARD(this.gcForm).subscribe(result => {
         this.gcForm.submit = false;
         if(result.status) {

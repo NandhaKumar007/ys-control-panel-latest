@@ -34,9 +34,16 @@
       <div class="col-md-1"></div>
       <div class="col-md-10">
         <div class="row">
-          <div class="col-md-6 form-group mb-3">
+          <div class="col-md-3 form-group mb-3">
             <label>Store Name</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="clientForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-3 form-group mb-3">
+            <label>Account Type</label>
+            <select name="account_type" class="form-control" [(ngModel)]="clientForm.account_type" #account_type="ngModel" required>
+              <option value="client">Client</option>
+              <option value="demo">Demo</option>
+            </select>
           </div>
           <div class="col-md-3 form-group mb-3">
             <label>Domain</label>
@@ -53,6 +60,13 @@
               <option value="snap">Snap</option>
               <option value="slot">Slot</option>
             </select>
+          </div>
+          <div *ngIf="!params.client_id && clientForm.account_type=='client'" class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="allow_deploy" [(ngModel)]="clientForm.allow_deploy" #allow_deploy="ngModel">
+              <span class="access-inner-head">Enable Auto-Deployment</span>
+              <span class="checkmark"></span>
+            </label>
           </div>
           <div class="form-group mb-3" [ngClass]="params.client_id? 'col-md-3': 'col-md-6'">
             <label>Email</label>
