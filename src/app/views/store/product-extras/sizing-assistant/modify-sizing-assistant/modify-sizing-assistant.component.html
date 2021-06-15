@@ -80,8 +80,12 @@
               <label>Option Link To</label>
               <select name="link_to{{i+1}}{{j+1}}" id="link_to" class="form-control" [(ngModel)]="y.link_to" #link_to="ngModel" required>
                 <option value="all">All</option>
-                <option *ngFor="let opt_link of sizingDetails.assistant_types[i-1].option_list;" [ngValue]="opt_link.heading">{{opt_link.heading}}</option>
+                <option *ngFor="let opt_link of sizingDetails.assistant_types[i-1].option_list;" [ngValue]="opt_link.unique_name">{{opt_link.unique_name}}</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label>Unique Name (For Linking)</label>
+              <input type="text" name="unique_name{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.unique_name" #unique_name="ngModel" required />
             </div>
             <div class="form-group">
               <label>Option Heading</label>
