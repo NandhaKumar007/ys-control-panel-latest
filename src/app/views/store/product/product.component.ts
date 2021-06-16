@@ -84,11 +84,19 @@ export class ProductComponent implements OnInit {
           prod.variant_list = prod.variant_list.filter(obj => obj.discounted_price!=null);
         }
         prod.category_id = prod.category_id.filter(obj => obj!='null');
+        prod.footnote_list = prod.footnote_list.filter(obj => obj.value!='null');
+        prod.image_list = prod.image_list.filter(obj => obj.image!='null');
+        if(!prod.image_list.length) prod.image_list = [{}];
+        let tagList = [];
         prod.tag_list.forEach(obj => {
           for(let key in obj) {
-            if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
+            if(obj.hasOwnProperty(key)) {
+              obj[key] = obj[key].filter(obj => obj!='null');
+              if(obj[key].length) tagList.push(obj);
+            }
           }
         });
+        prod.tag_list = tagList;
         prod.aistyle_list.forEach(obj => {
           for(let key in obj) {
             if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
