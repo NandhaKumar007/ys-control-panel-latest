@@ -1,12 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../src/assets/styles/custom/dark-mode.css";
 
-body {
+/* body {
   scrollbar-width: none;
 }
-
 body::-webkit-scrollbar {
   display: none;
+} */
+
+html {
+  scrollbar-color: #000000 #ffffff;
+  scrollbar-width: thin !important;
+}
+html::-webkit-scrollbar{
+  width: 4px;
+  height: 10px;
+  border-radius: 20px;
+  background-color: transparent;
+}
+html::-webkit-scrollbar-thumb {
+  background: #D83967;
+  border-radius: 20px;
 }
 
 .label_hint {
@@ -492,6 +506,136 @@ font-weight: bold;
 /* Custom btns */
 .apply-coupon-btn {
   border-radius: 0 !important;
+}
+
+/* --------------------------RELATED PICKER START--------------------- */
+
+.desktop-layout-image-sec{
+  position: relative;
+  margin-bottom: 0;
+}
+.desktop-layout-image-sec  .related-picker-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.desktop-layout-image-sec  .related-picker-wrapper .related-picker {
+  position: absolute;
+  display: block;
+  margin: -8px 0 0 -8px;
+  border-radius: 100%;
+  box-shadow: 0 1px 10px rgb(0, 0, 0, 0.25);
+  cursor: pointer;
+  z-index: 1;
+  transform: scale(1);
+  transition: transform 0.25s ease-in-out;
+  font-size: 16px;
+  background-color: #fff;
+  padding: 2px;
+  color: #000;
+  opacity: 0.7;
+}
+
+.desktop-layout-image-sec  .related-picker-wrapper .related-picker::after{
+  opacity: 0;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  position: absolute;
+  margin: 0 auto;
+  bottom: 0;
+  left: 0;
+  content: "";
+  height: 100%;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 100%;
+  -webkit-animation-name: ripple;
+  animation-name: ripple;
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+  animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+  z-index: -1;
+}
+
+.desktop-layout-image-sec  .related-picker-wrapper .related-picker::before{
+  opacity: 0;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  position: absolute;
+  margin: 0 auto;
+  bottom: 0;
+  left: 0;
+  content: "";
+  height: 100%;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 100%;
+  -webkit-animation-name: ripple;
+  animation-name: ripple;
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+  animation-timing-function: cubic-bezier(0.65, 0, 0.34, 1);
+  z-index: -1;
+}
+
+@-webkit-keyframes ripple {
+  from {
+    opacity: 1;
+    -webkit-transform: scale3d(0.95, 0.95, 1);
+    transform: scale3d(0.95, 0.95, 1);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: scale3d(2, 2, 1);
+    transform: scale3d(2, 2, 1);
+  }
+}
+@keyframes ripple {
+  from {
+    opacity: 1;
+    -webkit-transform: scale3d(0.95, 0.95, 1);
+    transform: scale3d(0.95, 0.95, 1);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: scale3d(2, 2, 1);
+    transform: scale3d(2, 2, 1);
+  }
+}
+
+/* --------------------------RELATED PICKER END--------------------- */
+
+quill-editor .ql-container.ql-snow{
+  min-height: 200px;
+  max-height: 200px;
 }
 
 .orng-outline-btn {
@@ -3600,5 +3744,43 @@ p svg:hover {
   z-index: 1500 !important;
 }
 .quill-mb-5 {
-  margin-bottom: 5rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.rating-form{
+  display: flex;
+}
+.rating-form input[type="radio"] {
+  -webkit-appearance: none !important;
+  width: 18px;
+  height: 18px;
+  border: none;
+  float: none;
+  cursor: pointer;
+  margin-right: 0;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease !important;
+  margin: 0 1px;
+}
+.rating-form input[type="radio"].rating-star {
+  background: url(./assets/images/star.svg) center;
+  background-size: cover !important;
+  outline-style: none !important;
+}
+.rating-form input[type="radio"]:checked, .rating-form input[type="radio"]:hover {
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.active-rating {
+  -webkit-filter: grayscale(0) !important;
+  filter: grayscale(0) !important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.rating-hint {
+  color:rgb(115, 214, 115) !important;
 }

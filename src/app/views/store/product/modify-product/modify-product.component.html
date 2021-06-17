@@ -386,7 +386,7 @@
                   <span class="checkmark"></span>
                 </label>
                 <div *ngIf="x.tag_checked" class="row ml-3 mt-3">
-                  <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list; let j=index;">
+                  <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'name'; let j=index;">
                     <label class="checkbox checkbox-warning">
                       <input class="form-check-input" type="checkbox" name="tag_option_checked{{i+1}}{{j}}" [(ngModel)]="y.tag_option_checked"
                         #tag_option_checked="ngModel">
@@ -422,7 +422,7 @@
                   <span class="checkmark"></span>
                 </label>
                 <div *ngIf="x.note_checked" class="row ml-3 mt-3">
-                  <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list; let j=index;">
+                  <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'description'; let j=index;">
                     <label class="radio radio-warning d-inline-block">
                       <input type="radio" name="{{x.name}}" value="{{y.description}}" [checked]="x.selected_option==y.description" (change)="x.selected_option=y.description;">
                       <span>{{y.description}}</span>
