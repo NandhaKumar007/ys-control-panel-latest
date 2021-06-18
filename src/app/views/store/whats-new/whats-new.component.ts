@@ -13,12 +13,14 @@ export class WhatsNewComponent implements OnInit {
   constructor(private api: ApiService, private commonService: CommonService) { }
 
   ngOnInit(): void {
-    let countryList: any = [];
-    this.api.COUNTRIES_LIST().subscribe(result => {
-      if(result.status) countryList = result.list;
-      this.commonService.country_list = countryList;
-      this.commonService.updateLocalData('country_list', countryList);
-    });
+    if(!localStorage.getItem("country_list")) {
+      let countryList: any = [];
+      this.api.COUNTRIES_LIST().subscribe(result => {
+        if(result.status) countryList = result.list;
+        this.commonService.country_list = countryList;
+        this.commonService.updateLocalData('country_list', countryList);
+      });
+    }
   }
 
 }

@@ -103,6 +103,15 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="commonService.ys_features.indexOf('time_based_delivery')!=-1" class="col-md-6 col-lg-4 d-flex">
+      <div (click)="onOpenPackChargeModal(packageChargeModal);" class="card setting-card w-100 p-3 mb-4 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column mt-2">
+          <label class="text-title">Packaging Charges</label>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </div>
 
@@ -840,6 +849,45 @@
               </div>
             </ng-container>
           </ng-container>
+        </div>
+      </div>
+      <div *ngIf="app_setting.errorMsg"><p class="text-danger">{{ app_setting.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- packaging charges -->
+<ng-template #packageChargeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Packaging Charges</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdatePackCharge();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label>Charge By</label>
+            <select name="charge_type" class="form-control select-arrow" [(ngModel)]="app_setting.packaging_charges.type" required>
+              <option value="percentage">Percentage</option>
+              <option value="amount">Amount</option>
+            </select>
+          </div>
+          <div *ngIf="app_setting.packaging_charges.type=='percentage'" class="col-md-6 form-group mb-3"></div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Charges {{ app_setting.packaging_charges.type=='amount'? '(Inc GST)': ''}}</label>
+            <input type="text" name="charge" class="form-control" [(ngModel)]="app_setting.packaging_charges.value" appNumberOnly required />
+            <label class="delivery-days" [innerHTML]="app_setting.packaging_charges.type=='percentage'? '%': commonService.store_currency.html_code"></label>
+          </div>
+          <div *ngIf="app_setting.packaging_charges.type=='percentage'" class="col-md-6 form-group mb-3">
+            <label>Min Charge (Inc GST)</label>
+            <input type="text" name="min_package_amt" class="form-control" [(ngModel)]="app_setting.packaging_charges.min_package_amt" appNumberOnly required />
+          </div>
         </div>
       </div>
       <div *ngIf="app_setting.errorMsg"><p class="text-danger">{{ app_setting.errorMsg }}</p></div>

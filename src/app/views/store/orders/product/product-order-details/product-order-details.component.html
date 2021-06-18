@@ -842,6 +842,19 @@
                   </div>
                 </div>
               </ng-container>
+              <ng-container *ngIf="order_details?.packaging_charges > 0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Packaging Charges</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      {{order_details.packaging_charges | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </ng-container>
               <ng-container *ngIf="order_details.order_type=='delivery'">
                 <div class="col-6">
                   <div class="box-card card-head">
@@ -2009,6 +2022,14 @@
               </td>
               <td align="right" class="p-10" style="width: 20%;">
                 <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.gift_wrapper)"></p>
+              </td>
+            </tr>
+            <tr class="invoice-total" *ngIf="invoice_details?.packaging_charges > 0">
+              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+                <p>Packaging Charges</p>
+              </td>
+              <td align="right" class="p-10" style="width: 20%;">
+                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.packaging_charges)"></p>
               </td>
             </tr>
             <tr *ngIf="invoice_details.order_type=='delivery'" class="invoice-total">

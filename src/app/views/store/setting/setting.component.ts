@@ -163,6 +163,28 @@ export class SettingComponent implements OnInit {
     });
   }
 
+  // packaging charges
+  onOpenPackChargeModal(modalName) {
+    this.api.STORE_DETAILS().subscribe((result) => {
+      if(result.status) {
+        if(!result.data.packaging_charges) result.data.packaging_charges = {};
+        this.app_setting = { packaging_charges: result.data.packaging_charges };
+        this.modalService.open(modalName);
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdatePackCharge() {
+    this.api.STORE_UPDATE(this.app_setting).subscribe(result => {
+      if(result.status) document.getElementById('closeModal').click();
+      else {
+        this.app_setting.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+
   // setting
   onOpenSettingModal(modalName) {
     this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {

@@ -42,13 +42,15 @@
                 <p *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider'">(Desktop) - 1850 x 690 pixels @72ppi</p>
                 <p *ngIf="layoutDetails?.type=='section' && grid_details.resolutions && grid_details.resolutions[i]?.value">{{grid_details.resolutions[i].value}}</p>
                 <i *ngIf="!x.desktop_img" class="material-icons">add_photo_alternate</i>
-                <img *ngIf="x.desktop_img && x?.desktop_img_change" [src]="x.desktop_img">
-                <figure *ngIf="x.desktop_img && !x?.desktop_img_change" class="desktop-layout-image-sec">
-                  <!-- except primary slider -->
-                  <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.desktop_img">
-                  <!-- primary slider -->
-                  <img *ngIf="layoutDetails?.type=='primary_slider' && i===0" [src]="imgBaseUrl+x.desktop_img+'?ver='+layoutDetails?.updated_on">
-                  <img *ngIf="layoutDetails?.type=='primary_slider' && i>0" [src]="imgBaseUrl+x.desktop_img">
+                <figure *ngIf="x.desktop_img" class="desktop-layout-image-sec">
+                  <img *ngIf="x?.desktop_img_change" [src]="x.desktop_img">
+                  <ng-container *ngIf="!x?.desktop_img_change">
+                    <!-- except primary slider -->
+                    <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.desktop_img">
+                    <!-- primary slider -->
+                    <img *ngIf="layoutDetails?.type=='primary_slider' && i===0" [src]="imgBaseUrl+x.desktop_img+'?ver='+layoutDetails?.updated_on">
+                    <img *ngIf="layoutDetails?.type=='primary_slider' && i>0" [src]="imgBaseUrl+x.desktop_img">
+                  </ng-container>
                   <!-- shop the look points -->
                   <div *ngIf="x.points_list?.length" class="related-picker-wrapper">
                     <ng-container *ngFor="let pt of x.points_list;">
@@ -73,13 +75,15 @@
               <div class="desktop-banner" align="center">
                 <p>(Mobile) - 1140 x 1400 pixels @72ppi</p>
                 <i *ngIf="!x.mobile_img" class="material-icons">add_photo_alternate</i>
-                <img *ngIf="x.mobile_img && x?.mobile_img_change" [src]="x.mobile_img">
-                <figure *ngIf="x.mobile_img && !x?.mobile_img_change" class="desktop-layout-image-sec">
-                  <!-- except primary slider -->
-                  <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.mobile_img">
-                  <!-- primary slider -->
-                  <img *ngIf="layoutDetails?.type=='primary_slider' && i===0" [src]="imgBaseUrl+x.mobile_img+'?ver='+layoutDetails?.updated_on">
-                  <img *ngIf="layoutDetails?.type=='primary_slider' && i>0" [src]="imgBaseUrl+x.mobile_img">
+                <figure *ngIf="x.mobile_img" class="desktop-layout-image-sec">
+                  <img *ngIf="x?.mobile_img_change" [src]="x.mobile_img">
+                  <ng-container *ngIf="!x?.mobile_img_change">
+                    <!-- except primary slider -->
+                    <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.mobile_img">
+                    <!-- primary slider -->
+                    <img *ngIf="layoutDetails?.type=='primary_slider' && i===0" [src]="imgBaseUrl+x.mobile_img+'?ver='+layoutDetails?.updated_on">
+                    <img *ngIf="layoutDetails?.type=='primary_slider' && i>0" [src]="imgBaseUrl+x.mobile_img">
+                  </ng-container>
                 </figure>
               </div>
               <div class="h-100 d-flex align-items-end">

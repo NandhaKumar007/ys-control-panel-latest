@@ -396,7 +396,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       if(result.status) {
         // cancel courier partner
         let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
-        if(this.order_details.existing_status=='confirmed' && cpIndex!=1) {
+        if(this.order_details.existing_status=='confirmed' && cpIndex!=-1) {
           if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
             this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: true }).subscribe(result => {
               document.getElementById('closeModal').click();
@@ -518,7 +518,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(this.addressType=='shipping') {
           // update courier details
           let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
-          if(this.order_details.existing_status=='confirmed' && cpIndex!=1) {
+          if(this.order_details.existing_status=='confirmed' && cpIndex!=-1) {
             if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
               this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: false }).subscribe(result => { });
             }
