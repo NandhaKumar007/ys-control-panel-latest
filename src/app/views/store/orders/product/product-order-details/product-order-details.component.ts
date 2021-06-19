@@ -53,7 +53,13 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
           this.order_details = result.data;
-          this.itemList = this.order_details.item_list;
+          if(this.order_details.order_type=='pickup') this.order_details.billing_address = this.order_details.shipping_address;
+          if(this.commonService.store_details._id=='60805f647ee34b5a03e4ca0d') {
+            this.processItemListExcludeTax(this.order_details.item_list).then((respData) => {
+              this.itemList = respData;
+            });
+          }
+          else this.itemList = this.order_details.item_list;
           this.order_details.vendors_confirmed = true;
           this.order_details.existing_status = this.order_details.order_status;
           if(this.order_details.existing_status=='placed') this.order_details.order_status='confirmed';
@@ -92,10 +98,14 @@ export class ProductOrderDetailsComponent implements OnInit {
                 this.remaining_items.push(elem);
               }
             });
-            this.itemList = this.remaining_items;
+            if(this.commonService.store_details._id=='60805f647ee34b5a03e4ca0d') {
+              this.processItemListExcludeTax(this.remaining_items).then((respData) => {
+                this.itemList = respData;
+              });
+            }
+            else this.itemList = this.remaining_items;
           }
           // address
-          if(this.order_details.order_type=='pickup') this.order_details.billing_address = this.order_details.shipping_address;
           if(this.order_details.shipping_address) {
             this.onGetAddrDetails(this.order_details.shipping_address);
           }
@@ -131,6 +141,24 @@ export class ProductOrderDetailsComponent implements OnInit {
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
       });
+    });
+  }
+
+  processItemListExcludeTax(itemList) {
+    let countryInr = this.order_details.currency_type.country_inr_value;
+    return new Promise((resolve, reject) => {
+      let newItemList: any = [];
+      for(let item of itemList)
+      {
+        let itemData: any = {};
+        for(let key in item) {
+          if(item.hasOwnProperty(key)) itemData[key] = item[key];
+        }
+        itemData.final_price = Math.round(this.findBaseAmount(item.final_price, item.tax_details)/countryInr);
+        itemData.addon_price = Math.round(this.findBaseAmount(item.addon_price, item.tax_details)/countryInr);
+        newItemList.push(itemData);
+      }
+      resolve(newItemList);
     });
   }
 
@@ -576,6 +604,26 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
     this.modalService.open(modalName, { size: 'lg' });
   }
+  processItemList(itemList) {
+    return new Promise((resolve, reject) => {
+      let orderList: any = [];
+      for(let item of itemList)
+      {
+        if(item.hsn_code) this.hsncode_exist = true;
+        let itemFinalPrice = item.final_price * item.quantity;
+        if(item.unit!="Pcs") { itemFinalPrice += item.addon_price; }
+        let taxIndex = orderList.findIndex(obj => obj.taxrate_id==item.taxrate_id);
+        if(taxIndex!=-1) {
+          orderList[taxIndex].item_list.push(item);
+          orderList[taxIndex].sub_total += itemFinalPrice;
+        }
+        else {
+          orderList.push({ taxrate_id: item.taxrate_id, tax_details: item.tax_details, item_list: [item], sub_total: itemFinalPrice });
+        }
+      }
+      resolve(orderList);
+    });
+  }
 
   // update
   onUpdate(x) {
@@ -752,30 +800,9 @@ export class ProductOrderDetailsComponent implements OnInit {
     }
   }
 
-  processItemList(itemList) {
-    return new Promise((resolve, reject) => {
-      let orderList: any = [];
-      for(let item of itemList)
-      {
-        if(item.hsn_code) this.hsncode_exist = true;
-        let itemFinalPrice = item.final_price * item.quantity;
-        if(item.unit!="Pcs") { itemFinalPrice += item.addon_price; }
-        let taxIndex = orderList.findIndex(obj => obj.taxrate_id==item.taxrate_id);
-        if(taxIndex!=-1) {
-          orderList[taxIndex].item_list.push(item);
-          orderList[taxIndex].sub_total += itemFinalPrice;
-        }
-        else {
-          orderList.push({ taxrate_id: item.taxrate_id, tax_details: item.tax_details, item_list: [item], sub_total: itemFinalPrice });
-        }
-      }
-      resolve(orderList);
-    });
-  }
-
   findBaseAmount(amount, taxDetails) {
     if(taxDetails) {
-      if(this.invoice_details.billing_address.country==taxDetails.home_country && this.invoice_details.billing_address.state==taxDetails.home_state) {
+      if(this.order_details.billing_address.country==taxDetails.home_country && this.order_details.billing_address.state==taxDetails.home_state) {
         let totalPercentage = 100+parseFloat(taxDetails.sgst)+parseFloat(taxDetails.cgst);
         let onePercentAmount = amount/totalPercentage;
         return (onePercentAmount*100);
