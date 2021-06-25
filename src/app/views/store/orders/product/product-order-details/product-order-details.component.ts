@@ -261,53 +261,85 @@ export class ProductOrderDetailsComponent implements OnInit {
       if(branchIndex!=-1) {
         let compDetails: any = this.commonService.branch_list[branchIndex];
         let shippingAddr = this.order_details.shipping_address;
+        let orderPrice: any = this.order_details.final_price - this.order_details.shipping_method.added_charge;
         // pickup address
-        let pickupAddr: any = { street_address_1: compDetails.address, country: this.commonService.store_details.country };
+        let pickupAddr: any = {
+          street_address_1: compDetails.address, country: this.commonService.store_details.country,
+          lat: parseFloat(this.order_details.shipping_method.pickup_details.lat),
+          lng: parseFloat(this.order_details.shipping_method.pickup_details.lng),
+          contact_details: {
+            name: compDetails.contact_person,
+            phone_number: compDetails.mobile
+          }
+        };
+        if(compDetails.landmark) pickupAddr.landmark = compDetails.landmark;
         if(compDetails.city) pickupAddr.city = compDetails.city;
         if(compDetails.state) pickupAddr.state = compDetails.state;
         if(compDetails.pincode) pickupAddr.pincode = compDetails.pincode;
         // drop address
-        let dropAddr: any = { street_address_1: shippingAddr.address, country: shippingAddr.country };
+        let dropAddr: any = {
+          street_address_1: shippingAddr.address, country: shippingAddr.country,
+          lat: parseFloat(shippingAddr.lat), lng: parseFloat(shippingAddr.lng),
+          contact_details: {
+            name: shippingAddr.name,
+            phone_number: shippingAddr.dial_code+' '+shippingAddr.mobile
+          }
+        };
+        if(shippingAddr.door_no) dropAddr.apartment_address = shippingAddr.door_no;
         if(shippingAddr.landmark) dropAddr.landmark = shippingAddr.landmark;
         if(shippingAddr.city) dropAddr.city = shippingAddr.city;
         if(shippingAddr.state) dropAddr.state = shippingAddr.state;
         if(shippingAddr.pincode) dropAddr.pincode = shippingAddr.pincode;
+        // create dunzo form data
+        let uniqueId = this.order_details._id+'-'+Math.floor(Math.random()*(999));
         let formData: any = {
-          request_id: this.order_details._id+'-'+Math.floor(Math.random()*(999)),
-          pickup_details: {
-            lat: parseFloat(this.order_details.shipping_method.pickup_details.lat),
-            lng: parseFloat(this.order_details.shipping_method.pickup_details.lng),
-            address: pickupAddr
-          },
-          drop_details: {
-            lat: parseFloat(shippingAddr.lat),
-            lng: parseFloat(shippingAddr.lng),
-            address: dropAddr
-          },
-          sender_details: {
-            name: compDetails.contact_person,
-            phone_number: compDetails.mobile
-          },
-          receiver_details: {
-            name: shippingAddr.name,
-            phone_number: shippingAddr.dial_code+' '+shippingAddr.mobile
-          },
-          package_content: [this.courierForm.package_content]
+          request_id: uniqueId,
+          reference_id: uniqueId,
+          pickup_details: [{ reference_id: "pickup1", address: pickupAddr }],
+          optimised_route: true,
+          drop_details: [{ reference_id: "drop1", address: dropAddr, otp_required: false }]
         };
-        if(this.courierForm.package_approx_value) formData.package_approx_value = this.courierForm.package_approx_value*1;
-        if(this.courierForm.special_instructions) formData.special_instructions = this.courierForm.special_instructions;
-        this.api.DUNZO_CREATE_ORDER({ _id: this.order_details._id, form_data: formData }).subscribe(result => {
-          if(result.status) this.ngOnInit();
+        if(this.order_details.payment_details.name=='COD') {
+          formData.drop_details[0].payment_data = { payment_method: "COD", amount: parseFloat(orderPrice) };
+          formData.payment_method = "COD";
+        }
+        else formData.payment_method = "DUNZO_CREDIT";
+        if(this.courierForm.special_instructions) formData.drop_details[0].special_instructions = this.courierForm.special_instructions;
+        // scheduled time
+        if(this.order_details.shipping_method.delivery_method) {
+          let deliveryDate = this.order_details.shipping_method.delivery_date.split("(")[0]+this.order_details.shipping_method.delivery_time.split(" - ")[0];
+          let minDelayTime = new Date().setMinutes(new Date().getMinutes() + 35);
+          if(new Date(deliveryDate) > new Date(minDelayTime)) {
+            formData.delivery_type = "SCHEDULED";
+            formData.schedule_time = Math.round(new Date(deliveryDate).getTime() / 1000);
+            this.contCreateDunzoTask(formData);
+          }
           else {
             this.courierForm.btnLoader = false;
-            this.courierForm.errorMsg = result.message;
-            console.log("response", result);
+            this.courierForm.errorMsg = "Pickup time must greater than 35 minutes from current time";
           }
-        });
+        }
+        else this.contCreateDunzoTask(formData);
       }
-      else this.courierForm.errorMsg = "Branch does not exists";
+      else {
+        this.courierForm.btnLoader = false;
+        this.courierForm.errorMsg = "Branch does not exists";
+      }
     }
-    else this.courierForm.errorMsg = "Branch ID does not exists";
+    else {
+      this.courierForm.btnLoader = false;
+      this.courierForm.errorMsg = "Branch ID does not exists";
+    }
+  }
+  contCreateDunzoTask(formData) {
+    this.api.DUNZO_CREATE_ORDER({ _id: this.order_details._id, form_data: formData }).subscribe(result => {
+      if(result.status) this.ngOnInit();
+      else {
+        this.courierForm.btnLoader = false;
+        this.courierForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
   checkDunzoStatus(taskId) {
     this.courierData.submit = true;

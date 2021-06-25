@@ -918,39 +918,22 @@
         <form *ngIf="order_details.order_type=='delivery' && order_details.vendors_confirmed && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
         (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
           <div class="order-summary-header">
-            <p class="sec-desc">Courier Partner</p>
+            <p class="sec-desc">Delivery Partner</p>
           </div>
           <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
               <div class="col-md-12 form-group mb-3 summary-section">
-                <label>Courier Partners</label>
+                <label>Delivery Partners</label>
                 <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="order_details.selected_cp"
                   (change)="courierForm.errorMsg='';" #selected_cp="ngModel" required>
                   <option [ngValue]="x" *ngFor="let x of courier_partners">{{x.name}}</option>
                   <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier">{{addedCourier?.name}}</option>
                 </select>
               </div>
-              <ng-container *ngIf="order_details?.selected_cp?.name=='Dunzo'">
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Package Content</label>
-                  <select name="package_content" class="form-control select-arrow" [(ngModel)]="courierForm.package_content" required>
-                    <option value="Documents | Books">Documents | Books</option>
-                    <option value="Clothes | Accessories">Clothes | Accessories</option>
-                    <option value="Food | Flowers">Food | Flowers</option>
-                    <option value="Household Items">Household Items</option>
-                    <option value="Sports & Other Equipment">Sports & Other Equipment</option>
-                    <option value="Electronic Items">Electronic Items</option>
-                  </select>
-                </div>
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Package Approx Price</label>
-                  <input type="text" name="package_approx_value" class="form-control" [(ngModel)]="courierForm.package_approx_value" appNumberOnly />
-                </div>
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Special Instructions</label>
-                  <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
-                </div>
-              </ng-container>
+              <div *ngIf="order_details?.selected_cp?.name=='Dunzo'" class="col-md-12 form-group mb-3 summary-section">
+                <label>Special Instructions</label>
+                <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+              </div>
               <ng-container *ngIf="order_details?.selected_cp?.name=='Others'">
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Courier Name</label>
@@ -971,7 +954,7 @@
                 </div>
                 <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
                   [ladda]="courierForm.btnLoader">
-                  {{ order_details?.selected_cp?.name=='Others' ? 'Update Details': 'Check and Set Courier Partner' }}
+                  {{ order_details?.selected_cp?.name=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
                 </button>
               </div>
             </div>
