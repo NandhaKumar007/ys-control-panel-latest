@@ -130,6 +130,10 @@
             <textarea name="completeAddress" [(ngModel)]="locForm.address" #completeAddress="ngModel" class="form-control" required></textarea>
           </div>
           <div class="col-md-12 form-group mb-3">
+            <label>Landmark</label>
+            <input type="text" name="landmark" class="form-control" [(ngModel)]="locForm.landmark" #landmark="ngModel" />
+          </div>
+          <div class="col-md-12 form-group mb-3">
             <label>Location Map URL</label>
             <input type="text" name="location_url" class="form-control" [(ngModel)]="locForm.location_url" #location_url="ngModel" required />
           </div>

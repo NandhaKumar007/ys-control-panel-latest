@@ -57,6 +57,7 @@ export class SigninComponent implements OnInit {
           additional_features: result.data.additional_features
         };
         if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
+        if(result.data.erp_details && result.data.erp_details.status=='active') this.commonService.store_details.erp_enabled = true;
         let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
