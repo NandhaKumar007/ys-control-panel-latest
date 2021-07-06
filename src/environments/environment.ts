@@ -10,7 +10,7 @@ export const environment = {
       syntax: false,
       toolbar: [
         ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
+        // ['blockquote', 'code-block'],
         [{ 'header': 1 }, { 'header': 2 }],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'script': 'sub'}, { 'script': 'super' }],
@@ -19,7 +19,7 @@ export const environment = {
         [{ 'size': ['small', false, 'large', 'huge'] }],  
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
         [{ 'color': [] }, { 'background': [] }],       
-        [{ 'font': [] }],
+        // [{ 'font': [] }],
         [{ 'align': [] }],
         ['clean'],                           
         ['link', 'image', 'video']                

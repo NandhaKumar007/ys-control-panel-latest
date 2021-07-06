@@ -117,155 +117,168 @@
           </div>
           <!-- #Testimonial Content -->
 
-          <!-- Content -->
-          <div *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
-            <div class="card w-100 p-3 mb-3">
-              <div *ngIf="layoutDetails?.type!='multiple_highlighted_section'" class="row">
-                <div class="col-md-12 form-group mb-3">
-                  <label class="checkbox checkbox-primary">
-                    <input class="form-check-input" type="checkbox" name="content_status{{i}}" [(ngModel)]="x.content_status" (change)="x.content_details={};" #content_status="ngModel">
-                    <span>Enable Content</span>
-                    <span class="checkmark"></span>
-                  </label>
+          <ng-container *ngIf="!layoutDetails.allow_video">
+            <!-- Content -->
+            <div *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+              <div class="card w-100 p-3 mb-3">
+                <div *ngIf="layoutDetails?.type!='multiple_highlighted_section'" class="row">
+                  <div class="col-md-12 form-group mb-3">
+                    <label class="checkbox checkbox-primary">
+                      <input class="form-check-input" type="checkbox" name="content_status{{i}}" [(ngModel)]="x.content_status" (change)="x.content_details={};" #content_status="ngModel">
+                      <span>Enable Content</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="x.content_status" class="row">
+                  <ng-container *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='multiple_highlighted_section'">
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Heading</label>
+                      <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" #heading="ngModel" required />
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Sub-heading</label>
+                      <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
+                    </div>
+                    <div *ngIf="layoutDetails?.type=='secondary'" class="col-md-12 form-group mb-3">
+                      <label>Text Color</label>
+                      <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                      </select>
+                    </div>
+                    <div *ngIf="layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
+                      <label>Description</label>
+                      <textarea class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel"></textarea>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="layoutDetails?.type!='secondary' && layoutDetails?.type!='multiple_highlighted_section'">
+                    <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
+                      <label>Title</label>
+                      <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Text Color</label>
+                      <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                      </select>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Position</label>
+                      <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
+                        <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
+                      </select>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
-              <div *ngIf="x.content_status" class="row">
-                <ng-container *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='multiple_highlighted_section'">
-                  <div class="col-md-12 form-group mb-3">
-                    <label>Heading</label>
-                    <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" #heading="ngModel" required />
-                  </div>
-                  <div class="col-md-12 form-group mb-3">
-                    <label>Sub-heading</label>
-                    <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.content_details.sub_heading" #sub_heading="ngModel"></textarea>
-                  </div>
-                  <div *ngIf="layoutDetails?.type=='secondary'" class="col-md-12 form-group mb-3">
-                    <label>Text Color</label>
-                    <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
-                    </select>
-                  </div>
-                  <div *ngIf="layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
-                    <label>Description</label>
-                    <textarea class="form-control" aria-label="With textarea" name="description{{i}}" [(ngModel)]="x.content_details.description" #description="ngModel"></textarea>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="layoutDetails?.type!='secondary' && layoutDetails?.type!='multiple_highlighted_section'">
-                  <div *ngIf="layoutDetails?.type!='primary_slider' && layoutDetails?.type!='slider'" class="col-md-12 form-group mb-3">
-                    <label>Title</label>
-                    <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />
-                  </div>
-                  <div class="col-md-12 form-group mb-3">
-                    <label>Text Color</label>
-                    <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
-                    </select>
-                  </div>
-                  <div class="col-md-12 form-group mb-3">
-                    <label>Position</label>
+            </div>
+            <!-- #Content -->
+
+            <!-- Link -->
+            <div *ngIf="layoutDetails?.type!='testimonial' && layoutDetails?.type!='shop_the_look'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+              <div class="card w-100 p-3 mb-3">
+                <div class="row">
+                  <div *ngIf="layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
+                    <label>Image Position</label>
                     <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
-                      <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
+                      <option value="left">Left</option>
+                      <option value="right">Right</option>
                     </select>
                   </div>
-                </ng-container>
+                  <div class="col-md-12 form-group mb-3">
+                    <label class="checkbox checkbox-primary">
+                      <input class="form-check-input" type="checkbox" name="link_status{{i}}" [(ngModel)]="x.link_status" (change)="x.link_type='category'; x.btn_status=false; x.btn_text='';" #link_status="ngModel">
+                      <span>Enable Image Link</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="x.link_status" class="row">
+                  <div class="col-md-6 form-group mb-3">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="category">
+                      <span>Link to Catalog</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="product">
+                      <span>Link to Product</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="internal">
+                      <span>Link to Internal Link</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="external">
+                      <span>Link to External Link</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div *ngIf="x.link_type=='category' || x.link_type=='product'" class="col-md-12 form-group mb-3">
+                    <label>{{x.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
+                    <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
+                      <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
+                    </select>
+                  </div>
+                  <div *ngIf="x.link_type=='product'" class="col-md-12 form-group mb-3">
+                    <label>Link to Product</label>
+                    <select [disabled]="!x.category_id" name="product_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.product_id" #product_id="ngModel" required>
+                      <option [ngValue]="y._id" *ngFor="let y of productList | productFilter:'category_id':x.category_id;">{{y.name}}</option>
+                    </select>
+                  </div>
+                  <div *ngIf="x.link_type=='internal' || x.link_type=='external'" class="col-md-12 form-group mb-3">
+                    <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
+                    <label *ngIf="x.link_type=='external'">External Link</label>
+                    <input type="text" name="link{{i}}" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
+                  </div>
+
+                  <!-- Btn -->
+                  <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
+                    <label class="checkbox checkbox-primary">
+                      <input class="form-check-input" type="checkbox" name="btn_status{{i}}" [(ngModel)]="x.btn_status" (change)="x.btn_text='';" #btn_status="ngModel">
+                      <span>Enable Button</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <ng-container *ngIf="x.btn_status">
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Button Text</label>
+                      <input type="text" name="btn_text{{i}}" class="form-control" [(ngModel)]="x.btn_text" maxlength="15" #btn_text="ngModel" />
+                    </div>
+                    <div *ngIf="layoutDetails?.type=='primary_slider' && !x.content_status || layoutDetails?.type=='slider' && !x.content_status" class="col-md-12 form-group mb-3">
+                      <label>Position</label>
+                      <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
+                        <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
+                      </select>
+                    </div>
+                  </ng-container>
+                  <!-- #Btn -->
+                </div>
               </div>
             </div>
-          </div>
-          <!-- #Content -->
+            <!-- #Link -->
+          </ng-container>
 
-          <!-- Link -->
-          <div *ngIf="layoutDetails?.type!='testimonial' && layoutDetails?.type!='shop_the_look'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
-            <div class="card w-100 p-3 mb-3">
+          <div *ngIf="layoutDetails.allow_video && i===0" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+            <div class="card w-100 p-3">
               <div class="row">
-                <div *ngIf="layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
-                  <label>Image Position</label>
-                  <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                  </select>
+                <div class="col-md-12 form-group">
+                  <label>Video Source</label>
+                  <input type="text" name="video_src{{i}}" class="form-control" [(ngModel)]="x.video_src" #video_src="ngModel" required />
                 </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label class="checkbox checkbox-primary">
-                    <input class="form-check-input" type="checkbox" name="link_status{{i}}" [(ngModel)]="x.link_status" (change)="x.link_type='category'; x.btn_status=false; x.btn_text='';" #link_status="ngModel">
-                    <span>Enable Image Link</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              </div>
-              <div *ngIf="x.link_status" class="row">
-                <div class="col-md-6 form-group mb-3">
-                  <label class="radio radio-primary">
-                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="category">
-                    <span>Link to Catalog</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                  <label class="radio radio-primary">
-                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="product">
-                    <span>Link to Product</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                  <label class="radio radio-primary">
-                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="internal">
-                    <span>Link to Internal Link</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                  <label class="radio radio-primary">
-                    <input type="radio" name="link_type{{i}}" [(ngModel)]="x.link_type" value="external">
-                    <span>Link to External Link</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <div *ngIf="x.link_type=='category' || x.link_type=='product'" class="col-md-12 form-group mb-3">
-                  <label>{{x.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
-                  <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
-                    <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
-                  </select>
-                </div>
-                <div *ngIf="x.link_type=='product'" class="col-md-12 form-group mb-3">
-                  <label>Link to Product</label>
-                  <select [disabled]="!x.category_id" name="product_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.product_id" #product_id="ngModel" required>
-                    <option [ngValue]="y._id" *ngFor="let y of productList | productFilter:'category_id':x.category_id;">{{y.name}}</option>
-                  </select>
-                </div>
-                <div *ngIf="x.link_type=='internal' || x.link_type=='external'" class="col-md-12 form-group mb-3">
-                  <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
-                  <label *ngIf="x.link_type=='external'">External Link</label>
-                  <input type="text" name="link{{i}}" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
-                </div>
-
-                <!-- Btn -->
-                <div *ngIf="layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails.type=='highlighted_section' || layoutDetails.type=='multiple_highlighted_section'" class="col-md-12 form-group mb-3">
-                  <label class="checkbox checkbox-primary">
-                    <input class="form-check-input" type="checkbox" name="btn_status{{i}}" [(ngModel)]="x.btn_status" (change)="x.btn_text='';" #btn_status="ngModel">
-                    <span>Enable Button</span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-                <ng-container *ngIf="x.btn_status">
-                  <div class="col-md-12 form-group mb-3">
-                    <label>Button Text</label>
-                    <input type="text" name="btn_text{{i}}" class="form-control" [(ngModel)]="x.btn_text" maxlength="15" #btn_text="ngModel" />
-                  </div>
-                  <div *ngIf="layoutDetails?.type=='primary_slider' && !x.content_status || layoutDetails?.type=='slider' && !x.content_status" class="col-md-12 form-group mb-3">
-                    <label>Position</label>
-                    <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
-                      <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
-                    </select>
-                  </div>
-                </ng-container>
-                <!-- #Btn -->
               </div>
             </div>
           </div>
-          <!-- #Link -->
 
           <!-- Points list -->
           <div *ngIf="layoutDetails?.type=='shop_the_look'" class="col-md-6">
@@ -338,7 +351,7 @@
       </div>
     </ng-container>
 
-    <div *ngIf="layoutDetails?.image_list?.length<10 && layoutDetails.type!='section' && layoutDetails.type!='highlighted_section' && layoutDetails.type!='secondary' && layoutDetails.type!='shopping_assistant'" style="margin-top: 50px;" class="row">
+    <div *ngIf="!layoutDetails.allow_video && layoutDetails?.image_list?.length<10 && layoutDetails.type!='section' && layoutDetails.type!='highlighted_section' && layoutDetails.type!='secondary' && layoutDetails.type!='shopping_assistant'" style="margin-top: 50px;" class="row">
       <div class="col-md-4">
         <p (click)="addNewImg();"><b class="add-another">ADD NEW</b></p>
       </div>

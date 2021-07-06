@@ -115,13 +115,13 @@
             <label>Rank</label>
             <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="2" max="{{maxRank+1}}" appNumberOnly required />
           </div>
-          <!-- <div *ngIf="addForm.type=='primary_slider' || addForm.type=='slider'" class="col-md-12 mb-3">
+          <div *ngIf="addForm.type=='primary_slider'" class="col-md-12 mb-3">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="allow_video" [(ngModel)]="editForm.allow_video" #allow_video="ngModel">
+              <input class="form-check-input" type="checkbox" name="allow_video" [(ngModel)]="addForm.allow_video" #allow_video="ngModel">
               <span>Enable Video</span>
               <span class="checkmark"></span>
             </label>
-          </div> -->
+          </div>
           <div *ngIf="addForm.type=='featured_product'" class="col-md-12 form-group mb-3">
             <label>Link to Catalog</label>
             <select name="featured_category_id" class="form-control select-arrow" [(ngModel)]="addForm.featured_category_id" #featured_category_id="ngModel" required>
@@ -231,6 +231,13 @@
           <div class="form-group mb-3" [ngClass]="(editForm.type=='section' && editForm.section_grid_type)? 'col-md-8': 'col-md-12'">
             <label>Type</label>
             <input type="text" name="dup_type" class="form-control" [(ngModel)]="editForm.dup_type" #dup_type="ngModel" readonly />
+          </div>
+          <div *ngIf="editForm.type=='primary_slider'" class="col-md-12 mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="allow_video" [(ngModel)]="editForm.allow_video" #allow_video="ngModel">
+              <span>Enable Video</span>
+              <span class="checkmark"></span>
+            </label>
           </div>
           <div *ngIf="editForm.type=='section' && editForm.section_grid_type" class="col-md-4 form-group mb-3">
             <label>Grid Type</label>
