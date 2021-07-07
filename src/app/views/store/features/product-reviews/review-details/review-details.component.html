@@ -38,8 +38,8 @@
       <h4 class="add-another">Reviews</h4>
     </div>
     <div class="col-md-6">
-      <button type="button" class="btn btn-wide btn-h-wide btn-primary pull-right mb-3"
-      (click)="reviewForm={ form_type: 'add', step_num: 1, rating: 5, image_list: [], created_on: currentDate }; modalService.open(reviewModal, { size: 'lg'});">
+      <button *ngIf="commonService.store_details._id=='60b52edf58954c13bf58b5a2'" type="button" class="btn btn-wide btn-h-wide btn-primary pull-right mb-3"
+      (click)="reviewForm={ form_type: 'add', step_num: 1, rating: 5, image_list: [], social_media_links: [], created_on: currentDate }; modalService.open(reviewModal, { size: 'lg'});">
         Add New
       </button>
     </div>
@@ -51,7 +51,7 @@
         <div *ngIf="x.order_by=='admin'" class="find-band"></div>
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
           <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <span class="review-star-container" [ngClass]="{ 'review-good': x.rating>2, 'review-avg': x.rating===2, 'review-bad': x.rating===1 }">
+            <span class="review-star-container" [ngClass]="{ 'review-good': x.rating>2, 'review-avg': x.rating>1 && x.rating<=2, 'review-bad': x.rating<=1 }">
               {{x.rating}} <i class="material-icons">star</i>
             </span>
             <p class="m-0 text-muted text-small w-sm-100">{{x.customer_name}}</p>
@@ -62,7 +62,7 @@
               </span>
             </p>
             <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions">
-              <button *ngIf="!x.order_id" (click)="onEdit(x, reviewModal);" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
+              <button *ngIf="!x.order_id && commonService.store_details._id=='60b52edf58954c13bf58b5a2'" (click)="onEdit(x, reviewModal);" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
                 <span class="black-outline-txt">Edit</span>
               </button>
               <button (click)="selectedReview=x; modalService.open(reviewDetailsModal, { size: 'lg'});" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
@@ -100,8 +100,10 @@
   <form *ngIf="reviewForm.step_num==1" autocomplete="off" (ngSubmit)="reviewForm.step_num=2;" ngNativeValidate>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-12 mb-3">
-          <h6>Rate this product</h6>
+        <div class="col-md-6 mb-3">
+          <label>Rate this product</label>
+          <input type="text" name="rating" class="form-control" [(ngModel)]="reviewForm.rating" #rating="ngModel" appNumberOnly required />
+          <!-- <h6>Rate this product</h6>
           <div class="rate-prod-icon-inner-wrapper">
             <div class="rating-form">
               <div class="rate-prod-star">
@@ -127,8 +129,9 @@
                 <span *ngIf="reviewForm.rating==5" class="rating-hint">Excellent</span>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
+        <div class="col-md-6"></div>
         <div class="col-md-6 form-group mb-3">
           <label>Customer Name</label>
           <input type="text" name="customer_name" class="form-control" [(ngModel)]="reviewForm.customer_name" #customer_name="ngModel" required />
@@ -160,6 +163,9 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
+          <div class="col-md-12 mb-3">
+            <h5>Review Images</h5>
+          </div>
           <div align="center" class="col-md-6 col-lg-4 form-group mb-3" *ngFor="let x of reviewForm.image_list; let i=index;">
             <div class="card p-3 mt-3 mb-3">
               <ng-container *ngIf="reviewForm.image_list.length>1">
@@ -178,10 +184,32 @@
               </label>
             </div>
           </div>
-          <div *ngIf="5 > reviewForm.image_list.length" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mb-3 z-i-0">
-            <div class="add-another-opt w-100" (click)="reviewForm.image_list.push({});">
-              <p>ADD NEW IMAGE</p>
+          <div *ngIf="5 > reviewForm.image_list.length" class="col-md-12">
+            <p class="add-another" (click)="reviewForm.image_list.push({});">ADD NEW IMAGE</p>
+          </div>
+          <div class="col-md-12 mb-3 border-top"></div>
+          <div class="col-md-12 mb-3">
+            <h5>Social Media Links</h5>
+          </div>
+          <div class="col-md-6 form-group mb-3" *ngFor="let x of reviewForm.social_media_links; let i=index;">
+            <div class="card p-2">
+              <span (click)="reviewForm.social_media_links.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <div class="row">
+                <div class="col-md-12 form-group mb-3">
+                  <label>Type</label>
+                  <select name="type{{i}}" class="form-control" [(ngModel)]="x.type" #type="ngModel" required>
+                    <option [ngValue]="x" *ngFor="let x of commonService.socialTypes;">{{x | titlecase}}</option>
+                  </select>
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label>Link</label>
+                  <input type="text" name="url{{i}}" class="form-control" [(ngModel)]="x.url" #url="ngModel" required />
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="col-md-12">
+            <p class="add-another" (click)="reviewForm.social_media_links.push({});">ADD NEW LINK</p>
           </div>
         </div>
       </div>

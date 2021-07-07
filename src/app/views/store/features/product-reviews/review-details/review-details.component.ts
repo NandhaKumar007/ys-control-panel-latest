@@ -71,14 +71,17 @@ export class ReviewDetailsComponent implements OnInit {
   }
 
   onEdit(x, modalName) {
-    let imgList = [];
+    let imgList = []; let linkList = [];
     x.image_list.forEach(obj => { imgList.push({ image: obj.image }); });
+    if(!x.social_media_links) x.social_media_links = [];
+    x.social_media_links.forEach(obj => { linkList.push({ type: obj.type, url: obj.url }); });
     this.reviewForm = { form_type: 'edit', step_num: 1 };
     for(let key in x) {
       if(x.hasOwnProperty(key)) this.reviewForm[key] = x[key];
     }
     this.reviewForm.created_on = new Date(this.reviewForm.created_on);
     this.reviewForm.image_list = imgList;
+    this.reviewForm.social_media_links = linkList;
     this.modalService.open(modalName, { size: 'lg'});
   }
 

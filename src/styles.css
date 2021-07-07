@@ -357,7 +357,7 @@ font-size: 1rem;
 font-weight: bold;
 }
 .review-star-container {
-  max-width: 45px;
+  max-width: 50px;
   padding:2px 5px;
   border-radius: 5px;
   display: flex;
@@ -3747,7 +3747,7 @@ p svg:hover {
   margin-bottom: 1rem !important;
 }
 
-.rating-form{
+/* .rating-form{
   display: flex;
 }
 .rating-form input[type="radio"] {
@@ -3783,4 +3783,4 @@ p svg:hover {
 }
 .rating-hint {
   color:rgb(115, 214, 115) !important;
-}
+} */
