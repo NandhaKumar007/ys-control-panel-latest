@@ -351,10 +351,17 @@
               <span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="commonService.master_token" class="form-group mb-3 col-md-4">
+          <div class="form-group mb-3 col-md-4">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="disable_delivery" [(ngModel)]="app_setting.disable_delivery" #disable_delivery="ngModel">
               <span>Disable Order Delivery</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div *ngIf="commonService.store_details?.type=='restaurant_based' && commonService.ys_features.indexOf('time_based_delivery')!=-1" class="form-group mb-3 col-md-4">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="disable_delivery_time_slots" [(ngModel)]="app_setting.disable_delivery_time_slots" #disable_delivery_time_slots="ngModel">
+              <span>Disable Delivery Time Slots</span>
               <span class="checkmark"></span>
             </label>
           </div>
