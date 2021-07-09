@@ -51,6 +51,7 @@ export class ModifyYsClientsComponent implements OnInit {
       this.paid_features_list.forEach(element => {
         if(element.feature_checked) this.clientForm.package_details.paid_features.push(element.keyword);
       });
+      if(this.clientForm.type!='order_based') this.clientForm.abandoned_status = false;
       this.clientForm.btnLoader = true;
       let formData = {
         _id: this.clientForm._id, name: this.clientForm.name, company_details: this.clientForm.company_details,

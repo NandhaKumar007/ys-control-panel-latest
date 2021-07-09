@@ -158,7 +158,7 @@ export class SidebarService {
         if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
         else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
         // abandoned
-        if(ysFeatures.indexOf('abandoned_cart') != -1) {
+        if(ysFeatures.indexOf('abandoned_cart') != -1 && this.commonService.store_details.type!='restaurant_based') {
           orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
             { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
             { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }

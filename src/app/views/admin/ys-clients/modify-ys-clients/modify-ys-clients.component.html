@@ -46,10 +46,19 @@
             </select>
           </div>
           <div class="col-md-3 form-group mb-3">
+            <label>Store Type</label>
+            <select name="type" class="form-control" [(ngModel)]="clientForm.type" #type="ngModel" required>
+              <option value="order_based">General</option>
+              <!-- <option value="quot_based">Quotation</option>
+              <option value="quot_with_order_based">General with Quotation</option> -->
+              <option value="restaurant_based">Restaurant</option>
+            </select>
+          </div>
+          <div class="col-md-3 form-group mb-3">
             <label>Domain</label>
             <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required [readonly]="params.client_id" />
           </div>
-          <div *ngIf="!params.client_id" class="col-md-3 form-group mb-3">
+          <!-- <div *ngIf="!params.client_id" class="col-md-3 form-group mb-3">
             <label>Theme</label>
             <select name="theme" class="form-control" [(ngModel)]="clientForm.theme" #theme="ngModel" required>
               <option value="boleiro">Boleiro</option>
@@ -60,7 +69,7 @@
               <option value="snap">Snap</option>
               <option value="slot">Slot</option>
             </select>
-          </div>
+          </div> -->
           <div *ngIf="!params.client_id && clientForm.account_type=='client'" class="form-group mb-3 col-md-12">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="allow_deploy" [(ngModel)]="clientForm.allow_deploy" #allow_deploy="ngModel">
@@ -154,7 +163,7 @@
 
   <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
-      <div class="form-group mb-3 col-md-12">
+      <div *ngIf="clientForm.type=='order_based'" class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">
           <input class="form-check-input" type="checkbox" name="abandoned_status" [(ngModel)]="clientForm.abandoned_status" #abandoned_status="ngModel">
           <span>Enable abandoned cart recovery email alert</span>
