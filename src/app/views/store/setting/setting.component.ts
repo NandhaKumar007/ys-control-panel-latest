@@ -48,6 +48,7 @@ export class SettingComponent implements OnInit {
   checkout_setting: any; productList: any = [];
   curr_date: any = new Date();
   imgBaseUrl = environment.img_baseurl;
+  btnLoader: boolean;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: StoreApiService, private atp: AmazingTimePickerService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -357,6 +358,14 @@ export class SettingComponent implements OnInit {
       }
       reader.readAsDataURL(event.target.files[0]);
     }
+  }
+
+  createSSL() {
+    this.btnLoader = true;
+    this.api.CREATE_SSL().subscribe((result) => {
+      this.btnLoader = false;
+      console.log("-----", result);
+    });
   }
 
 }
