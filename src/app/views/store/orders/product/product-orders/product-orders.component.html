@@ -36,10 +36,14 @@
         </ng-container>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button *ngIf="commonService.ys_features.indexOf('sales_report')!=-1 || commonService.ys_features.indexOf('advanced_sales_report')!=-1" type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2"
-        [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
-        <button *ngIf="params?.type=='live' && params?.customer_id=='all' && commonService.ys_features.indexOf('manual_order')!=-1" type="button"
-        class="btn btn-primary" routerLink="/orders/create-order">Create New Order</button>
+        <ng-container *ngIf="commonService.ys_features.indexOf('sales_report')!=-1 || commonService.ys_features.indexOf('advanced_sales_report')!=-1">
+          <button *ngIf="commonService.store_details?.login_type=='admin' || commonService.subuser_features.indexOf('order_export')!=-1"
+          type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+        </ng-container>
+        <ng-container *ngIf="params?.type=='live' && params?.customer_id=='all'">
+          <button *ngIf="commonService.ys_features.indexOf('manual_order')!=-1 || commonService.subuser_features.indexOf('manual_order')!=-1"
+          type="button" class="btn btn-primary" routerLink="/orders/create-order">Create New Order</button>
+        </ng-container>
       </div>
     </div>
   </div>

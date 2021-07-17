@@ -43,7 +43,7 @@ export class SigninComponent implements OnInit {
         localStorage.setItem("store_token", result.token);
         this.commonService.store_details = {
           type: result.data.type,
-          login_email: result.data.email,
+          login_email: this.loginForm.email,
           login_type: result.login_type,
           _id: result.data._id,
           name: result.data.name,
@@ -64,6 +64,9 @@ export class SigninComponent implements OnInit {
         // ys features
         this.commonService.ys_features = result.ys_features;
         this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+        // sub-user features
+        this.commonService.subuser_features = result.subuser_features;
+        this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
         // payment list
         this.commonService.payment_list = result.data.payment_types;
         this.commonService.updateLocalData('payment_list', this.commonService.payment_list);

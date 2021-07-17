@@ -93,6 +93,7 @@ export class CommonService {
 
   store_list: any = [];
   ys_features: any = [];
+  subuser_features: any = [];
 
   store_details: any = {};
   store_currency: any = {};
@@ -124,6 +125,7 @@ export class CommonService {
     if(localStorage.getItem('admin_features')) this.admin_features = this.decryptData(localStorage.getItem("admin_features"));
 
     if(localStorage.getItem('ys_features')) this.ys_features = this.decryptData(localStorage.getItem("ys_features"));
+    if(localStorage.getItem('subuser_features')) this.subuser_features = this.decryptData(localStorage.getItem("subuser_features"));
     if(localStorage.getItem('store_details')) this.store_details = this.decryptData(localStorage.getItem("store_details"));
     if(localStorage.getItem('store_currency')) this.store_currency = this.decryptData(localStorage.getItem("store_currency"));
     if(localStorage.getItem('route_permission_list')) this.route_permission_list = this.decryptData(localStorage.getItem("route_permission_list"));
@@ -224,6 +226,7 @@ export class CommonService {
     this.admin_packages = [];
     this.admin_features = [];
     this.ys_features = [];
+    this.subuser_features = [];
 
     delete this.master_token;
     delete this.store_token;

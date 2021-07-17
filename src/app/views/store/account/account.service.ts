@@ -11,6 +11,28 @@ export class AccountService {
 
   constructor(private http: HttpClient) { }
 
+  // sub-users
+  SUBUSER_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/sub_user', httpOptions);
+  }
+  ADD_SUBUSER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/sub_user', x, httpOptions);
+  }
+  UPDATE_SUBUSER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/sub_user', x, httpOptions);
+  }
+  DELETE_SUBUSER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/sub_user', x, httpOptions);
+  }
+  UPDATE_SUBUSER_PWD(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/sub_user/update_pwd', x, httpOptions);
+  }
+
   // vendors
   VENDOR_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -33,7 +55,7 @@ export class AccountService {
     return this.http.put<any>(environment.ws_url+'/store/vendor/update_pwd', x, httpOptions);
   }
 
-  // pickup locations
+  // branches
   BRANCH_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/branches', httpOptions);
