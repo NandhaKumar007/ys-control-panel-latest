@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { UserInterceptor } from './user.interceptor';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { UserInterceptor } from './user.interceptor';
     SharedModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     DatePipe,

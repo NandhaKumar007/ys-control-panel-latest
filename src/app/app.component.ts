@@ -22,4 +22,5 @@ export class AppComponent {
       document.body.setAttribute("data-theme", "true");
     }
   }
+
 }

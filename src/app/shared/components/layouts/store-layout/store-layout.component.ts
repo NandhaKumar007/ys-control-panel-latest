@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { SwPush } from '@angular/service-worker';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../../environments/environment';
 import { SidebarService, IMenuItem } from '../../../../services/sidebar.service';
 import { Utils } from './../../../animations/utils';
@@ -22,8 +24,13 @@ export class StoreLayoutComponent implements OnInit {
   currentYear: any = (new Date()).getFullYear();
   imgBaseUrl = environment.img_baseurl;
   verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
+  audio: any;
 
-  constructor(private router: Router, public navService: SidebarService, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private swPush: SwPush, private router: Router,
+    public navService: SidebarService, public commonService: CommonService
+  ) {
+    config.backdrop = 'static'; config.keyboard = false;
     this.notifications = [
       {
         icon: "message",
@@ -69,6 +76,22 @@ export class StoreLayoutComponent implements OnInit {
         link: "/dashboard/v3"
       }
     ];
+    // push notification
+    if(this.swPush.isEnabled) {
+      this.swPush.messages.subscribe( event => { console.log("receive: ", event); this.playAudio(); });
+      // this.swPush.notificationClicks.subscribe( event => { });
+    }
+  }
+
+  playAudio() {
+    this.audio = document.getElementById("audio-file");
+    this.audio.play();
+    this.audio.loop = true;
+    document.getElementById("openModal").click();
+  }
+  stopAudio() {
+    this.audio = document.getElementById("audio-file");
+    this.audio.pause();
   }
 
   ngOnInit() {
