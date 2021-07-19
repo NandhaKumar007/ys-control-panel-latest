@@ -84,6 +84,7 @@ export class CommonService {
     { name: "Cms", value: "cms" }
   ];
   host_name: string = window.location.hostname;
+  vapidPublicKey: string = "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk";
 
   master_token: string;
   store_token: string;

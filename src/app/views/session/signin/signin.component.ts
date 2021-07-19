@@ -29,7 +29,7 @@ export class SigninComponent implements OnInit {
     localStorage.clear();
     this.loading = false; this.loadingText = "";
     if(this.router.url=='/session/signin' && this.swPush.isEnabled) {
-      this.swPush.requestSubscription({ serverPublicKey: "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk" })
+      this.swPush.requestSubscription({ serverPublicKey: this.commonService.vapidPublicKey })
       .then(sub => { this.deviceToken = sub; })
       .catch(err => console.error("Could not subscribe to notifications", err));
     }

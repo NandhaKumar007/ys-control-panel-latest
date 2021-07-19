@@ -78,7 +78,7 @@ export class StoreLayoutComponent implements OnInit {
     ];
     // push notification
     if(this.swPush.isEnabled) {
-      this.swPush.messages.subscribe( event => { console.log("receive: ", event); this.playAudio(); });
+      this.swPush.messages.subscribe( event => { console.log("receive notification"); this.playAudio(); });
       // this.swPush.notificationClicks.subscribe( event => { });
     }
   }
