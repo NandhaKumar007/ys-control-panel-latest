@@ -291,10 +291,9 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(shippingAddr.state) dropAddr.state = shippingAddr.state;
         if(shippingAddr.pincode) dropAddr.pincode = shippingAddr.pincode;
         // create dunzo form data
-        let uniqueId = this.order_details._id+'-'+Math.floor(Math.random()*(999));
         let formData: any = {
-          request_id: uniqueId,
-          reference_id: uniqueId,
+          request_id: this.order_details._id+'-'+Math.floor(Math.random()*(999)),
+          reference_id: this.order_details.order_number,
           pickup_details: [{ reference_id: "pickup1", address: pickupAddr }],
           optimised_route: true,
           drop_details: [{ reference_id: "drop1", address: dropAddr, otp_required: false }]
@@ -344,6 +343,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   checkDunzoStatus(taskId) {
     this.courierData.submit = true;
     this.api.DUNZO_ORDER_STATUS(this.order_details._id, taskId).subscribe(result => {
+      console.log("-------", result)
       this.courierData.submit = false;
       if(result.status) this.courierData = result.data;
       else {

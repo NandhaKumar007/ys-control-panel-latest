@@ -128,16 +128,24 @@
             <label>Shipping Charge</label>
             <input type="text" name="shipping_price" class="form-control" [(ngModel)]="addForm.shipping_price" #shipping_price="ngModel" appNumberOnly required />
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-6 form-group mb-3">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="free_shipping" [(ngModel)]="addForm.free_shipping" #free_shipping="ngModel">
               <span>Free Shipping</span><span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="addForm.free_shipping" class="col-md-12 form-group mb-3">
-            <label>Order above</label>
-            <input type="text" name="minimum_price" class="form-control" [(ngModel)]="addForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
-          </div>
+          <ng-container *ngIf="addForm.free_shipping">
+            <div class="col-md-6 form-group mb-3">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="alert_status" [(ngModel)]="addForm.alert_status" #alert_status="ngModel">
+                <span>Enable Alert</span><span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Order above</label>
+              <input type="text" name="minimum_price" class="form-control" [(ngModel)]="addForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+            </div>
+          </ng-container>
         </div>
       </div>
       <div *ngIf="addForm.errorMsg"><p class="text-danger">{{ addForm.errorMsg }}</p></div>
@@ -200,16 +208,24 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-6 form-group mb-3">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="free_shipping" [(ngModel)]="editForm.free_shipping" #free_shipping="ngModel">
               <span>Free Shipping</span><span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="editForm.free_shipping" class="col-md-12 form-group mb-3">
-            <label>Order above</label>
-            <input type="text" name="minimum_price" class="form-control" [(ngModel)]="editForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
-          </div>
+          <ng-container *ngIf="editForm.free_shipping">
+            <div class="col-md-6 form-group mb-3">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="alert_status" [(ngModel)]="editForm.alert_status" #alert_status="ngModel">
+                <span>Enable Alert</span><span class="checkmark"></span>
+              </label>
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Order above</label>
+              <input type="text" name="minimum_price" class="form-control" [(ngModel)]="editForm.minimum_price" #minimum_price="ngModel" appNumberOnly />
+            </div>
+          </ng-container>
         </div>
       </div>
       <div *ngIf="editForm.errorMsg"><p class="text-danger">{{ editForm.errorMsg }}</p></div>

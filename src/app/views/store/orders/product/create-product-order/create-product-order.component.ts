@@ -702,10 +702,10 @@ export class CreateProductOrderComponent implements OnInit {
       let filterZone = zones.filter(obj => obj.countries.findIndex(x => x == shippingAddress.country)!=-1);
       if(filterZone.length && filterZone[0].rate_multiplier.length) {
         // multiplier
-        let multiplier = filterZone[0].rate_multiplier;
-        multiplier.sort((a, b) => 0 - (a.weight > b.weight ? 1 : -1));  // sort desc
-        let shippingMultiplier = multiplier[0].multiplier;
-        let filterMultiplier = multiplier.filter(obj => obj.weight==cartWeight);
+        let rateMultiplier = filterZone[0].rate_multiplier;
+        rateMultiplier.sort((a, b) => 0 - (a.weight > b.weight ? -1 : 1));  // sort asc
+        let shippingMultiplier = rateMultiplier[rateMultiplier.length - 1].multiplier;
+        let filterMultiplier = rateMultiplier.filter(obj => obj.weight>=cartWeight);
         if(filterMultiplier.length) shippingMultiplier = filterMultiplier[0].multiplier;
         // find price
         let zonePrice = Math.round(filterZone[0].price_per_kg*shippingMultiplier);
@@ -718,17 +718,15 @@ export class CreateProductOrderComponent implements OnInit {
   }
 
   findDomesticPrice(zones, shippingAddress, cartWeight) {
-    // domestic type -> state or pincode
-    // here pincode based
     return new Promise((resolve, reject) => {
       // zone
-      let filterZone = zones.filter(obj => obj.states.findIndex(x => x == shippingAddress.pincode)!=-1);
+      let filterZone = zones.filter(obj => obj.states.findIndex(x => x == shippingAddress.state)!=-1);
       if(filterZone.length && filterZone[0].rate_multiplier.length) {
         // multiplier
-        let multiplier = filterZone[0].rate_multiplier;
-        multiplier.sort((a, b) => 0 - (a.weight > b.weight ? 1 : -1));  // sort desc
-        let shippingMultiplier = multiplier[0].multiplier;
-        let filterMultiplier = multiplier.filter(obj => obj.weight==cartWeight);
+        let rateMultiplier = filterZone[0].rate_multiplier;
+        rateMultiplier.sort((a, b) => 0 - (a.weight > b.weight ? -1 : 1));  // sort asc
+        let shippingMultiplier = rateMultiplier[rateMultiplier.length - 1].multiplier;
+        let filterMultiplier = rateMultiplier.filter(obj => obj.weight>=cartWeight);
         if(filterMultiplier.length) shippingMultiplier = filterMultiplier[0].multiplier;
         // find price
         let zonePrice = Math.round(filterZone[0].price_per_kg*shippingMultiplier);

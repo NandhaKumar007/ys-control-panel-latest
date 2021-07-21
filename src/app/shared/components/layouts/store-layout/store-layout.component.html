@@ -170,9 +170,9 @@
   <source src="assets/audio/notification.mp3" type="audio/mpeg">
 </audio>
 
-<div id="openModal" (click)="modalService.open(deleteModal, { centered: true });"></div>
+<div id="openNewOrderModal" (click)="modalService.open(deleteModal, { centered: true });"></div>
 <ng-template #deleteModal let-modal>
-  <div class="modal-body">
+  <div id="newOrderModalContent" class="modal-body">
     <p><strong>You have a new order</strong></p>
   </div>
   <div class="modal-footer">

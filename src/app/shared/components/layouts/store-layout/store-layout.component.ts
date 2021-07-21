@@ -84,10 +84,12 @@ export class StoreLayoutComponent implements OnInit {
   }
 
   playAudio() {
-    this.audio = document.getElementById("audio-file");
-    this.audio.play();
-    this.audio.loop = true;
-    document.getElementById("openModal").click();
+    if(!document.getElementById("newOrderModalContent")) {
+      this.audio = document.getElementById("audio-file");
+      this.audio.play();
+      this.audio.loop = true;
+      document.getElementById("openNewOrderModal").click();
+    }
   }
   stopAudio() {
     this.audio = document.getElementById("audio-file");
