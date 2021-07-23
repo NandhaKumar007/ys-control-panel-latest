@@ -18,11 +18,9 @@ export class CustomersComponent implements OnInit {
 
   search_bar: string;
   page = 1; pageSize = 10;
-  pageLoader: boolean; exportLoader: boolean; addressFormType: string;
-  list: any = []; editForm: any = {}; addressForm: any = {}; customerForm: any = {};
-  country_details: any; address_fields: any = []; mobile_pattern: any;
-  state_list: any = []; deleteForm: any = {};
-  selected_customer: any; selected_address: any; btnLoader: boolean;
+  pageLoader: boolean; exportLoader: boolean;
+  list: any = []; addressForm: any = {}; customerForm: any = {};
+  country_details: any; address_fields: any = []; mobile_pattern: any; state_list: any = [];
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private excelService: ExcelService,
@@ -37,13 +35,14 @@ export class CustomersComponent implements OnInit {
       if(result.status) {
         this.list = result.list;
         this.list.forEach(element => {
-          if(!element.mobile) {
+          if(!element.dial_code && !element.mobile) {
             if(element.address_list.length) {
               let filteredAddress = element.address_list.filter(obj => obj.billing_address);
-              if(filteredAddress.length) element.mobile = filteredAddress[0].dial_code+" "+filteredAddress[0].mobile;
-              else element.mobile = "NA";
+              if(filteredAddress.length) {
+                element.dial_code = filteredAddress[0].dial_code;
+                element.mobile = filteredAddress[0].mobile;
+              }
             }
-            else element.mobile = "NA";
           }
         });
       }
@@ -55,6 +54,8 @@ export class CustomersComponent implements OnInit {
   // ADD CUSTOMER
   addCustomerModal(modalName) {
     this.customerForm = { step:1, address_form: { type: 'home', billing_address: true, shipping_address: true, country: this.commonService.store_details.country } };
+    let index = this.commonService.country_list.findIndex(object => object.name==this.commonService.store_details.country);
+    if(index!=-1) this.customerForm.dial_code = this.commonService.country_list[index].dial_code;
     this.onCountryChange(this.customerForm.address_form.country);
     this.modalService.open(modalName, {size: 'lg'});
   }
@@ -76,133 +77,6 @@ export class CustomersComponent implements OnInit {
         this.customerForm.error_msg = result.message;
       }
     });
-  }
-
-  // EDIT CUSTOMER
-  onEditCustomer(x, modalName) {
-    this.btnLoader = false;
-    this.editForm = { _id: x._id, name: x.name, email: x.email, mobile: x.mobile };
-    this.modalService.open(modalName);
-  }
-  onUpdateCustomer() {
-    this.btnLoader = true;
-    this.customerApi.UPDATE_CUSTOMER(this.editForm).subscribe(result => {
-      this.btnLoader = false;
-      if(result.status) {
-        document.getElementById("closeModal").click();
-        this.ngOnInit();
-      }
-      else {
-        this.editForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
-  }
-
-  // ADD ADDRESS
-  onAddAddressModal(modalName) {
-    this.btnLoader = false;
-    this.addressFormType = 'add';
-    this.addressForm = { type: 'home', country: this.commonService.store_details.country };
-    if(!this.list.length) {
-      this.addressForm.billing_address = true;
-      this.addressForm.shipping_address = true;
-    }
-    this.onEditCountryChange(this.addressForm.country);
-    this.modalService.open(modalName, {size: 'lg'});
-  }
-
-  // EDIT ADDRESS
-  onEditAddress(x, modalName) {
-    this.btnLoader = false;
-    this.addressFormType = "update";
-    this.onEditCountryChange(x.country);
-    this.addressForm = {
-      _id: x._id, type: x.type, other_place: x.other_place, name: x.name, dial_code: x.dial_code, mobile: x.mobile, address: x.address, landmark: x.landmark,
-      city: x.city, state: x.state, country: x.country, pincode: x.pincode, billing_address: x.billing_address, exist_billing: x.billing_address,
-      shipping_address: x.shipping_address, exist_shipping: x.shipping_address
-    };
-    this.address_fields.forEach(element => {
-      element.value = this.addressForm[element.keyword];
-    });
-    this.modalService.open(modalName, {size: 'lg'});
-  }
-
-  onAddressEvent() {
-    this.btnLoader = true;
-    this.addressForm.customer_id = this.selected_customer._id;
-    this.address_fields.forEach(element => {
-      if(element.value) this.addressForm[element.keyword] = element.value;
-    });
-    if(this.addressFormType=='add') {
-      this.customerApi.ADD_ADDRESS(this.addressForm).subscribe(result => {
-        this.btnLoader = false;
-        if(result.status) {
-          document.getElementById("closeModal").click();
-          this.ngOnInit();
-        }
-        else {
-          this.addressForm.error_msg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-    else {
-      this.customerApi.UPDATE_ADDRESS(this.addressForm).subscribe(result => {
-        this.btnLoader = false;
-        if(result.status) {
-          document.getElementById("closeModal").click();
-          this.ngOnInit();
-        }
-        else {
-          this.addressForm.error_msg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-  }
-
-  // DELETE ADDRESS
-  onDeleteAddress() {
-    this.btnLoader = true;
-    this.deleteForm = this.selected_address;
-    this.deleteForm.customer_id = this.selected_customer._id;
-    this.customerApi.DELETE_ADDRESS(this.deleteForm).subscribe(result => {
-      this.btnLoader = false;
-      if(result.status) {
-        document.getElementById("closeModal").click();
-        this.ngOnInit();
-      }
-      else {
-        this.deleteForm.error_msg = result.message;
-        console.log("response", result);
-      }
-    });
-  }
-
-  onCountryChange(x) {
-    this.state_list = []; this.address_fields = [];
-    delete this.country_details; delete this.mobile_pattern;
-    let index = this.commonService.country_list.findIndex(object => object.name==x);
-    if(index!=-1) {
-      this.country_details = this.commonService.country_list[index];
-      this.state_list = this.country_details.states;
-      this.customerForm.address_form.dial_code = this.country_details.dial_code;
-      this.address_fields = this.country_details.address_fields;
-      if(this.country_details.mobileno_length) this.mobile_pattern = ".{"+this.country_details.mobileno_length+","+this.country_details.mobileno_length+"}";
-    }
-  }
-  onEditCountryChange(x) {
-    this.state_list = []; this.address_fields = [];
-    delete this.country_details; delete this.mobile_pattern;
-    let index = this.commonService.country_list.findIndex(object => object.name==x);
-    if(index!=-1) {
-      this.country_details = this.commonService.country_list[index];
-      this.state_list = this.country_details.states;
-      this.addressForm.dial_code = this.country_details.dial_code;
-      this.address_fields = this.country_details.address_fields;
-      if(this.country_details.mobileno_length) this.mobile_pattern = ".{"+this.country_details.mobileno_length+","+this.country_details.mobileno_length+"}";
-    }
   }
 
   goOrdersPage(customer, type) {
@@ -232,7 +106,8 @@ export class CustomersComponent implements OnInit {
         let sendData = {};
         sendData['Name'] = order.name;
         sendData['Email'] = order.email;
-        sendData['Mobile'] = order.mobile;
+        sendData['Mobile'] = "NA";
+        if(order.dial_code && order.mobile) sendData['Mobile'] = order.dial_code+' '+order.mobile;
         sendData['Address'] = "NA"; sendData['City'] = "NA";
         sendData['State'] = "NA"; sendData['Country'] = "NA";
         sendData['Pincode'] = "NA"; sendData['Landmark'] = "NA";
@@ -249,6 +124,19 @@ export class CustomersComponent implements OnInit {
       }
       resolve(updatedList);
     });
+  }
+
+  onCountryChange(x) {
+    this.state_list = []; this.address_fields = [];
+    delete this.country_details; delete this.mobile_pattern;
+    let index = this.commonService.country_list.findIndex(object => object.name==x);
+    if(index!=-1) {
+      this.country_details = this.commonService.country_list[index];
+      this.state_list = this.country_details.states;
+      this.customerForm.address_form.dial_code = this.country_details.dial_code;
+      this.address_fields = this.country_details.address_fields;
+      if(this.country_details.mobileno_length) this.mobile_pattern = ".{"+this.country_details.mobileno_length+","+this.country_details.mobileno_length+"}";
+    }
   }
 
 }
