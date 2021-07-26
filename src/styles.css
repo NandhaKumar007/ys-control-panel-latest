@@ -321,7 +321,10 @@ a {
 }
 
 /* RADIO AND CHECK BOXES */
-
+.checkbox input[disabled] ~ *, .radio input[disabled] ~ *{
+  color: #47404F;
+  opacity: .5;
+}
 .checkbox-primary input:checked ~ .checkmark {
   background: #ec366b;
   background: linear-gradient(35deg, #ec366b 0%, #a43493 100%) !important;

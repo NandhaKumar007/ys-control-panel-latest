@@ -1153,8 +1153,8 @@
                     [(ngModel)]="x.custom_option_checked" (change)="addonForm.alert_msg=null; getCheckboxNextList(); disableOption();" [disabled]="x.disabled" />
                     <!-- Content -->
                     <span class="checkmark"></span>
-                    <img imgBroken *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="addon" class="img-fluid">
-                    <img imgBroken *ngIf="!x.image" class="addon-icon" src="assets/images/addon.svg">
+                    <img *ngIf="x.image" [src]="imgBaseUrl+x.image" alt="addon" class="img-fluid">
+                    <img *ngIf="!x.image" class="addon-icon" src="assets/images/addon.svg">
                     <p class="text-center m-0">{{x.name}}</p>
                     <p *ngIf="x.price>0" class="text-center m-0">{{ x.price | currency:commonService.store_currency.country_code }}</p>
                   </label>
@@ -1168,7 +1168,7 @@
             <div class="row">
               <div *ngIf="measurement_sets[mmIndex].image" class="col-lg-4">
                 <div class="d-flex align-items-center justify-content-center mb-3">
-                  <img imgBroken [src]="imgBaseUrl+measurement_sets[mmIndex].image" alt="model">
+                  <img [src]="imgBaseUrl+measurement_sets[mmIndex].image" alt="model">
                 </div>
               </div>
               <div [ngClass]="(measurement_sets[mmIndex].image)? 'col-lg-8': 'col-lg-12'">

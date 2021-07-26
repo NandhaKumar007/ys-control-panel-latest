@@ -183,73 +183,83 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   // customer models
-  onEdit(type, x, modalName) {
-    this.addonForm = x;
-    this.prodExtApi.ADDON_DETAILS(this.addonForm.addon_id).subscribe(result => {
+  onEdit(type, modelId, modalName) {
+    this.customerApi.CUSTOMER_DETAILS(this.params.id).subscribe(result => {
       if(result.status) {
-        let addonDetails = result.data;
-        this.addonForm.price = addonDetails.price;
-        // customization
-        if(type=="custom") {
-          this.customIndex = 0;
-          this.custom_list = addonDetails.custom_list;
-          this.custom_list[this.customIndex].filtered_option_list = this.custom_list[this.customIndex].option_list;
-          let customList = this.addonForm.custom_list[this.customIndex];
-          if(this.custom_list[this.customIndex].type=='either_or') {
-            if(customList.value && customList.value.length) {
-              let selectedOption = customList.value[0];
-              let optIndex = this.custom_list[this.customIndex].filtered_option_list.findIndex(obj => obj.name==selectedOption.name);
-              if(optIndex!=-1) {
-                this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[optIndex].name;
-                this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
-              }
-            }
-            else {
-              this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
-              this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
-            }
-          }
-          else {
-            if(customList.value) {
-              this.custom_list[this.customIndex].filtered_option_list.forEach(opt => {
-                let optionIndex = customList.value.findIndex(obj => obj.name==opt.name);
-                if(optionIndex!=-1) opt.custom_option_checked = true;
-              });
-              this.getCheckboxNextList();
-            }
-            this.disableOption();
-          }
-          this.modalService.open(modalName, {size: 'lg'});
-          this.commonService.scrollModalTop(500);
-        }
-        // measurement
-        else if(type=="measurement") {
-          this.mmIndex = 0;
-          if(!this.measurementList) {
-            this.prodExtApi.MEASUREMENT_LIST().subscribe(result => {
-              if(result.status) this.measurementList = result.list;
-              else this.measurementList = [];
-              this.buildMmList(addonDetails.mm_list, this.measurementList).then((resp: any) => {
-                this.parent_mm_list = resp;
-                this.updateCurrentMmList();
+        let modelList = result.data.model_list;
+        let index = modelList.findIndex(obj => obj._id==modelId);
+        if(index!=-1) {
+          this.addonForm = modelList[index];
+          this.prodExtApi.ADDON_DETAILS(this.addonForm.addon_id).subscribe(result => {
+            if(result.status) {
+              let addonDetails = result.data;
+              this.addonForm.price = addonDetails.price;
+              // customization
+              if(type=="custom") {
+                this.customIndex = 0;
+                this.custom_list = addonDetails.custom_list;
+                this.custom_list[this.customIndex].filtered_option_list = this.custom_list[this.customIndex].option_list;
+                let customList = this.addonForm.custom_list[this.customIndex];
+                if(this.custom_list[this.customIndex].type=='either_or') {
+                  if(customList.value && customList.value.length) {
+                    let selectedOption = customList.value[0];
+                    let optIndex = this.custom_list[this.customIndex].filtered_option_list.findIndex(obj => obj.name==selectedOption.name);
+                    if(optIndex!=-1) {
+                      this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[optIndex].name;
+                      this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
+                    }
+                  }
+                  else {
+                    this.custom_list[this.customIndex].selected_option = this.custom_list[this.customIndex].filtered_option_list[0].name;
+                    this.getRadioNextList(this.custom_list[this.customIndex].selected_option);
+                  }
+                }
+                else {
+                  if(customList.value) {
+                    this.custom_list[this.customIndex].filtered_option_list.forEach(opt => {
+                      let optionIndex = customList.value.findIndex(obj => obj.name==opt.name);
+                      if(optionIndex!=-1) opt.custom_option_checked = true;
+                    });
+                    this.getCheckboxNextList();
+                  }
+                  this.disableOption();
+                }
                 this.modalService.open(modalName, {size: 'lg'});
                 this.commonService.scrollModalTop(500);
-              });
-            });
-          }
-          else {
-            this.buildMmList(addonDetails.mm_list, this.measurementList).then((resp: any) => {
-              this.parent_mm_list = resp;
-              this.updateCurrentMmList();
-              this.modalService.open(modalName, {size: 'lg'});
-              this.commonService.scrollModalTop(500);
-            });
-          }
+              }
+              // measurement
+              else if(type=="measurement") {
+                this.mmIndex = 0;
+                if(!this.measurementList) {
+                  this.prodExtApi.MEASUREMENT_LIST().subscribe(result => {
+                    if(result.status) this.measurementList = result.list;
+                    else this.measurementList = [];
+                    this.buildMmList(addonDetails.mm_list, this.measurementList).then((resp: any) => {
+                      this.parent_mm_list = resp;
+                      this.updateCurrentMmList();
+                      this.modalService.open(modalName, {size: 'lg'});
+                      this.commonService.scrollModalTop(500);
+                    });
+                  });
+                }
+                else {
+                  this.buildMmList(addonDetails.mm_list, this.measurementList).then((resp: any) => {
+                    this.parent_mm_list = resp;
+                    this.updateCurrentMmList();
+                    this.modalService.open(modalName, {size: 'lg'});
+                    this.commonService.scrollModalTop(500);
+                  });
+                }
+              }
+              else {
+                this.modalService.open(modalName, {size: 'lg'});
+                this.commonService.scrollModalTop(500);
+              }
+            }
+            else console.log("response", result);
+          });
         }
-        else {
-          this.modalService.open(modalName, {size: 'lg'});
-          this.commonService.scrollModalTop(500);
-        }
+        else console.log("invalid model");
       }
       else console.log("response", result);
     });

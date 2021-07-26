@@ -22,7 +22,7 @@ export const environment = {
         // [{ 'font': [] }],
         [{ 'align': [] }],
         ['clean'],                           
-        ['link', 'image', 'video']                
+        ['link', 'image']                
       ]
     }
   }
