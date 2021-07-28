@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { CommonService } from '../../../../services/common.service';
@@ -26,7 +27,7 @@ export class CustomerDetailsComponent implements OnInit {
   measurementList: any;
 
   constructor(
-    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute,
+    config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private router: Router, public location: Location,
     public commonService: CommonService, private customerApi: CustomerApiService, private prodExtApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -38,8 +39,19 @@ export class CustomerDetailsComponent implements OnInit {
       this.customerApi.CUSTOMER_DETAILS(params.id).subscribe(result => {
         setTimeout(() => { this.pageLoader = false; }, 500);
         if(result.status) this.customerDetails = result.data;
+        else console.log("response", result);
       });
     });
+  }
+
+  goOrdersPage(customer, type) {
+    this.commonService.selected_customer = customer;
+    this.router.navigate(["/orders/product/"+type+"/"+customer._id])
+  }
+
+  goQuotPage(customer, type) {
+    this.commonService.selected_customer = customer;
+    this.router.navigate(["/quotations/"+type+"/"+customer._id])
   }
 
   // EDIT CUSTOMER
@@ -182,6 +194,12 @@ export class CustomerDetailsComponent implements OnInit {
     }
   }
 
+  onViewModelHistory(x) {
+    let customerDetails = { name: this.customerDetails.name, email: this.customerDetails.email, unique_id: this.customerDetails.unique_id };
+    sessionStorage.setItem("customer_details", JSON.stringify(customerDetails));
+    this.router.navigate(["/customers/"+this.params.id+"/"+x._id]);
+  }
+
   // customer models
   onEdit(type, modelId, modalName) {
     this.customerApi.CUSTOMER_DETAILS(this.params.id).subscribe(result => {
@@ -284,15 +302,8 @@ export class CustomerDetailsComponent implements OnInit {
             }
           }
         });
-        this.addonForm.updated_on = new Date();
         this.addonForm.customer_id = this.params.id;
-        this.customerApi.UPDATE_MODEL(this.addonForm).subscribe(result => {
-          if(result.status) {
-            document.getElementById("closeModal").click();
-            this.customerDetails = result.data;
-          }
-          else console.log("response", result);
-        });
+        this.onUpdateModel(this.addonForm);
       }
       else this.addonForm.alert_msg = customAlert;
     }
@@ -322,15 +333,8 @@ export class CustomerDetailsComponent implements OnInit {
         }
       }
       this.addonForm.submit = true;
-      this.addonForm.updated_on = new Date();
       this.addonForm.customer_id = this.params.id;
-      this.customerApi.UPDATE_MODEL(this.addonForm).subscribe(result => {
-        if(result.status) {
-          document.getElementById("closeModal").click();
-          this.customerDetails = result.data;
-        }
-        else console.log("response", result);
-      });
+      this.onUpdateModel(this.addonForm);
     }
     else {
       this.addonForm.alert_msg = "Please fill out the mandatory fields";
@@ -342,20 +346,31 @@ export class CustomerDetailsComponent implements OnInit {
     let reqInput = this.validateForm('notes-form');
     if(reqInput===undefined) {
       this.addonForm.submit = true;
-      this.addonForm.updated_on = new Date();
       this.addonForm.customer_id = this.params.id;
-      this.customerApi.UPDATE_MODEL(this.addonForm).subscribe(result => {
-        if(result.status) {
-          document.getElementById("closeModal").click();
-          this.customerDetails = result.data;
-        }
-        else console.log("response", result);
-      });
+      this.onUpdateModel(this.addonForm);
     }
     else {
       this.addonForm.alert_msg = "Please fill out the mandatory fields";
       document.getElementById(reqInput).focus();
     }
+  }
+
+  onUpdateModel(addonForm) {
+    this.customerApi.UPDATE_MODEL(addonForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById("closeModal").click();
+        this.customerDetails = result.data;
+        // model history
+        if(this.commonService.ys_features.indexOf('custom_model_history')!=-1) {
+          addonForm.store_id = this.commonService.store_details._id;
+          addonForm.customer_id = this.params.id;
+          addonForm.model_id = addonForm._id;
+          delete addonForm.created_on;
+          this.customerApi.ADD_MODEL_TO_CUSTOMER_HISTORY(addonForm).subscribe(result => { });
+        }
+      }
+      else console.log("response", result);
+    });
   }
 
   // custom section

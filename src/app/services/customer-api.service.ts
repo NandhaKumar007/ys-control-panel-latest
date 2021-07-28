@@ -38,6 +38,15 @@ export class CustomerApiService {
     return this.http.get<any>(environment.ws_url+'/store/abandoned_carts', httpOptions);
   }
 
+  CUSTOMER_MODEL_HISTORY_LIST(x, y) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/customer_models?customer_id='+x+'&model_id='+y, httpOptions);
+  }
+  ADD_MODEL_TO_CUSTOMER_HISTORY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/customer_models', x, httpOptions);
+  }
+
   // Address
   ADD_ADDRESS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

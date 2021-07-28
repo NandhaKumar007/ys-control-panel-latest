@@ -71,6 +71,7 @@ export class SidebarService {
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
       routePermissionList.push("dashboard", "customers", "profile");
+      if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       // dashboard
       sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
       // product extras
@@ -341,6 +342,7 @@ export class SidebarService {
       sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }
     else if(this.commonService.store_details.login_type == 'subuser') {
+      if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       if(subuserFeatures.indexOf('dashboard')!=-1) {
         sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
         routePermissionList.push("dashboard");

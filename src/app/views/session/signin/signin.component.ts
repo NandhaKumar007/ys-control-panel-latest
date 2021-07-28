@@ -77,19 +77,22 @@ export class SigninComponent implements OnInit {
         this.commonService.payment_list = result.data.payment_types;
         this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
         // store features
-        this.commonService.vendor_list = []; this.commonService.courier_partners = [];
+        this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
+        this.commonService.updateLocalData('user_list', this.commonService.user_list);
         this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
         this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-        if(this.commonService.ys_features.indexOf('vendors')!=-1 || this.commonService.ys_features.indexOf('courier_partners')!=-1) {
-          this.storeApi.STORE_FEATURES().subscribe(result => {
-            if(result.status) {
-              this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
-              this.commonService.courier_partners = result.data.courier_partners;
-              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
-              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-            }
-          });
-        }
+        this.storeApi.STORE_FEATURES().subscribe(result => {
+          if(result.status) {
+            result.data.sub_users.forEach(obj => {
+              this.commonService.user_list.push({ _id: obj._id, name: obj.name });
+            });
+            this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
+            this.commonService.courier_partners = result.data.courier_partners;
+            this.commonService.updateLocalData('user_list', this.commonService.user_list);
+            this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+            this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+          }
+        });
         this.sidebar.BUILD_CATEGORY_LIST();
         if(sessionStorage.getItem("redirect_url")) {
           let redirectUrl = sessionStorage.getItem("redirect_url");

@@ -54,8 +54,9 @@ export class ModifyYsClientsComponent implements OnInit {
       if(this.clientForm.type!='order_based') this.clientForm.abandoned_status = false;
       this.clientForm.btnLoader = true;
       let formData = {
-        _id: this.clientForm._id, name: this.clientForm.name, type: this.clientForm.type, company_details: this.clientForm.company_details,
-        gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details, abandoned_status: this.clientForm.abandoned_status
+        _id: this.clientForm._id, name: this.clientForm.name, account_type: this.clientForm.account_type, type: this.clientForm.type,
+        company_details: this.clientForm.company_details, gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details,
+        abandoned_status: this.clientForm.abandoned_status
       }
       this.adminApi.UPDATE_STORE(formData).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);

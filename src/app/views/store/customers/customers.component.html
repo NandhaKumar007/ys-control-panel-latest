@@ -38,9 +38,9 @@
       class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
       <div class="card o-hidden mb-4 d-flex flex-row">
         <div class="flex-grow-1 pl-2 d-flex mtb-30 mtb-0-60">
-          <div
-            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+            <p *ngIf="x.unique_id" class="w-30 w-sm-100 m-b-0">{{x.unique_id}}</p>
             <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
             <p class="w-30 w-sm-100 m-b-0">{{ (x.dial_code && x.mobile)? x.dial_code+' '+x.mobile: 'NA' }}</p>
             <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions order-md-2">

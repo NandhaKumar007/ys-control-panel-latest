@@ -101,6 +101,7 @@ export class CommonService {
   subuser_permissions: any = {};
   vendor_permissions: any = {};
 
+  user_list: any = [];
   vendor_list: any = [];
   currency_types: any = [];
   route_permission_list: any = [];

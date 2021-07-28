@@ -237,8 +237,8 @@
                 <p class="m-0 text-small text-muted">{{x.total_qty}} items purchased for {{x.total_price | currency: commonService.store_currency?.country_code}}</p>
               </div>
               <div>
-                <a [routerLink]="['/customers']" [queryParams]="{customer_id: x._id}" class="btn btn-wide btn-outline-primary">
-               <span class="outline-primary-txt">View</span>
+                <a routerLink="/customers/{{x._id}}" class="btn btn-wide btn-outline-primary">
+                  <span class="outline-primary-txt">View</span>
                 </a>
               </div>
             </div>
