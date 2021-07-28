@@ -117,6 +117,7 @@ export class CommonService {
   page_attr: any;
   product_page_attr: any;
   selected_customer: any;
+  custom_model: any;
   
   scroll_y_pos: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";

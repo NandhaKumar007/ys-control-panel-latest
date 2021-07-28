@@ -18,7 +18,7 @@ export class CustomerDetailsComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl; addressFormType: string;
   editForm: any = {}; addressForm: any = {}; customerForm: any = {};
   country_details: any; address_fields: any = []; mobile_pattern: any;
-  state_list: any = []; deleteForm: any = {}; custom_model: any = {};
+  state_list: any = []; deleteForm: any = {};
   selected_address: any; selected_model: any; btnLoader: boolean;
 
   custom_list: any = []; addonForm: any = {};
@@ -303,7 +303,7 @@ export class CustomerDetailsComponent implements OnInit {
           }
         });
         this.addonForm.customer_id = this.params.id;
-        this.onUpdateModel(this.addonForm);
+        this.onUpdateModel(this.addonForm, 'customization');
       }
       else this.addonForm.alert_msg = customAlert;
     }
@@ -334,7 +334,7 @@ export class CustomerDetailsComponent implements OnInit {
       }
       this.addonForm.submit = true;
       this.addonForm.customer_id = this.params.id;
-      this.onUpdateModel(this.addonForm);
+      this.onUpdateModel(this.addonForm, 'measurement');
     }
     else {
       this.addonForm.alert_msg = "Please fill out the mandatory fields";
@@ -347,7 +347,7 @@ export class CustomerDetailsComponent implements OnInit {
     if(reqInput===undefined) {
       this.addonForm.submit = true;
       this.addonForm.customer_id = this.params.id;
-      this.onUpdateModel(this.addonForm);
+      this.onUpdateModel(this.addonForm, 'notes');
     }
     else {
       this.addonForm.alert_msg = "Please fill out the mandatory fields";
@@ -355,7 +355,7 @@ export class CustomerDetailsComponent implements OnInit {
     }
   }
 
-  onUpdateModel(addonForm) {
+  onUpdateModel(addonForm, type) {
     this.customerApi.UPDATE_MODEL(addonForm).subscribe(result => {
       if(result.status) {
         document.getElementById("closeModal").click();
@@ -365,7 +365,21 @@ export class CustomerDetailsComponent implements OnInit {
           addonForm.store_id = this.commonService.store_details._id;
           addonForm.customer_id = this.params.id;
           addonForm.model_id = addonForm._id;
-          delete addonForm.created_on;
+          if(type=='customization') {
+            addonForm.mm_sets = [];
+            addonForm.notes_list = [];
+            delete addonForm.mm_unit;
+          }
+          else if(type=='measurement') {
+            addonForm.custom_list = [];
+            addonForm.notes_list = [];
+          }
+          else if(type=='notes') {
+            addonForm.custom_list = [];
+            addonForm.mm_sets = [];
+            delete addonForm.mm_unit;
+          }
+          delete addonForm._id; delete addonForm.created_on;
           this.customerApi.ADD_MODEL_TO_CUSTOMER_HISTORY(addonForm).subscribe(result => { });
         }
       }

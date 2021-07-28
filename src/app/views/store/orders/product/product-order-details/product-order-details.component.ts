@@ -18,7 +18,7 @@ import { Location } from '@angular/common';
 export class ProductOrderDetailsComponent implements OnInit {
 
   params: any = {}; order_details: any = {}; courierForm: any;
-  custom_model: any = {}; customNext: boolean;
+  customNext: boolean;
   imgBaseUrl = environment.img_baseurl; updateErrorMsg: string;
   btnLoader: boolean; mailForm: any;
   errorMsg: string; pageLoader: boolean;

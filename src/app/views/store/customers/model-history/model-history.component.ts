@@ -18,7 +18,7 @@ export class ModelHistoryComponent implements OnInit {
 
   page = 1; pageSize = 10;
   pageLoader: boolean; list: any= [];
-  customerDetails: any= {}; custom_model: any = {};
+  customerDetails: any= {};
   imgBaseUrl = environment.img_baseurl;
 
   constructor(
