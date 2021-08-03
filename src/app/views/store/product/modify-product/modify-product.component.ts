@@ -136,7 +136,7 @@ export class ModifyProductComponent implements OnInit {
                 this.commonService.aistyle_list = result.data;
                 this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
                 this.aiStyleList = this.commonService.aistyle_list;
-                if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
+                if(this.productForm.aistyle_list && this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
                 this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
                   this.aiStyleList = list;
                 });
@@ -266,10 +266,15 @@ export class ModifyProductComponent implements OnInit {
 
   onUpdateImages() {
     this.btnLoader = true;
-    let formData = {
+    let formData: any = {
       _id: this.productForm._id, image_tag_status: this.productForm.image_tag_status,
-      image_list: this.productForm.image_list, video_details: this.productForm.video_details
+      image_list: this.productForm.image_list, video_details: this.productForm.video_details,
+      variant_status: false, variant_list: []
     };
+    if(this.productForm.variant_status) {
+      formData.variant_status = true;
+      if(this.productForm.variant_list) formData.variant_list = this.productForm.variant_list;
+    }
     this.api.UPDATE_PRODUCT_IMAGES(formData).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
@@ -400,6 +405,16 @@ export class ModifyProductComponent implements OnInit {
     };
     myReader.readAsDataURL(file);
   }
+  variantFileChangeListener(parentIndex, childIndex, event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.productForm.variant_list[parentIndex].image_list[childIndex].image = (<FileReader>event.target).result;
+        this.productForm.variant_list[parentIndex].image_list[childIndex].img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
   videoFileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let myReader:FileReader = new FileReader();
@@ -492,6 +507,8 @@ export class ModifyProductComponent implements OnInit {
         jsonData.sku = this.existVariantList[varIndex].sku;
         jsonData.stock = this.existVariantList[varIndex].stock;
         jsonData.selling_price = this.existVariantList[varIndex].selling_price;
+        jsonData.image_list = [];
+        if(this.existVariantList[varIndex].image_list) jsonData.image_list = this.existVariantList[varIndex].image_list;
         if(this.existVariantList[varIndex].discounted_price) jsonData.discounted_price = this.existVariantList[varIndex].discounted_price;
         if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
         if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;
@@ -510,6 +527,8 @@ export class ModifyProductComponent implements OnInit {
           jsonData.sku = this.existVariantList[varIndex].sku;
           jsonData.stock = this.existVariantList[varIndex].stock;
           jsonData.selling_price = this.existVariantList[varIndex].selling_price;
+          jsonData.image_list = [];
+          if(this.existVariantList[varIndex].image_list) jsonData.image_list = this.existVariantList[varIndex].image_list;
           if(this.existVariantList[varIndex].discounted_price) jsonData.discounted_price = this.existVariantList[varIndex].discounted_price;
           if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
           if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;
@@ -530,6 +549,8 @@ export class ModifyProductComponent implements OnInit {
             jsonData.sku = this.existVariantList[varIndex].sku;
             jsonData.stock = this.existVariantList[varIndex].stock;
             jsonData.selling_price = this.existVariantList[varIndex].selling_price;
+            jsonData.image_list = [];
+            if(this.existVariantList[varIndex].image_list) jsonData.image_list = this.existVariantList[varIndex].image_list;
             if(this.existVariantList[varIndex].discounted_price) jsonData.discounted_price = this.existVariantList[varIndex].discounted_price;
             if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
             if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;

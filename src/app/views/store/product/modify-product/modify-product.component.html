@@ -583,49 +583,30 @@
             <img-cropper class="image-cropper" #cropper [image]="productForm.image_list[imageIndex]" [settings]="cropperSettings"></img-cropper>
           </div>
         </div>
+        <div class="separator-breadcrumb border-top mt-3"></div>
         <!-- Image Tag -->
-        <div *ngIf="commonService.ys_features.indexOf('variant_image_tag')!=-1" class="row">
-          <div class="col-md-12 form-group">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="image_tag_status" [(ngModel)]="productForm.image_tag_status" #image_tag_status="ngModel">
-              <span>Tag image to variants</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div *ngIf="productForm.image_tag_status" class="col-md-4 form-group mb-3">
-            <div class="card p-3">
-              <label>Variants</label>
-              <select name="tag_variant" class="form-control" [(ngModel)]="productForm.tag_variant" #tag_variant="ngModel" required>
-                <option *ngFor="let x of productForm.variant_types;" [ngValue]="x.options">{{x.name}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Video -->
-          <div align="center" class="col-md-6 col-lg-4 d-flex form-group mb-3" *ngIf="commonService.ys_features.indexOf('product_video')!=-1">
-            <div class="card w-100 p-3 mt-3 mb-3">
-              <ng-container *ngIf="productForm?.video_details?.image">
-                <span (click)="productForm.video_details={}; clearIdValue('videoSrc');" class="material-icons item-close absolute-item-close float-right "
-                  aria-hidden="true">close</span>
-              </ng-container>
-              <label>
-                <div *ngIf="!productForm?.video_details?.image">
-                  <i class="material-icons add-img">add_photo_alternate</i>
-                  <p>Click to upload video thumbnail image</p>
-                </div>
-                <img *ngIf="productForm?.video_details?.image && productForm?.video_details?.img_change" [src]="productForm.video_details.image" height="150" width="auto">
-                <img *ngIf="productForm?.video_details?.image && !productForm?.video_details?.img_change" [src]="imgBaseUrl+productForm.video_details.image" height="150" width="auto">
-                <input type="file" id="videoSrc" name="video_img" style="display: none;" (change)="videoFileChangeListener($event)" accept="image/jpeg, image/png"
-                />
+        <ng-container *ngIf="commonService.ys_features.indexOf('variant_image_tag')!=-1 && productForm.variant_types?.length">
+          <div class="row">
+            <div class="col-md-12 form-group">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="image_tag_status" [(ngModel)]="productForm.image_tag_status" #image_tag_status="ngModel">
+                <span>Tag image to variants</span>
+                <span class="checkmark"></span>
               </label>
-              <div class="mt-1" align="left">
-                <label>Product Video Source Link</label>
-                <input type="text" name="video_src" class="form-control" [(ngModel)]="productForm.video_details.src" #video_src="ngModel" />
+            </div>
+            <div *ngIf="productForm.image_tag_status" class="col-md-4 form-group mb-3">
+              <div class="card p-3">
+                <label>Variants</label>
+                <select name="tag_variant" class="form-control" [(ngModel)]="productForm.tag_variant" #tag_variant="ngModel" required>
+                  <option *ngFor="let x of productForm.variant_types;" [ngValue]="x.options">{{x.name}}</option>
+                </select>
               </div>
             </div>
           </div>
-          <!-- Image List -->
+          <div class="separator-breadcrumb border-top mt-3"></div>
+        </ng-container>
+        <!-- Image List -->
+        <div class="row">
           <div align="center" class="col-md-6 col-lg-4 form-group mb-3" *ngFor="let x of productForm.image_list; let i=index;">
             <div class="card p-3 mt-3 mb-3">
               <ng-container *ngIf="productForm.image_list.length>1">
@@ -646,9 +627,16 @@
               </div>
               <div class="mt-1" *ngIf="commonService.ys_features.indexOf('variant_image_tag')!=-1 && productForm.image_tag_status" align="left">
                 <label>Image Tag</label>
-                <select name="img_tag{{i}}" class="form-control" [(ngModel)]="x.tag" #tag="ngModel" required>
+                <select name="img_tag{{i}}" class="form-control" [(ngModel)]="x.tag" #tag="ngModel">
                   <option *ngFor="let x of productForm.tag_variant;" [ngValue]="x.value">{{x.value}}</option>
                 </select>
+              </div>
+              <div *ngIf="commonService.ys_features.indexOf('variant_image_tag_pro')!=-1 && productForm.variant_list?.length" class="mt-2" align="left">
+                <label class="checkbox checkbox-primary">
+                  <input class="form-check-input" type="checkbox" name="hide_on_variants{{i}}" [(ngModel)]="x.hide_on_variants" #hide_on_variants="ngModel">
+                  <span>Hide on variants</span>
+                  <span class="checkmark"></span>
+                </label>
               </div>
             </div>
           </div>
@@ -658,8 +646,79 @@
             </div>
           </div>
         </div>
+        <!-- Image Tag Pro -->
+        <ng-container *ngIf="commonService.ys_features.indexOf('variant_image_tag_pro')!=-1 && productForm.variant_list?.length">
+          <div class="separator-breadcrumb border-top mt-3"></div>
+          <div class="row">
+            <div *ngFor="let x of productForm.variant_list; let i=index;" class="col-md-12 mb-3">
+              <h6 class="add-another">{{ x.variants.join(' | ') }}</h6>
+              <div class="card p-3 mb-3">
+                <div class="row">
+                  <ng-container *ngIf="x.image_list?.length">
+                    <div align="center" class="col-md-6 col-lg-4 d-flex" *ngFor="let y of x.image_list; let j=index;">
+                      <div class="card card-in-card w-100 p-3 mt-3 mb-3">
+                        <span (click)="x.image_list.splice(j, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                        <label>
+                          <div *ngIf="!y.image">
+                            <i class="material-icons add-img"> add_photo_alternate</i>
+                            <p>Click to upload image (Resolution: {{imgWidth}}x{{imgHeight}})</p>
+                          </div>
+                          <img *ngIf="y.image && y.img_change" [src]="y.image" height="150" width="auto">
+                          <img *ngIf="y.image && !y.img_change" [src]="imgBaseUrl+y.image" height="150" width="auto">
+                          <input type="file" name="image{{i+1}}{{j+1}}" style="display: none;" (change)="variantFileChangeListener(i, j, $event);" accept="image/jpeg, image/png" />
+                        </label>
+                        <div class="mt-1" align="left">
+                          <label>Image Label</label>
+                          <input type="text" name="title{{i}}" class="form-control" [(ngModel)]="y.title" #title="ngModel" />
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="x.image_list.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mb-3 z-i-0">
+                      <div class="add-another-opt w-100" (click)="x.image_list.push({});">
+                        <p>ADD ANOTHER IMAGE</p>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div *ngIf="!x.image_list?.length" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
+                    <div class="add-another-opt w-100" (click)="x.image_list=[{}];">
+                      <p>ADD NEW IMAGE</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Video -->
+        <ng-container *ngIf="commonService.ys_features.indexOf('product_video')!=-1">
+          <div class="separator-breadcrumb border-top mt-3"></div>
+          <div class="row">
+            <div align="center" class="col-md-6 col-lg-4 d-flex form-group mb-3">
+              <div class="card w-100 p-3 mt-3 mb-3">
+                <ng-container *ngIf="productForm?.video_details?.image">
+                  <span (click)="productForm.video_details={}; clearIdValue('videoSrc');" class="material-icons item-close absolute-item-close float-right"
+                    aria-hidden="true">close</span>
+                </ng-container>
+                <label>
+                  <div *ngIf="!productForm?.video_details?.image">
+                    <i class="material-icons add-img">video_camera_back</i>
+                    <p>Click to upload video thumbnail image</p>
+                  </div>
+                  <img *ngIf="productForm?.video_details?.image && productForm?.video_details?.img_change" [src]="productForm.video_details.image" height="150" width="auto">
+                  <img *ngIf="productForm?.video_details?.image && !productForm?.video_details?.img_change" [src]="imgBaseUrl+productForm.video_details.image" height="150" width="auto">
+                  <input type="file" id="videoSrc" name="video_img" style="display: none;" (change)="videoFileChangeListener($event)" accept="image/jpeg, image/png"
+                  />
+                </label>
+                <div class="mt-1" align="left">
+                  <label>Product Video Source Link</label>
+                  <input type="text" name="video_src" class="form-control" [(ngModel)]="productForm.video_details.src" #video_src="ngModel" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
 
-        <div class="separator-breadcrumb border-top mt-5"></div>
+        <div class="separator-breadcrumb border-top mt-3"></div>
         <div class="row">
           <div class="col-md-12 mt-3 mb-3">
             <div *ngIf="productForm.errorMsg">

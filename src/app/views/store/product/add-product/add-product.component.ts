@@ -222,6 +222,16 @@ export class AddProductComponent implements OnInit {
     };
     myReader.readAsDataURL(file);
   }
+  variantFileChangeListener(parentIndex, childIndex, event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.productForm.variant_list[parentIndex].image_list[childIndex].image = (<FileReader>event.target).result;
+        this.productForm.variant_list[parentIndex].image_list[childIndex].img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
   videoFileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let myReader:FileReader = new FileReader();
