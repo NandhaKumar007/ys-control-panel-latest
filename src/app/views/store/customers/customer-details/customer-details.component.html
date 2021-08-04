@@ -149,18 +149,16 @@
           <input type="text" name="email" class="form-control" [(ngModel)]="editForm.email" #email="ngModel" required />
         </div>
         <div class="col-md-12 form-group mb-3">
-          <div class="card p-3">
-            <div class="input-group">
-              <div class="input-group-prepend flex-column w-40 w-sm-100 mr-3 c-sm-m-0 c-sm-mb-3">
-                <label>Dial Code</label>
-                <select name="dial_code" class="form-control" [(ngModel)]="editForm.dial_code" #dial_code="ngModel" required>
-                  <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [ngValue]="x.dial_code">{{x.dial_code}}</option>
-                </select>
-              </div>
-              <div class="flex-column w-55 w-sm-100">
-                <label>Mobile</label>
-                <input type="text" name="mobile" [(ngModel)]="editForm.mobile" #mobile="ngModel" class="form-control" required />
-              </div>
+          <div class="input-group">
+            <div class="input-group-prepend flex-column w-40 w-sm-100 mr-3 c-sm-m-0 c-sm-mb-3">
+              <label>Dial Code</label>
+              <select name="dial_code" class="form-control" [(ngModel)]="editForm.dial_code" #dial_code="ngModel" required>
+                <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [ngValue]="x.dial_code">{{x.dial_code}}</option>
+              </select>
+            </div>
+            <div class="flex-column w-55 w-sm-100">
+              <label>Mobile</label>
+              <input type="text" name="mobile" [(ngModel)]="editForm.mobile" #mobile="ngModel" class="form-control" required />
             </div>
           </div>
         </div>
