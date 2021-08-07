@@ -65,7 +65,7 @@
             <div *ngIf="cart_list.length" class="list-item col-md-12 p-0">
               <ng-container *ngFor="let x of cart_list; let i=index;">
                 <div class="card mb-4 d-flex flex-row">
-                  <div class="list-thumb d-flex align-items-center mtb-20">
+                  <div *ngIf="x.image" class="list-thumb d-flex align-items-center mtb-20">
                     <img [src]="imgBaseUrl+x.image" alt="image" />
                   </div>
                   <div class="flex-grow-1 pl-2 d-flex mtb-20">
@@ -73,22 +73,21 @@
                       class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                       <p class="m-0 prod-card-content w-md-100 cursor">{{x.name}}
                         <ng-container *ngIf="x.variant_status">
-                          <ng-container *ngFor="let y of x.variant_types;">
-                            <p class="inner-addon w-100">
-                              <strong>{{y.name}}: </strong>
-                              <span class="cart-addon">{{y.value}}</span>
-                            </p>
-                          </ng-container>
-                        </ng-container>
-                        <ng-container *ngIf="x.selected_addon">
-                          <p class="inner-addon w-100">
-                            <strong>Addon:</strong>
-                            <span class="cart-addon" [ngClass]="x.customization_status? 'cursor': ''"
-                              (click)="x.customization_status? onViewModel(x.customized_model, viewCustomizationDetailsModal): '';">
-                              {{x.selected_addon?.name}}
-                            </span>
+                          <p *ngFor="let y of x.variant_types;" class="inner-addon w-100">
+                            <strong>{{y.name}}: </strong>
+                            <span class="cart-addon">{{y.value}}</span>
                           </p>
-
+                        </ng-container>
+                        <ng-container *ngIf="x.addon_status && x.selected_addon">
+                          <p class="inner-addon w-100">
+                            <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
+                            <ng-container *ngIf="x.customization_status">
+                              <br>
+                              <b class="w-100 text-primary"
+                                (click)="commonService.custom_model=x.customized_model; modalService.open(viewCustomizationDetailsModal, { size: 'lg'});"
+                                style="cursor:pointer;">{{x.customized_model?.name}}</b>
+                            </ng-container>
+                          </p>
                         </ng-container>
                       </p>
                       <p class="m-0 prod-card-content w-md-100">{{x.quantity}} {{x.unit}}</p>
@@ -574,7 +573,7 @@
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{(x.address_list?.length)? x.address_list[0].address : 'NA'}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{(x.unique_id)? x.unique_id : 'NA'}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{(x.mobile)? x.mobile : 'NA'}}</p>
                   <p class="w-30 w-md-100 m-b-0">
@@ -706,7 +705,7 @@
                 <div>
                   <div class="product-image d-flex justify-content-center align-items-center">
                     <div class="list-thumb d-flex align-items-center mtb-20">
-                      <img [src]="imgBaseUrl+productDetails.image" alt="prod-img">
+                      <img *ngIf="productDetails.image" [src]="imgBaseUrl+productDetails.image" alt="prod-img">
                     </div>
                   </div>
                 </div>
@@ -1054,11 +1053,17 @@
             <div class="col-lg-2 col-md-6">
               <div class="modal-details">
                 <h6><b>Created On</b></h6>
-                <p>{{x.created_on | date : "dd MMM y"}}
-                <p>
+                <p>{{x.created_on | date : "dd MMM y hh:mm a"}}<p>
               </div>
             </div>
-            <ng-container *ngIf="x?.custom_list?.length">
+            <div class="col-lg-2 col-md-6">
+              <div *ngIf="x.updated_on" class="modal-details">
+                <h6><b>Updated On</b></h6>
+                <p>{{x.updated_on | date : "dd MMM y hh:mm a"}}<p>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6"></div>
+            <!-- <ng-container *ngIf="x?.custom_list?.length">
               <div *ngFor="let y of x.custom_list | slice:0:2; let j=index;" class="col-md-6"
                 [ngClass]="x.custom_list.length==1? 'col-lg-4': 'col-lg-2'">
                 <div class="modal-details">
@@ -1068,12 +1073,12 @@
                 </div>
               </div>
             </ng-container>
-            <div *ngIf="!x?.custom_list?.length" class="col-lg-4 col-md-6"></div>
+            <div *ngIf="!x?.custom_list?.length" class="col-lg-4 col-md-6"></div> -->
             <div class="col-lg-4 col-md-12">
               <button type="button"
                 (click)="modal.dismiss('Cross click'); customized_model=x; calcAddonPrice(); productDetails.added_to_cart=false;"
                 class="btn btn-wide btn-primary mb-2 w-100">Select</button>
-              <button type="button" (click)="onViewModel(x, viewCustomizationDetailsModal);"
+              <button type="button" (click)="commonService.custom_model=x; modalService.open(viewCustomizationDetailsModal, { size: 'lg'});"
                 class="btn blue-outline-btn mb-2 w-100">
                 <span class="blue-outline-txt">View</span>
               </button>
@@ -1408,76 +1413,16 @@
   <div class="modal-header d-flex align-items-center">
     <div>
       <h5 class="modal-title">
-        <strong>{{selected_model?.name}}</strong>
+        <strong>{{commonService.custom_model?.name}}</strong>
       </h5>
-      <p class="m-0">These are the details of this model</p>
+      <p class="m-0">These are the details of this customization</p>
     </div>
     <div (click)="modal.dismiss('Cross click');" class="d-flex">
       <i class="material-icons">close</i>
     </div>
   </div>
   <div class="modal-body lg-modal-body slim-scroll">
-    <!-- custom list -->
-    <div *ngIf="selected_model?.custom_list?.length" class="row">
-      <div class="col-md-12">
-        <b class="add-another mb-3">CUSTOMIZATION</b>
-      </div>
-      <ng-container *ngFor="let x of selected_model?.custom_list;">
-        <div class="col-md-6 flex" *ngFor="let y of x.value;">
-          <div class="blouse-model-col flex-dir-column">
-            <img *ngIf="y.image" [src]="imgBaseUrl+y.image" alt="">
-            <img class="addon-icon opacity6" *ngIf="!y.image" src="assets/images/addon_big.svg" alt="addon">
-            <div class="blouse-model-col-name" align="center">
-              <h6>{{x.name}}</h6>
-              <p>{{y.name}}</p>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-      <div *ngIf="selected_model?.mm_sets?.length || selected_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
-    </div>
-    <!-- measurement list -->
-    <div *ngIf="selected_model?.mm_sets?.length" class="row d_measure">
-      <div class="col-md-12">
-        <b class="add-another mb-3">MEASUREMENTS</b>
-      </div>
-      <div *ngFor="let x of selected_model?.mm_sets;" [ngClass]="(selected_model?.mm_sets?.length>1)? 'col-md-6': 'col-md-12'">
-        <div class="card o-hidden mb-4 d-flex flex-row" align="center">
-          <div class="blouse-model-col w-100">
-            <div align="center">
-              <p style="padding: 10px; background-color: dimgray; color:#fff; font-size: 16px;">{{x.name}}</p>
-              <img [src]="imgBaseUrl+x.image" alt="" class="img-responsive blouse-mrs" style="height:150px;">
-            </div>
-            <div *ngFor="let y of x.list; let j=index;"
-              class="blouse-model-col-name align-self-center d-flex flex-column justify-content-between align-items-lg-center">
-              <p>{{y.name}}:
-                <span class="text-primary">{{y.value}} {{ selected_model?.mm_unit }}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="selected_model?.notes_list?.length" class="col-md-12 mb-3 border-top"></div>
-    </div>
-    <!-- notes list -->
-    <div *ngIf="selected_model?.notes_list?.length" class="row">
-      <div class="col-md-12">
-        <b class="add-another mb-3">NOTES</b>
-      </div>
-      <div *ngFor="let x of selected_model?.notes_list;" class="col-md-12">
-        <div class="card o-hidden mb-4">
-          <div class="flex-grow-1 pl-2 d-flex">
-            <div class="card-body">
-              <b class="w-30 w-sm-100 m-b-0">{{x.name}}</b>
-              <p class="w-30 w-sm-100 m-b-0">{{x.value}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-wide btn-primary" type="button" (click)="modal.dismiss('Cross click');">CLOSE</button>
+    <app-customization-details></app-customization-details>
   </div>
 </ng-template>
 

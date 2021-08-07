@@ -31,7 +31,7 @@ export class CreateProductOrderComponent implements OnInit {
   discount: any = 0; shipping_cost: any = 0; wo_disc_sub_total: any = 0;
   payment_type: string; payment_status: string;
 
-  existing_model_list: any = []; selected_model: any = {};
+  existing_model_list: any = [];
   addonForm: any = {}; customized_model: any;
   custom_list: any = []; customIndex: number; selected_unit: any = {};
   measurement_sets: any = []; mmIndex: number; mm_section: boolean;
@@ -125,6 +125,10 @@ export class CreateProductOrderComponent implements OnInit {
     this.orderForm.discount_amount = (this.offerAmount*1) + (this.manualDiscount*1);
     this.orderForm.grand_total = this.cart_total + this.orderForm.gift_wrapper + this.shipping_cost;
     this.orderForm.final_price = this.orderForm.grand_total - this.orderForm.discount_amount;
+    // Hungover
+    if(this.orderForm.store_id=='5fbcac07fd6ce3538c2cf355') {
+      this.orderForm.order_type = 'trial';
+    }
     this.OrderApi.CREATE_ORDER(this.orderForm).subscribe(result => {
       this.orderForm.submit = true;
       if(result.status) {
@@ -993,12 +997,6 @@ export class CreateProductOrderComponent implements OnInit {
         }
       }
     }
-  }
-
-  onViewModel(x, modalName) {
-    this.selected_model = x;
-    this.modalService.open(modalName, { windowClass:'xlModal' });
-    this.commonService.scrollModalTop(500);
   }
 
   onSaveNewModal() {

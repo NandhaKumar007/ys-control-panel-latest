@@ -558,7 +558,7 @@
           </div>
           <!-- shipping & billing & pickup address -->
           <div class="order-section">
-            <div *ngIf="order_details.order_type=='delivery'" class="row">
+            <div *ngIf="order_details.order_type!='pickup'" class="row">
               <!-- shipping address -->
               <div class="col-md-6 d-flex">
                 <div class="summary-section mtb-10">
@@ -866,7 +866,7 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_details.order_type=='delivery'">
+              <ng-container *ngIf="order_details.order_type!='pickup'">
                 <div class="col-6">
                   <div class="box-card card-head">
                     <p>Shipping</p>
@@ -1196,7 +1196,7 @@
             <input type="text" name="delivery_time" class="form-control"
               [(ngModel)]="editForm.shipping_method.delivery_time" #delivery_time="ngModel" required />
           </div>
-          <div *ngIf="order_details.order_type=='delivery'" class="col-md-12 form-group mb-3">
+          <div *ngIf="order_details.order_type!='pickup'" class="col-md-12 form-group mb-3">
             <label>Delivery Cost</label>
             <input type="text" name="shipping_price" class="form-control"
               [(ngModel)]="editForm.shipping_method.shipping_price" #shipping_price="ngModel" appNumberOnly required />
@@ -1802,7 +1802,7 @@
         <!-- address section -->
         <div class="col-12">
           <div class="row">
-            <div *ngIf="invoice_details.order_type=='delivery'" class="col-md-6 flex m-info-head flex-col">
+            <div *ngIf="invoice_details.order_type!='pickup'" class="col-md-6 flex m-info-head flex-col">
               <div class="w-100 flex gray-bg">
                 <h4>Billing Information</h4>
               </div>
@@ -1818,7 +1818,7 @@
             </div>
             <div class="col-md-6 flex m-info-head flex-col">
               <div class="w-100 flex gray-bg">
-                <h4>{{ (invoice_details.order_type=='delivery')? 'Shipping': 'Pickup' }} Information</h4>
+                <h4>{{ (invoice_details.order_type!='pickup')? 'Shipping': 'Pickup' }} Information</h4>
               </div>
               <div class="p-10">
                 <p>{{invoice_details.shipping_address?.name}}</p>
@@ -1969,7 +1969,7 @@
                 <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.packaging_charges)"></p>
               </td>
             </tr>
-            <tr *ngIf="invoice_details.order_type=='delivery'" class="invoice-total">
+            <tr *ngIf="invoice_details.order_type!='pickup'" class="invoice-total">
               <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Shipping and Handling</p>
               </td>
