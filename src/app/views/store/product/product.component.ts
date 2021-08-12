@@ -97,11 +97,13 @@ export class ProductComponent implements OnInit {
           }
         });
         prod.tag_list = tagList;
-        prod.aistyle_list.forEach(obj => {
-          for(let key in obj) {
-            if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
-          }
-        });
+        if(prod.aistyle_list) {
+          prod.aistyle_list.forEach(obj => {
+            for(let key in obj) {
+              if(obj.hasOwnProperty(key)) obj[key] = obj[key].filter(obj => obj!='null');
+            }
+          });
+        }
       }
       resolve(list);
     });
