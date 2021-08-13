@@ -1044,12 +1044,16 @@ export class CreateProductOrderComponent implements OnInit {
           this.addonForm.submit = true;
           this.addonForm.customer_id = this.selected_customer._id;
           this.customerApi.ADD_MODEL(this.addonForm).subscribe(result => {
+            this.addonForm.submit = false;
             if(result.status) {
               this.customized_model = this.addonForm;
               this.calcAddonPrice();
               document.getElementById('closeCreateNewModal').click();
             }
-            else console.log("response", result);
+            else {
+              console.log("response", result);
+              this.addonForm.alert_msg = result.message;
+            }
           });
         }
         else {

@@ -196,6 +196,9 @@ export class AddProductComponent implements OnInit {
       };
     }
     if(this.commonService.ys_features.indexOf('limited_products')!=-1) this.productForm.limited_products = environment.limited_product_count;
+    if(!this.productForm.image_tag_status) {
+      this.productForm.image_list.forEach(obj => { delete obj.tag; });
+    }
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.btnLoader = false;

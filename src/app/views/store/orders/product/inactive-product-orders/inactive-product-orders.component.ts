@@ -56,17 +56,22 @@ export class InactiveProductOrdersComponent implements OnInit {
     x.loader = true;
     if(x.payment_details.name=="CCAvenue") {
       this.api.CCAVENUE_PAYMENT_STATUS({ type: 'product', _id: x._id }).subscribe(result => {
+        x.loader = false;
         this.ngOnInit();
         if(!result.status) console.log("response", result);
       });
     }
     else if(x.payment_details.name=="Razorpay") {
       this.api.RAZORPAY_PAYMENT_STATUS({ type: 'product', _id: x._id }).subscribe(result => {
+        x.loader = false;
         this.ngOnInit();
         if(!result.status) console.log("response", result);
       });
     }
-    else console.log("service not available for this payment");
+    else {
+      x.loader = false;
+      console.log("service not available for this payment");
+    }
   }
 
   capturePageData() {

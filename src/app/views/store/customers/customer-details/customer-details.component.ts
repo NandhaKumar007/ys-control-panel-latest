@@ -357,6 +357,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   onUpdateModel(addonForm, type) {
     this.customerApi.UPDATE_MODEL(addonForm).subscribe(result => {
+      this.addonForm.submit = false;
       if(result.status) {
         document.getElementById("closeModal").click();
         this.customerDetails = result.data;
@@ -383,7 +384,10 @@ export class CustomerDetailsComponent implements OnInit {
           this.customerApi.ADD_MODEL_TO_CUSTOMER_HISTORY(addonForm).subscribe(result => { });
         }
       }
-      else console.log("response", result);
+      else {
+        console.log("response", result);
+        this.addonForm.alert_msg = result.message;
+      }
     });
   }
 

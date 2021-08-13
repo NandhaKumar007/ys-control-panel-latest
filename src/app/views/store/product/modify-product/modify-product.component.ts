@@ -266,6 +266,9 @@ export class ModifyProductComponent implements OnInit {
 
   onUpdateImages() {
     this.btnLoader = true;
+    if(!this.productForm.image_tag_status) {
+      this.productForm.image_list.forEach(obj => { delete obj.tag; });
+    }
     let formData: any = {
       _id: this.productForm._id, image_tag_status: this.productForm.image_tag_status,
       image_list: this.productForm.image_list, video_details: this.productForm.video_details,
