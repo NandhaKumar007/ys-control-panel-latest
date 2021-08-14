@@ -671,6 +671,19 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
   }
 
+  onPlaceOrder(x) {
+    this.api.PLACE_INACTIVE_ORDER(x).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.location.back();
+      }
+      else {
+        this.editForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
   onResendMail(modalName) {
     this.errorMsg=null; this.btnLoader=false;
     // let customStatus = false;

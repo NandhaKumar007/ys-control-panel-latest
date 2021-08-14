@@ -1108,6 +1108,12 @@
         class="btn blue-fill-btn w-100 mtb-10">Resend Email</button>
         <!-- # Resend mail -->
 
+        <!-- Mark as paid -->
+        <button *ngIf="!params?.coupon_id && params?.type=='inactive'" type="button"
+        (click)="editForm = { payment_id: order_details.payment_details?.payment_id }; modalService.open(placeOrderModal);"
+        class="btn blue-fill-btn w-100 mtb-10">Place Order</button>
+        <!-- # Mark as paid -->
+
       </div>
       <!-- vendor login -->
       <div class="col-lg-3" *ngIf="commonService.store_details?.login_type=='vendor'">
@@ -2175,4 +2181,32 @@
     <button type="button" (click)="onRemoveNewGroup();" class="btn btn-wide btn-primary ladda-button"
       [disabled]="groupForm.submit" [ladda]="groupForm.submit">Ok</button>
   </div>
+</ng-template>
+
+<!-- place order -->
+<ng-template #placeOrderModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Place Order</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onPlaceOrder({_id: order_details._id, payment_id: editForm.payment_id });" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Payment ID</label>
+            <input type="text" name="payment_id" class="form-control" [(ngModel)]="editForm.payment_id" #payment_id="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editForm.errorMsg">
+        <p class="text-danger">{{ editForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Confirm</button>
+    </div>
+  </form>
 </ng-template>

@@ -16,6 +16,10 @@ export class OrderService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/orders', x, httpOptions);
   }
+  PLACE_INACTIVE_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/place_inactive_order', x, httpOptions);
+  }
   UPDATE_ORDER_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/orders', x, httpOptions);
