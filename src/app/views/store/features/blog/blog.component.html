@@ -3,11 +3,17 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Blog</h1>
-    <ul><li>Add and edit blogs</li></ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Blog</h1>
+        <ul><li>Add and edit blogs</li></ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" (click)="openSettingModal(settingModal);">SEO Setting</button>
+      </div>
+    </div>
   </div>
-
   <div class="separator-breadcrumb border-top"></div>
   <div class="top-filter-sec">
   <div class="row mb-4">
@@ -175,4 +181,59 @@
     </button>
     <button type="button" (click)="onUpdateStatus();" class="btn btn-wide btn-primary">Yes</button>
   </div>
+</ng-template>
+
+<!-- SETTING MODAL -->
+<ng-template #settingModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">SEO Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSetting();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="status" [(ngModel)]="seoForm.status" #status="ngModel">
+              <span>Enable</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="seoForm.status">
+            <div class="col-md-12 form-group mb-3">
+              <label>H1 Tag</label>
+              <span *ngIf="seoForm?.h1_tag?.length" class="label_hint">{{seoForm?.h1_tag?.length}} of 70 characters used</span>
+              <input type="text" name="h1_tag" class="form-control" [(ngModel)]="seoForm.h1_tag" #h1_tag="ngModel"
+                maxlength="70" required />
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Page Title</label>
+              <span *ngIf="seoForm?.page_title?.length" class="label_hint">{{seoForm?.page_title?.length}} of 70 characters used</span>
+              <input type="text" name="page_title" class="form-control" [(ngModel)]="seoForm.page_title" #page_title="ngModel"
+                maxlength="70" required />
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Meta Description</label>
+              <span *ngIf="seoForm?.meta_desc?.length" class="label_hint">{{seoForm?.meta_desc?.length}} of 320 characters used</span>
+              <textarea class="form-control" aria-label="With textarea" name="meta_desc" [(ngModel)]="seoForm.meta_desc" #meta_desc="ngModel" maxlength="320" required></textarea>
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Meta Keywords</label>
+              <tag-input class="w-100" name="meta_keyword_list" [(ngModel)]="seoForm.meta_keyword_list" #meta_keyword_list="ngModel" placeholder=""
+              [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="seoForm.errorMsg">
+        <p class="text-danger">{{ seoForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
 </ng-template>

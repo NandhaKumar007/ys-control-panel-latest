@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FeaturesApiService } from '../features-api.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -19,8 +20,12 @@ export class BlogComponent implements OnInit {
   blogForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   currentDate: Date = new Date();
+  seoForm: any = {};
   
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: FeaturesApiService, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private api: FeaturesApiService,
+    public commonService: CommonService, private storeApi: StoreApiService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -124,6 +129,43 @@ export class BlogComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  // SEO update
+  openSettingModal(modalName) {
+    this.seoForm = {};
+    this.storeApi.STORE_PROPERTY_DETAILS().subscribe((result) => {
+      if(result.status) {
+        if(result.data.blog_seo) {
+          this.seoForm = result.data.blog_seo;
+          this.seoForm.meta_keyword_list = [];
+          if(this.seoForm.meta_keywords.length) {
+            this.seoForm.meta_keywords.forEach(obj => {
+              this.seoForm.meta_keyword_list.push({display: obj, value: obj});
+            });
+          }
+        }
+        this.modalService.open(modalName);
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdateSetting() {
+    if(this.seoForm.status) {
+      this.seoForm.meta_keywords = [];
+      if(this.seoForm.meta_keyword_list) {
+        this.seoForm.meta_keyword_list.forEach(obj => {
+          this.seoForm.meta_keywords.push(obj.value);
+        });
+      }
+    }
+    this.storeApi.UPDATE_STORE_PROPERTY_DETAILS({ blog_seo: this.seoForm }).subscribe(result => {
+      if(result.status) document.getElementById('closeModal').click();
+      else {
+        this.seoForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   fileChangeListener(event) {
