@@ -10,6 +10,7 @@ declare const $: any;
 export class CommonService {
 
   dark_theme: boolean;
+  desktop_device: boolean;
   grid_list: any = [
     {
       type: "grid_1", name: "Grid 1", icon: "assets/images/grid/Grid-1.png", status: "enabled",
@@ -253,6 +254,15 @@ export class CommonService {
     delete this.scroll_y_pos;
     delete this.product_page_attr;
     delete this.selected_customer;
+  }
+
+  timeConversion(timeString) {
+    var H = timeString.substr(0, 2);
+    var convertedTime = (H % 12) || 12;
+    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
+    var ampm = H < 12 ? " AM" : " PM";
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return timeString;
   }
 
 }

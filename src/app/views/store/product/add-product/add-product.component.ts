@@ -391,16 +391,8 @@ export class AddProductComponent implements OnInit {
   timePicker(i, j, variable) {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.productForm.available_days[i].opening_hrs[j][variable] = this.timeConversion(time);
+      this.productForm.available_days[i].opening_hrs[j][variable] = this.commonService.timeConversion(time);
     });
-  }
-  timeConversion(timeString) {
-    var H = timeString.substr(0, 2);
-    var convertedTime = (H % 12) || 12;
-    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
-    var ampm = H < 12 ? " AM" : " PM";
-    timeString = h + timeString.substr(2, 3) + ampm;
-    return timeString;
   }
 
 }

@@ -331,22 +331,14 @@ export class SettingComponent implements OnInit {
   openingHrsTimePicker(i, j, variable) {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.settingForm.opening_days[i].opening_hrs[j][variable] = this.timeConversion(time);
+      this.settingForm.opening_days[i].opening_hrs[j][variable] = this.commonService.timeConversion(time);
     });
   }
   timePicker() {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.app_setting.announcebar_config.end_time = this.timeConversion(time);
+      this.app_setting.announcebar_config.end_time = this.commonService.timeConversion(time);
     });
-  }
-  timeConversion(timeString) {
-    var H = timeString.substr(0, 2);
-    var convertedTime = (H % 12) || 12;
-    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
-    var ampm = H < 12 ? " AM" : " PM";
-    timeString = h + timeString.substr(2, 3) + ampm;
-    return timeString;
   }
 
   fileChangeListener(event) {

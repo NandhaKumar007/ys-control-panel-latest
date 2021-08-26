@@ -376,24 +376,10 @@
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p class="w-30 w-sm-100 m-b-0">{{order_details?.manual_discount?.percentage}}%</p>
+                    <p *ngIf="order_details?.manual_discount?.percentage" class="w-30 w-sm-100 m-b-0">{{order_details?.manual_discount?.percentage}}%</p>
+                    <p *ngIf="!order_details?.manual_discount?.percentage" class="w-30 w-sm-100 m-b-0"></p>
                     <p class="w-30 w-sm-100 m-b-0">
                       {{order_details.manual_discount.amount | currency: commonService.store_currency?.country_code}}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- applied coupon codes -->
-          <div *ngIf="order_details?.coupon_list?.length" class="order-section">
-            <p class="sec-desc" style="display: inline-block;">Redeemed Gift Coupons</p>
-            <div class="col-md-12 list-item p-0">
-              <div *ngFor="let x of order_details.coupon_list;" class="card o-hidden mb-4 d-flex flex-row">
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p class="w-30 w-sm-100 m-b-0">{{x.code}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">{{x.price | currency: commonService.store_currency?.country_code}}</p>
                   </div>
                 </div>
               </div>
@@ -410,6 +396,21 @@
                     <p class="w-30 w-sm-100 m-b-0">{{order_details?.offer_details?.code}}</p>
                     <p class="w-30 w-sm-100 m-b-0">
                       {{order_details?.offer_details?.price | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- applied coupon codes -->
+          <div *ngIf="order_details?.coupon_list?.length" class="order-section">
+            <p class="sec-desc" style="display: inline-block;">Redeemed Gift Coupons</p>
+            <div class="col-md-12 list-item p-0">
+              <div *ngFor="let x of order_details.coupon_list;" class="card o-hidden mb-4 d-flex flex-row">
+                <div class="flex-grow-1 pl-2 d-flex">
+                  <div
+                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                    <p class="w-30 w-sm-100 m-b-0">{{x.code}}</p>
+                    <p class="w-30 w-sm-100 m-b-0">{{x.price | currency: commonService.store_currency?.country_code}}</p>
                   </div>
                 </div>
               </div>

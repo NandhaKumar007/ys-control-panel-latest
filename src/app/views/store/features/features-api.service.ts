@@ -288,4 +288,26 @@ export class FeaturesApiService {
     return this.http.patch<any>(environment.ws_url+'/store/dinamic_offers', x, httpOptions);
   }
 
+  // QUICK ORDERS
+  QUICK_ORDER_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/quick_order', httpOptions);
+  }
+  QUICK_ORDER_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/quick_order?id='+x, httpOptions);
+  }
+  ADD_QUICK_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/quick_order', x, httpOptions);
+  }
+  UPDATE_QUICK_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/quick_order', x, httpOptions);
+  }
+  DELETE_QUICK_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/quick_order', x, httpOptions);
+  }
+
 }

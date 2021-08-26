@@ -145,6 +145,11 @@ export class SidebarService {
           inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
           routePermissionList.push("inactive_gift_orders");
         }
+        // quick order
+        if(ysFeatures.indexOf('quick_order')!=-1) {
+          orderList.push({ icon: 'timer', name: 'Quick Orders', state: '/features/quick-orders', type: 'link' });
+          routePermissionList.push("quick_order");
+        }
         // dinamic offers
         if(ysFeatures.indexOf('dinamic_offers')!=-1) {
           orderList.push({ icon: 'local_dining', name: 'DiNAMIC Offers', state: '/orders/dinamic-offers', type: 'link' });

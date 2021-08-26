@@ -104,23 +104,14 @@ export class DeliveryMethodsComponent implements OnInit {
   timePicker(i, j, k, paramName) {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.deliveryForm.list[i].groups[j].slots[k][paramName] = this.timeConversion(time);
+      this.deliveryForm.list[i].groups[j].slots[k][paramName] = this.commonService.timeConversion(time);
     });
   }
   secondaryTimePicker(i, j, paramName) {
     const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
     amazingTimePicker.afterClose().subscribe(time => {
-      this.deliveryForm.list[i].groups[j][paramName] = this.timeConversion(time);
+      this.deliveryForm.list[i].groups[j][paramName] = this.commonService.timeConversion(time);
     });
-  }
-
-  timeConversion(timeString) {
-    var H = timeString.substr(0, 2);
-    var convertedTime = (H % 12) || 12;
-    var h = convertedTime < 10 ? "0"+ convertedTime : convertedTime;
-    var ampm = H < 12 ? " AM" : " PM";
-    timeString = h + timeString.substr(2, 3) + ampm;
-    return timeString;
   }
 
 }
