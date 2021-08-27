@@ -22,7 +22,8 @@
     </div>
     <div class="col-md-3 col-6">
       <div class="form-group">
-        <select name="type" class="form-control select-arrow" [(ngModel)]="accountType" (change)="page=1; changeAccType();">
+        <select name="type" class="form-control select-arrow" [(ngModel)]="accountType"
+          (change)="page=1; changeAccType();">
           <option value="all">All</option>
           <option value="demo">Demo Accounts</option>
           <option value="client">Live Accounts</option>
@@ -41,55 +42,80 @@
   </div>
 
   <!-- DATA LIST -->
-  <div class="row list-horizontal">
-    <div *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, website: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
-      class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+  <div class="list-horizontal">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div [ngClass]="x.account_type=='demo'? 'find-band': ''"></div>
-        <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
-          <img [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" style="height: 75px !important;" alt="">
-        </div>
-        <div class="flex-grow-1 pl-5 d-flex mtb-10">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <!-- OTHER DATA -->
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
-            <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <a href={{x.base_url}} target="_blank">
-                <i style="position: relative; top: 10px;" class="material-icons mr-3">open_in_new</i>
-              </a>
-              <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
-                <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
-                  <button class="btn btn-wide btn-outline-secondary w-md-100" ngbDropdownToggle>Action</button>
-                  <div class="dropdown-menu" ngbDropdownMenu>
-                    <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
-                    <button (click)="settingForm=x; modalService.open(settingModal);" class="dropdown-item">Setting</button>
-                    <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change Password</button>
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
+          <div
+          *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, website: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+          class="list-item data-list-card col-md-12 p-0" [ngClass]="x.account_type=='demo' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    
+          <div class="d-flex flex-row">
+            <div [ngClass]="x.account_type=='demo'? 'find-band': ''"></div>
+            <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
+              <img class="client-logo" [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" alt="">
+            </div>
+            <div class="flex-grow-1 pl-3 d-flex mtb-10">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <!-- OTHER DATA -->
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
+                <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-flex align-items-center item-actions">
+                  <a href={{x.base_url}} target="_blank">
+                    <i class="material-icons edit-icon mr-3">open_in_new</i>
+                  </a>
+                  <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                    <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                      <button class="btn btn-wide btn-outline-secondary w-md-100" ngbDropdownToggle>Action</button>
+                      <div class="dropdown-menu" ngbDropdownMenu>
+                        <button routerLink="/admin/clients/update/{{x._id}}" class="dropdown-item">Edit</button>
+                        <button (click)="settingForm=x; modalService.open(settingModal);"
+                          class="dropdown-item">Setting</button>
+                        <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change
+                          Password</button>
+                      </div>
+                    </div>
                   </div>
+                  <button *ngIf="commonService.host_name=='localhost' && x.account_type=='client'"
+                    class="btn btn-wide btn-outline-secondary w-md-100 mr-3"
+                    (click)="openBuildInfoModal(x, buildInfoModal);">
+                    Build Info
+                  </button>
+                  <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });"
+                    class="btn btn-wide w-md-100"
+                    [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
+                    {{ (x.status=='active')? 'Disable': 'Enable' }}
+                  </button>
+                  <button *ngIf="commonService.host_name=='localhost' && x.status!='active'"
+                    class="btn orng-outline-btn w-md-100"
+                    (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                    <span class="orng-outline-txt">Remove</span>
+                  </button>
                 </div>
               </div>
-              <button *ngIf="commonService.host_name=='localhost' && x.account_type=='client'" class="btn btn-wide btn-outline-secondary w-md-100 mr-3" (click)="openBuildInfoModal(x, buildInfoModal);">
-                Build Info
-              </button>
-              <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });" class="btn btn-wide w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
-                {{ (x.status=='active')? 'Disable': 'Enable' }}
-              </button>
-              <button *ngIf="commonService.host_name=='localhost' && x.status!='active'" class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
-                <span class="orng-outline-txt">Remove</span>
-              </button>
             </div>
           </div>
+    
+        </div>
+
         </div>
       </div>
+    </div>
 
-    </div>
+   
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3" *ngIf="list?.length">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3" *ngIf="list?.length">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+    
   </div>
 
   <div *ngIf="!list?.length" class="row">
@@ -110,21 +136,27 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>New Password</label>
-            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd" #new_pwd="ngModel" required />
+            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd" #new_pwd="ngModel"
+              required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Confirm New Password</label>
-            <input type="text" name="confirm_new_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_new_pwd" #confirm_new_pwd="ngModel" required />
+            <input type="text" name="confirm_new_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_new_pwd"
+              #confirm_new_pwd="ngModel" required />
           </div>
         </div>
       </div>
-      <div *ngIf="pwdForm.errorMsg"><p class="text-danger">{{ pwdForm.errorMsg }}</p></div>
+      <div *ngIf="pwdForm.errorMsg">
+        <p class="text-danger">{{ pwdForm.errorMsg }}</p>
+      </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" [disabled]="pwdForm.new_pwd!=pwdForm.confirm_new_pwd" class="btn btn-wide btn-primary">Update</button>
+      <button type="submit" [disabled]="pwdForm.new_pwd!=pwdForm.confirm_new_pwd"
+        class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
 </ng-template>
@@ -147,7 +179,8 @@
           <p><b>PORT:</b> {{ (buildForm.build_details?.port_number)? buildForm.build_details.port_number: 'NA' }}</p>
         </div>
         <div class="col-md-6 mb-2">
-          <p><b>Build Number:</b> {{ (buildForm.build_details?.build_number)? buildForm.build_details.build_number: 'NA' }}</p>
+          <p><b>Build Number:</b> {{ (buildForm.build_details?.build_number)? buildForm.build_details.build_number: 'NA'
+            }}</p>
         </div>
         <div class="col-md-6 mb-2">
           <p><b>Build Status:</b> {{buildForm.build_details?.build_status}}</p>
@@ -157,21 +190,28 @@
         </div>
       </ng-container>
       <!-- btn section -->
-      <div class="col-md-6 mb-2" *ngIf="!buildForm.build_details?.port_number && !buildForm.build_details?.build_number">
-        <button type="button" (click)="manualDeploy();" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buildForm.submit" [ladda]="buildForm.submit">
+      <div class="col-md-6 mb-2"
+        *ngIf="!buildForm.build_details?.port_number && !buildForm.build_details?.build_number">
+        <button type="button" (click)="manualDeploy();" class="btn btn-wide btn-primary ladda-button m-1"
+          [disabled]="buildForm.submit" [ladda]="buildForm.submit">
           Deploy {{buildForm.website}}
         </button>
       </div>
-      <div class="col-md-6 mb-2" *ngIf="buildForm.build_details?.port_number && buildForm.build_details?.build_number && buildForm.build_details?.build_status!='success'">
-        <button type="button" (click)="checkBuildStatus();" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buildForm.submit" [ladda]="buildForm.submit">
+      <div class="col-md-6 mb-2"
+        *ngIf="buildForm.build_details?.port_number && buildForm.build_details?.build_number && buildForm.build_details?.build_status!='success'">
+        <button type="button" (click)="checkBuildStatus();" class="btn btn-wide btn-primary ladda-button m-1"
+          [disabled]="buildForm.submit" [ladda]="buildForm.submit">
           Check Build Status
         </button>
       </div>
     </div>
-    <div *ngIf="buildForm.errorMsg"><p class="text-danger">{{ buildForm.errorMsg }}</p></div>
+    <div *ngIf="buildForm.errorMsg">
+      <p class="text-danger">{{ buildForm.errorMsg }}</p>
+    </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Close</span>
     </button>
   </div>
@@ -180,13 +220,15 @@
 <!-- Status -->
 <ng-template #statusModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
+    <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span
+          class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('Cross click');">No</button>
+    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary"
+      (click)="modal.dismiss('Cross click');">No</button>
     <button type="button" (click)="onUpdateStatus();" class="btn btn-primary">Yes</button>
   </div>
 </ng-template>
@@ -196,14 +238,15 @@
   <div class="modal-body" style="background-color: #FA8072;">
     <p>
       <strong>Are you sure you want to remove
-      <span style="color: #fff;">"{{deleteForm.name}}"</span> permanently?</strong>
+        <span style="color: #fff;">"{{deleteForm.name}}"</span> permanently?</strong>
     </p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
@@ -223,14 +266,16 @@
         <div class="row">
           <div class="form-group mb-3 col-md-4">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="band_status" [(ngModel)]="settingForm.additional_features.band_status" #band_status="ngModel">
+              <input class="form-check-input" type="checkbox" name="band_status"
+                [(ngModel)]="settingForm.additional_features.band_status" #band_status="ngModel">
               <span>Enable YS Band</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="form-group mb-3 col-md-4">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="menu_image" [(ngModel)]="settingForm.additional_features.menu_image" #menu_image="ngModel">
+              <input class="form-check-input" type="checkbox" name="menu_image"
+                [(ngModel)]="settingForm.additional_features.menu_image" #menu_image="ngModel">
               <span>Menu with image</span>
               <span class="checkmark"></span>
             </label>
@@ -244,21 +289,25 @@
           </div> -->
           <div class="form-group mb-3 col-md-4">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="custom_model" [(ngModel)]="settingForm.additional_features.custom_model" #custom_model="ngModel">
+              <input class="form-check-input" type="checkbox" name="custom_model"
+                [(ngModel)]="settingForm.additional_features.custom_model" #custom_model="ngModel">
               <span>Save custom model</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="form-group mb-3 col-md-6">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="measurements_condition" [(ngModel)]="settingForm.additional_features.measurements_condition" #measurements_condition="ngModel">
+              <input class="form-check-input" type="checkbox" name="measurements_condition"
+                [(ngModel)]="settingForm.additional_features.measurements_condition" #measurements_condition="ngModel">
               <span>Measurement with condition</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="form-group mb-3 col-md-6">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="cfm_odr_on_last_vdr_cfm" [(ngModel)]="settingForm.additional_features.cfm_odr_on_last_vdr_cfm" #cfm_odr_on_last_vdr_cfm="ngModel">
+              <input class="form-check-input" type="checkbox" name="cfm_odr_on_last_vdr_cfm"
+                [(ngModel)]="settingForm.additional_features.cfm_odr_on_last_vdr_cfm"
+                #cfm_odr_on_last_vdr_cfm="ngModel">
               <span>Auto order confirm on vendor confirm</span>
               <span class="checkmark"></span>
             </label>
@@ -266,26 +315,33 @@
           <div class="col-md-12 mb-3 border-top"></div>
           <div class="col-md-12 form-group mb-3">
             <label>Product image resolution</label>
-            <input type="text" name="cropper_resolution" class="form-control" [(ngModel)]="settingForm.additional_features.cropper_resolution" #cropper_resolution="ngModel" required />
+            <input type="text" name="cropper_resolution" class="form-control"
+              [(ngModel)]="settingForm.additional_features.cropper_resolution" #cropper_resolution="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Gift card validty in months</label>
-            <input type="text" name="gc_validity_in_month" class="form-control" [(ngModel)]="settingForm.additional_features.gc_validity_in_month" #gc_validity_in_month="ngModel" required />
+            <input type="text" name="gc_validity_in_month" class="form-control"
+              [(ngModel)]="settingForm.additional_features.gc_validity_in_month" #gc_validity_in_month="ngModel"
+              required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Gift card type</label>
-            <select name="giftcard_type" class="form-control select-arrow" [(ngModel)]="settingForm.additional_features.giftcard_type" required>
+            <select name="giftcard_type" class="form-control select-arrow"
+              [(ngModel)]="settingForm.additional_features.giftcard_type" required>
               <option value="onetime">One Time</option>
               <option value="wallet">Wallet</option>
             </select>
           </div>
         </div>
       </div>
-      <div *ngIf="settingForm.errorMsg"><p class="text-danger">{{ settingForm.errorMsg }}</p></div>
+      <div *ngIf="settingForm.errorMsg">
+        <p class="text-danger">{{ settingForm.errorMsg }}</p>
+      </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>

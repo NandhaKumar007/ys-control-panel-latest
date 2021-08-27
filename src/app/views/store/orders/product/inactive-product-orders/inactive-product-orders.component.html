@@ -8,7 +8,7 @@
       <div class="col-md-12">
         <h1>Inactive Orders</h1>
         <ul>
-          <li style="padding: 0px;">View and manage your inactive orders</li>
+          <li class="p-0">View and manage your inactive orders</li>
         </ul>
       </div>
     </div>
@@ -21,7 +21,8 @@
         <div class="form-group">
           <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type" (change)="ngOnInit();">
             <option value="All">All</option>
-            <option *ngFor="let x of commonService.payment_list | orderAsc: 'rank';" [ngValue]="x.name">{{x.name}}</option>
+            <option *ngFor="let x of commonService.payment_list | orderAsc: 'rank';" [ngValue]="x.name">{{x.name}}
+            </option>
           </select>
         </div>
       </div>
@@ -50,48 +51,67 @@
     </div>
   </div>
   <!-- DATA LIST -->
-  <div *ngIf="list?.length" class="row" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <!-- SINGLE LIST ITEM -->
-    <div
-      *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div *ngIf="x.order_by!='user'" [ngClass]="x.order_by=='admin'? 'find-band': 'guest-band'"></div>
-        <div class="flex-grow-1 pl-2 d-flex">
           <div
-            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="c-w-15 w-md-100 m-b-0">#{{x.order_number}}</p>
-            <p class="w-20 w-md-100 m-b-0">
-              {{ (x.order_by!='guest')? x.customerDetails[0]?.name: x?.shipping_address?.name }}
-            </p>
-            <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-            <p class="c-w-15 w-md-100 m-b-0">{{x.payment_details?.name}}<span
-                *ngIf="x.payment_details?.status"><br>({{x.payment_details?.status}})</span></p>
-            <p class="c-w-15 w-md-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}</p>
-            <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
-              <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
-                [disabled]="x.payment_details?.name=='PayPal' || x.loader" [ladda]="x.loader">Check Status</button>
-             
-            </div>
-            <div class="c-w-15 w-md-100 d-lg-block item-actions">
-              <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
-              routerLink="/orders/product/inactive/all/{{x._id}}">
-              <span class="black-outline-txt">View</span>
-            </a>
+          *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          class="col-md-12 list-item data-list-card p-0" [ngClass]="{
+            'has-quick-band': x.quick_order_id,
+            'has-find-band': !x.quick_order_id && x.order_by=='admin',
+            'has-guest-band': !x.quick_order_id && x.order_by=='guest' }" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    
+          <div class="o-hidden d-flex flex-row">
+            <div *ngIf="x.order_by!='user' || x.quick_order_id" [ngClass]="{
+            'quick-band': x.quick_order_id,
+            'find-band': !x.quick_order_id && x.order_by=='admin',
+            'guest-band': !x.quick_order_id && x.order_by=='guest' }"></div>
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="c-w-15 w-md-100 m-b-0">#{{x.order_number}}</p>
+                <p class="w-20 w-md-100 m-b-0">
+                  {{ (x.order_by!='guest')? x.customerDetails[0]?.name: x?.shipping_address?.name }}
+                </p>
+                <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
+                <p class="c-w-15 w-md-100 m-b-0">{{x.payment_details?.name}}<span
+                    *ngIf="x.payment_details?.status"><br>({{x.payment_details?.status}})</span></p>
+                <p class="c-w-15 w-md-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}
+                </p>
+                <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
+                  <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
+                    [disabled]="x.payment_details?.name=='PayPal' || x.loader" [ladda]="x.loader">Check Status</button>
+    
+                </div>
+                <div class="c-w-15 w-md-100 d-lg-block item-actions">
+                  <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
+                    routerLink="/orders/product/inactive/all/{{x._id}}">
+                    <span class="black-outline-txt">View</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
+    
+        </div>
+
         </div>
       </div>
-
     </div>
+    <!-- SINGLE LIST ITEM -->
+  
 
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
-        previousLabel="" nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+  
 
   </div>
 

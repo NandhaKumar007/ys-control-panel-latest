@@ -38,35 +38,48 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="list?.length" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <div
-      *ngFor="let x of list | orderDesc:'_id' | gridSearch: { name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex">
+
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
           <div
-            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.rating}}/5</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
-            <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button type="button" (click)="details=x; modalService.open(feedbackModal);"
-                class="btn btn-wide black-outline-btn w-md-100 mr-3">
-                <span class="black-outline-txt">View</span>
-              </button>
-            </p>
+          *ngFor="let x of list | orderDesc:'_id' | gridSearch: { name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          <div class="o-hidden d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.rating}}/5</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
+                <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                  <button type="button" (click)="details=x; modalService.open(feedbackModal);"
+                    class="btn btn-wide black-outline-btn w-md-100 mr-3">
+                    <span class="black-outline-txt">View</span>
+                  </button>
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
+
         </div>
       </div>
     </div>
+   
 
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
-        previousLabel="" nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+  
 
   </div>
 
@@ -96,9 +109,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-wide black-outline-btn"
-      (click)="modal.dismiss('Cross click');">
-     <span class="black-outline-txt">Close</span>
+    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Close</span>
     </button>
   </div>
 </ng-template>

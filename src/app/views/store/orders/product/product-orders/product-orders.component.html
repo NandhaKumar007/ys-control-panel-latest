@@ -9,7 +9,8 @@
       <div class="col-md-8">
         <ng-container *ngIf="params?.type=='live'">
           <h1>
-            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">{{commonService.selected_customer?.name}} -
+            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">
+              {{commonService.selected_customer?.name}} -
             </ng-container>Live Orders
           </h1>
           <ul>
@@ -18,7 +19,8 @@
         </ng-container>
         <ng-container *ngIf="params?.type=='delivered'">
           <h1>
-            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">{{commonService.selected_customer?.name}} -
+            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">
+              {{commonService.selected_customer?.name}} -
             </ng-container>Completed Orders
           </h1>
           <ul>
@@ -27,7 +29,8 @@
         </ng-container>
         <ng-container *ngIf="params?.type=='cancelled'">
           <h1>
-            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">{{commonService.selected_customer?.name}} -
+            <ng-container *ngIf="params?.customer_id!='all' && commonService.selected_customer?.name">
+              {{commonService.selected_customer?.name}} -
             </ng-container>Cancelled Orders
           </h1>
           <ul>
@@ -62,7 +65,8 @@
     <div class="row mb-4">
       <div *ngIf="params?.type=='live' && commonService.store_details?.login_type!='vendor'" class="col-md-3 col-6">
         <div class="form-group">
-          <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type" (change)="getOrderList();">
+          <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type"
+            (change)="getOrderList();">
             <option value="all">All Orders</option>
             <option value="placed">New Orders</option>
             <option value="confirmed">Confirmed Orders</option>
@@ -72,14 +76,16 @@
       </div>
       <div *ngIf="commonService.vendor_list?.length" class="col-md-3 col-6">
         <div class="form-group">
-          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id" (change)="getOrderList();">
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
+            (change)="getOrderList();">
             <option value="all">All Vendors</option>
             <option [ngValue]="x._id" *ngFor="let x of commonService.vendor_list">{{x.name}}</option>
           </select>
         </div>
       </div>
       <!-- search box -->
-      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live'" [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
+      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live'"
+        [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -99,68 +105,91 @@
             [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
-    
+
     </div>
   </div>
   <!-- DATA LIST -->
-  <div *ngIf="list?.length" class="row" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <!-- SINGLE LIST ITEM -->
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
+           <!-- SINGLE LIST ITEM -->
     <div
-      *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+    class="col-md-12 list-item data-list-card p-0" [ngClass]="{
+      'has-quick-band': x.quick_order_id,
+      'has-find-band': !x.quick_order_id && x.order_by=='admin',
+      'has-guest-band': !x.quick_order_id && x.order_by=='guest' }" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div *ngIf="x.order_by!='user'" [ngClass]="x.order_by=='admin'? 'find-band': 'guest-band'"></div>
-        <div class="flex-grow-1 pl-2 d-flex">
-          <div
-            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.customer_name}}</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-            <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
-              <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}</p>
-              <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
-                <span *ngIf="x.payment_success" class="badge badge-success badge-green-outline">
-                  <span class="badge-green-outline-txt">Paid</span>
-                </span>
-                <span *ngIf="!x.payment_success" class="badge badge-warning badge-red-outline">
-                <span class="badge-red-outline-txt">Pending</span>
-                </span>
-              </p>
-              <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
-                <span class="badge" [ngClass]="{
-                  'badge-primary badge-red': x.order_status === 'placed',
-                  'badge-info badge-blue': x.order_status === 'confirmed',
-                  'badge-warning badge-green': x.order_status === 'dispatched'
-                }">{{x.order_status}}</span>
-              </p>
-            </ng-container>
-            <ng-container *ngIf="commonService.store_details?.login_type=='vendor'">
-              <p class="w-30 w-sm-100 m-b-0">{{x.vendor_order_amount | currency: commonService.store_currency?.country_code}}</p>
-              <p class="w-30 w-sm-100 m-b-0">
-                <span class="badge" [ngClass]="x.vendor_order_status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
-                  <span [ngClass]="x.vendor_order_status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'" style="text-transform: capitalize;">{{x.vendor_order_status}}</span>
-                </span>
-              </p>
-            </ng-container>
-            <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
-                routerLink="/orders/product/{{params?.type}}/{{params?.customer_id}}/{{x._id}}">
-               <span class="black-outline-txt">View</span>
-              </a>
+    <div class="o-hidden d-flex flex-row">
+      <div *ngIf="x.order_by!='user' || x.quick_order_id" [ngClass]="{
+      'quick-band': x.quick_order_id,
+      'find-band': !x.quick_order_id && x.order_by=='admin',
+      'guest-band': !x.quick_order_id && x.order_by=='guest' }"></div>
+      <div class="flex-grow-1 pl-2 d-flex">
+        <div
+          class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+          <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
+          <p class="w-30 w-sm-100 m-b-0">{{x.customer_name}}</p>
+          <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
+          <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
+            <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}
             </p>
-          </div>
+            <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
+              <span *ngIf="x.payment_success" class="badge badge-success badge-green-outline">
+                <span class="badge-green-outline-txt">Paid</span>
+              </span>
+              <span *ngIf="!x.payment_success" class="badge badge-warning badge-red-outline">
+                <span class="badge-red-outline-txt">Pending</span>
+              </span>
+            </p>
+            <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
+              <span class="badge" [ngClass]="{
+                'badge-primary badge-red': x.order_status === 'placed',
+                'badge-info badge-blue': x.order_status === 'confirmed',
+                'badge-warning badge-green': x.order_status === 'dispatched'
+              }">{{x.order_status}}</span>
+            </p>
+          </ng-container>
+          <ng-container *ngIf="commonService.store_details?.login_type=='vendor'">
+            <p class="w-30 w-sm-100 m-b-0">{{x.vendor_order_amount | currency:
+              commonService.store_currency?.country_code}}</p>
+            <p class="w-30 w-sm-100 m-b-0">
+              <span class="badge"
+                [ngClass]="x.vendor_order_status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
+                <span
+                  [ngClass]="x.vendor_order_status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'"
+                  style="text-transform: capitalize;">{{x.vendor_order_status}}</span>
+              </span>
+            </p>
+          </ng-container>
+          <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+            <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
+              routerLink="/orders/product/{{params?.type}}/{{params?.customer_id}}/{{x._id}}">
+              <span class="black-outline-txt">View</span>
+            </a>
+          </p>
         </div>
       </div>
-
     </div>
+
+  </div>
+
+          </div>
+      </div>
+    </div>
+   
 
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
-        previousLabel="" nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+   
 
   </div>
 

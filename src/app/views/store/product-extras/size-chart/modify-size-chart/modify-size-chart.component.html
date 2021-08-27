@@ -42,22 +42,24 @@
         <table class="table table-bordered size-chart">
           <thead>
             <th *ngFor='let key of duplicateKeys; let i=index;'>
-              <input type="text" class="table-input" [(ngModel)]="key.name" [ngModelOptions]="{standalone: true}" (focusout)="focusOutFunction($event, i)" required />
+              <input type="text" class="table-input form-control" [(ngModel)]="key.name" [ngModelOptions]="{standalone: true}" (focusout)="focusOutFunction($event, i)" required />
             </th>
           </thead>
           <tbody>
             <tr *ngFor="let x of chartForm.chart_list;">
               <td *ngFor="let key of keys;">
-                <input type="text" class="table-input" [(ngModel)]="x[key]" [ngModelOptions]="{standalone: true}" required />
+                <input type="text" class="table-input form-control" [(ngModel)]="x[key]" [ngModelOptions]="{standalone: true}" required />
               </td>
             </tr>
           </tbody>
         </table>
-        <button type="button" class="btn blue-fill-btn mr-1" (click)="chartForm.chart_list.push({});">+ Row</button>
+        <button type="button" class="btn blue-outline-btn mr-1" (click)="chartForm.chart_list.push({});">
+         <span class="blue-outline-txt">+ Row</span> </button>
         <button *ngIf="chartForm?.chart_list?.length>1" type="button" class="btn btn-primary" (click)="chartForm.chart_list.splice(chartForm.chart_list.length-1, 1);">- Row</button>
       </div>
       <div class="col-md-1">
-        <button type="button" class="btn blue-fill-btn mr-1" (click)="addColumn();">+ Cloumn</button>
+        <button type="button" class="btn blue-outline-btn mr-1" (click)="addColumn();">
+          <span class="blue-outline-txt">+ Cloumn</span></button>
         <button *ngIf="duplicateKeys?.length>1" type="button" class="btn btn-primary" (click)="removeColumn(duplicateKeys.length-1);">- Cloumn</button>
       </div>
     </div>

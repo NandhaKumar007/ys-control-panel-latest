@@ -27,7 +27,8 @@
           <img [src]="imgBaseUrl+reviewDetails.productDetails[0]?.image_list[0].image" alt="">
         </div>
         <div class="flex-grow-1 pl-2 d-flex mtb-20">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+          <div
+            class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <p class="m-0">{{reviewDetails.productDetails[0]?.name}}<br>{{reviewDetails.productDetails[0]?.sku}}</p>
           </div>
         </div>
@@ -43,40 +44,58 @@
         Add New
       </button>
     </div>
+  </div>
 
-    <div *ngFor="let x of reviewDetails.reviews | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
-      class="list-item col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+  <div class="data-list-card-wrapper">
+    <div class="data-list-card-inner">
+      <div class="row">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div *ngIf="x.order_by=='admin'" class="find-band"></div>
-        <div class="flex-grow-1 pl-2 d-flex mtb-20">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <span class="review-star-container" [ngClass]="{ 'review-good': x.rating>2, 'review-avg': x.rating>1 && x.rating<=2, 'review-bad': x.rating<=1 }">
-              {{x.rating}} <i class="material-icons">star</i>
-            </span>
-            <p class="m-0 text-muted text-small w-sm-100">{{x.customer_name}}</p>
-            <p class="m-0 text-muted text-small w-sm-100">{{ x.created_on | date: "dd MMM y hh:mm a" }}</p>
-            <p class="c-w-15 w-md-100 m-b-0">
-              <span class="badge badge-warning" [ngClass]="x.status=='active'? 'badge-green': 'badge-red'">
-                {{ x.status=='active'? 'Published': 'Unpublished' }}
-              </span>
-            </p>
-            <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions">
-              <button *ngIf="!x.order_id && commonService.store_details._id=='60b52edf58954c13bf58b5a2'" (click)="onEdit(x, reviewModal);" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
-                <span class="black-outline-txt">Edit</span>
-              </button>
-              <button (click)="selectedReview=x; modalService.open(reviewDetailsModal, { size: 'lg'});" class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
-                <span class="black-outline-txt">View</span>
-              </button>
+        <div
+          *ngFor="let x of reviewDetails.reviews | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+          class="list-item data-list-card col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    
+          <div class="o-hidden d-flex flex-row">
+            <div *ngIf="x.order_by=='admin'" class="find-band"></div>
+            <div class="flex-grow-1 pl-2 d-flex mtb-20">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <span class="review-star-container"
+                [ngClass]="{ 'review-good': x.rating>2, 'review-avg': x.rating>1 && x.rating<=2, 'review-bad': x.rating<=1 }">
+                  {{x.rating}} <i class="material-icons">star</i>
+                </span>
+                <p class="m-0 text-muted text-small w-sm-100">{{x.customer_name}}</p>
+                <p class="m-0 text-muted text-small w-sm-100">{{ x.created_on | date: "dd MMM y hh:mm a" }}</p>
+                <p class="c-w-15 w-md-100 m-b-0">
+                  <span class="badge badge-warning" [ngClass]="x.status=='active'? 'badge-green': 'badge-red'">
+                    {{ x.status=='active'? 'Published': 'Unpublished' }}
+                  </span>
+                </p>
+                <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions">
+                  <button *ngIf="!x.order_id && commonService.store_details._id=='60b52edf58954c13bf58b5a2'" (click)="onEdit(x, reviewModal);"
+                    class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
+                    <span class="black-outline-txt">Edit</span>
+                  </button>
+                  <button (click)="selectedReview=x; modalService.open(reviewDetailsModal, { size: 'lg'});"
+                    class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
+                    <span class="black-outline-txt">View</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+    
         </div>
       </div>
 
     </div>
-    <!-- PAGINATION CONTROL -->
+  </div>
+ 
+
+  <!-- PAGINATION CONTROL -->
+  <div class="row">
     <div class="col-md-12 mt-3" *ngIf="reviewDetails.reviews?.length">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+        maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
     </div>
   </div>
 
@@ -91,7 +110,8 @@
 <!-- ADD REVIEW MODAL -->
 <ng-template #reviewModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{ (reviewForm?.form_type=='add')? 'Add Review': 'Update Review' }}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{ (reviewForm?.form_type=='add')? 'Add Review': 'Update Review' }}
+    </h4>
     <button type="button" id="closeModal" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -134,20 +154,24 @@
         <div class="col-md-6"></div>
         <div class="col-md-6 form-group mb-3">
           <label>Customer Name</label>
-          <input type="text" name="customer_name" class="form-control" [(ngModel)]="reviewForm.customer_name" #customer_name="ngModel" required />
+          <input type="text" name="customer_name" class="form-control" [(ngModel)]="reviewForm.customer_name"
+            #customer_name="ngModel" required />
         </div>
         <div class="col-md-6 form-group mb-3">
           <label>Created On</label>
-          <input type="text" placeholder="Select Date" class="form-control" name="created_on" autocomplete="off" [maxDate]="currentDate"
-          [(ngModel)]="reviewForm.created_on" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+          <input type="text" placeholder="Select Date" class="form-control" name="created_on" autocomplete="off"
+            [maxDate]="currentDate" [(ngModel)]="reviewForm.created_on" bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
         </div>
         <div class="col-md-12 form-group mb-3">
           <label>Title</label>
-          <input type="text" name="title" class="form-control" [(ngModel)]="reviewForm.title" #title="ngModel" required />
+          <input type="text" name="title" class="form-control" [(ngModel)]="reviewForm.title" #title="ngModel"
+            required />
         </div>
         <div class="col-md-12 form-group mb-3 quill-mb-5">
           <label>Description</label>
-          <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="reviewForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
+          <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="reviewForm.description"
+            [ngModelOptions]="{standalone: true}"></quill-editor>
         </div>
       </div>
     </div>
@@ -166,10 +190,12 @@
           <div class="col-md-12 mb-3">
             <h5>Review Images</h5>
           </div>
-          <div align="center" class="col-md-6 col-lg-4 form-group mb-3" *ngFor="let x of reviewForm.image_list; let i=index;">
+          <div align="center" class="col-md-6 col-lg-4 form-group mb-3"
+            *ngFor="let x of reviewForm.image_list; let i=index;">
             <div class="card p-3 mt-3 mb-3">
               <ng-container *ngIf="reviewForm.image_list.length>1">
-                <span (click)="reviewForm.image_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                <span (click)="reviewForm.image_list.splice(i, 1);"
+                  class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
               </ng-container>
               <label>
                 <div *ngIf="!x.image">
@@ -180,7 +206,8 @@
                   <img *ngIf="x.img_change" [src]="x.image" height="150" width="auto">
                   <img *ngIf="!x.img_change" [src]="imgBaseUrl+x.image" height="150" width="auto">
                 </ng-container>
-                <input type="file" name="image{{i}}" style="display: none;" (change)="fileChangeListener(i, $event);" accept="image/jpeg, image/png" />
+                <input type="file" name="image{{i}}" style="display: none;" (change)="fileChangeListener(i, $event);"
+                  accept="image/jpeg, image/png" />
               </label>
             </div>
           </div>
@@ -213,14 +240,17 @@
           </div>
         </div>
       </div>
-      <div *ngIf="reviewForm.errorMsg"><p class="text-danger">{{ reviewForm.errorMsg }}</p></div>
+      <div *ngIf="reviewForm.errorMsg">
+        <p class="text-danger">{{ reviewForm.errorMsg }}</p>
+      </div>
     </div>
     <div class="modal-footer">
       <button type="button" style="display: none;" id="closeModal" (click)="modal.dismiss('Cross click');"></button>
       <button type="button" class="btn btn-wide black-outline-btn" (click)="reviewForm.step_num=1;">
         <span class="black-outline-txt">Go Back</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="reviewForm.submit" [ladda]="reviewForm.submit">
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="reviewForm.submit"
+        [ladda]="reviewForm.submit">
         {{ (reviewForm?.form_type=='add')? 'Add': 'Update' }}
       </button>
     </div>
@@ -239,7 +269,8 @@
     <div class="card p-3">
       <div class="row">
         <div class="col-md-12 mb-3">
-          <span class="review-star-container" [ngClass]="{ 'review-good': selectedReview.rating>2, 'review-avg': selectedReview.rating===2, 'review-bad': selectedReview.rating===1 }">
+          <span class="review-star-container"
+            [ngClass]="{ 'review-good': selectedReview.rating>2, 'review-avg': selectedReview.rating===2, 'review-bad': selectedReview.rating===1 }">
             {{selectedReview.rating}} <i class="material-icons">star</i>
           </span>
         </div>
@@ -290,8 +321,9 @@
     <button type="button" (click)="updateStatus(selectedReview);" class="btn btn-wide blue-outline-btn">
       <span class="blue-outline-txt">{{selectedReview.status=='active'? 'Unpublish': 'Publish'}}</span>
     </button>
-    <button type="button" (click)="deleteForm=selectedReview; modalService.open(deleteModal, { centered: true });" class="btn btn-wide orng-outline-btn">
-     <span class="orng-outline-txt">Delete</span>
+    <button type="button" (click)="deleteForm=selectedReview; modalService.open(deleteModal, { centered: true });"
+      class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Delete</span>
     </button>
   </div>
 </ng-template>
@@ -307,7 +339,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeDeleteModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+    <button type="button" id="closeDeleteModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('cancel')">
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" class="btn btn-wide orng-outline-btn" (click)="onDelete();">

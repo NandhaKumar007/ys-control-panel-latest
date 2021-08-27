@@ -5,7 +5,9 @@
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
     <h1>Subscribers</h1>
-    <ul><li>View and manage your subscribers</li></ul>
+    <ul>
+      <li>View and manage your subscribers</li>
+    </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
   <div class="row mb-4">
@@ -17,25 +19,37 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="list?.length" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <div *ngFor="let x of list | fieldSearch:'email':search_bar | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;" class="col-md-12 list-item"
-      [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}" >
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
-            <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
+          <div
+          *ngFor="let x of list | fieldSearch:'email':search_bar | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          <div class="o-hidden d-flex flex-row">
+            <div class="flex-grow-1 pl-2 d-flex">
+              <div
+                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
+                <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
+              </div>
+            </div>
           </div>
+        </div>
+
         </div>
       </div>
     </div>
+   
 
     <!-- PAGINATION CONTROL -->
     <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+        maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
     </div>
-    
+
   </div>
 
   <div *ngIf="!list?.length" class="row">

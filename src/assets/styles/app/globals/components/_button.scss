@@ -136,6 +136,19 @@ html [type="button"], .btn[type="button"] {
     }
 }
 
+// @each $name, $value in $theme-colors {
+//     .btn-#{$name} {
+//         .btn-spinner {
+//             animation: btn-glow-#{$name} 1s ease infinite;
+//         }
+//     }
+//     @keyframes btn-glow-#{$name} {
+//         0% { box-shadow: 0 0 0 .4em darken($value, 10%), 0 0 0 .1em darken($value, 10%); transform:rotate(360deg); }
+//         50% { border-top-color: #ffffff;}
+//         100% { box-shadow: 0 0 0 .4em darken($value, 10%), 0 0 0 3.6em transparent; }
+//     }
+// }
+
 @each $name, $value in $theme-colors {
     .btn-#{$name} {
         .btn-spinner {
@@ -143,8 +156,8 @@ html [type="button"], .btn[type="button"] {
         }
     }
     @keyframes btn-glow-#{$name} {
-        0% { box-shadow: 0 0 0 .4em darken($value, 10%), 0 0 0 .1em darken($value, 10%); transform:rotate(360deg); }
+        0% { box-shadow: 0 0 0 .4em darken(#545454, 10%), 0 0 0 .1em darken(#545454, 10%); transform:rotate(360deg); }
         50% { border-top-color: #ffffff;}
-        100% { box-shadow: 0 0 0 .4em darken($value, 10%), 0 0 0 3.6em transparent; }
+        100% { box-shadow: 0 0 0 .4em darken(#545454, 10%), 0 0 0 3.6em transparent; }
     }
 }

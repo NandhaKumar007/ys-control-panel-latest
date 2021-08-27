@@ -35,10 +35,12 @@
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">
-                    {{ (order_details.order_by=='guest')? order_details?.shipping_address?.name: order_details.customerDetails[0]?.name }}
+                    {{ (order_details.order_by=='guest')? order_details?.shipping_address?.name:
+                    order_details.customerDetails[0]?.name }}
                   </p>
                   <p class="w-30 w-sm-100 m-b-0">
-                    {{ (order_details.order_by=='guest')? order_details?.guest_email: order_details.customerDetails[0]?.email }}
+                    {{ (order_details.order_by=='guest')? order_details?.guest_email:
+                    order_details.customerDetails[0]?.email }}
                   </p>
                   <p *ngIf="order_details.customerDetails[0]?.mobile" class="w-30 w-sm-100 m-b-0">
                     {{order_details.customerDetails[0].mobile}}</p>
@@ -49,7 +51,8 @@
           </div>
         </div>
         <!-- product list (with group) -->
-        <div *ngIf="order_details.item_groups?.length && commonService.store_details?.login_type!='vendor'" class="list-item col-md-12 p-0 mb-4">
+        <div *ngIf="order_details.item_groups?.length && commonService.store_details?.login_type!='vendor'"
+          class="list-item col-md-12 p-0 mb-4">
           <p class="sec-desc">Product Groups</p>
           <ng-container *ngFor="let group of order_details.item_groups;">
             <div class="card p-3 mb-3">
@@ -59,10 +62,13 @@
                 </div>
                 <div class="col-4 d-flex justify-content-end align-items-center">
                   <ng-container *ngIf="!group.dispatched_on">
-                    <i (click)="groupForm=group; openUpdateItemGroupModal(updateItemGroupModal);" class="material-icons edit-icon">edit</i>
-                    <i (click)="groupForm=group; modalService.open(deleteItemGroupModal, { centered: true });" class="material-icons edit-icon ml-3">delete</i>
+                    <i (click)="groupForm=group; openUpdateItemGroupModal(updateItemGroupModal);"
+                      class="material-icons edit-icon">edit</i>
+                    <i (click)="groupForm=group; modalService.open(deleteItemGroupModal, { centered: true });"
+                      class="material-icons edit-icon ml-3">delete</i>
                   </ng-container>
-                  <span *ngIf="group.dispatched_on" (click)="groupForm=group; modalService.open(updateItemGroupModal);" class="cursor badge badge-success badge-green-outline">
+                  <span *ngIf="group.dispatched_on" (click)="groupForm=group; modalService.open(updateItemGroupModal);"
+                    class="cursor badge badge-success badge-green-outline">
                     <span class="badge-green-outline-txt">
                       Dispatched on: {{group.dispatched_on | date: "dd MMM y hh:mm a"}}
                     </span>
@@ -82,11 +88,12 @@
                         </span>
                         <ng-container *ngIf="x.variant_status">
                           <ng-container *ngFor="let y of x.variant_types;">
-                            <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                            <span class="w-100">
+                              <b>{{y.name}}: </b>{{y.value}}</span>
                           </ng-container>
                         </ng-container>
                         <span *ngIf="x.slot_details" class="w-100">
-                          <b>Delivery on: </b>{{ x.slot_details?.date  | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                          <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
                         </span>
                         <div *ngIf="x.addon_status && x.selected_addon">
                           <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
@@ -109,7 +116,8 @@
                       <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
                         {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
                       <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                        {{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+                        {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
+                        commonService.store_currency?.country_code}}</div>
                       <!-- if customization exist -->
                       <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
                         <div class="btn-group">
@@ -125,8 +133,7 @@
                                 (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                                 class="dropdown-item">Measurement</button>
                               <button *ngIf="x.customized_model?.notes_list?.length"
-                                (click)="itemIndex=i; onEditNotes(editNotesModal);"
-                                class="dropdown-item">Notes</button>
+                                (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
                             </div>
                           </div>
                         </div>
@@ -140,10 +147,12 @@
         </div>
         <!-- product list (without vendor) -->
         <ng-container *ngIf="itemList?.length">
-          <div *ngIf="!order_details.vendor_list?.length || commonService.store_details?.login_type=='vendor'" class="list-item col-md-12 p-0 mb-4">
+          <div *ngIf="!order_details.vendor_list?.length || commonService.store_details?.login_type=='vendor'"
+            class="list-item col-md-12 p-0 mb-4">
             <p class="sec-desc">Product Details</p>
             <div *ngFor="let x of itemList; let i=index;" class="card o-hidden m-10 d-flex flex-row">
-              <ng-container *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.store_details.login_id">
+              <ng-container
+                *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.store_details.login_id">
                 <div class="list-thumb d-flex mtb-20">
                   <img [src]="imgBaseUrl+x.image" alt="">
                 </div>
@@ -155,11 +164,12 @@
                       </span>
                       <ng-container *ngIf="x.variant_status">
                         <ng-container *ngFor="let y of x.variant_types;">
-                          <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                          <span class="w-100">
+                            <b>{{y.name}}: </b>{{y.value}}</span>
                         </ng-container>
                       </ng-container>
                       <span *ngIf="x.slot_details" class="w-100">
-                        <b>Delivery on: </b>{{ x.slot_details?.date  | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                        <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
                       </span>
                       <div *ngIf="x.addon_status && x.selected_addon">
                         <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
@@ -182,7 +192,8 @@
                     <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
                       {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
                     <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                      {{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+                      {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
+                      commonService.store_currency?.country_code}}</div>
                     <!-- if customization exist -->
                     <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
                       <div class="btn-group">
@@ -198,8 +209,7 @@
                               (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                               class="dropdown-item">Measurement</button>
                             <button *ngIf="x.customized_model?.notes_list?.length"
-                              (click)="itemIndex=i; onEditNotes(editNotesModal);"
-                              class="dropdown-item">Notes</button>
+                              (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
                           </div>
                         </div>
                       </div>
@@ -211,7 +221,8 @@
           </div>
         </ng-container>
         <!-- product list (with vendor) -->
-        <div *ngIf="order_details.vendor_list?.length && commonService.store_details?.login_type!='vendor'" class="list-item col-md-12 p-0 mb-4">
+        <div *ngIf="order_details.vendor_list?.length && commonService.store_details?.login_type!='vendor'"
+          class="list-item col-md-12 p-0 mb-4">
           <p class="sec-desc">Product Details</p>
           <!-- vendor_id not exist -->
           <ng-container *ngFor="let x of itemList; let i=index;">
@@ -227,11 +238,12 @@
                     </span>
                     <ng-container *ngIf="x.variant_status">
                       <ng-container *ngFor="let y of x.variant_types;">
-                        <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                        <span class="w-100">
+                          <b>{{y.name}}: </b>{{y.value}}</span>
                       </ng-container>
                     </ng-container>
                     <span *ngIf="x.slot_details" class="w-100">
-                      <b>Delivery on: </b>{{ x.slot_details?.date  | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                      <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
                     </span>
                     <div *ngIf="x.addon_status && x.selected_addon">
                       <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
@@ -254,7 +266,8 @@
                   <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
                     {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
                   <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                    {{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+                    {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
+                    commonService.store_currency?.country_code}}</div>
                   <!-- if customization exist -->
                   <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
                     <div class="btn-group">
@@ -270,8 +283,7 @@
                             (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                             class="dropdown-item">Measurement</button>
                           <button *ngIf="x.customized_model?.notes_list?.length"
-                            (click)="itemIndex=i; onEditNotes(editNotesModal);"
-                            class="dropdown-item">Notes</button>
+                            (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
                         </div>
                       </div>
                     </div>
@@ -287,13 +299,18 @@
                 <div class="col-md-12">
                   <p class="sec-desc add-another">{{vendor.vendor_name}}</p>
                   <p class="pull-right mb-0">
-                    <span class="badge" [ngClass]="vendor.status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
-                      <span [ngClass]="vendor.status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'" style="text-transform: capitalize;">
+                    <span class="badge"
+                      [ngClass]="vendor.status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
+                      <span [ngClass]="vendor.status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'"
+                        style="text-transform: capitalize;">
                         {{vendor.status}}
-                        <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on: {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
+                        <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on:
+                          {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
                       </span>
                     </span>
-                    <button *ngIf="vendor.status!='confirmed'" type="button" (click)="selected_vendor=vendor; modalService.open(vendorConfirmModal, { centered: true });" class="btn btn-wide btn-primary ml-3">Confirm</button>
+                    <button *ngIf="vendor.status!='confirmed'" type="button"
+                      (click)="selected_vendor=vendor; modalService.open(vendorConfirmModal, { centered: true });"
+                      class="btn btn-wide btn-primary ml-3">Confirm</button>
                   </p>
                 </div>
               </div>
@@ -310,11 +327,12 @@
                         </span>
                         <ng-container *ngIf="x.variant_status">
                           <ng-container *ngFor="let y of x.variant_types;">
-                            <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                            <span class="w-100">
+                              <b>{{y.name}}: </b>{{y.value}}</span>
                           </ng-container>
                         </ng-container>
                         <span *ngIf="x.slot_details" class="w-100">
-                          <b>Delivery on: </b>{{ x.slot_details?.date  | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                          <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
                         </span>
                         <div *ngIf="x.addon_status && x.selected_addon">
                           <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
@@ -337,7 +355,8 @@
                       <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
                         {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
                       <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                        {{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+                        {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
+                        commonService.store_currency?.country_code}}</div>
                       <!-- if customization exist -->
                       <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
                         <div class="btn-group">
@@ -353,8 +372,7 @@
                                 (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
                                 class="dropdown-item">Measurement</button>
                               <button *ngIf="x.customized_model?.notes_list?.length"
-                                (click)="itemIndex=i; onEditNotes(editNotesModal);"
-                                class="dropdown-item">Notes</button>
+                                (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
                             </div>
                           </div>
                         </div>
@@ -379,7 +397,8 @@
                     <p *ngIf="order_details?.manual_discount?.percentage" class="w-30 w-sm-100 m-b-0">{{order_details?.manual_discount?.percentage}}%</p>
                     <p *ngIf="!order_details?.manual_discount?.percentage" class="w-30 w-sm-100 m-b-0"></p>
                     <p class="w-30 w-sm-100 m-b-0">
-                      {{order_details.manual_discount.amount | currency: commonService.store_currency?.country_code}}</p>
+                      {{order_details.manual_discount.amount | currency: commonService.store_currency?.country_code}}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -450,17 +469,19 @@
                 <!-- courier order status -->
                 <ng-container *ngFor="let x of order_details.cp_orders;">
                   <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
-                    <button *ngIf="!courierData?.state" type="button" (click)="checkDunzoStatus(x.order_id);" class="badge badge-warning badge-green mr-3" style="border: none;"
-                    [disabled]="courierData.submit" [ladda]="courierData.submit">Check Dunzo Order Status</button>
+                    <button *ngIf="!courierData?.state" type="button" (click)="checkDunzoStatus(x.order_id);"
+                      class="badge ladda-badge badge-warning badge-green mr-3" style="border: none;"
+                      [disabled]="courierData.submit" [ladda]="courierData.submit">Check Dunzo Order Status</button>
                   </ng-container>
                 </ng-container>
                 <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-                (click)="courierData={}; onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
+                  (click)="courierData={}; onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
               </div>
             </div>
             <div class="col-md-12 list-item p-0">
               <!-- shipping details -->
-              <div *ngIf="!order_details.shipping_method?.delivery_method" class="card o-hidden mb-4 d-flex flex-column">
+              <div *ngIf="!order_details.shipping_method?.delivery_method"
+                class="card o-hidden mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -468,7 +489,8 @@
                       {{order_details.shipping_method?.name? order_details.shipping_method?.name: 'NA'}}</p>
                     <p class="w-30 w-sm-100 m-b-0">
                       <span
-                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}</span>
+                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
+                        | currency:commonService.store_currency?.country_code }}</span>
                       <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
                     </p>
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
@@ -489,12 +511,14 @@
               <!-- delivery details -->
               <div *ngIf="order_details.shipping_method?.delivery_method" class="card o-hidden mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
-                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <div
+                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
                     <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
                     <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
                       <span
-                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}</span>
+                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
+                        | currency:commonService.store_currency?.country_code }}</span>
                       <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
                     </p>
                   </div>
@@ -511,15 +535,19 @@
             <div class="col-md-12 list-item p-0">
               <div class="card o-hidden mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
-                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <div
+                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                     <p class="w-50 w-sm-100 m-b-0">Status: <strong>{{courierData?.state}}</strong></p>
                     <p class="w-50 w-sm-100 m-b-0">Contact No: <strong>{{courierData?.contact}}</strong></p>
                     <ng-container *ngIf="courierData?.eta">
-                      <p class="w-50 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
-                      <p class="w-50 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
+                      <p class="w-50 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}}
+                          (mins)</strong></p>
+                      <p class="w-50 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}}
+                          (mins)</strong></p>
                     </ng-container>
                     <p *ngIf="courierData?.runner" class="w-50 w-sm-100 m-b-0">
-                      Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong>
+                      Runner Details: <strong>{{courierData?.runner?.name}}
+                        ({{courierData?.runner?.phone_number}})</strong>
                     </p>
                     <p *ngIf="courierData?.price" class="w-50 w-sm-100 m-b-0">
                       Final Price: <strong>{{courierData?.price}}</strong>
@@ -588,7 +616,8 @@
                       </div>
                       <div class="col-6">
                         <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.shipping_address?.dial_code}} {{order_details.shipping_address?.mobile}}</p>
+                          <p class="pull-right text-right">{{order_details.shipping_address?.dial_code}}
+                            {{order_details.shipping_address?.mobile}}</p>
                         </div>
                       </div>
                       <div class="col-6">
@@ -667,7 +696,8 @@
                       </div>
                       <div class="col-6">
                         <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.billing_address?.dial_code}} {{order_details.billing_address?.mobile}}</p>
+                          <p class="pull-right text-right">{{order_details.billing_address?.dial_code}}
+                            {{order_details.billing_address?.mobile}}</p>
                         </div>
                       </div>
                       <div class="col-6">
@@ -837,7 +867,8 @@
               </div>
               <div class="col-6">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{order_details.sub_total | currency: commonService.store_currency?.country_code}}
+                  <p class="pull-right text-right">{{order_details.sub_total | currency:
+                    commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -927,8 +958,9 @@
         </div>
 
         <!-- courier partner -->
-        <form *ngIf="order_details.order_type=='delivery' && order_details.vendors_confirmed && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
-        (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
+        <form
+          *ngIf="order_details.order_type=='delivery' && order_details.vendors_confirmed && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
+          (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
           <div class="order-summary-header">
             <p class="sec-desc">Delivery Partner</p>
           </div>
@@ -939,12 +971,14 @@
                 <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="order_details.selected_cp"
                   (change)="courierForm.errorMsg='';" #selected_cp="ngModel" required>
                   <option [ngValue]="x" *ngFor="let x of courier_partners">{{x.name}}</option>
-                  <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier">{{addedCourier?.name}}</option>
+                  <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier">
+                    {{addedCourier?.name}}</option>
                 </select>
               </div>
               <div *ngIf="order_details?.selected_cp?.name=='Dunzo'" class="col-md-12 form-group mb-3 summary-section">
                 <label>Special Instructions</label>
-                <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                <input type="text" name="special_instructions" class="form-control"
+                  [(ngModel)]="courierForm.special_instructions" />
               </div>
               <ng-container *ngIf="order_details?.selected_cp?.name=='Others'">
                 <div class="col-md-12 form-group mb-3 summary-section">
@@ -953,11 +987,13 @@
                 </div>
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Tracking Number</label>
-                  <input type="text" name="tracking_number" class="form-control" [(ngModel)]="courierForm.tracking_number" required />
+                  <input type="text" name="tracking_number" class="form-control"
+                    [(ngModel)]="courierForm.tracking_number" required />
                 </div>
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Tracking Link</label>
-                  <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link" required />
+                  <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link"
+                    required />
                 </div>
               </ng-container>
               <div class="col-md-12">
@@ -979,18 +1015,23 @@
           <div *ngIf="params?.type!='inactive'" class="order-summary-header">
             <p class="sec-desc">Order Status</p>
           </div>
-          <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });" ngNativeValidate>
+          <form autocomplete="off"
+            (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });"
+            ngNativeValidate>
             <div class="card order-summary-details mtb-10">
               <div class="row mtb-10">
                 <!-- tracking details -->
-                <ng-container *ngIf="params?.type=='live' && commonService.ys_features.indexOf('courier_partners')==-1 && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
+                <ng-container
+                  *ngIf="params?.type=='live' && commonService.ys_features.indexOf('courier_partners')==-1 && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
                   <div class="col-md-12 form-group mb-3 summary-section">
                     <label>Tracking Number</label>
-                    <input type="text" name="tracking_number" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_number" #tracking_number="ngModel" required />
+                    <input type="text" name="tracking_number" class="form-control"
+                      [(ngModel)]="order_details.shipping_method.tracking_number" #tracking_number="ngModel" required />
                   </div>
                   <div class="col-md-12 form-group mb-3 summary-section">
                     <label>Tracking Link</label>
-                    <input type="text" name="tracking_link" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_link" #tracking_link="ngModel" required />
+                    <input type="text" name="tracking_link" class="form-control"
+                      [(ngModel)]="order_details.shipping_method.tracking_link" #tracking_link="ngModel" required />
                   </div>
                 </ng-container>
                 <!-- existing order status -->
@@ -1058,15 +1099,18 @@
                 <ng-container *ngIf="params?.type=='live'">
                   <div *ngIf="order_details?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="confirmed" [(ngModel)]="order_details.order_status">
+                      <input type="radio" name="order_status" value="confirmed"
+                        [(ngModel)]="order_details.order_status">
                       <span>Order Confirmed</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
-                  <ng-container *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
+                  <ng-container
+                    *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
                     <div *ngIf="!order_details.item_groups?.length" class="col-md-12 mb-1 summary-section">
                       <label class="radio radio-primary">
-                        <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_details.order_status">
+                        <input type="radio" name="order_status" value="dispatched"
+                          [(ngModel)]="order_details.order_status">
                         <span>Order Dispatched</span>
                         <span class="checkmark"></span>
                       </label>
@@ -1074,13 +1118,16 @@
                   </ng-container>
                   <div class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="delivered" [(ngModel)]="order_details.order_status">
+                      <input type="radio" name="order_status" value="delivered"
+                        [(ngModel)]="order_details.order_status">
                       <span>Order Delivered</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
                   <div class="col-md-12">
-                    <button type="submit" [disabled]="order_details.order_status=='delivered' && order_details.item_groups?.length && !order_details?.dispatched_on" class="btn btn-primary ladda-button w-100">
+                    <button type="submit"
+                      [disabled]="order_details.order_status=='delivered' && order_details.item_groups?.length && !order_details?.dispatched_on"
+                      class="btn btn-primary ladda-button w-100">
                       Update Status
                     </button>
                   </div>
@@ -1093,20 +1140,27 @@
 
         <!-- Create new item group -->
         <ng-container *ngIf="order_details.existing_status=='placed' || order_details.existing_status=='confirmed'">
-          <button *ngIf="commonService.store_details?.login_type!='vendor' && remaining_items.length && params?.type=='live'" type="button"
-          (click)="groupForm={}; modalService.open(itemGroupModal, {size: 'lg'});" class="btn btn-primary w-100 mtb-10">Create New Item Group</button>
+          <button
+            *ngIf="commonService.store_details?.login_type!='vendor' && remaining_items.length && params?.type=='live'"
+            type="button" (click)="groupForm={}; modalService.open(itemGroupModal, {size: 'lg'});"
+            class="btn btn-primary w-100 mtb-10">Create New Item Group</button>
         </ng-container>
         <!-- # Create new item group -->
 
         <!-- cancel order -->
         <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='inactive'" type="button"
-        (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
-        class="btn orng-fill-btn w-100 mtb-10">Cancel Order</button>
+          (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
+          class="btn orng-outline-btn w-100 mtb-10">
+          <span class="orng-outline-txt">
+            Cancel Order
+          </span>
+        </button>
         <!-- # cancel order -->
 
         <!-- Resend mail -->
-        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button" (click)="onResendMail(resendMailModal);"
-        class="btn blue-fill-btn w-100 mtb-10">Resend Email</button>
+        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button"
+          (click)="onResendMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
+         <span class="blue-outline-txt">Resend Email</span> </button>
         <!-- # Resend mail -->
 
         <!-- Mark as paid -->
@@ -1132,14 +1186,17 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
+                    <p class="pull-right text-right">{{ order_vendor_details.confirmed_on | date: "dd MMM y hh:mm a"}}
+                    </p>
                   </div>
                 </div>
               </ng-container>
             </div>
           </div>
         </div>
-        <button *ngIf="!order_vendor_details?.confirmed_on" type="button" (click)="modalService.open(vendorConfirmModal, { centered: true });" class="btn btn-primary w-100 mtb-10">Confirm Order</button>
+        <button *ngIf="!order_vendor_details?.confirmed_on" type="button"
+          (click)="modalService.open(vendorConfirmModal, { centered: true });"
+          class="btn btn-primary w-100 mtb-10">Confirm Order</button>
       </div>
     </div>
   </div>
@@ -1247,8 +1304,10 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
         <span class="black-outline-txt">Close</span>
       </button>
-      <button type="button" *ngIf="order_details?.cp_status && order_details?.existing_status=='confirmed'" class="btn btn-wide orng-outline-btn ladda-button"
-      (click)="modal.dismiss('cancel'); cancelCourierPartner(confirmCourierCancelModal);" [disabled]="editForm.btnLoader" [ladda]="editForm.btnLoader">
+      <button type="button" *ngIf="order_details?.cp_status && order_details?.existing_status=='confirmed'"
+        class="btn btn-wide orng-outline-btn ladda-button"
+        (click)="modal.dismiss('cancel'); cancelCourierPartner(confirmCourierCancelModal);"
+        [disabled]="editForm.btnLoader" [ladda]="editForm.btnLoader">
         <span class="orng-outline-txt">Cancel Courier</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
@@ -1298,7 +1357,8 @@
         <div *ngIf="addressType!='pickup'" class="row">
           <div class="col-md-6 form-group mb-3">
             <label>Name</label>
-            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control" required />
+            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control"
+              required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
@@ -1355,16 +1415,19 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Landmark</label>
-            <input type="text" name="landmark" [(ngModel)]="addressForm.landmark" #landmark="ngModel" class="form-control" />
+            <input type="text" name="landmark" [(ngModel)]="addressForm.landmark" #landmark="ngModel"
+              class="form-control" />
           </div>
           <ng-container *ngIf="commonService.store_details?.type=='restaurant_based'">
             <div class="col-md-6 form-group mb-3">
               <label>Latitude</label>
-              <input type="text" name="lat" [(ngModel)]="addressForm.lat" #lat="ngModel" class="form-control" readonly />
+              <input type="text" name="lat" [(ngModel)]="addressForm.lat" #lat="ngModel" class="form-control"
+                readonly />
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Longitude</label>
-              <input type="text" name="lng" [(ngModel)]="addressForm.lng" #lng="ngModel" class="form-control" readonly />
+              <input type="text" name="lng" [(ngModel)]="addressForm.lng" #lng="ngModel" class="form-control"
+                readonly />
             </div>
           </ng-container>
         </div>
@@ -1372,15 +1435,18 @@
         <div *ngIf="addressType=='pickup'" class="row">
           <div class="col-md-6 form-group mb-3">
             <label>Name</label>
-            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control" required />
+            <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control"
+              required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Contact No</label>
-            <input type="text" name="mobile" [(ngModel)]="addressForm.mobile" #mobile="ngModel" class="form-control" required />
+            <input type="text" name="mobile" [(ngModel)]="addressForm.mobile" #mobile="ngModel" class="form-control"
+              required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
-            <input type="text" name="country" [(ngModel)]="addressForm.country" #country="ngModel" class="form-control" required />
+            <input type="text" name="country" [(ngModel)]="addressForm.country" #country="ngModel" class="form-control"
+              required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>State</label>
@@ -1392,15 +1458,18 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Pincode</label>
-            <input type="text" name="pincode" [(ngModel)]="addressForm.pincode" #pincode="ngModel" class="form-control" />
+            <input type="text" name="pincode" [(ngModel)]="addressForm.pincode" #pincode="ngModel"
+              class="form-control" />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Complete Address</label>
-            <textarea class="form-control" rows="3" aria-label="With textarea" name="address" [(ngModel)]="addressForm.address" #address="ngModel" required></textarea>
+            <textarea class="form-control" rows="3" aria-label="With textarea" name="address"
+              [(ngModel)]="addressForm.address" #address="ngModel" required></textarea>
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Location URL</label>
-            <input type="text" name="location_url" [(ngModel)]="addressForm.location_url" #location_url="ngModel" class="form-control" />
+            <input type="text" name="location_url" [(ngModel)]="addressForm.location_url" #location_url="ngModel"
+              class="form-control" />
           </div>
         </div>
       </div>
@@ -1582,7 +1651,8 @@
         <div class="row">
           <div *ngFor="let x of customizationForm.notes_list; let i=index;" class="col-md-12 form-group mb-3">
             <label>{{x.name}}</label>
-            <input type="text" id="value{{i}}" name="value{{i}}" [(ngModel)]="x.value" #value="ngModel" class="form-control" />
+            <input type="text" id="value{{i}}" name="value{{i}}" [(ngModel)]="x.value" #value="ngModel"
+              class="form-control" />
           </div>
         </div>
       </div>
@@ -1624,8 +1694,10 @@
 <ng-template #vendorConfirmModal let-modal>
   <div class="modal-body">
     <p>
-      <strong *ngIf="commonService.store_details.login_type=='vendor'">Do you want to confirm the order <span class="text-danger">"#{{order_details.order_number}}"</span>?</strong>
-      <strong *ngIf="commonService.store_details.login_type!='vendor'">Do you want to confirm the <span class="text-danger">"{{selected_vendor.vendor_name}}"</span>order?</strong>
+      <strong *ngIf="commonService.store_details.login_type=='vendor'">Do you want to confirm the order <span
+          class="text-danger">"#{{order_details.order_number}}"</span>?</strong>
+      <strong *ngIf="commonService.store_details.login_type!='vendor'">Do you want to confirm the <span
+          class="text-danger">"{{selected_vendor.vendor_name}}"</span>order?</strong>
     </p>
     <div *ngIf="errorMsg">
       <p class="text-danger">{{ errorMsg }}</p>
@@ -1684,12 +1756,13 @@
     <div class="modal-body">
       <p>
         <strong>Are you sure you want to cancel the
-        <span *ngIf="courierForm.type!='Others'" class="text-danger">"{{courierForm.type}}"</span> courier?</strong>
+          <span *ngIf="courierForm.type!='Others'" class="text-danger">"{{courierForm.type}}"</span> courier?</strong>
       </p>
       <div *ngIf="courierForm.type=='Dunzo'" class="row">
         <div class="col-md-12 form-group">
           <label>Cancellation Reason</label>
-          <input type="text" name="cancel_reason" [(ngModel)]="courierForm.cancel_reason" #cancel_reason="ngModel" class="form-control" required />
+          <input type="text" name="cancel_reason" [(ngModel)]="courierForm.cancel_reason" #cancel_reason="ngModel"
+            class="form-control" required />
         </div>
       </div>
       <div *ngIf="courierForm.errorMsg">
@@ -1700,7 +1773,8 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="courierForm.btnLoader" [ladda]="courierForm.btnLoader">Ok</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="courierForm.btnLoader"
+        [ladda]="courierForm.btnLoader">Ok</button>
     </div>
   </form>
 </ng-template>
@@ -1731,7 +1805,8 @@
                   <option *ngIf="x.dispatched_on" [ngValue]="x._id">Order Dispatched - {{x.name}}</option>
                 </ng-container>
                 <option *ngIf="order_details.delivered_on" value="delivered">Order Delivered</option>
-                <option *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" value="review">Order Review</option>
+                <option *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" value="review">Order Review
+                </option>
               </ng-container>
               <option *ngIf="params?.type=='cancelled'" value="cancelled">Order Cancelled</option>
             </select>
@@ -1788,22 +1863,34 @@
         </div>
         <div class="col-md-6">
           <tr>
-            <td><p>Order ID</p></td>
-            <td><p>: #{{invoice_details.order_number}}</p></td>
+            <td>
+              <p>Order ID</p>
+            </td>
+            <td>
+              <p>: #{{invoice_details.order_number}}</p>
+            </td>
           </tr>
         </div>
         <div *ngIf="invoice_details.invoice_number" class="col-md-6">
           <div class="invoice-no mr-3">
             <tr>
-              <td><p>Invoice No</p></td>
-              <td><p>: {{invoice_details.invoice_number}}</p></td>
+              <td>
+                <p>Invoice No</p>
+              </td>
+              <td>
+                <p>: {{invoice_details.invoice_number}}</p>
+              </td>
             </tr>
           </div>
         </div>
         <div class="col-md-6">
           <tr>
-            <td><p>Order Date</p></td>
-            <td><p>: {{invoice_details.created_on | date: "dd MMM y"}}</p></td>
+            <td>
+              <p>Order Date</p>
+            </td>
+            <td>
+              <p>: {{invoice_details.created_on | date: "dd MMM y"}}</p>
+            </td>
           </tr>
         </div>
         <!-- address section -->
@@ -1871,11 +1958,13 @@
                         <p>{{x.name}}</p>
                         <ng-container *ngIf="x.variant_status">
                           <p *ngFor="let y of x.variant_types; let j=index;">
-                            <strong>{{y.name}}</strong>: {{y.value}}</p>
+                            <strong>{{y.name}}</strong>: {{y.value}}
+                          </p>
                         </ng-container>
                         <ng-container *ngIf="x.addon_status && x.selected_addon">
                           <p class="invoice-addon">
-                            <strong>Addons</strong>: {{x.selected_addon?.name}}</p>
+                            <strong>Addons</strong>: {{x.selected_addon?.name}}
+                          </p>
                         </ng-container>
                       </td>
                       <td class="p-10 invoice-font-size" align="left" style="width: 20%;">{{x.sku}}</td>
@@ -1947,9 +2036,13 @@
               <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
                 <p>Subtotal</p>
               </td>
-              <td  align="right" class="p-10" style="width: 20%;">
-                <p *ngIf="tax_config?.tax <= 0" [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total)"></p>
-                <p *ngIf="tax_config?.tax > 0" [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total_wo_tax)"></p>
+              <td align="right" class="p-10" style="width: 20%;">
+                <p *ngIf="tax_config?.tax <= 0"
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total)">
+                </p>
+                <p *ngIf="tax_config?.tax > 0"
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total_wo_tax)">
+                </p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="tax_config?.tax > 0">
@@ -1957,7 +2050,9 @@
                 <p>{{ tax_config?.name }} ({{tax_config.tax}}%)</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.tax_amount)"></p>
+                <p
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.tax_amount)">
+                </p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.gift_wrapper > 0">
@@ -1965,7 +2060,9 @@
                 <p>Gift Wrapping</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.gift_wrapper)"></p>
+                <p
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.gift_wrapper)">
+                </p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.packaging_charges > 0">
@@ -1973,7 +2070,9 @@
                 <p>Packaging Charges</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.packaging_charges)"></p>
+                <p
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.packaging_charges)">
+                </p>
               </td>
             </tr>
             <tr *ngIf="invoice_details.order_type!='pickup'" class="invoice-total">
@@ -1981,7 +2080,8 @@
                 <p>Shipping and Handling</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.shipping_cost)">
+                <p
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.shipping_cost)">
                 </p>
               </td>
             </tr>
@@ -1990,7 +2090,9 @@
                 <p>COD Charges</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.cod_charges)"></p>
+                <p
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.cod_charges)">
+                </p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.discount_amount > 0">
@@ -2010,7 +2112,8 @@
               </td>
               <td class="p-10" align="right" style="width: 20%;">
                 <h5 class="m-0"
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.final_price)"></h5>
+                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.final_price)">
+                </h5>
               </td>
             </tr>
           </table>
@@ -2018,25 +2121,29 @@
         </div>
 
         <div class="col-md-12 mt-1">
-          <p class="mt-2 mb-0" align="left"><b>Note:</b> The above prices are in <b>{{ invoice_details?.currency_type?.country_code }}</b></p>
+          <p class="mt-2 mb-0" align="left"><b>Note:</b> The above prices are in <b>{{
+              invoice_details?.currency_type?.country_code }}</b></p>
         </div>
 
         <div class="col-md-12">
           <div class="invoice-footer-details mt-2 mb-2">
             <p class="invoice-store-name">{{commonService.store_details?.name}}</p>
-            <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">{{commonService.store_details?.gst_no}}</p>
+            <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">
+              {{commonService.store_details?.gst_no}}</p>
           </div>
         </div>
 
         <div class="col-md-12">
-          <p class="mt-2 mb-0" align="center">This is a computer generated invoice that does not require a signature.</p>
+          <p class="mt-2 mb-0" align="center">This is a computer generated invoice that does not require a signature.
+          </p>
         </div>
 
       </div>
     </kendo-pdf-export>
   </div>
   <div class="modal-footer">
-    <button kendo-button class="btn btn-wide btn-primary" (click)="invoicePdf.saveAs('invoice.pdf')">Save as pdf</button>
+    <button kendo-button class="btn btn-wide btn-primary" (click)="invoicePdf.saveAs('invoice.pdf')">Save as
+      pdf</button>
   </div>
 
 </ng-template>
@@ -2062,11 +2169,12 @@
                     <span>{{x.name}}</span>
                     <ng-container *ngIf="x.variant_status">
                       <ng-container *ngFor="let y of x.variant_types;">
-                        <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                        <span class="w-100">
+                          <b>{{y.name}}: </b>{{y.value}}</span>
                       </ng-container>
                     </ng-container>
                     <span *ngIf="x.slot_details" class="w-100">
-                      <b>Delivery on: </b>{{ x.slot_details?.date  | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                      <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
                     </span>
                     <div *ngIf="x.addon_status && x.selected_addon">
                       <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
@@ -2086,7 +2194,8 @@
                   <div class="col-md-3 flex-center">{{x.sku}}</div>
                   <div class="col-md-2">
                     <label class="checkbox checkbox-primary pull-right mt-4">
-                      <input (click)="groupForm.errorMsg=null;" name="check{{i}}" type="checkbox" [(ngModel)]="x.checked">
+                      <input (click)="groupForm.errorMsg=null;" name="check{{i}}" type="checkbox"
+                        [(ngModel)]="x.checked">
                       <span></span>
                       <span class="checkmark"></span>
                     </label>
@@ -2097,7 +2206,8 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Group Name</label>
-            <input type="text" name="group_name" class="form-control" [(ngModel)]="groupForm.name" #group_name="ngModel" required />
+            <input type="text" name="group_name" class="form-control" [(ngModel)]="groupForm.name" #group_name="ngModel"
+              required />
           </div>
         </div>
       </div>
@@ -2109,7 +2219,8 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="groupForm.submit" [ladda]="groupForm.submit">Create</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="groupForm.submit"
+        [ladda]="groupForm.submit">Create</button>
     </div>
   </form>
 </ng-template>
@@ -2125,32 +2236,39 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Group Name</label>
-            <input type="text" name="group_name" class="form-control" [(ngModel)]="groupForm.name" #group_name="ngModel" required />
+            <input type="text" name="group_name" class="form-control" [(ngModel)]="groupForm.name" #group_name="ngModel"
+              required />
           </div>
           <ng-container *ngIf="!order_details.shipping_method?.delivery_method">
             <div class="col-md-12 form-group mb-3">
               <label>Carrier Name</label>
-              <input type="text" name="carrier_name" class="form-control" [(ngModel)]="groupForm.carrier_name" #carrier_name="ngModel" required />
+              <input type="text" name="carrier_name" class="form-control" [(ngModel)]="groupForm.carrier_name"
+                #carrier_name="ngModel" required />
             </div>
             <div class="col-md-12 form-group mb-3">
               <label>Tracking Number</label>
-              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="groupForm.tracking_number" #tracking_number="ngModel" required />
+              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="groupForm.tracking_number"
+                #tracking_number="ngModel" required />
             </div>
             <div class="col-md-12 form-group mb-3">
               <label>Tracking Link</label>
-              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="groupForm.tracking_link" #tracking_link="ngModel" required />
+              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="groupForm.tracking_link"
+                #tracking_link="ngModel" required />
             </div>
           </ng-container>
           <div *ngIf="!groupForm.dispatched_on" class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="dispatched_status" [(ngModel)]="groupForm.dispatched_status" #dispatched_status="ngModel">
+              <input class="form-check-input" type="checkbox" name="dispatched_status"
+                [(ngModel)]="groupForm.dispatched_status" #dispatched_status="ngModel">
               <span>Mark as dispatched</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div *ngIf="groupForm.dispatched_on || groupForm.dispatched_status" class="col-md-12 form-group mb-3">
-            <label>{{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Cost (for your reference)</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="groupForm.price" #price="ngModel" appNumberOnly required />
+            <label>{{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Cost (for your
+              reference)</label>
+            <input type="text" name="price" class="form-control" [(ngModel)]="groupForm.price" #price="ngModel"
+              appNumberOnly required />
           </div>
         </div>
       </div>
@@ -2162,7 +2280,8 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="groupForm.submit" [ladda]="groupForm.submit">Update</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="groupForm.submit"
+        [ladda]="groupForm.submit">Update</button>
     </div>
   </form>
 </ng-template>
@@ -2170,7 +2289,8 @@
 <!-- delete item group -->
 <ng-template #deleteItemGroupModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to remove <span class="txt-grdint-highlight">"{{groupForm.name}}"</span> group?</strong></p>
+    <p><strong>Are you sure you want to remove <span class="txt-grdint-highlight">"{{groupForm.name}}"</span>
+        group?</strong></p>
     <div *ngIf="groupForm.errorMsg">
       <p class="text-danger">{{ groupForm.errorMsg }}</p>
     </div>

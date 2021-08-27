@@ -34,51 +34,64 @@
 
       <div class="col-md-3 col-6">
         <div class="form-group">
-          <input type="text" placeholder="Select Date" class="form-control" name="from_date" [(ngModel)]="filterForm.from_date" (ngModelChange)="ngOnInit();"
-            bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+          <input type="text" placeholder="Select Date" class="form-control" name="from_date"
+            [(ngModel)]="filterForm.from_date" (ngModelChange)="ngOnInit();" bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
       <div class="col-md-3 col-6">
         <div class="form-group">
-          <input type="text" placeholder="Select Date" class="form-control" name="to_date" [(ngModel)]="filterForm.to_date" (ngModelChange)="ngOnInit();"
-            bsDatepicker [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }"
-          />
+          <input type="text" placeholder="Select Date" class="form-control" name="to_date"
+            [(ngModel)]="filterForm.to_date" (ngModelChange)="ngOnInit();" bsDatepicker [minDate]="filterForm.from_date"
+            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
 
     </div>
   </div>
   <!-- DATA LIST -->
-  <div *ngIf="list?.length" class="row" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <!-- SINGLE LIST ITEM -->
-    <div *ngFor="let x of list | gridSearch: { order_number: search_bar, store_name: search_bar, store_email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <p class="c-w-15 w-md-100 m-b-0">#{{x.order_number}}</p>
-            <p class="w-20 w-md-100 m-b-0">{{ x.store_name }}</p>
-            <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-            <p class="c-w-15 w-md-100 m-b-0">{{x.payment_type}}
-              <span *ngIf="x.payment_status"><br>({{x.payment_status}})</span>
-            </p>
-            <p class="c-w-15 w-md-100 m-b-0">{{x.amount | currency: x.currency_type?.country_code}}</p>
-            <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
-              <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100" [disabled]="x.loader"
-              [ladda]="x.loader">Check Status</button>
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
+          <!-- SINGLE LIST ITEM -->
+          <div
+            *ngFor="let x of list | gridSearch: { order_number: search_bar, store_name: search_bar, store_email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+            <div class="o-hidden d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <p class="c-w-15 w-md-100 m-b-0">#{{x.order_number}}</p>
+                  <p class="w-20 w-md-100 m-b-0">{{ x.store_name }}</p>
+                  <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="c-w-15 w-md-100 m-b-0">{{x.payment_type}}
+                    <span *ngIf="x.payment_status"><br>({{x.payment_status}})</span>
+                  </p>
+                  <p class="c-w-15 w-md-100 m-b-0">{{x.amount | currency: x.currency_type?.country_code}}</p>
+                  <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
+                    <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
+                      [disabled]="x.loader" [ladda]="x.loader">Check Status</button>
+                  </div>
+                </div>
+              </div>
             </div>
+
           </div>
+
         </div>
       </div>
-
     </div>
+
 
     <!-- PAGINATION CONTROL -->
     <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
-        previousLabel="" nextLabel=""></pagination-controls>
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+        maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
     </div>
 
   </div>

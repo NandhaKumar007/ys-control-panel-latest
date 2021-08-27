@@ -10,7 +10,7 @@
       </div>
       <div class="col-md-4" align="right">
         <button type="button" class="btn btn-wide btn-outline-secondary" (click)="location.back();">
-        Back
+          Back
         </button>
       </div>
     </div>
@@ -33,42 +33,55 @@
         </div>
       </div>
     </div>
+    <div class="col-md-12">
+      <div class="data-list-card-wrapper">
+        <div class="data-list-card-inner">
+          <div class="row m-0">
 
-    <!-- SINGLE LIST ITEM -->
-    <div *ngFor="let x of customer_details.cart_list; let i=index;" class="col-md-12 list-item"
-      [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+            <!-- SINGLE LIST ITEM -->
+            <div *ngFor="let x of customer_details.cart_list; let i=index;" class="col-md-12 list-item data-list-card"
+              [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="list-thumb d-flex mtb-20">
-          <img [src]="imgBaseUrl+x.image" alt="">
-        </div>
-        <div class="flex-grow-1 pl-2 d-flex mtb-20">
-          <div class="card-body row">
-            <div class="col-md-6 d-flex justify-content-center flex-column">
-              <span>{{x.name}}</span>
-              <ng-container *ngIf="x.variant_status">
-                <ng-container *ngFor="let y of x.variant_types;">
-                  <span class="w-100">
-                    <b>{{y.name}}: </b>{{y.value}}</span>
-                </ng-container>
-              </ng-container>
+              <div class="o-hidden d-flex flex-row">
+                <div class="list-thumb d-flex mtb-20">
+                  <img [src]="imgBaseUrl+x.image" alt="">
+                </div>
+                <div class="flex-grow-1 pl-2 d-flex mtb-20">
+                  <div class="card-body row">
+                    <div class="col-md-6 d-flex justify-content-center flex-column">
+                      <span>{{x.name}}</span>
+                      <ng-container *ngIf="x.variant_status">
+                        <ng-container *ngFor="let y of x.variant_types;">
+                          <span class="w-100">
+                            <b>{{y.name}}: </b>{{y.value}}</span>
+                        </ng-container>
+                      </ng-container>
 
-              <div *ngIf="x.addon_status">
-                <b>Addon</b>
-                <br>
-                <span class="w-100">{{x.selected_addon?.name}}</span>
+                      <div *ngIf="x.addon_status">
+                        <b>Addon</b>
+                        <br>
+                        <span class="w-100">{{x.selected_addon?.name}}</span>
+                      </div>
+
+                    </div>
+
+                    <div class="col-md-3 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
+                    <div *ngIf="x.unit=='Pcs'" class="col-md-3 flex-center">{{ (x.final_price*x.quantity) | currency:
+                      commonService.store_currency?.country_code}}</div>
+                    <div *ngIf="x.unit!='Pcs'" class="col-md-3 flex-center">{{
+                      ((x.final_price*x.quantity)+x.addon_price) |
+                      currency: commonService.store_currency?.country_code}}</div>
+                  </div>
+                </div>
               </div>
 
             </div>
-         
-            <div class="col-md-3 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
-            <div *ngIf="x.unit=='Pcs'" class="col-md-3 flex-center">{{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
-            <div *ngIf="x.unit!='Pcs'" class="col-md-3 flex-center">{{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+
           </div>
         </div>
       </div>
-
     </div>
+
 
   </div>
 

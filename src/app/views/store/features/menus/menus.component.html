@@ -14,7 +14,8 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || list?.length<1" type="button" class="btn btn-wide btn-h-wide btn-primary"
+        <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || list?.length<1" type="button"
+          class="btn btn-wide btn-h-wide btn-primary"
           (click)="maxRank=list.length; formType='menu'; addForm = { rank: list.length+1 }; modalService.open(addModal);">
           Add New Menu
         </button>
@@ -31,72 +32,95 @@
   <!-- DATA LIST -->
   <div *ngIf="list?.length" class="row" class="list-horizontal">
 
-    <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;" class="card p-3 mb-3">
+    <div
+      *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+      class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-8">
           <h4>{{x.name}}</h4>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
-          <i *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0" class="material-icons edit-icon" (click)="maxRank=list.length; formType='menu'; onEdit(x, editModal);">edit</i>
-          <i class="material-icons edit-icon ml-3" (click)="formType='menu'; deleteForm=x; modalService.open(deleteModal, { centered: true });">delete</i>
+          <i *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0" class="material-icons edit-icon"
+            (click)="maxRank=list.length; formType='menu'; onEdit(x, editModal);">edit</i>
+          <i class="material-icons edit-icon ml-3"
+            (click)="formType='menu'; deleteForm=x; modalService.open(deleteModal, { centered: true });">delete</i>
         </div>
       </div>
       <div class="row">
-        <div *ngFor="let y of x.sections | orderAsc:'rank'; let j=index;" class="col-md-12">
-          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
-            <div class="flex-grow-1 pl-2 d-flex">
-              <div
-                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                <p class="w-30 w-sm-100 m-b-0">{{y.name}}</p>
-                <p class="m-0 text-muted text-small w-30 w-sm-100">{{y.categories?.length}} Categories</p>
-                <div *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1" class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
-                  <button class="btn btn-primary w-md-100" (click)="onViewCategories(x, y);">View Categories</button>
+        <div class="col-md-12">
+          <div class="data-list-card-wrapper">
+            <div class="data-list-card-inner">
+
+              <div class="row">
+                <div *ngFor="let y of x.sections | orderAsc:'rank'; let j=index;" class="col-md-12 data-list-card">
+                  <div class="card-in-card o-hidden d-flex flex-row">
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div
+                        class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p class="w-30 w-sm-100 m-b-0">{{y.name}}</p>
+                        <p class="m-0 text-muted text-small w-30 w-sm-100">{{y.categories?.length}} Categories</p>
+                        <div *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1"
+                          class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                          <button class="btn btn-primary w-md-100" (click)="onViewCategories(x, y);">View Categories</button>
+                        </div>
+                        <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                          <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0 && j<=3"
+                            class="btn btn-wide black-outline-btn w-md-100"
+                            (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; onEdit(y, editModal);">
+                            <span class="btn-wide black-outline-txt">Edit</span>
+                          </button>
+                        </div>
+                        <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
+                          <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0"
+                            class="btn orng-outline-btn w-md-100"
+                            (click)="formType='section'; menuId=x._id; deleteForm=y; modalService.open(deleteModal, { centered: true });">
+                            <span class="orng-outline-txt">Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
-                  <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0 && j<=3" class="btn btn-wide black-outline-btn w-md-100"
-                    (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; onEdit(y, editModal);">
-                    <span class="btn-wide black-outline-txt">Edit</span>
-                  </button>
+        
+                <div *ngIf="!x?.sections?.length" class="col-md-12">
+                  <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div
+                        class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p class="w-100 w-sm-100 m-b-0" align="center">No sections found.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="mr-2 w-sm-100 d-lg-block item-actions c-m-md-0">
-                  <button *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || i===0" class="btn orng-outline-btn w-md-100"
-                    (click)="formType='section'; menuId=x._id; deleteForm=y; modalService.open(deleteModal, { centered: true });">
-                    <span class="orng-outline-txt">Remove</span>
-                  </button>
+        
+                <div class="col-md-12 ml-2 mt-2 mb-2">
+                  <span class="add-another x-close"
+                    *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || x?.sections?.length<4 && list?.length===1"
+                    (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; addForm = { rank: x.sections.length+1 }; modalService.open(addModal);">
+                    <b>ADD NEW SECTION</b>
+                  </span>
+                  <span *ngIf="commonService.store_details?.additional_features?.menu_image"
+                    class="add-another x-close pull-right mr-3" (click)="openMenuImgModal(x, menuImageModal);">
+                    <b>{{(x.menu_images?.length)? 'UPDATE': 'ADD'}} IMAGES</b>
+                  </span>
                 </div>
               </div>
+
             </div>
           </div>
-        </div>
-
-        <div *ngIf="!x?.sections?.length" class="col-md-12">
-          <div class="card card-in-card o-hidden mb-4 d-flex flex-row">
-            <div class="flex-grow-1 pl-2 d-flex">
-              <div
-                class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                <p class="w-100 w-sm-100 m-b-0" align="center">No sections found.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12 ml-2 mb-2">
-          <span class="add-another x-close" *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || x?.sections?.length<4 && list?.length===1"
-            (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; addForm = { rank: x.sections.length+1 }; modalService.open(addModal);">
-            <b>ADD NEW SECTION</b>
-          </span>
-          <span *ngIf="commonService.store_details?.additional_features?.menu_image" class="add-another x-close pull-right mr-3" (click)="openMenuImgModal(x, menuImageModal);">
-            <b>{{(x.menu_images?.length)? 'UPDATE': 'ADD'}} IMAGES</b>
-          </span>
         </div>
       </div>
+     
     </div>
 
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
-        previousLabel="" nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+   
 
   </div>
 
@@ -123,11 +147,13 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1"
+              max="{{maxRank+1}}" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="link_status" [(ngModel)]="addForm.link_status" (change)="addForm.link_type='category';" #link_status="ngModel">
+              <input class="form-check-input" type="checkbox" name="link_status" [(ngModel)]="addForm.link_status"
+                (change)="addForm.link_type='category';" #link_status="ngModel">
               <span>Enable Link</span>
               <span class="checkmark"></span>
             </label>
@@ -161,22 +187,29 @@
                 <span class="checkmark"></span>
               </label>
             </div>
-            <div *ngIf="addForm.link_type=='category' || addForm.link_type=='product'" class="col-md-12 form-group mb-3">
+            <div *ngIf="addForm.link_type=='category' || addForm.link_type=='product'"
+              class="col-md-12 form-group mb-3">
               <label>{{addForm.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
-              <select name="category_id" class="form-control select-arrow" [(ngModel)]="addForm.category_id" #category_id="ngModel" required>
+              <select name="category_id" class="form-control select-arrow" [(ngModel)]="addForm.category_id"
+                #category_id="ngModel" required>
                 <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
               </select>
             </div>
             <div *ngIf="addForm.link_type=='product'" class="col-md-12 form-group mb-3">
               <label>Link to Product</label>
-              <select [disabled]="!addForm.category_id" name="product_id" class="form-control select-arrow" [(ngModel)]="addForm.product_id" #product_id="ngModel" required>
-                <option [ngValue]="x._id" *ngFor="let x of productList | productFilter:'category_id':addForm.category_id;">{{x.name}}</option>
+              <select [disabled]="!addForm.category_id" name="product_id" class="form-control select-arrow"
+                [(ngModel)]="addForm.product_id" #product_id="ngModel" required>
+                <option [ngValue]="x._id"
+                  *ngFor="let x of productList | productFilter:'category_id':addForm.category_id;">{{x.name}}</option>
               </select>
             </div>
-            <div *ngIf="addForm.link_type=='internal' || addForm.link_type=='external'" class="col-md-12 form-group mb-3">
-              <label *ngIf="addForm.link_type=='internal'">{{commonService.store_details?.base_url}}{{addForm.link}}</label>
+            <div *ngIf="addForm.link_type=='internal' || addForm.link_type=='external'"
+              class="col-md-12 form-group mb-3">
+              <label
+                *ngIf="addForm.link_type=='internal'">{{commonService.store_details?.base_url}}{{addForm.link}}</label>
               <label *ngIf="addForm.link_type=='external'">External Link</label>
-              <input type="text" name="link" class="form-control" [(ngModel)]="addForm.link" #int_link="ngModel" required />
+              <input type="text" name="link" class="form-control" [(ngModel)]="addForm.link" #int_link="ngModel"
+                required />
             </div>
           </ng-container>
         </div>
@@ -210,11 +243,13 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1"
+              max="{{maxRank+1}}" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="link_status" [(ngModel)]="editForm.link_status" (change)="editForm.link_type='category';" #link_status="ngModel">
+              <input class="form-check-input" type="checkbox" name="link_status" [(ngModel)]="editForm.link_status"
+                (change)="editForm.link_type='category';" #link_status="ngModel">
               <span>Enable Link</span>
               <span class="checkmark"></span>
             </label>
@@ -248,22 +283,29 @@
                 <span class="checkmark"></span>
               </label>
             </div>
-            <div *ngIf="editForm.link_type=='category' || editForm.link_type=='product'" class="col-md-12 form-group mb-3">
+            <div *ngIf="editForm.link_type=='category' || editForm.link_type=='product'"
+              class="col-md-12 form-group mb-3">
               <label>{{editForm.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
-              <select name="category_id" class="form-control select-arrow" [(ngModel)]="editForm.category_id" #category_id="ngModel" required>
+              <select name="category_id" class="form-control select-arrow" [(ngModel)]="editForm.category_id"
+                #category_id="ngModel" required>
                 <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
               </select>
             </div>
             <div *ngIf="editForm.link_type=='product'" class="col-md-12 form-group mb-3">
               <label>Link to Product</label>
-              <select [disabled]="!editForm.category_id" name="product_id" class="form-control select-arrow" [(ngModel)]="editForm.product_id" #product_id="ngModel" required>
-                <option [ngValue]="x._id" *ngFor="let x of productList | productFilter:'category_id':editForm.category_id;">{{x.name}}</option>
+              <select [disabled]="!editForm.category_id" name="product_id" class="form-control select-arrow"
+                [(ngModel)]="editForm.product_id" #product_id="ngModel" required>
+                <option [ngValue]="x._id"
+                  *ngFor="let x of productList | productFilter:'category_id':editForm.category_id;">{{x.name}}</option>
               </select>
             </div>
-            <div *ngIf="editForm.link_type=='internal' || editForm.link_type=='external'" class="col-md-12 form-group mb-3">
-              <label *ngIf="editForm.link_type=='internal'">{{commonService.store_details?.base_url}}{{editForm.link}}</label>
+            <div *ngIf="editForm.link_type=='internal' || editForm.link_type=='external'"
+              class="col-md-12 form-group mb-3">
+              <label
+                *ngIf="editForm.link_type=='internal'">{{commonService.store_details?.base_url}}{{editForm.link}}</label>
               <label *ngIf="editForm.link_type=='external'">External Link</label>
-              <input type="text" name="link" class="form-control" [(ngModel)]="editForm.link" #int_link="ngModel" required />
+              <input type="text" name="link" class="form-control" [(ngModel)]="editForm.link" #int_link="ngModel"
+                required />
             </div>
           </ng-container>
         </div>
@@ -312,14 +354,16 @@
       <div class="form-group">
         <ng-container *ngFor="let x of imgForm.menu_images; let i=index;">
           <div class="card p-3 mb-3">
-            <span (click)="imgForm.menu_images.splice(i, 1);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+            <span (click)="imgForm.menu_images.splice(i, 1);"
+              class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
             <div class="row pt-3 pb-3">
               <div class="col-md-6">
                 <h3>Image {{(imgForm.menu_images?.length>1)? i+1: ''}}</h3>
               </div>
               <div class="col-md-6 form-group">
                 <label>Rank</label>
-                <input type="number" name="rank{{i}}" class="form-control" [(ngModel)]="x.rank" #rank="ngModel" appNumberOnly required />
+                <input type="number" name="rank{{i}}" class="form-control" [(ngModel)]="x.rank" #rank="ngModel"
+                  appNumberOnly required />
               </div>
             </div>
             <div class="row">
@@ -329,10 +373,12 @@
                     <p>Photo Resolution: 450x300</p>
                     <i *ngIf="!x.image" class="material-icons">add_photo_alternate</i>
                     <img style="max-width: 240px; width: auto;" *ngIf="x.image && x.img_change" [src]="x.image">
-                    <img style="max-width: 240px; width: auto;" *ngIf="x.image && !x.img_change" [src]="imgBaseUrl+x.image">
+                    <img style="max-width: 240px; width: auto;" *ngIf="x.image && !x.img_change"
+                      [src]="imgBaseUrl+x.image">
                     <div class="h-100 d-flex align-items-end">
                       <div class="custom-file mt-2">
-                        <input type="file" name="image{{i}}" class="custom-file-input" [required]="!x.image" (change)="fileChangeListener(i, $event);" accept="image/jpeg">
+                        <input type="file" name="image{{i}}" class="custom-file-input" [required]="!x.image"
+                          (change)="fileChangeListener(i, $event);" accept="image/jpeg">
                         <label class="custom-file-label">Choose file</label>
                       </div>
                     </div>
@@ -345,15 +391,18 @@
                   <div class="row">
                     <div class="col-md-12 form-group mb-3">
                       <label>Heading</label>
-                      <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.heading" #heading="ngModel" />
+                      <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.heading"
+                        #heading="ngModel" />
                     </div>
                     <div class="col-md-12 form-group mb-3">
                       <label>Sub-heading</label>
-                      <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}" [(ngModel)]="x.sub_heading" #sub_heading="ngModel"></textarea>
+                      <textarea class="form-control" aria-label="With textarea" name="sub_heading{{i}}"
+                        [(ngModel)]="x.sub_heading" #sub_heading="ngModel"></textarea>
                     </div>
                     <div class="col-md-12 form-group mb-3">
                       <label class="checkbox checkbox-primary">
-                        <input class="form-check-input" type="checkbox" name="link_status{{i}}" [(ngModel)]="x.link_status" (change)="x.link_type='category';" #link_status="ngModel">
+                        <input class="form-check-input" type="checkbox" name="link_status{{i}}"
+                          [(ngModel)]="x.link_status" (change)="x.link_type='category';" #link_status="ngModel">
                         <span>Enable Link</span>
                         <span class="checkmark"></span>
                       </label>
@@ -389,32 +438,40 @@
                       </div>
                       <div *ngIf="x.link_type=='category' || x.link_type=='product'" class="col-md-12 form-group mb-3">
                         <label>{{x.link_type=='category'? 'Link to Catalog': 'Catalogs'}}</label>
-                        <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id" #category_id="ngModel" required>
+                        <select name="category_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.category_id"
+                          #category_id="ngModel" required>
                           <option [ngValue]="y._id" *ngFor="let y of commonService.catalog_list">{{y.name}}</option>
                         </select>
                       </div>
                       <div *ngIf="x.link_type=='product'" class="col-md-12 form-group mb-3">
                         <label>Link to Product</label>
-                        <select [disabled]="!x.category_id" name="product_id{{i}}" class="form-control select-arrow" [(ngModel)]="x.product_id" #product_id="ngModel" required>
-                          <option [ngValue]="y._id" *ngFor="let y of productList | productFilter:'category_id':x.category_id;">{{y.name}}</option>
+                        <select [disabled]="!x.category_id" name="product_id{{i}}" class="form-control select-arrow"
+                          [(ngModel)]="x.product_id" #product_id="ngModel" required>
+                          <option [ngValue]="y._id"
+                            *ngFor="let y of productList | productFilter:'category_id':x.category_id;">{{y.name}}
+                          </option>
                         </select>
                       </div>
                       <div *ngIf="x.link_type=='internal' || x.link_type=='external'" class="col-md-12 form-group mb-3">
-                        <label *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
+                        <label
+                          *ngIf="x.link_type=='internal'">{{commonService.store_details?.base_url}}{{x.link}}</label>
                         <label *ngIf="x.link_type=='external'">External Link</label>
-                        <input type="text" name="link" class="form-control" [(ngModel)]="x.link" #int_link="ngModel" required />
+                        <input type="text" name="link" class="form-control" [(ngModel)]="x.link" #int_link="ngModel"
+                          required />
                       </div>
                       <!-- Btn -->
                       <div class="col-md-4 form-group mb-3" [ngClass]="x.btn_status? 'mt-3': ''">
                         <label class="checkbox checkbox-primary">
-                          <input class="form-check-input" type="checkbox" name="btn_status{{i}}" [(ngModel)]="x.btn_status" (change)="x.btn_text='';" #btn_status="ngModel">
+                          <input class="form-check-input" type="checkbox" name="btn_status{{i}}"
+                            [(ngModel)]="x.btn_status" (change)="x.btn_text='';" #btn_status="ngModel">
                           <span>Enable Button</span>
                           <span class="checkmark"></span>
                         </label>
                       </div>
                       <div *ngIf="x.btn_status" class="col-md-8 form-group mb-3">
                         <label>Button Text</label>
-                        <input type="text" name="btn_text{{i}}" class="form-control" [(ngModel)]="x.btn_text" maxlength="15" #btn_text="ngModel" />
+                        <input type="text" name="btn_text{{i}}" class="form-control" [(ngModel)]="x.btn_text"
+                          maxlength="15" #btn_text="ngModel" />
                       </div>
                       <!-- #Btn -->
                     </ng-container>
@@ -437,10 +494,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="imgForm.submit" [ladda]="imgForm.submit">Update</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="imgForm.submit"
+        [ladda]="imgForm.submit">Update</button>
     </div>
   </form>
 </ng-template>

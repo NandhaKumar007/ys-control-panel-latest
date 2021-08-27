@@ -11,62 +11,97 @@
   </div>
   <div class="separator-breadcrumb border-top"></div>
   <div class="top-filter-sec">
-  <div class="row mb-4">
-    <div class="col-md-6">
-      <button *ngIf="commonService.master_token" type="button" class="btn btn-primary" (click)="addForm={}; modalService.open(addModal);">Add New Vendor</button>
-    </div>
-    <!-- search box -->
-    <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
-      <div class="form-group">
-        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <button *ngIf="commonService.master_token" type="button" class="btn btn-primary"
+          (click)="addForm={}; modalService.open(addModal);">Add New Vendor</button>
+      </div>
+      <!-- search box -->
+      <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+        <div class="form-group">
+          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+        </div>
       </div>
     </div>
   </div>
-</div>
   <!-- DATA LIST -->
-  <div *ngIf="list?.length" class="row" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <!-- SINGLE LIST ITEM -->
-    <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex mtb-20">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <!-- OTHER DATA -->
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.contact_person}} - {{x.mobile}}</p>
-            <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
-            <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
-                <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
-                  <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
-                   <span class="black-outline-txt">Edit</span>
-                  </button>
-                  <div class="dropdown-menu" ngbDropdownMenu>
-                    <button class="dropdown-item" (click)="onEdit(x, 'details', editDetailsModal);">Details</button>
-                    <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Change Password</button>
-                    <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+
+          <!-- SINGLE LIST ITEM -->
+          <div
+            *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+            <div class="o-hidden">
+              <div class="mtb-20">
+                <div class="card-body">
+                  <!-- OTHER DATA -->
+                  <div class="row">
+                  <div class="col-md-3 d-flex align-items-center">
+                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
                   </div>
+
+                  <div class="col-md-2 d-flex align-items-center">
+                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.contact_person}} - {{x.mobile}}</p>
+                  </div>
+
+                  <div class="col-md-2 d-flex align-items-center">
+                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
+                  </div>
+
+                  <div class="col-md-5 d-flex align-items-center justify-content-end">
+                    <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                      <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
+                        <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all"
+                          placement="left">
+                          <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
+                            <span class="black-outline-txt">Edit</span>
+                          </button>
+                          <div class="dropdown-menu" ngbDropdownMenu>
+                            <button class="dropdown-item"
+                              (click)="onEdit(x, 'details', editDetailsModal);">Details</button>
+                            <button class="dropdown-item"
+                              (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Change
+                              Password</button>
+                            <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
+                        class="btn btn-wide mr-3 w-md-100"
+                        [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
+                        {{ (x.status=='active')? 'Disable': 'Enable' }}
+                      </button>
+                      <button class="btn orng-outline-btn w-md-100"
+                        (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                        <span class="orng-outline-txt">Remove</span>
+                      </button>
+                    </div>
+                  </div>
+
+</div>
+                  
                 </div>
               </div>
-              <button (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });" class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
-                {{ (x.status=='active')? 'Disable': 'Enable' }}
-              </button>
-              <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
-               <span class="orng-outline-txt">Remove</span>
-              </button>
             </div>
+
           </div>
+
         </div>
       </div>
-
     </div>
+
 
     <!-- PAGINATION CONTROL -->
     <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel=""
-        nextLabel=""></pagination-controls>
+      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+        maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
     </div>
 
   </div>
@@ -90,24 +125,28 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Vendor Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" (input)="addForm.errorMsg=null;" #name="ngModel" required />
+            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name"
+              (input)="addForm.errorMsg=null;" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Contact Person</label>
-            <input type="text" name="contact_person" class="form-control" [(ngModel)]="addForm.contact_person" (input)="addForm.errorMsg=null;" #contact_person="ngModel" required />
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="addForm.contact_person"
+              (input)="addForm.errorMsg=null;" #contact_person="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Mobile</label>
-            <input type="text" name="mobile" class="form-control" [(ngModel)]="addForm.mobile" (input)="addForm.errorMsg=null;" #mobile="ngModel" required />
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="addForm.mobile"
+              (input)="addForm.errorMsg=null;" #mobile="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Login Email</label>
-            <input type="email" name="email" class="form-control" [(ngModel)]="addForm.email" (input)="addForm.errorMsg=null;" #email="ngModel" required />
+            <input type="email" name="email" class="form-control" [(ngModel)]="addForm.email"
+              (input)="addForm.errorMsg=null;" #email="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Password</label>
-            <input type="text" name="password" class="form-control" [(ngModel)]="addForm.password" (input)="addForm.errorMsg=null;" #password="ngModel"
-              required />
+            <input type="text" name="password" class="form-control" [(ngModel)]="addForm.password"
+              (input)="addForm.errorMsg=null;" #password="ngModel" required />
           </div>
         </div>
       </div>
@@ -116,10 +155,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span classs="black-outline-txt">Cancel</span>
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span classs="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Add</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader"
+        [ladda]="btnLoader">Add</button>
     </div>
   </form>
 </ng-template>
@@ -135,13 +176,13 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>New Password</label>
-            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd" (input)="pwdForm.errorMsg=null;" #new_pwd="ngModel"
-              required />
+            <input type="text" name="new_pwd" class="form-control" [(ngModel)]="pwdForm.new_pwd"
+              (input)="pwdForm.errorMsg=null;" #new_pwd="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Confirm New Password</label>
-            <input type="text" name="confirm_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_pwd" (input)="pwdForm.errorMsg=null;"
-              #confirm_pwd="ngModel" required />
+            <input type="text" name="confirm_pwd" class="form-control" [(ngModel)]="pwdForm.confirm_pwd"
+              (input)="pwdForm.errorMsg=null;" #confirm_pwd="ngModel" required />
           </div>
         </div>
       </div>
@@ -150,10 +191,12 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" [disabled]="pwdForm.confirm_pwd && pwdForm.new_pwd!=pwdForm.confirm_pwd" class="btn btn-wide btn-primary">Submit</button>
+      <button type="submit" [disabled]="pwdForm.confirm_pwd && pwdForm.new_pwd!=pwdForm.confirm_pwd"
+        class="btn btn-wide btn-primary">Submit</button>
     </div>
   </form>
 </ng-template>
@@ -169,16 +212,18 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Vendor Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" (input)="editForm.errorMsg=null;" #name="ngModel"
-              required />
+            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name"
+              (input)="editForm.errorMsg=null;" #name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Contact Person</label>
-            <input type="text" name="contact_person" class="form-control" [(ngModel)]="editForm.contact_person" (input)="editForm.errorMsg=null;" #contact_person="ngModel" required />
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="editForm.contact_person"
+              (input)="editForm.errorMsg=null;" #contact_person="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Mobile</label>
-            <input type="text" name="mobile" class="form-control" [(ngModel)]="editForm.mobile" (input)="editForm.errorMsg=null;" #mobile="ngModel" required />
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="editForm.mobile"
+              (input)="editForm.errorMsg=null;" #mobile="ngModel" required />
           </div>
         </div>
       </div>
@@ -187,8 +232,9 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span>
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
@@ -211,21 +257,25 @@
           </div>
           <div class="col-md-6 col-lg-4 form-group mt-1 mb-1">
             <label class="checkbox checkbox-success">
-              <input class="form-check-input" type="checkbox" name="product_add" [(ngModel)]="permissions.products.add" #product_add="ngModel">
+              <input class="form-check-input" type="checkbox" name="product_add" [(ngModel)]="permissions.products.add"
+                #product_add="ngModel">
               <span>Add</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="col-md-6 col-lg-4 form-group mt-1 mb-1">
             <label class="checkbox checkbox-success">
-              <input class="form-check-input" type="checkbox" name="product_remove" [(ngModel)]="permissions.products.remove" #product_remove="ngModel">
+              <input class="form-check-input" type="checkbox" name="product_remove"
+                [(ngModel)]="permissions.products.remove" #product_remove="ngModel">
               <span>Remove</span>
               <span class="checkmark"></span>
             </label>
           </div>
-          <div *ngIf="permissions.products.add || permissions.products.update" class="col-md-6 col-lg-4 form-group mt-1 mb-1">
+          <div *ngIf="permissions.products.add || permissions.products.update"
+            class="col-md-6 col-lg-4 form-group mt-1 mb-1">
             <label class="checkbox checkbox-success">
-              <input class="form-check-input" type="checkbox" name="product_section_tag" [(ngModel)]="permissions.products.section_tag" #product_section_tag="ngModel">
+              <input class="form-check-input" type="checkbox" name="product_section_tag"
+                [(ngModel)]="permissions.products.section_tag" #product_section_tag="ngModel">
               <span>Section Tag</span>
               <span class="checkmark"></span>
             </label>
@@ -234,7 +284,8 @@
         <div class="row mt-3">
           <div class="col-md-6 col-lg-4 form-group">
             <label class="checkbox checkbox-success">
-              <input class="form-check-input" type="checkbox" name="product_update" [(ngModel)]="permissions.products.update" #product_update="ngModel">
+              <input class="form-check-input" type="checkbox" name="product_update"
+                [(ngModel)]="permissions.products.update" #product_update="ngModel">
               <span>Update</span>
               <span class="checkmark"></span>
             </label>
@@ -243,14 +294,16 @@
         <div *ngIf="permissions.products.update" class="row mt-2 ml-2">
           <div class="col-md-6 col-lg-4 form-group">
             <label class="radio radio-primary">
-              <input type="radio" name="product_update_type" value="overall" [(ngModel)]="permissions.products.update_type">
+              <input type="radio" name="product_update_type" value="overall"
+                [(ngModel)]="permissions.products.update_type">
               <span>Overall</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <div class="col-md-6 col-lg-4 form-group">
             <label class="radio radio-primary">
-              <input type="radio" name="product_update_type" value="stock_only" [(ngModel)]="permissions.products.update_type">
+              <input type="radio" name="product_update_type" value="stock_only"
+                [(ngModel)]="permissions.products.update_type">
               <span>Stock Only</span>
               <span class="checkmark"></span>
             </label>
@@ -262,8 +315,9 @@
       <p class="text-danger">{{ editForm.errorMsg }}</p>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-       <span class="black-outline-txt">Cancel</span> 
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
@@ -273,13 +327,15 @@
 <!-- STATUS MODAL -->
 <ng-template #statusModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to {{ (deleteForm.exist_status=='active')? 'disable': 'enable' }} the <span class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
+    <p><strong>Are you sure you want to {{ (deleteForm.exist_status=='active')? 'disable': 'enable' }} the <span
+          class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('Cross click');">No</button>
+    <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary"
+      (click)="modal.dismiss('Cross click');">No</button>
     <button type="button" (click)="onUpdateStatus();" class="btn btn-primary">Yes</button>
   </div>
 </ng-template>
@@ -297,11 +353,12 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-     <span class="black-outline-txt">No</span> 
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
-     <span class="orng-outline-txt">Yes</span>
+      <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
 </ng-template>

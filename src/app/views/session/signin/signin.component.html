@@ -8,14 +8,37 @@
         <h1 class="mb-3 text-18">Sign In</h1>
         <form autocomplete="off" (ngSubmit)="signin()" ngNativeValidate>
           <div class="form-group">
-            <label>Email address</label>
-            <input type="email" name="email" class="form-control" [(ngModel)]="loginForm.email" #email="ngModel" (input)="loginForm.errorMsg=null;" required />
+            <!-- <label>Email address</label> -->
+            <div class="custom-input-prepend-group">
+              <i class="material-icons-outlined">
+                alternate_email
+              </i>
+              <input type="email" name="email" class="form-control" [(ngModel)]="loginForm.email" #email="ngModel"
+                (input)="loginForm.errorMsg=null;" required />
+            </div>
+
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <input [type]="loginForm.input_txt? 'text': 'password'" name="password" class="form-control" [(ngModel)]="loginForm.password" #password="ngModel" (input)="loginForm.errorMsg=null;" required />
-            <i class="material-icons visibility_icon" *ngIf="!loginForm.input_txt" (click)="loginForm.input_txt = !loginForm.input_txt" aria-hidden="true">visibility</i>
-            <i class="material-icons visibility_icon" *ngIf="loginForm.input_txt" (click)="loginForm.input_txt = !loginForm.input_txt" aria-hidden="true">visibility_off</i>
+            <!-- <label>Password</label> -->
+            <div class="custom-input-prepend-append-group">
+              <div class="custom-input-prepend">
+                <i class="material-icons-outlined">
+                  lock
+                  </i>
+              </div>
+              <input [type]="loginForm.input_txt? 'text': 'password'" name="password" class="form-control"
+              [(ngModel)]="loginForm.password" #password="ngModel" (input)="loginForm.errorMsg=null;" required />
+        
+              <div class="custom-input-append">
+                <i class="material-icons" *ngIf="!loginForm.input_txt"
+              (click)="loginForm.input_txt = !loginForm.input_txt" aria-hidden="true">visibility</i>
+            <i class="material-icons" *ngIf="loginForm.input_txt"
+              (click)="loginForm.input_txt = !loginForm.input_txt" aria-hidden="true">visibility_off</i>
+              </div>
+
+             
+            </div>
+           
           </div>
           <div *ngIf="loginForm.errorMsg" align="center" style="margin: 20px 0 10px 0;">
             <p style="color:red;"><strong>{{loginForm.errorMsg}}</strong></p>
@@ -30,19 +53,20 @@
 
 
           <div class="row">
-            <div class="col-md-8 d-flex align-items-center">
-              <div *ngIf="router?.url=='/signin'" class="forgot-password-link">
+            <div class="col-md-12 d-flex align-items-center">
+              <div *ngIf="router?.url=='/signin'" class="forgot-password-link mt-3 mb-3">
                 <a href="" class="text-muted" routerLink="/forgot-password">Forgot Password</a>
               </div>
             </div>
 
-            <div class="col-md-4">
-              <btn-loading btnClass="btn-primary btn-rounded btn-block" [loadingText]="loadingText" [loading]="loading">Sign In</btn-loading>
+            <div class="col-md-12">
+              <btn-loading btnClass="btn-primary btn-rounded btn-block w-100" [loadingText]="loadingText" [loading]="loading">
+                Sign In</btn-loading>
             </div>
           </div>
-          
+
         </form>
-     
+
       </div>
     </div>
   </div>

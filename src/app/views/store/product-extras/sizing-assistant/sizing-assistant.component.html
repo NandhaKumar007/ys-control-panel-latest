@@ -25,40 +25,55 @@
     </div>
   </div>
   <!-- DATA LIST -->
-  <div *ngIf="list?.length" class="row" class="list-horizontal">
+  <div *ngIf="list?.length" class="list-horizontal">
 
-    <!-- SINGLE LIST ITEM -->
-    <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-      class="col-md-12 list-item" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row">
 
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex">
-          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-            <!-- OTHER DATA -->
-            <p class="m-0 w-15 w-sm-100">{{x.name}}</p>
-            <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.mm_list?.length}} Measurement sets</p>
-            <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-              <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
-                <span class="black-outline-txt">Edit</span>
-              </button>
-              <button class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="onViewOptions(x);">
-                <span class="blue-outline-txt">View Options</span>
-              </button>
-              <button class="btn orng-outline-btn w-md-100" (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
-                <span class="orng-outline-txt">Remove</span>
-              </button>
-            </p>
+          <!-- SINGLE LIST ITEM -->
+          <div
+            *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+
+            <div class="o-hidden d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <!-- OTHER DATA -->
+                  <p class="m-0 w-15 w-sm-100">{{x.name}}</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.mm_list?.length}} Measurement sets</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
+                      <span class="black-outline-txt">Edit</span>
+                    </button>
+                    <button class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="onViewOptions(x);">
+                      <span class="blue-outline-txt">View Options</span>
+                    </button>
+                    <button class="btn orng-outline-btn w-md-100"
+                      (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
+
         </div>
       </div>
-
     </div>
+
 
     <!-- PAGINATION CONTROL -->
-    <div class="col-md-12 mt-3">
-      <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5" previousLabel=""
-        nextLabel=""></pagination-controls>
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
     </div>
+    
 
   </div>
 
@@ -91,11 +106,13 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Heading</label>
-            <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel" required />
+            <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel"
+              required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Sub-heading</label>
-            <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
+            <textarea class="form-control" aria-label="With textarea" name="sub_heading"
+              [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
           </div>
           <div *ngIf="measurementList.length" class="col-md-12">
             <p class="primary-color">
@@ -105,9 +122,11 @@
         </div>
         <div *ngIf="measurementList.length" class="card card-in-card mb-3 p-3">
           <div class="row">
-            <div class="form-group col-md-3 mt-1 mb-1" *ngFor="let x of measurementList | orderAsc:'rank'; let i=index;">
+            <div class="form-group col-md-3 mt-1 mb-1"
+              *ngFor="let x of measurementList | orderAsc:'rank'; let i=index;">
               <label class="checkbox checkbox-success">
-                <input class="form-check-input" type="checkbox" name="mm_checked{{i+1}}" [(ngModel)]="x.mm_checked" #mm_checked="ngModel">
+                <input class="form-check-input" type="checkbox" name="mm_checked{{i+1}}" [(ngModel)]="x.mm_checked"
+                  #mm_checked="ngModel">
                 <span>{{x.name}}</span>
                 <span class="checkmark"></span>
               </label>
@@ -120,7 +139,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Add</button>
@@ -149,11 +169,13 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Heading</label>
-            <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel" required />
+            <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel"
+              required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Sub-heading</label>
-            <textarea class="form-control" aria-label="With textarea" name="sub_heading" [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
+            <textarea class="form-control" aria-label="With textarea" name="sub_heading"
+              [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
           </div>
           <div *ngIf="measurementList.length" class="col-md-12">
             <p class="primary-color">
@@ -163,9 +185,11 @@
         </div>
         <div *ngIf="measurementList.length" class="card card-in-card mb-3 p-3">
           <div class="row">
-            <div class="form-group col-md-3 mt-1 mb-1" *ngFor="let x of measurementList | orderAsc:'rank'; let i=index;">
+            <div class="form-group col-md-3 mt-1 mb-1"
+              *ngFor="let x of measurementList | orderAsc:'rank'; let i=index;">
               <label class="checkbox checkbox-success">
-                <input class="form-check-input" type="checkbox" name="mm_checked{{i+1}}" [(ngModel)]="x.mm_checked" #mm_checked="ngModel">
+                <input class="form-check-input" type="checkbox" name="mm_checked{{i+1}}" [(ngModel)]="x.mm_checked"
+                  #mm_checked="ngModel">
                 <span>{{x.name}}</span>
                 <span class="checkmark"></span>
               </label>
@@ -178,7 +202,8 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+        (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
@@ -198,7 +223,8 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
