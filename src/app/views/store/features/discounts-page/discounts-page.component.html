@@ -43,7 +43,7 @@
         <div class="row m-0">
           <div
           *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
-          class="list-item data-list-card col-md-12 p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          class="list-item data-list-card col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
     
           <div class="o-hidden d-flex flex-row">
             <div class="list-thumb d-flex align-items-center">

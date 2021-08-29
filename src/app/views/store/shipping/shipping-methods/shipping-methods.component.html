@@ -37,7 +37,7 @@
 
     <div class="data-list-card-wrapper">
       <div class="data-list-card-inner">
-        <div class="row">
+        <div class="row m-0">
 
           <div
           *ngFor="let x of list | gridSearch: { name: search_bar, tracking_link: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"

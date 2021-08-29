@@ -32,40 +32,41 @@
     <div class="data-list-card-wrapper">
       <div class="data-list-card-inner">
         <div class="row m-0">
-  <!-- SINGLE LIST ITEM -->
-  <div
-  *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-  class="col-md-12 p-0 list-item data-list-card " [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          <!-- SINGLE LIST ITEM -->
+          <div
+            *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card "
+            [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-  <div class="o-hidden mt-2 mb-4 d-flex flex-row">
-    <div *ngIf="x.image" class="list-thumb d-flex align-self-center">
-      <!-- TUMBNAIL -->
-      <img [src]="imgBaseUrl+x.image" alt="">
-    </div>
-    <div class="flex-grow-1 pl-2 d-flex">
-      <div
-        class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-        <!-- OTHER DATA -->
-        <p class="m-0 w-30 w-sm-100">{{x.name}}</p>
-        <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.list?.length}} Measurements</p>
-        <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-          <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
-            <span class="black-outline-txt">Edit</span>
-          </button>
-          <button class="btn orng-outline-btn w-md-100"
-            (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
-            <span class="orng-outline-txt">Remove</span>
-          </button>
-        </p>
-      </div>
-    </div>
-  </div>
+            <div class="o-hidden mt-2 mb-4 d-flex flex-row">
+              <div *ngIf="x.image" class="list-thumb d-flex align-self-center">
+                <!-- TUMBNAIL -->
+                <img [src]="imgBaseUrl+x.image" alt="">
+              </div>
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <!-- OTHER DATA -->
+                  <p class="m-0 w-30 w-sm-100">{{x.name}}</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100">{{x.list?.length}} Measurements</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
+                      <span class="black-outline-txt">Edit</span>
+                    </button>
+                    <button class="btn orng-outline-btn w-md-100"
+                      (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
 
-</div>
+          </div>
         </div>
       </div>
     </div>
-  
+
 
     <!-- PAGINATION CONTROL -->
     <div class="row">
@@ -74,7 +75,7 @@
           maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
       </div>
     </div>
-  
+
 
   </div>
 

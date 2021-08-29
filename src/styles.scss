@@ -1809,7 +1809,7 @@ transition: visibility 1s linear 0s, opacity 300ms !important;
 } */
 .visibility_icon {
   position: absolute;
-  right: 10px;
+  right: 25px;
   bottom: 8px;
   font-size: 18px;
 }
@@ -2388,8 +2388,8 @@ tag-input-form form input[type="text"] {
 .auth-layout-wrap .auth-content {
   /* max-width: 666px;
   min-width: 666px; */
-  max-width: 30%;
-  min-width: 30%;
+  max-width: 400px;
+  min-width: 400px;
 }
 
 .auth-layout-wrap .pricing-content {
@@ -2453,7 +2453,8 @@ tag-input-form form input[type="text"] {
 }
 
 .layout-sidebar-large .main-header .logo img {
-  width: 100px;
+  // width: 100px;
+  width: 130px;
     height: auto !important;
 }
 .client-logo {
@@ -2556,12 +2557,17 @@ kendo-pdf-export {
   display: none;
 }
 
+.menu-icon-grid-dropdown{
+  border-radius: $primary-theme-bdr-rds;
+}
+
 .auth-card {
   border-radius: $primary-theme-bdr-rds;
   // box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05)!important;
   border: 0;
   background-color: #fff;
+  padding: 40px;
 }
 .auth-card .form-control {
   // border: 1px solid $input-bdr-clr;
@@ -2575,6 +2581,11 @@ kendo-pdf-export {
     color: $input-clr;
     border-radius: $input-bdr-rds;
     font-size: 1rem;
+
+   &::-webkit-input-placeholder {color:$input-clr;}
+   &::-moz-placeholder          {color:$input-clr;}
+   &:-moz-placeholder           {color:$input-clr;}
+   &:-ms-input-placeholder      {color:$input-clr;}
 }
 
 .auth-card .form-control:focus {
@@ -2584,7 +2595,7 @@ kendo-pdf-export {
   // outline: 0;
   // box-shadow: $input-fcs-bx-sdw;
 
-  color: $input-fcs-clr;
+  color: $input-clr;
   background: rgba(0, 0, 0, 0.05);
   border-color:none;
   outline: 0;
@@ -2662,7 +2673,7 @@ kendo-pdf-export {
 }
 
 .auth-card .form-group i {
-  color: $primary-txt-clr;
+  color: #999999;
 }
 
 .auth-card .auth-sub-head {
@@ -3870,8 +3881,8 @@ p svg:hover {
 
 @media only screen and (max-width: 1200px) {
   .auth-layout-wrap .auth-content {
-    min-width: 35%;
-    max-width: 35%;
+    min-width: 400px;
+    max-width: 400px;
   }
 }
 
@@ -3935,8 +3946,8 @@ p svg:hover {
   }
 
   .auth-layout-wrap .auth-content {
-    min-width: 70%;
-    max-width: 70%;
+    min-width: 400px;
+    max-width: 400px;
   }
   .invoice-no {
     justify-content: flex-start;
@@ -4067,7 +4078,8 @@ p svg:hover {
 }
 
 .billing-add {
-  background-color: #000000;
+  background-color: $primary-theme-clr;
+  border-radius: 8px;
   color: #ffffff;
   padding: 5px 25px;
   margin-bottom: 0;

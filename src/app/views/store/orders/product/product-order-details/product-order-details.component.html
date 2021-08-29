@@ -150,7 +150,7 @@
           <div *ngIf="!order_details.vendor_list?.length || commonService.store_details?.login_type=='vendor'"
             class="list-item col-md-12 p-0 mb-4">
             <p class="sec-desc">Product Details</p>
-            <div *ngFor="let x of itemList; let i=index;" class="card o-hidden m-10 d-flex flex-row">
+            <div *ngFor="let x of itemList; let i=index;" class="card o-hidden m-10 d-flex flex-row pl-3 pr-3">
               <ng-container
                 *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.store_details.login_id">
                 <div class="list-thumb d-flex mtb-20">
@@ -226,7 +226,7 @@
           <p class="sec-desc">Product Details</p>
           <!-- vendor_id not exist -->
           <ng-container *ngFor="let x of itemList; let i=index;">
-            <div *ngIf="!x.vendor_id" class="card o-hidden m-10 d-flex flex-row">
+            <div *ngIf="!x.vendor_id" class="card o-hidden m-10 d-flex flex-row pl-3 pr-3">
               <div class="list-thumb d-flex mtb-20">
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>
@@ -1166,7 +1166,10 @@
         <!-- Mark as paid -->
         <button *ngIf="!params?.coupon_id && params?.type=='inactive'" type="button"
         (click)="editForm = { payment_id: order_details.payment_details?.payment_id }; modalService.open(placeOrderModal);"
-        class="btn blue-fill-btn w-100 mtb-10">Place Order</button>
+        class="btn blue-outline-btn w-100 mtb-10">
+        <span class="blue-outline-txt">
+          Place Order
+        </span> </button>
         <!-- # Mark as paid -->
 
       </div>

@@ -48,8 +48,8 @@
               <p class="p-3 mb-1">No items found</p>
             </div>
           </div>
-          <div *ngIf="cart_list.length" class="list-item col-md-12 p-0">
-            <div *ngFor="let x of cart_list; let i=index;" class="card mb-4 d-flex flex-row">
+          <div *ngIf="cart_list.length" class="list-item col-md-12">
+            <div *ngFor="let x of cart_list; let i=index;" class="card mb-4 d-flex flex-row pr-3 pl-3">
               <div *ngIf="x.image" class="list-thumb d-flex align-items-center mtb-20">
                 <img [src]="imgBaseUrl+x.image" alt="image" />
               </div>
@@ -68,7 +68,7 @@
                       </p>
                     </ng-container>
                   </p>
-                  <p class="m-0 prod-card-content w-md-100">{{x.quantity}} {{x.unit}}</p>
+                  <p class="m-0 w-md-100">{{x.quantity}} {{x.unit}}</p>
                   <p class="m-0 text-muted w-15 w-md-100">{{ x.final_price | currency:commonService.store_currency.country_code }}</p>
                 </div>
               </div>
