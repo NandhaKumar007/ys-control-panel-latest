@@ -9,18 +9,18 @@
   "start_url": "./",
   "shortcuts": [
     {
-      "name": "View All Products",
-      "short_name": "Products",
-      "description": "View the list of items on sale at your store",
-      "url": "products",
-      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
+      "name": "Quick Orders",
+      "short_name": "Quick Orders",
+      "description": "View and manage your quick orders",
+      "url": "features/quick-orders",
+      "icons": [{ "src": "assets/icons/quick-order.png", "sizes": "96x96" }]
     },
     {
-      "name": "View All Customers",
-      "short_name": "Customers",
-      "description": "View and manage your customers",
-      "url": "customers",
-      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
+      "name": "Live Orders",
+      "short_name": "Live Orders",
+      "description": "View and manage your ongoing orders",
+      "url": "orders/product/live/all",
+      "icons": [{ "src": "assets/icons/live-order.png", "sizes": "96x96" }]
     }
   ],
   "icons": [

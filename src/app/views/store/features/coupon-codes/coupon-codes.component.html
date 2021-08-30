@@ -14,7 +14,7 @@
 
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-md-3 col-6">
+      <div class="col-md-3">
         <div class="form-group">
           <select name="type" class="form-control select-arrow" [(ngModel)]="list_type"
             (change)="filterList(list_type);">
@@ -30,8 +30,8 @@
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
       </div>
-      <div class="col-3">
-        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary pull-right">Create New
+      <div class="col-md-3">
+        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary w-md-100 pull-right">Create New
           Offer</button>
       </div>
     </div>
@@ -50,26 +50,26 @@
 
             <div class="o-hidden d-flex flex-row">
               <div *ngIf="x.code_type=='auto_discount'" class="find-band"></div>
-              <div class="flex-grow-1 pl-2 d-flex">
+              <div class="flex-grow-1 d-flex">
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p class="c-w-15 w-sm-50 m-b-0">{{x.code}}</p>
-                  <p class="c-w-10 w-sm-100 m-b-0">
+                  <p class="w-20 w-sm-100 mb-0">{{x.code}}</p>
+                  <p class="w-20 w-sm-100 mb-0">
                     <span class="badge" [ngClass]="{
               'badge-warning badge-green': x.code_status === 'Active',
               'badge-info badge-blue': x.code_status === 'Inactive',
               'badge-primary badge-red': x.code_status === 'Expired'
             }">{{x.code_status}}</span>
                   </p>
-                  <p class="c-w-10 w-sm-50 m-b-0">
+                  <p class="w-20 w-sm-100 mb-0">
                     <ng-container *ngIf="!x.usage_limit || x.usage_limit<=0">{{x.redeemed_count}} used</ng-container>
                     <ng-container *ngIf="x.usage_limit>0">{{x.redeemed_count}}/{{x.usage_limit}} used</ng-container>
                   </p>
-                  <p class="c-w-15 w-sm-150 m-b-0">
+                  <p class="w-30 w-sm-100 mb-0">
                     From {{x.valid_from | date: "dd MMM y hh:mm a"}}
                     <span *ngIf="x.valid_to"> To {{x.valid_to | date: "dd MMM y hh:mm a"}}</span>
                   </p>
-                  <p class="m-0 text-muted text-small c-w-15 w-sm-100 d-lg-block item-actions">
+                  <p class="m-0 text-muted text-small w-20 w-sm-100  d-lg-block item-actions">
                     <button class="btn btn-wide black-outline-btn w-md-100 mr-3"
                       routerLink="/features/coupon-codes/modify/{{x._id}}">
                       <span class="black-outline-txt">Edit</span>
