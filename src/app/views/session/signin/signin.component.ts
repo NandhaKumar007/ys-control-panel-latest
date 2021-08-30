@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SwPush } from '@angular/service-worker';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
@@ -19,25 +18,18 @@ export class SigninComponent implements OnInit {
 
   loading: boolean; loadingText: string;
   loginForm: any = {};
-  deviceToken: any;
   constructor(
     public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService,
-    private commonService: CommonService, private accountApi: AccountService, private swPush: SwPush
+    private commonService: CommonService, private accountApi: AccountService
   ) { }
 
   ngOnInit() {
     localStorage.clear();
     this.loading = false; this.loadingText = "";
-    if(this.router.url=='/session/signin' && this.swPush.isEnabled) {
-      this.swPush.requestSubscription({ serverPublicKey: this.commonService.vapidPublicKey })
-      .then(sub => { this.deviceToken = sub; })
-      .catch(err => console.error("Could not subscribe to notifications", err));
-    }
   }
 
   signin() {
     this.loading = true; this.loadingText = 'Signing in...';
-    this.loginForm.device_token = this.deviceToken;
     if(this.router.url=='/session/signin/master') this.masterLogin();
     else this.storeLogin();
   }

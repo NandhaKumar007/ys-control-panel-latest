@@ -1,11 +1,28 @@
 {
   "name": "Yourstore",
   "short_name": "Yourstore",
-  "theme_color": "#1976d2",
+  "description": "Yourstore control panel",
+  "theme_color": "#ec848b",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
+  "shortcuts": [
+    {
+      "name": "View All Products",
+      "short_name": "Products",
+      "description": "View the list of items on sale at your store",
+      "url": "products",
+      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View All Customers",
+      "short_name": "Customers",
+      "description": "View and manage your customers",
+      "url": "customers",
+      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",

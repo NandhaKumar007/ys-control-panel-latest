@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { SwPush } from '@angular/service-worker';
 import { ActivatedRoute, Params } from '@angular/router';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { CookieService } from 'ngx-cookie-service';
 import { OrderService } from '../../order.service';
 import { ExcelService } from '../../../../../services/excel.service';
 import { CommonService } from '../../../../../services/common.service';
+import { StoreApiService } from '../../../../../services/store-api.service';
 import { FieldSearchPipe } from '../../../../../shared/pipes/field-search.pipe';
+declare const Notification: any;
 
 @Component({
   selector: 'app-product-orders',
@@ -21,11 +26,21 @@ export class ProductOrdersComponent implements OnInit {
   params: any = {}; filterForm: any = {};
   list: any = []; scrollPos: number = 0;
 
-  constructor(private api: OrderService, private activeRoute: ActivatedRoute, private excelService: ExcelService, private datePipe: DatePipe, public commonService: CommonService) { }
+  constructor(
+    private api: OrderService, private activeRoute: ActivatedRoute, private excelService: ExcelService, private datePipe: DatePipe, private cookieService: CookieService,
+    public commonService: CommonService, private swPush: SwPush, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService
+  ) {
+    config.backdrop = 'static'; config.keyboard = false;
+  }
 
   ngOnInit() {
+    this.cookieService.set('blockSub', 'true');
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.page = 1; this.pageSize = 10;
+      if(!this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
+        if(Notification.permission=='default') document.getElementById('openSubModal').click();
+        else if(Notification.permission=='granted' && !sessionStorage.getItem("sw_sub")) this.reqSub();
+      }
       this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: this.params.type, vendor_id: 'all' };
       if(this.params.type=='live') this.filterForm.type = 'all';
       if(this.commonService.store_details.login_type=='vendor') {
@@ -200,6 +215,22 @@ export class ProductOrdersComponent implements OnInit {
   capturePageData() {
     let pageData = { page_no: this.page, search: this.search_bar, filter_form: this.filterForm, scroll_pos: sessionStorage.getItem("scroll_y_pos") };
     sessionStorage.setItem("order_page", JSON.stringify(pageData));
+  }
+
+  reqSub() {
+    if(this.swPush.isEnabled) {
+      this.swPush.requestSubscription({ serverPublicKey: this.commonService.vapidPublicKey })
+      .then(sub => {
+        sessionStorage.setItem("sw_sub","true");
+        this.storeApi.STORE_UPDATE({ device_token: sub }).subscribe(result => {
+          if(!result.status) console.log("response", result);
+        });
+      })
+      .catch(err => console.error("Could not subscribe to notifications", err));
+    }
+  }
+  blockSub() {
+    this.cookieService.set('blockSub', 'true');
   }
 
 }

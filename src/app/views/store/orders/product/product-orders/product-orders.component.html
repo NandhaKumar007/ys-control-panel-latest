@@ -201,3 +201,21 @@
   </div>
 
 </div>
+
+<!-- Subscription Modal -->
+<a id="openSubModal" (click)="modalService.open(subModal, { centered: true });"></a>
+<ng-template #subModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>If you want to be notified for new orders?</strong>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel'); blockSub();">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" class="btn btn-wide orng-outline-btn m-1" (click)="modal.dismiss('cancel'); reqSub();">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>
