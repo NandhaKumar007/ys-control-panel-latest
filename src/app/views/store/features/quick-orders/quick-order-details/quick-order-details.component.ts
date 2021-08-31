@@ -365,6 +365,8 @@ export class QuickOrderDetailsComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+    this.orderForm.copied= true;
+    setTimeout(() =>{ this.orderForm.copied= false; }, 1000);
   }
 
   socialShare(id) {

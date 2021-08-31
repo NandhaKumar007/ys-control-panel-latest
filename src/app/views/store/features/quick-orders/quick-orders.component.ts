@@ -79,7 +79,7 @@ export class QuickOrdersComponent implements OnInit {
 		});
   }
 
-  copyText(id) {
+  copyText(id, index) {
     let val = this.commonService.store_details.base_url+'/checkout/quick-order/'+id;
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -92,6 +92,8 @@ export class QuickOrdersComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+    this.list[index].copied= true;
+    setTimeout(() =>{ this.list[index].copied= false; }, 1000);
   }
 
   socialShare(id) {

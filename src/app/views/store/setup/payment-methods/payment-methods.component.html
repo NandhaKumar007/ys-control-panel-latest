@@ -107,6 +107,8 @@
                 <option value="CCAvenue">CCAvenue</option>
               </ng-container>
               <option value="PayPal">PayPal</option>
+              <option value="Gpay">Gpay</option>
+              <option value="QR-Gpay">Gpay QR Code</option>
               <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square
               </option>
               <ng-container *ngIf="commonService.store_details?.country=='United Arab Emirates'">
@@ -289,7 +291,7 @@
             <textarea class="form-control" aria-label="With textarea" name="token" [(ngModel)]="payForm.token"
               #token="ngModel" required></textarea>
           </div>
-          <!-- Telr -->
+          <!-- telr -->
           <ng-container *ngIf="payForm.name=='Telr'">
             <div class="col-md-6 form-group mb-3">
               <label>Key</label>
@@ -319,9 +321,23 @@
                 https://yourstore.io/api/store_details/foloosi_payment/{{commonService.store_details._id}}</p>
             </div>
           </ng-container>
+          <!-- gpay -->
+          <ng-container *ngIf="payForm.name=='Gpay' || payForm.name=='QR-Gpay'">
+            <div class="col-md-6 form-group mb-3">
+              <label>Merchant Name</label>
+              <input type="text" name="merchant_name" class="form-control" [(ngModel)]="payForm.merchant_name" #merchant_name="ngModel" required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Merchant Code</label>
+              <input type="text" name="merchant_code" class="form-control" [(ngModel)]="payForm.merchant_code" #merchant_code="ngModel" required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>UPI ID</label>
+              <input type="text" name="upi_id" class="form-control" [(ngModel)]="payForm.upi_id" #upi_id="ngModel" required />
+            </div>
+          </ng-container>
           <!-- mode -->
-          <ng-container
-            *ngIf="payForm.name=='PayPal' || payForm.name=='Square' || payForm.name=='Fatoorah' || payForm.name=='Telr'">
+          <ng-container *ngIf="payForm.name=='PayPal' || payForm.name=='Square' || payForm.name=='Fatoorah' || payForm.name=='Telr'">
             <div class="col-md-6 form-group mb-3">
               <label>Payment Mode</label>
               <select name="mode" class="form-control" [(ngModel)]="payForm.mode" #mode="ngModel" required>

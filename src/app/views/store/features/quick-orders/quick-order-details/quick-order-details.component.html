@@ -187,7 +187,10 @@
             <button type="submit" class="btn btn-primary w-100" [disabled]="!cart_list.length">{{ (formType=='add')? 'Generate': 'Update' }} Link</button>
           </form>
           <ng-container *ngIf="formType=='update'">
-            <button type="button" (click)="copyText(orderForm._id);" class="btn btn-success w-100">Copy Link</button>
+            <div class="tooltip-container">
+              <span *ngIf="orderForm.copied" class="tooltip">Link Copied</span>
+              <button type="button" (click)="copyText(orderForm._id);" class="btn btn-success w-100 m-0">Copy Link</button>
+            </div>
             <button type="button" *ngIf="!commonService?.desktop_device" (click)="socialShare(orderForm._id);" class="btn btn-info w-100">Share Link</button>
           </ng-container>
         </div>

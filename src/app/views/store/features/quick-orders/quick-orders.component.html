@@ -64,8 +64,9 @@
                     currency:commonService.store_currency.country_code }}</p>
                   <p class="w-15 w-sm-100 m-b-0">{{x.usage_count}} used</p>
                   <p class="w-10 w-sm-100 m-b-0">
-                    <span (click)="copyText(x._id);" class="badge badge-success badge-green-outline d-block cursor">
+                    <span (click)="copyText(x._id, i);" class="badge badge-success badge-green-outline d-block cursor">
                       <span class="badge-green-outline-txt">Copy</span>
+                      <span *ngIf="x.copied" class="tooltip">Link Copied</span>
                     </span>
                     <span *ngIf="!commonService?.desktop_device" (click)="socialShare(x._id);"
                       class="badge badge-warning badge-red-outline d-block cursor">
