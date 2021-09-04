@@ -261,7 +261,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       if(branchIndex!=-1) {
         let compDetails: any = this.commonService.branch_list[branchIndex];
         let shippingAddr = this.order_details.shipping_address;
-        let orderPrice: any = this.order_details.final_price - this.order_details.shipping_method.added_charge;
+        let orderPrice: any = this.order_details.final_price - this.order_details.shipping_method.dp_charges;
         // pickup address
         let pickupAddr: any = {
           street_address_1: compDetails.address, country: this.commonService.store_details.country,
