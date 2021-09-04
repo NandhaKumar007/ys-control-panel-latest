@@ -61,8 +61,11 @@ export class ControlPanelComponent implements OnInit {
             currency_types: result.data.currency_types,
             country: result.data.country,
             created_on: result.data.created_on,
-            additional_features: result.data.additional_features
+            additional_features: result.data.additional_features,
+            company_details: {}
           };
+          if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
+          if(result.data.company_details) this.commonService.store_details.company_details = result.data.company_details;
           if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
           let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
           this.commonService.store_currency = result.data.currency_types[currencyIndex];

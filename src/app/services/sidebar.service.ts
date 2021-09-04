@@ -344,8 +344,13 @@ export class SidebarService {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
       }
+      if(this.commonService.store_details.dp_wallet_status) {
+        accountList.push({ icon: 'account_balance_wallet', name: 'Wallet', state: '/account/wallet', type: 'link' });
+        routePermissionList.push("dp_wallet");
+      }
       sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }
+    // SUB USER
     else if(this.commonService.store_details.login_type == 'subuser') {
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       if(subuserFeatures.indexOf('dashboard')!=-1) {
@@ -437,6 +442,11 @@ export class SidebarService {
             inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
             routePermissionList.push("inactive_gift_orders");
           }
+        }
+        // quick order
+        if(ysFeatures.indexOf('quick_order')!=-1 && subuserFeatures.indexOf('quick_order')!=-1) {
+          orderList.push({ icon: 'timer', name: 'Quick Orders', state: '/features/quick-orders', type: 'link' });
+          routePermissionList.push("quick_order");
         }
         // dinamic offers
         // if(ysFeatures.indexOf('dinamic_offers')!=-1) {

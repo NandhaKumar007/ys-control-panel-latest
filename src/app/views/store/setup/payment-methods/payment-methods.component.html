@@ -108,7 +108,6 @@
               </ng-container>
               <option value="PayPal">PayPal</option>
               <option value="Gpay">Gpay</option>
-              <option value="QR-Gpay">Gpay QR Code</option>
               <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square
               </option>
               <ng-container *ngIf="commonService.store_details?.country=='United Arab Emirates'">
@@ -322,7 +321,7 @@
             </div>
           </ng-container>
           <!-- gpay -->
-          <ng-container *ngIf="payForm.name=='Gpay' || payForm.name=='QR-Gpay'">
+          <ng-container *ngIf="payForm.name=='Gpay'">
             <div class="col-md-6 form-group mb-3">
               <label>Merchant Name</label>
               <input type="text" name="merchant_name" class="form-control" [(ngModel)]="payForm.merchant_name" #merchant_name="ngModel" required />

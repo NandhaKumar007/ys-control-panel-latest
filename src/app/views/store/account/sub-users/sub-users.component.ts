@@ -154,7 +154,8 @@ export class SubUsersComponent implements OnInit {
     let orderList = [
       { keyword: "live_orders", name: "Live Orders" },
       { keyword: "completed_orders", name: "Completed Orders" },
-      { keyword: "cancelled_orders", name: "Cancelled Orders" }
+      { keyword: "cancelled_orders", name: "Cancelled Orders" },
+      { keyword: "quick_order", name: "Quick Orders" }
     ];
     if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
       orderList.push({ keyword: "giftcard_orders", name: "Giftcard Orders" });

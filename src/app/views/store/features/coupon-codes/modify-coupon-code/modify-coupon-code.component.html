@@ -24,6 +24,14 @@
 
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
+      <label class="ml-3 mb-4 checkbox checkbox-primary">
+        <input class="form-check-input" type="checkbox" name="enable_status" [(ngModel)]="offerForm.enable_status" #enable_status="ngModel">
+        <span>Enable</span>
+        <span class="checkmark"></span>
+      </label>
+    </div>
+
+    <div class="row">
       <!-- code type -->
       <ng-container *ngIf="commonService.ys_features.indexOf('basic_discount')==-1">
         <div class="col-md-12 col-lg-6 d-flex">
@@ -31,7 +39,7 @@
             <div class="ml-3 mt-3 mb-2">
               <label class="radio radio-primary">
                 <input type="radio" name="code_type" value="discount" [(ngModel)]="offerForm.code_type" />
-                <span><b>Discount Code</b><br>Customers will get a discount if they enter a code at checkout.</span>
+                <span><b>Manual discount</b><br>Customers will get a discount if they enter a code at checkout.</span>
                 <span class="checkmark"></span>
               </label>
             </div>
@@ -42,7 +50,7 @@
             <div class="ml-3 mt-3 mb-2">
               <label class="radio radio-primary">
                 <input type="radio" name="code_type" value="auto_discount" [(ngModel)]="offerForm.code_type" />
-                <span><b>Automatic discount</b><br>Customers will get a discount automatically in their cart.</span>
+                <span><b>Automatic discount</b><br>Customers will get a discount automatically on checkout.</span>
                 <span class="checkmark"></span>
               </label>
             </div>
@@ -53,23 +61,16 @@
       <!-- discount code -->
       <div class="col-md-12 col-lg-6 d-flex">
         <div class="card w-100 p-3 mb-3">
-          <div class="row mb-3">
-            <div class="col-6">
-              <p><b>Discount Code</b></p>
-              <label class="ml-3 checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="enable_status" [(ngModel)]="offerForm.enable_status" #enable_status="ngModel">
-              <span>Enable</span>
-              <span class="checkmark"></span>
-            </label>
-            </div>
-            <div class="col-6">
-              <button type="button" class="btn btn-primary w-md-100 pull-right" (click)="offerForm.code = getRandomCode();">Generate Code</button>
-            </div>
-          </div>
-          <div class="ml-3">
+          <div>
+            <label>Discount Code</label>
             <input type="text" name="code" class="form-control" [(ngModel)]="offerForm.code" #code="ngModel" (keydown.space)="$event.preventDefault()"
               appUppercase required />
-            <label>Customers will enter this discount code at checkout.</label>
+            <label>Customers will get a discount with these code.</label>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button type="button" class="btn btn-primary w-md-100 pull-right" (click)="offerForm.code = getRandomCode();">Generate Code</button>
+            </div>
           </div>
         </div>
       </div>
@@ -377,8 +378,7 @@
             </p>
             <div class="row ml-3">
               <div class="col-md-12 form-group pl-0 mb-3">
-                <label>Minimum Purchase Amount (
-                  <span [innerHTML]="commonService.store_currency.html_code"></span>)</label>
+                <label>Minimum Purchase Amount (<span [innerHTML]="commonService.store_currency.html_code"></span>)</label>
                 <input type="text" name="min_order_amt" class="form-control" [(ngModel)]="offerForm.min_order_amt" #min_order_amt="ngModel"
                   appNumberOnly required />
               </div>

@@ -25,5 +25,8 @@ export const environment = {
         ['link', 'image']                
       ]
     }
-  }
+  },
+  base_url: "https://yourstore.io/store-login-v2/#",
+  razorpay_payment_url: "https://api.razorpay.com/v1/checkout/embedded",
+  razorpay_dp_wallet_redirect_url: "https://yourstore.io/api/others/razorpay_dp_wallet_payment/5ceb9eb971f2cb809646edd2"
 };

@@ -16,8 +16,7 @@
     <div class="row mb-4">
       <div class="col-md-3">
         <div class="form-group">
-          <select name="type" class="form-control select-arrow" [(ngModel)]="list_type"
-            (change)="filterList(list_type);">
+          <select name="type" class="form-control select-arrow" [(ngModel)]="list_type" (change)="filterList(list_type);">
             <option value="all">All</option>
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
@@ -31,8 +30,8 @@
         </div>
       </div>
       <div class="col-md-3">
-        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary w-md-100 pull-right">Create New
-          Offer</button>
+        <button type="button" routerLink="/features/coupon-codes/new" class="btn btn-primary w-md-100 pull-right">Create New Offer
+        </button>
       </div>
     </div>
   </div>
@@ -44,15 +43,13 @@
         <div class="row m-0">
 
           <!-- SINGLE LIST ITEM -->
-          <div
-            *ngFor="let x of list | orderDesc:'created_on' | fieldSearch:'code':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-            class="col-md-12 list-item data-list-card" [ngClass]="x.order_by=='admin' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          <div *ngFor="let x of list | orderDesc:'created_on' | fieldSearch:'code':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card p-0" [ngClass]="x.code_type=='auto_discount'? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="o-hidden d-flex flex-row">
               <div *ngIf="x.code_type=='auto_discount'" class="find-band"></div>
               <div class="flex-grow-1 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-20 w-sm-100 mb-0">{{x.code}}</p>
                   <p class="w-20 w-sm-100 mb-0">
                     <span class="badge" [ngClass]="{
@@ -70,12 +67,10 @@
                     <span *ngIf="x.valid_to"> To {{x.valid_to | date: "dd MMM y hh:mm a"}}</span>
                   </p>
                   <p class="m-0 text-muted text-small w-20 w-sm-100  d-lg-block item-actions">
-                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3"
-                      routerLink="/features/coupon-codes/modify/{{x._id}}">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="/features/coupon-codes/modify/{{x._id}}">
                       <span class="black-outline-txt">Edit</span>
                     </button>
-                    <button class="btn orng-outline-btn w-md-100"
-                      (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
+                    <button class="btn orng-outline-btn w-md-100" (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
                       <span class="orng-outline-txt">Remove</span>
                     </button>
                   </p>
@@ -93,11 +88,11 @@
     <!-- PAGINATION CONTROL -->
     <div class="row">
       <div class="col-md-12 mt-3">
-        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
-          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true" maxSize="5"
+          previousLabel="" nextLabel=""></pagination-controls>
       </div>
     </div>
-  
+
 
   </div>
 
@@ -122,8 +117,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-wide black-outline-btn" id="closeModal"
-      (click)="modal.dismiss('Cross click');">
+    <button type="button" class="btn btn-wide black-outline-btn" id="closeModal" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">

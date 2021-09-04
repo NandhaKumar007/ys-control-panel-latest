@@ -107,7 +107,7 @@ export class PaymentMethodsComponent implements OnInit {
       this.payForm.merchant_key = x.config.merchant_key;
       this.payForm.secret_key = x.config.secret_key;
     }
-    else if(x.name=='Gpay' || x.name=='QR-Gpay') {
+    else if(x.name=='Gpay') {
       this.payForm.upi_id = x.app_config.upi_id;
       this.payForm.merchant_name = x.app_config.merchant_name;
       this.payForm.merchant_code = x.app_config.merchant_code;
@@ -183,7 +183,7 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.rank = this.payForm.rank;
       paymentData.prev_rank = this.payForm.prev_rank;
     }
-    if(paymentData.name!='COD' && paymentData.name!='Square' && paymentData.name!='QR-Gpay') {
+    if(paymentData.name!='COD' && paymentData.name!='Square') {
       paymentData.return_url = this.commonService.store_details.base_url+'/checkout/order-summary';
       paymentData.cancel_url = this.commonService.store_details.base_url+'/checkout/payment-failure';
     }
@@ -217,7 +217,7 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.config = { merchant_key: this.payForm.merchant_key, secret_key: this.payForm.secret_key };
       paymentData.app_config = { merchant_key: this.payForm.merchant_key };
     }
-    else if(paymentData.name=='Gpay' || paymentData.name=='QR-Gpay') {
+    else if(paymentData.name=='Gpay') {
       paymentData.app_config = { upi_id: this.payForm.upi_id, merchant_name: this.payForm.merchant_name, merchant_code: this.payForm.merchant_code };
     }
     return paymentData;

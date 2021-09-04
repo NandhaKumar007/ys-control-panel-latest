@@ -293,7 +293,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         // create dunzo form data
         let formData: any = {
           request_id: this.order_details._id+'-'+Math.floor(Math.random()*(999)),
-          reference_id: this.order_details.order_number,
+          reference_id: this.order_details.order_number+"@"+this.order_details._id,
           pickup_details: [{ reference_id: "pickup1", address: pickupAddr }],
           optimised_route: true,
           drop_details: [{ reference_id: "drop1", address: dropAddr, otp_required: false }]
