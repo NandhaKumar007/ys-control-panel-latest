@@ -32,7 +32,7 @@
         <div class="row m-0">
 
           <!-- SINGLE LIST ITEM -->
-          <div *ngFor="let x of list | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          <div *ngFor="let x of list | orderDesc:'_id' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="o-hidden d-flex flex-row">

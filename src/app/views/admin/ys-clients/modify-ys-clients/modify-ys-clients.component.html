@@ -163,6 +163,7 @@
 
   <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
+      <!-- abandoned cart -->
       <div *ngIf="clientForm.type=='order_based'" class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">
           <input class="form-check-input" type="checkbox" name="abandoned_status" [(ngModel)]="clientForm.abandoned_status" #abandoned_status="ngModel">
@@ -170,6 +171,21 @@
           <span class="checkmark"></span>
         </label>
       </div>
+      <!-- package list -->
+      <div class="col-md-12 mb-3">
+        <div class="card card-in-card p-3">
+          <div class="row mt-3">
+            <div class="col-lg-3 col-md-4 mb-3" *ngFor="let x of packages_list;">
+              <label class="radio radio-success">
+                <input type="radio" name="package_id" [value]="x._id" [checked]="x._id==clientForm.package_details.package_id" (change)="clientForm.package_details.package_id=x._id; onChoosePackage();">
+                <span>{{x.name}} - <b>{{ x.currency_types[clientForm.currency_types.country_code].amount | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- billing -->
       <div class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">
           <input class="form-check-input" type="checkbox" name="billing_status" [(ngModel)]="clientForm.package_details.billing_status" #billing_status="ngModel">
@@ -177,27 +193,18 @@
           <span class="checkmark"></span>
         </label>
       </div>
-      <ng-container *ngIf="clientForm.package_details.billing_status">
-        <div class="col-md-6 form-group mb-3">
-          <label>Subscription Start Date</label>
-          <input type="text" placeholder="Select Date" class="form-control" name="start_date" autocomplete="off"
-          [(ngModel)]="clientForm.package_details.subscription_start_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
-        </div>
-        <div class="col-md-6 form-group mb-3">
-          <label>Subscription End Date</label>
-          <input type="text" placeholder="Select Date" class="form-control" name="end_date" autocomplete="off"
-          [(ngModel)]="clientForm.package_details.expiry_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
-        </div>
-      </ng-container>
-      <div class="col-md-12 mb-3">
+      <div class="col-md-12 mb-3" *ngIf="clientForm.package_details.billing_status">
         <div class="card card-in-card p-3">
-          <div class="row ml-3 mt-3">
-            <div class="col-lg-3 col-md-4 mb-3" *ngFor="let x of packages_list;">
-              <label class="radio radio-success">
-                <input type="radio" name="package_id" [value]="x._id" [checked]="x._id==clientForm.package_details.package_id" (change)="clientForm.package_details.package_id=x._id; onChoosePackage();">
-                <span>{{x.name}} - <b>{{ x.currency_types[clientForm.currency_types.country_code].amount | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
-                <span class="checkmark"></span>
-              </label>
+          <div class="row mt-3">
+            <div class="col-md-6 form-group mb-3">
+              <label>Subscription Start Date</label>
+              <input type="text" placeholder="Select Date" class="form-control" name="start_date" autocomplete="off"
+              [(ngModel)]="clientForm.package_details.subscription_start_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Subscription End Date</label>
+              <input type="text" placeholder="Select Date" class="form-control" name="end_date" autocomplete="off"
+              [(ngModel)]="clientForm.package_details.expiry_date" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
             </div>
           </div>
         </div>
@@ -210,13 +217,47 @@
           <span class="checkmark"></span>
         </label>
       </div>
-      <ng-container *ngIf="clientForm.package_details.disc_status">
-        <div class="form-group mb-3 ml-3 col-md-6">
-          <label>Discount per month ({{clientForm.currency_types.country_code}})</label>
-          <input type="text" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" required />
+      <div class="col-md-12 mb-3" *ngIf="clientForm.package_details.disc_status">
+        <div class="card card-in-card p-3">
+          <div class="row mt-3">
+            <div class="form-group mb-3 col-md-6">
+              <label>Discount per month ({{clientForm.currency_types.country_code}})</label>
+              <input type="text" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" required />
+            </div>
+          </div>
         </div>
-        <div class="col-md-6"></div>
-      </ng-container>
+      </div>
+      <!-- wallet -->
+      <div class="form-group mb-3 col-md-12">
+        <label class="checkbox checkbox-primary">
+          <input class="form-check-input" type="checkbox" name="dp_wallet_status" [(ngModel)]="clientForm.dp_wallet_status"
+          (change)="!clientForm.dp_wallet_details? clientForm.dp_wallet_details={ balance: 0 }: ''" #dp_wallet_status="ngModel">
+          <span>Enable Delivery Partner Wallet</span>
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <div class="col-md-12 mb-3" *ngIf="clientForm.dp_wallet_status && clientForm.dp_wallet_details">
+        <div class="card card-in-card p-3">
+          <div class="row mt-3">
+            <div class="col-md-4 form-group mb-3">
+              <label>Balance ({{clientForm.currency_types.country_code}})</label>
+              <input type="text" name="wallet_balance" class="form-control" [(ngModel)]="clientForm.dp_wallet_details.balance" #wallet_balance="ngModel" readonly />
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label>Transaction Charges By</label>
+              <select name="wallet_charge_type" class="form-control" [(ngModel)]="clientForm.dp_wallet_details.charge_type" #wallet_charge_type="ngModel" required>
+                <option value="percentage">Percentage</option>
+                <option value="amount">Amount</option>
+              </select>
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label *ngIf="!clientForm.dp_wallet_details.charge_type">Value</label>
+              <label *ngIf="clientForm.dp_wallet_details.charge_type">Value in {{ clientForm.dp_wallet_details.charge_type | titlecase }}</label>
+              <input type="text" name="wallet_charge_value" class="form-control" [(ngModel)]="clientForm.dp_wallet_details.charge_value" #wallet_charge_value="ngModel" required />
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Additional Features -->
       <div *ngIf="paid_features_list?.length" class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">
@@ -225,18 +266,21 @@
           <span class="checkmark"></span>
         </label>
       </div>
-    </div>
-
-    <div class="row ml-3" *ngIf="paid_features_list?.length && clientForm.add_features">
-      <ng-container *ngFor="let x of paid_features_list; let i=index;">
-        <div *ngIf="x.package_pricing[clientForm.currency_types.country_code].price > 0" class="col-lg-3 col-md-4 form-group mb-3">
-          <label class="checkbox checkbox-success">
-            <input class="form-check-input" type="checkbox" name="feature_checked{{i}}" [(ngModel)]="x.feature_checked">
-            <span>{{x.name}} - <b>{{ x.package_pricing[clientForm.currency_types.country_code].price | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
-            <span class="checkmark"></span>
-          </label>
+      <div *ngIf="paid_features_list?.length && clientForm.add_features" class="col-md-12 mb-3">
+        <div class="card card-in-card p-3">
+          <div class="row mt-3">
+            <ng-container *ngFor="let x of paid_features_list; let i=index;">
+              <div *ngIf="x.package_pricing[clientForm.currency_types.country_code].price > 0" class="col-lg-3 col-md-4 form-group mb-3">
+                <label class="checkbox checkbox-success">
+                  <input class="form-check-input" type="checkbox" name="feature_checked{{i}}" [(ngModel)]="x.feature_checked">
+                  <span>{{x.name}} - <b>{{ x.package_pricing[clientForm.currency_types.country_code].price | currency:clientForm.currency_types.country_code:'symbol':'1.0' }}</b></span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </ng-container>
+          </div>
         </div>
-      </ng-container>
+      </div>
     </div>
 
     <div class="separator-breadcrumb border-top mt-5"></div>

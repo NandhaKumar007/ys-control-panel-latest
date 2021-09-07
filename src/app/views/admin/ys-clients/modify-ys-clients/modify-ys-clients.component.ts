@@ -45,6 +45,7 @@ export class ModifyYsClientsComponent implements OnInit {
   }
 
   onSubmit() {
+    if(!this.clientForm.dp_wallet_status) this.clientForm.dp_wallet_status = false;
     if(this.params.client_id) {
       // UPDATE
       this.clientForm.package_details.paid_features = [];
@@ -53,11 +54,12 @@ export class ModifyYsClientsComponent implements OnInit {
       });
       if(this.clientForm.type!='order_based') this.clientForm.abandoned_status = false;
       this.clientForm.btnLoader = true;
-      let formData = {
+      let formData: any = {
         _id: this.clientForm._id, name: this.clientForm.name, account_type: this.clientForm.account_type, type: this.clientForm.type,
         company_details: this.clientForm.company_details, gst_no: this.clientForm.gst_no, package_details: this.clientForm.package_details,
-        abandoned_status: this.clientForm.abandoned_status
+        abandoned_status: this.clientForm.abandoned_status, dp_wallet_status: this.clientForm.dp_wallet_status
       }
+      if(this.clientForm.dp_wallet_details) formData.dp_wallet_details = this.clientForm.dp_wallet_details;
       this.adminApi.UPDATE_STORE(formData).subscribe(result => {
         if(result.status) this.router.navigate(['/admin/clients']);
         else {

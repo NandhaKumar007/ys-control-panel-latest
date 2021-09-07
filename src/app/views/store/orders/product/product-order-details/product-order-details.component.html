@@ -456,27 +456,14 @@
           </div>
           <!-- shipping & delivery details -->
           <div class="order-section">
-            <div class="row mb-2">
-              <div class="col-8">
-                <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
-                  {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
-                </p>
-                <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
-                  Pickup Details
-                </p>
-              </div>
-              <div class="col-4 d-flex justify-content-end align-items-center">
-                <!-- courier order status -->
-                <ng-container *ngFor="let x of order_details.cp_orders;">
-                  <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
-                    <button *ngIf="!courierData?.state" type="button" (click)="checkDunzoStatus(x.order_id);"
-                      class="badge ladda-badge badge-warning badge-green mr-3" style="border: none;"
-                      [disabled]="courierData.submit" [ladda]="courierData.submit">Check Dunzo Order Status</button>
-                  </ng-container>
-                </ng-container>
-                <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-                  (click)="courierData={}; onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
-              </div>
+            <div class="pb-2">
+              <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
+                {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
+              </p>
+              <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
+                Pickup Details
+              </p>
+              <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
             </div>
             <div class="col-md-12 list-item p-0">
               <!-- shipping details -->
@@ -527,36 +514,40 @@
             </div>
           </div>
           <!-- courier partner - order details -->
-          <div *ngIf="courierData?.state" class="order-section">
-            <div class="pb-2">
-              <p class="sec-desc" style="display: inline-block;">Dunzo Order Details</p>
-              <i style="float:right;" (click)="courierData={};" class="material-icons edit-icon">close</i>
-            </div>
-            <div class="col-md-12 list-item p-0">
-              <div class="card o-hidden mb-4 d-flex flex-column">
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p class="w-50 w-sm-100 m-b-0">Status: <strong>{{courierData?.state}}</strong></p>
-                    <p class="w-50 w-sm-100 m-b-0">Contact No: <strong>{{courierData?.contact}}</strong></p>
-                    <ng-container *ngIf="courierData?.eta">
-                      <p class="w-50 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}}
-                          (mins)</strong></p>
-                      <p class="w-50 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}}
-                          (mins)</strong></p>
-                    </ng-container>
-                    <p *ngIf="courierData?.runner" class="w-50 w-sm-100 m-b-0">
-                      Runner Details: <strong>{{courierData?.runner?.name}}
-                        ({{courierData?.runner?.phone_number}})</strong>
+          <ng-container *ngFor="let x of order_details.cp_orders;">
+            <!-- DUNZO -->
+            <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
+              <div class="order-section">
+                <div class="pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Dunzo Order Details</p>
+                </div>
+                <div class="card p-3 mb-3">
+                  <div class="d-flex flex-column justify-content-between flex-lg-row">
+                    <p class="w-40 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                    <p class="w-30 w-sm-100 m-b-0">{{x?.cp_status}}</p>
+                    <p class="w-30 w-sm-100 m-b-0">
+                      <button type="button" (click)="checkDunzoStatus(x.order_id);" [disabled]="courierData?.submit" [ladda]="courierData?.submit"
+                      class="badge ladda-badge badge-warning badge-green pull-right mr-3" style="border: none;">Get More Info</button>
                     </p>
-                    <p *ngIf="courierData?.price" class="w-50 w-sm-100 m-b-0">
-                      Final Price: <strong>{{courierData?.price}}</strong>
-                    </p>
+                  </div>
+                  <div *ngIf="courierData?.state" class="mt-3">
+                    <div class="card card-in-card p-3">
+                      <span (click)="courierData={};" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                      <div class="d-flex flex-column justify-content-between flex-lg-row">
+                        <ng-container *ngIf="courierData?.eta">
+                          <p class="w-30 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
+                          <p class="w-30 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
+                          <p *ngIf="courierData?.runner" class="w-40 w-sm-100 m-b-0">
+                            Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong>
+                          </p>
+                        </ng-container>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </ng-container>
+          </ng-container>
           <!-- order note -->
           <div class="order-section">
             <div class="pb-2">
