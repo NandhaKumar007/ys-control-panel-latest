@@ -26,7 +26,7 @@ export const environment = {
       ]
     }
   },
-  base_url: "http://localhost:4500/#",
+  base_url: "http://localhost:4500",
   razorpay_payment_url: "https://api.razorpay.com/v1/checkout/embedded",
   razorpay_dp_wallet_redirect_url: "https://yourstore.io/api/others/razorpay_dp_wallet_payment/5ceb9eb971f2cb809646edd2"
 };

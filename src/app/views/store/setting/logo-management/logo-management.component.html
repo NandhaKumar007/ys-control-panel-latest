@@ -46,7 +46,7 @@
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
           <label class="text-title d-flex align-items-center justify-content-center">
             Social Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '128x128' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>
