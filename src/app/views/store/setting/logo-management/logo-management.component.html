@@ -1,15 +1,12 @@
 <div>
   <div class="breadcrumb with-back-btn">
     <div class="row">
-      <div class="col-md-12 p-0">
-        <div class="row">
-          <div class="col-md-12 col-md-8 d-flex justify-content-end align-items-start flex-column">
-            <h1>Store Logo</h1>
-            <ul>
-              <li>Manage your store logos</li>
-            </ul>
-          </div>
-        </div>
+      <div class="col-md-8">
+        <h1>Logo Management</h1>
+        <ul><li>Manage your store logos</li></ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" routerLink="/store-setting">Go Back</button>
       </div>
     </div>
   </div>
@@ -20,7 +17,7 @@
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/favicon.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center">
+          <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Favicon 
             <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
           </label>
@@ -32,7 +29,7 @@
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center">
+          <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Site Logo 
             <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
           </label>
@@ -44,7 +41,7 @@
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center">
+          <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Social Logo 
             <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
           </label>
@@ -56,7 +53,7 @@
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/mail_logo.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center">
+          <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Mail Logo 
             <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'mail_logo', file_type: 'png', resolution: 'autox80' }; modalService.open(imageModal);">create</i>
           </label>

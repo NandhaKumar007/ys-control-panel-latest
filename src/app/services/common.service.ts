@@ -122,7 +122,7 @@ export class CommonService {
   
   scroll_y_pos: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
-  socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp", "web"];
+  socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp", "website"];
 
   constructor(private router: Router) {
     if(localStorage.getItem('admin_packages')) this.admin_packages = this.decryptData(localStorage.getItem("admin_packages"));

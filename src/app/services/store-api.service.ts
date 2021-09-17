@@ -169,6 +169,8 @@ export class StoreApiService {
     return this.http.get<any>(environment.ws_url+'/store/newsletter_subscribers', httpOptions);
   }
 
+  UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
+  LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }
   UPDATE_LOGO(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/update_logo', x, httpOptions);
