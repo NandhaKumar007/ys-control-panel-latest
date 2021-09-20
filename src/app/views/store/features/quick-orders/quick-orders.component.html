@@ -50,7 +50,7 @@
             *ngFor="let x of list | orderDesc:'_id' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card p-0" [ngClass]="x.disc_status? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-            <div class="o-hidden d-flex flex-row">
+            <div class="d-flex flex-row">
               <div *ngIf="x.disc_status" class="find-band"></div>
               <div class="flex-grow-1 d-flex">
                 <div

@@ -30,7 +30,7 @@
         <div class="order-section mtb-10">
           <p class="sec-desc">Customer Details</p>
           <div class="col-md-12 list-item p-0 mtb-10">
-            <div class="card o-hidden mb-4 d-flex flex-row">
+            <div class="card mb-4 d-flex flex-row">
               <div class="flex-grow-1 pl-2 d-flex">
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -150,7 +150,7 @@
           <div *ngIf="!order_details.vendor_list?.length || commonService.store_details?.login_type=='vendor'"
             class="list-item col-md-12 p-0 mb-4">
             <p class="sec-desc">Product Details</p>
-            <div *ngFor="let x of itemList; let i=index;" class="card o-hidden m-10 d-flex flex-row pl-3 pr-3">
+            <div *ngFor="let x of itemList; let i=index;" class="card m-10 d-flex flex-row pl-3 pr-3">
               <ng-container
                 *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.store_details.login_id">
                 <div class="list-thumb d-flex mtb-20">
@@ -226,7 +226,7 @@
           <p class="sec-desc">Product Details</p>
           <!-- vendor_id not exist -->
           <ng-container *ngFor="let x of itemList; let i=index;">
-            <div *ngIf="!x.vendor_id" class="card o-hidden m-10 d-flex flex-row pl-3 pr-3">
+            <div *ngIf="!x.vendor_id" class="card m-10 d-flex flex-row pl-3 pr-3">
               <div class="list-thumb d-flex mtb-20">
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>
@@ -390,7 +390,7 @@
           <div *ngIf="order_details?.manual_discount?.amount > 0" class="order-section">
             <p class="sec-desc" style="display: inline-block;">Discounts</p>
             <div class="col-md-12 list-item p-0">
-              <div class="card o-hidden mb-4 d-flex flex-row">
+              <div class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -408,7 +408,7 @@
           <div *ngIf="order_details?.offer_applied" class="order-section">
             <p class="sec-desc" style="display: inline-block;">Redeemed Offers</p>
             <div class="col-md-12 list-item p-0">
-              <div class="card o-hidden mb-4 d-flex flex-row">
+              <div class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -424,7 +424,7 @@
           <div *ngIf="order_details?.coupon_list?.length" class="order-section">
             <p class="sec-desc" style="display: inline-block;">Redeemed Gift Coupons</p>
             <div class="col-md-12 list-item p-0">
-              <div *ngFor="let x of order_details.coupon_list;" class="card o-hidden mb-4 d-flex flex-row">
+              <div *ngFor="let x of order_details.coupon_list;" class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -443,7 +443,7 @@
                 (click)="onEdit('payment', paymentDetailsModal);" class="material-icons edit-icon">edit</i>
             </div>
             <div class="col-md-12 list-item p-0">
-              <div class="card o-hidden mb-4 d-flex flex-row">
+              <div class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -468,7 +468,7 @@
             <div class="col-md-12 list-item p-0">
               <!-- shipping details -->
               <div *ngIf="!order_details.shipping_method?.delivery_method"
-                class="card o-hidden mb-4 d-flex flex-column">
+                class="card mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -496,7 +496,7 @@
                 </div>
               </div>
               <!-- delivery details -->
-              <div *ngIf="order_details.shipping_method?.delivery_method" class="card o-hidden mb-4 d-flex flex-column">
+              <div *ngIf="order_details.shipping_method?.delivery_method" class="card mb-4 d-flex flex-column">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div
                     class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -556,7 +556,7 @@
                 style="float:right;" (click)="onEdit('note', orderNoteModal);" class="material-icons edit-icon">edit</i>
             </div>
             <div class="col-md-12 list-item p-0">
-              <div class="card o-hidden mb-4 d-flex flex-row">
+              <div class="card mb-4 d-flex flex-row">
                 <div class="flex-grow-1 pl-2 d-flex">
                   <div class="card-body">
                     <p *ngIf="order_details?.order_note" class="m-b-0"
@@ -2151,7 +2151,7 @@
         <div class="row">
           <div class="list-item col-md-12 mb-4">
             <p class="sec-desc">Product List</p>
-            <div *ngFor="let x of remaining_items; let i=index;" class="card o-hidden m-10 d-flex flex-row">
+            <div *ngFor="let x of remaining_items; let i=index;" class="card m-10 d-flex flex-row">
               <div class="list-thumb d-flex mtb-20">
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>

@@ -64,7 +64,7 @@
             'has-find-band': !x.quick_order_id && x.order_by=='admin',
             'has-guest-band': !x.quick_order_id && x.order_by=='guest' }" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
     
-          <div class="o-hidden d-flex flex-row">
+          <div class="d-flex flex-row">
             <div *ngIf="x.order_by!='user' || x.quick_order_id" [ngClass]="{
             'quick-band': x.quick_order_id,
             'find-band': !x.quick_order_id && x.order_by=='admin',

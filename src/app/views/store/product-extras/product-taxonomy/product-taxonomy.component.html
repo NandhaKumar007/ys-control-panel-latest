@@ -38,8 +38,8 @@
     *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
     class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-    <div class="o-hidden d-flex flex-row">
-      <div class="flex-grow-1 pl-2 d-flex">
+    <div class="d-flex flex-row">
+      <div class="flex-grow-1 d-flex">
         <div class="card-body">
           <div class="row">
             <div class="col-lg-3 d-flex align-items-center">

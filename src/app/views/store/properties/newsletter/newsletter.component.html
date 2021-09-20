@@ -29,7 +29,7 @@
           <div
             *ngFor="let x of list | fieldSearch:'email':search_bar | orderDesc:'created_on' | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
-            <div class="o-hidden ">
+            <div class="">
               <div class="">
                 <div class="card-body">
 

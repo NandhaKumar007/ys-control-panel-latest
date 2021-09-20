@@ -21,8 +21,8 @@
   <div *ngIf="customer_details?.cart_list?.length" class="row" class="list-horizontal">
 
     <div class="col-md-12 list-item">
-      <div class="card o-hidden mb-4 d-flex flex-row">
-        <div class="flex-grow-1 pl-2 d-flex">
+      <div class="card mb-4 d-flex flex-row">
+        <div class="flex-grow-1 d-flex">
           <div
             class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
             <p class="w-30 w-sm-100 m-b-0">{{ customer_details.name }}</p>
@@ -42,7 +42,7 @@
             <div *ngFor="let x of customer_details.cart_list; let i=index;" class="col-md-12 list-item data-list-card"
               [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-              <div class="o-hidden d-flex flex-row">
+              <div class="d-flex flex-row">
                 <div class="list-thumb d-flex mtb-20">
                   <img [src]="imgBaseUrl+x.image" alt="">
                 </div>

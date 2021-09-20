@@ -27,14 +27,14 @@
 
     <div class="data-list-card-wrapper">
       <div class="data-list-card-inner">
-        <div class="row">
+        <div class="row m-0">
 
           <!-- SINGLE LIST ITEM -->
           <div
             *ngFor="let x of commonService.catalog_list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-            <div class="o-hidden d-flex flex-row">
+            <div class="d-flex flex-row">
               <div *ngIf="x.image" class="list-thumb d-flex">
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>

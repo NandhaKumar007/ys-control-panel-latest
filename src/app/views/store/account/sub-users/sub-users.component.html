@@ -37,15 +37,15 @@
             *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
-            <div class="o-hidden d-flex flex-row">
-              <div class="flex-grow-1 d-flex mtb-20">
+            <div class="d-flex flex-row">
+              <div class="flex-grow-1 d-flex">
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <!-- OTHER DATA -->
-                  <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
-                  <p class="m-0 w-15 w-sm-100 m-b-0">{{x.designation}}</p>
-                  <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
-                  <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                  <p class="m-0 w-20 w-sm-100 m-b-0">{{x.name}}</p>
+                  <p class="m-0 w-20 w-sm-100 m-b-0">{{x.designation}}</p>
+                  <p class="m-0 w-20 w-sm-100 m-b-0">{{x.email}}</p>
+                  <div class="text-muted text-small w-sm-100 d-lg-block item-actions">
                     <button class="btn btn-wide blue-outline-btn w-md-100"
                       (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">
                       <span class="blue-outline-txt">Change Password</span>

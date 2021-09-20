@@ -231,8 +231,8 @@
       <div *ngIf="!productDetails && !product_list_modal_config.pageLoader" class="col-md-12">
         <div class="row"
           *ngFor="let x of product_list | orderDesc: 'rank' | gridSearch: { name: product_list_modal_config.search_input, sku: product_list_modal_config.search_input } | paginate: { itemsPerPage: 10, currentPage: page }; let i=index;">
-          <div class="col-md-12 list-item p-0">
-            <div class="card o-hidden m-10 d-flex flex-row">
+          <div class="col-md-12 list-item">
+            <div class="card mb-2 d-flex flex-row">
               <div class="list-thumb d-flex align-items-center mtb-20">
                 <img [src]="imgBaseUrl+x.image_list[0].image" alt="">
               </div>
