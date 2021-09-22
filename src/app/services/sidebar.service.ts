@@ -70,7 +70,7 @@ export class SidebarService {
     let subuserFeatures = this.commonService.subuser_features;;
     // admin
     if(this.commonService.store_details.login_type == 'admin') {
-      routePermissionList.push("dashboard", "customers", "profile");
+      routePermissionList.push("deployment", "dashboard", "customers", "profile");
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       // dashboard
       sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });

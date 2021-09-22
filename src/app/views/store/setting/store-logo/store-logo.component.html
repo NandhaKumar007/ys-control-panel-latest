@@ -21,7 +21,7 @@
             <span (click)="logoForm={};" class="material-icons item-close float-right" aria-hidden="true">close</span>
             <img [src]="logoForm.image" height="150px;" width="auto;">
           </ng-container>
-          <img *ngIf="!logoForm.img_change" [src]="storeLogo" height="150px;" width="auto;">
+          <img *ngIf="!logoForm.img_change" [src]="storeLogo" imgBroken height="150px;" width="auto;">
         </div>
         <div class="h-100 d-flex align-items-end mt-3">
           <div class="custom-file mt-2">

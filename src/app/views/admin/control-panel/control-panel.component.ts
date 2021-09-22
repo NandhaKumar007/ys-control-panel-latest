@@ -71,6 +71,9 @@ export class ControlPanelComponent implements OnInit {
           this.commonService.store_currency = result.data.currency_types[currencyIndex];
           this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
           this.commonService.updateLocalData('store_details', this.commonService.store_details);
+          // deploy stages
+          this.commonService.deploy_stages = result.data.deployDetails[0].deploy_stages;
+          this.commonService.updateLocalData('deploy_stages', this.commonService.deploy_stages);
           // ys features
           this.commonService.ys_features = result.ys_features;
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);

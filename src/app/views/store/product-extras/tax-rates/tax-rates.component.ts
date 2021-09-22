@@ -3,6 +3,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductExtrasApiService } from '../product-extras-api.service';
 import { CommonService } from '../../../../services/common.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 
 @Component({
   selector: 'app-tax-rates',
@@ -18,7 +19,10 @@ export class TaxRatesComponent implements OnInit {
   pageLoader: boolean; search_bar: string;
   state_list: any = [];
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ProductExtrasApiService, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private api: ProductExtrasApiService,
+    public commonService: CommonService, private deployApi: DeploymentService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -36,6 +40,7 @@ export class TaxRatesComponent implements OnInit {
 
   onAdd() {
     this.api.ADD_TAX(this.addForm).subscribe(result => {
+      this.updateDeployStatus();
 			if(result.status) {
 				document.getElementById('closeModal').click();
 				this.list = result.list;
@@ -67,6 +72,7 @@ export class TaxRatesComponent implements OnInit {
   // UPDATE
   onUpdate() {
 		this.api.UPDATE_TAX(this.editForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeModal').click();
 				this.list = result.list;
@@ -81,6 +87,7 @@ export class TaxRatesComponent implements OnInit {
   // DELETE
   onDelete() {
     this.api.DELETE_TAX(this.deleteForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeModal').click();
 				this.list = result.list;
@@ -90,6 +97,18 @@ export class TaxRatesComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['tax_rates']) {
+      let formData = { "deploy_stages.tax_rates": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
 }

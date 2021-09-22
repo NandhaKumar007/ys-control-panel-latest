@@ -4,6 +4,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ShippingService } from '../shipping.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 import { element } from 'protractor';
 
@@ -22,7 +23,7 @@ export class DeliveryMethodsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, private atp: AmazingTimePickerService,
-    private router: Router, private activeRoute: ActivatedRoute, public commonService:CommonService
+    private router: Router, private activeRoute: ActivatedRoute, public commonService:CommonService, private deployApi: DeploymentService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -92,6 +93,7 @@ export class DeliveryMethodsComponent implements OnInit {
   onUpdate() {
     this.btnLoader = true;
     this.api.UPDATE_DELIVERY_METHODS(this.deliveryForm).subscribe(result => {
+      this.updateDeployStatus();
       this.btnLoader = false;
       if(result.status) this.router.navigate(['/shipping/delivery-methods']);
       else {
@@ -99,6 +101,18 @@ export class DeliveryMethodsComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['shipping']) {
+      let formData = { "deploy_stages.shipping": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
   timePicker(i, j, k, paramName) {

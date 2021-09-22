@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -38,7 +39,10 @@ export class HomeLayoutComponent implements OnInit {
     { type: "category", disp_name: "Catalog" }
   ];
 
-  constructor(private router: Router, config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService, public commonService: CommonService) {
+  constructor(
+    private router: Router, config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService,
+    public commonService: CommonService, private deployApi: DeploymentService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -61,6 +65,7 @@ export class HomeLayoutComponent implements OnInit {
   onAdd() {
     if(this.addForm.type!="multiple_featured_product") delete this.addForm.multitab_list;
     this.api.ADD_LAYOUT(this.addForm).subscribe(result => {
+      this.updateDeployStatus();
 			if(result.status) {
 				document.getElementById('closeAddModal').click();
 				this.ngOnInit();
@@ -91,6 +96,7 @@ export class HomeLayoutComponent implements OnInit {
   // UPDATE
 	onUpdate() {
 		this.api.UPDATE_LAYOUT(this.editForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeEditModal').click();
         this.ngOnInit();
@@ -106,6 +112,7 @@ export class HomeLayoutComponent implements OnInit {
   onDelete() {
     this.deleteForm.btnLoader = true;
     this.api.DELETE_LAYOUT(this.deleteForm).subscribe(result => {
+      this.updateDeployStatus();
       this.deleteForm.btnLoader = false;
       if(result.status) {
         document.getElementById('closeDeleteModal').click();
@@ -116,6 +123,18 @@ export class HomeLayoutComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['home_layouts']) {
+      let formData = { "deploy_stages.home_layouts": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
   findType(type) {

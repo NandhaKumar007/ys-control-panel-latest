@@ -114,6 +114,7 @@ export class CommonService {
   payment_list: any = [];
   ys_payment_list: any = [];
   branch_list: any =[];
+  deploy_stages:any = {};
 
   page_attr: any;
   product_page_attr: any;
@@ -123,6 +124,7 @@ export class CommonService {
   scroll_y_pos: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
   socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp", "website"];
+  verNum: any = new Date().valueOf();
 
   constructor(private router: Router) {
     if(localStorage.getItem('admin_packages')) this.admin_packages = this.decryptData(localStorage.getItem("admin_packages"));
@@ -145,6 +147,7 @@ export class CommonService {
     if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));
     if(localStorage.getItem('ys_payment_list')) this.ys_payment_list = this.decryptData(localStorage.getItem("ys_payment_list"));
     if(localStorage.getItem('branch_list')) this.branch_list = this.decryptData(localStorage.getItem("branch_list"));
+    if(localStorage.getItem('deploy_stages')) this.deploy_stages = this.decryptData(localStorage.getItem("deploy_stages"));
 
     if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
 

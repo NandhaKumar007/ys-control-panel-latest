@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ShippingService } from '../shipping.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class ShippingMethodsComponent implements OnInit {
   list: any = [];
   pageLoader: boolean;
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, public commonService: CommonService) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, public commonService: CommonService, private deployApi: DeploymentService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -35,6 +36,7 @@ export class ShippingMethodsComponent implements OnInit {
   // Add
   onAdd() {
     this.api.ADD_SHIPPING(this.addForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeAddModal').click();
         this.ngOnInit();
@@ -57,6 +59,7 @@ export class ShippingMethodsComponent implements OnInit {
   }
   onUpdate() {
     this.api.UPDATE_SHIPPING(this.editForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeEditModal').click();
         this.ngOnInit();
@@ -71,6 +74,7 @@ export class ShippingMethodsComponent implements OnInit {
   // Delete
   onDelete() {
     this.api.DELETE_SHIPPING(this.deleteForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeDeleteModal').click();
         this.ngOnInit();
@@ -80,6 +84,18 @@ export class ShippingMethodsComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['shipping']) {
+      let formData = { "deploy_stages.shipping": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
 }

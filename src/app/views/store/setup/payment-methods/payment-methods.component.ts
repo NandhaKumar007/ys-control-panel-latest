@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SetupService } from '../setup.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 import { resource } from 'selenium-webdriver/http';
 
@@ -20,7 +21,10 @@ export class PaymentMethodsComponent implements OnInit {
 	payForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
 
-	constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService, public commonService: CommonService) {
+	constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,
+    public commonService: CommonService, private deployApi: DeploymentService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -44,6 +48,7 @@ export class PaymentMethodsComponent implements OnInit {
       let formData = this.structureFormData();
       formData.rank = this.maxRank+1;
       this.api.ADD_PAYMENT(formData).subscribe(result => {
+        this.updateDeployStatus();
         if(result.status) {
           document.getElementById('closeModal').click();
           this.list = result.list;
@@ -125,6 +130,7 @@ export class PaymentMethodsComponent implements OnInit {
     if(this.payForm.status=='active') this.payForm.status = 'inactive';
     else this.payForm.status = 'active';
     this.api.UPDATE_PAYMENT(this.payForm).subscribe(result => {
+      this.updateDeployStatus();
 			if(result.status) {
         document.getElementById('closeModal').click();
         this.list = result.list;
@@ -143,6 +149,7 @@ export class PaymentMethodsComponent implements OnInit {
 	onUpdate() {
     let formData = this.structureFormData();
     this.api.UPDATE_PAYMENT(formData).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeModal').click();
         this.list = result.list;
@@ -160,6 +167,7 @@ export class PaymentMethodsComponent implements OnInit {
   // DELETE
   onDelete() {
     this.api.DELETE_PAYMENT(this.deleteForm).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeModal').click();
         this.list = result.list;
@@ -221,6 +229,18 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.app_config = { upi_id: this.payForm.upi_id, merchant_name: this.payForm.merchant_name, merchant_code: this.payForm.merchant_code };
     }
     return paymentData;
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['payments']) {
+      let formData = { "deploy_stages.payments": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
 }

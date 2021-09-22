@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { StoreApiService } from '../../../../../services/store-api.service';
 import { CommonService } from '../../../../../services/common.service';
+import { DeploymentService } from '../../../deployment/deployment.service';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
@@ -23,7 +24,10 @@ export class ModifyHomeLayoutComponent implements OnInit {
   grid_details: any = {};
   shopping_assist_config: any;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService) { }
+  constructor(
+    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
+    public commonService: CommonService, private deployApi: DeploymentService
+  ) { }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
@@ -85,6 +89,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
     this.btnLoader = true;
     if(this.layoutDetails.type=='shopping_assistant') this.layoutDetails.shopping_assistant_config = this.shopping_assist_config;
     this.api.UPDATE_LAYOUT_LIST(this.layoutDetails).subscribe(result => {
+      this.updateDeployStatus();
       if(result.status) {
         this.router.navigate(["/layouts/home"]);
       }
@@ -94,6 +99,18 @@ export class ModifyHomeLayoutComponent implements OnInit {
       }
       this.btnLoader = false;
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['home_layouts']) {
+      let formData = { "deploy_stages.home_layouts": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
   fileChangeListener(devType, index, event) {

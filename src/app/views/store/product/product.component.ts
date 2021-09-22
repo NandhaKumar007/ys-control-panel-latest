@@ -7,6 +7,7 @@ import { StoreApiService } from '../../../services/store-api.service';
 import { ProductExtrasApiService } from '../product-extras/product-extras-api.service';
 import { CommonService } from '../../../services/common.service';
 import { ExcelService } from '../../../services/excel.service';
+import { DeploymentService } from '../deployment/deployment.service';
 import { GridSearchPipe } from '../../../shared/pipes/grid-search.pipe';
 import { environment } from '../../../../environments/environment';
 import jsonProducts from '../../../../assets/json/products.json';
@@ -31,7 +32,7 @@ export class ProductComponent implements OnInit {
   product_filter: any = "all"; sort_by: any = 'created_desc'; scrollPos: number = 0;
 
   constructor(
-    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService,
+    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
     private router: Router, private excelService: ExcelService, public commonService: CommonService, private extraApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -181,6 +182,7 @@ export class ProductComponent implements OnInit {
   onDelete() {
     this.btnLoader = true;
     this.storeApi.DELETE_PRODUCT({ _id: this.deleteForm._id, rank: this.deleteForm.rank }).subscribe(result => {
+      this.updateDeployStatus();
       setTimeout(() => { this.btnLoader = false; }, 500);
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -191,6 +193,18 @@ export class ProductComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['products']) {
+      let formData = { "deploy_stages.products": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
   goModifyPage(product, stepNum) {

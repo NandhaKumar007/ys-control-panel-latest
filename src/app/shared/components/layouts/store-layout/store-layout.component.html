@@ -88,15 +88,15 @@
 
         <div ngbDropdown [placement]="'bottom-right'" class="user col d-flex align-self-end">
           <div class="x-close account-circle user-account">
-            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum"
-              alt="product-logo" ngbDropdownToggle>
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum"
+            alt="product-logo" ngbDropdownToggle>
           </div>
           <div ngbDropdownMenu class="header-account-dropdown">
             <div>
               <div
                 class="inner-account-circle user-account-inner d-flex flex-column align-items-center justify-content-center">
-                <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+verNum"
-                  alt="product-logo">
+                <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum"
+                alt="product-logo">
               </div>
               <p class="m-0" align="center">
                 <b>{{ commonService.store_details?.name }}</b>

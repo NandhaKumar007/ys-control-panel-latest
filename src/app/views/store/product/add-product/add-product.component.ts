@@ -6,6 +6,7 @@ import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CustomerApiService } from '../../../../services/customer-api.service';
 import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -32,7 +33,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, private peApi: ProductExtrasApiService,
-    public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService
+    public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService, private deployApi: DeploymentService
   ) {
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
     this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
@@ -201,6 +202,7 @@ export class AddProductComponent implements OnInit {
     }
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
+      this.updateDeployStatus();
       this.btnLoader = false;
       if(result.status) {
         this.router.navigate(['/products']);
@@ -210,6 +212,18 @@ export class AddProductComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['products']) {
+      let formData = { "deploy_stages.products": true };
+      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
   /* Common Functions */
