@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DeployStagesComponent } from './deploy-stages.component';
+import { DeployDomainComponent } from './deploy-domain.component';
 
-const routes: Routes = [{ path: "", component: DeployStagesComponent }];
+const routes: Routes = [{ path: "", component: DeployDomainComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 
-export class DeployStagesRoutingModule { }
+export class DeployDomainRoutingModule { }

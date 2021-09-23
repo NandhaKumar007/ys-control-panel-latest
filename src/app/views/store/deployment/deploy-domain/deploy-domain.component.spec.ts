@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeployStagesComponent } from './deploy-stages.component';
+import { DeployDomainComponent } from './deploy-domain.component';
 
-describe('DeployStagesComponent', () => {
-  let component: DeployStagesComponent;
-  let fixture: ComponentFixture<DeployStagesComponent>;
+describe('DeployDomainComponent', () => {
+  let component: DeployDomainComponent;
+  let fixture: ComponentFixture<DeployDomainComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DeployStagesComponent ]
+      declarations: [ DeployDomainComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeployStagesComponent);
+    fixture = TestBed.createComponent(DeployDomainComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

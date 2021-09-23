@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonService } from '../../../../services/common.service';
-import { DeploymentService } from '../deployment.service';
+import { CommonService } from '../../../services/common.service';
+import { DeploymentService } from './deployment.service';
 
 @Component({
-  selector: 'app-deploy-stages',
-  templateUrl: './deploy-stages.component.html',
-  styleUrls: ['./deploy-stages.component.scss']
+  selector: 'app-deployment',
+  templateUrl: './deployment.component.html',
+  styleUrls: ['./deployment.component.scss']
 })
 
-export class DeployStagesComponent implements OnInit {
+export class DeploymentComponent implements OnInit {
 
   list: any = [
     {
@@ -22,13 +22,13 @@ export class DeployStagesComponent implements OnInit {
       keyword: "logo", heading: "Add your logo",
       sub_heading: "",
       description: "",
-      duration: "1", completed: false, redirect: "/store-logo"
+      duration: "1", completed: false, redirect: "/deployment/logo"
     },
     {
       keyword: "domain", heading: "Setup your domain",
       sub_heading: "",
       description: "Choose your domain or add your domain for your website",
-      duration: "5", completed: false, redirect: "/domain-setup"
+      duration: "5", completed: false, redirect: "/deployment/domain"
     },
     {
       keyword: "home_layouts", heading: "Design your website",
@@ -64,7 +64,7 @@ export class DeployStagesComponent implements OnInit {
       keyword: "package", heading: "Choose plan",
       sub_heading: "",
       description: "Choose the right plan for your business",
-      duration: "1", completed: false, redirect: "/pricing"
+      duration: "1", completed: false, redirect: "/deployment/plans"
     }
   ];
   pageLoader: boolean;
