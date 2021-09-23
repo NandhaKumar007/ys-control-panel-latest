@@ -74,6 +74,10 @@ export class ControlPanelComponent implements OnInit {
           // deploy stages
           this.commonService.deploy_stages = result.data.deployDetails[0].deploy_stages;
           this.commonService.updateLocalData('deploy_stages', this.commonService.deploy_stages);
+          // deploy details
+          this.commonService.deploy_details = result.data.deployDetails[0];
+          delete this.commonService.deploy_details.deploy_stages;
+          this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
           // ys features
           this.commonService.ys_features = result.ys_features;
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);

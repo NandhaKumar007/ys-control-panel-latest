@@ -88,15 +88,14 @@
 
         <div ngbDropdown [placement]="'bottom-right'" class="user col d-flex align-self-end">
           <div class="x-close account-circle user-account">
-            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum"
-            alt="product-logo" ngbDropdownToggle>
+            <img *ngIf="!commonService.deploy_stages?.logo" src="assets/images/placeholder.svg" alt="store-logo" ngbDropdownToggle>
+            <img *ngIf="commonService.deploy_stages?.logo" [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum" alt="store-logo" ngbDropdownToggle>
           </div>
           <div ngbDropdownMenu class="header-account-dropdown">
             <div>
-              <div
-                class="inner-account-circle user-account-inner d-flex flex-column align-items-center justify-content-center">
-                <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum"
-                alt="product-logo">
+              <div class="inner-account-circle user-account-inner d-flex flex-column align-items-center justify-content-center">
+                <img *ngIf="!commonService.deploy_stages?.logo" src="assets/images/placeholder.svg" alt="store-logo">
+                <img *ngIf="commonService.deploy_stages?.logo" [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/social_logo.jpg?v='+commonService.verNum" alt="store-logo">
               </div>
               <p class="m-0" align="center">
                 <b>{{ commonService.store_details?.name }}</b>

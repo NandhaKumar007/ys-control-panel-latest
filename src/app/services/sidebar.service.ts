@@ -72,6 +72,10 @@ export class SidebarService {
     if(this.commonService.store_details.login_type == 'admin') {
       routePermissionList.push("deployment", "dashboard", "customers", "profile");
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
+      // deployment
+      if(this.commonService.master_token) {
+        sidePanelList.push({ name: 'Deployment', type: 'link', icon: 'construction', state: '/deployment' });
+      }
       // dashboard
       sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
       // product extras

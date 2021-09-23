@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StoreLogoComponent } from './store-logo.component';
+import { DeployLogoComponent } from './deploy-logo.component';
 
-describe('StoreLogoComponent', () => {
-  let component: StoreLogoComponent;
-  let fixture: ComponentFixture<StoreLogoComponent>;
+describe('DeployLogoComponent', () => {
+  let component: DeployLogoComponent;
+  let fixture: ComponentFixture<DeployLogoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StoreLogoComponent ]
+      declarations: [ DeployLogoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StoreLogoComponent);
+    fixture = TestBed.createComponent(DeployLogoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

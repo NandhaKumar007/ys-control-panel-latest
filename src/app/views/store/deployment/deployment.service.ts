@@ -21,4 +21,7 @@ export class DeploymentService {
     return this.http.put<any>(environment.ws_url+'/store/deploy', x, httpOptions);
   }
 
+  UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
+  LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }
+
 }

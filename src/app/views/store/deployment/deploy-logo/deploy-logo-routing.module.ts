@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StoreLogoComponent } from './store-logo.component';
+import { DeployLogoComponent } from './deploy-logo.component';
 
-const routes: Routes = [{ path: "", component: StoreLogoComponent }];
+const routes: Routes = [{ path: "", component: DeployLogoComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 
-export class StoreLogoRoutingModule { }
+export class DeployLogoRoutingModule { }

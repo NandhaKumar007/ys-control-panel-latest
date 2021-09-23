@@ -115,6 +115,7 @@ export class CommonService {
   ys_payment_list: any = [];
   branch_list: any =[];
   deploy_stages:any = {};
+  deploy_details: any = {};
 
   page_attr: any;
   product_page_attr: any;
@@ -147,6 +148,7 @@ export class CommonService {
     if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));
     if(localStorage.getItem('ys_payment_list')) this.ys_payment_list = this.decryptData(localStorage.getItem("ys_payment_list"));
     if(localStorage.getItem('branch_list')) this.branch_list = this.decryptData(localStorage.getItem("branch_list"));
+    if(localStorage.getItem('deploy_details')) this.deploy_details = this.decryptData(localStorage.getItem("deploy_details"));
     if(localStorage.getItem('deploy_stages')) this.deploy_stages = this.decryptData(localStorage.getItem("deploy_stages"));
 
     if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
