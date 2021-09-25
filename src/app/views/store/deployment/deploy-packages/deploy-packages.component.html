@@ -1,249 +1,134 @@
-<section class="pricing-section-wrapper desktop-pricing-table">
-  <!-- head -->
-  <div class="row">
-    <div class="col-md-12">
-      <div class="text-center">
-        <h3>Pricing</h3>
-      </div>
-    </div>
-  </div>
-  <!-- pricing heads-->
-  <div class="card pricing-table-card-wrapper p-3 mt-4">
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb with-back-btn">
     <div class="row">
-      <div class="col-md-2"></div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <h4 class="text-left">Free</h4>
-            <ul>
-              <li>Good for New Businesses</li>
-              <li>Basic Operational Tools</li>
-              <li>Built for Word of Mouth Marketing</li>
-              <li>Upgradeable to Starter</li>
-            </ul>
-            <!-- <p>Good for New Businesses Basic Operational Tools Built for Word of Mouth Marketing Upgradeable
-                          to
-                          Starter </p> -->
-          </div>
-          <div class="">
-            <button class="btn btn-primary">Select Plan</button>
-          </div>
-
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <h4 class="text-left">Lite</h4>
-            <ul>
-              <li>Good for New Businesses</li>
-              <li>Basic Operational Tools</li>
-              <li>Built for Word of Mouth Marketing</li>
-              <li>Upgradeable to Starter</li>
-            </ul>
-          </div>
-
-          <div class="">
-            <button class="btn btn-primary">Select Plan</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <h4 class="text-left">Starter</h4>
-            <ul>
-              <li>Good for New Businesses</li>
-              <li>Basic Operational Tools</li>
-              <li>Built for Word of Mouth Marketing</li>
-              <li>Upgradeable to Growth</li>
-            </ul>
-          </div>
-
-          <div class="">
-            <button class="btn btn-primary">Select Plan</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <h4 class="text-left">Growth</h4>
-            <ul>
-              <li>Good for New Businesses</li>
-              <li>Basic Operational Tools</li>
-              <li>Built for Word of Mouth Marketing</li>
-              <li>Upgradeable to Premium</li>
-            </ul>
-          </div>
-
-          <div class="">
-            <button class="btn btn-primary">Select Plan</button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <h4 class="text-left">premium</h4>
-            <ul>
-              <li>Good for New Businesses</li>
-              <li>Basic Operational Tools</li>
-              <li>Built for Word of Mouth Marketing</li>
-              <li>Upgradeable to Enterprise</li>
-            </ul>
-          </div>
-
-          <div class="">
-            <button class="btn btn-primary">Select Plan</button>
-          </div>
-        </div>
+      <div class="col-md-12">
+        <h1>Plans</h1>
+        <ul>
+          <li>Choose your preferred plan</li>
+        </ul>
       </div>
     </div>
   </div>
-  <!--## pricing heads##-->
-  <!-- pricing fee-->
-  <div class="row mt-4">
-    <div class="col-md-12">
-      <div class="aside-pricing-head">
-        <h6>Pricing</h6>
-      </div>
-    </div>
-  </div>
-  <div class="card pricing-table-card-wrapper p-3">
-    <!-- pricing fee -->
-    <div class="row" *ngFor="let x of pricing_table.pricing">
-      <div class="col-md-2">
-        <p class="option-name m-0">{{x.name}}
-          <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-            help_outline
-          </i>
-        </p>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.free_plan}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.lite_plan}}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.starter_plan}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.growth_plan}}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.premium_plan}}
-            </p>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <!-- desktop -->
+  <section class="pricing-section-wrapper desktop-pricing-table">
+    <!-- pricing heads-->
+    <div class="card pricing-table-card-wrapper p-3 mt-4">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <h4 class="text-left">{{x.name}}</h4>
+              <p [innerHTML]="x.description"></p>
+            </div>
+            <div class="">
+              <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-  </div>
-
-  <!-- Top features -->
-  <div class="row mt-4">
-    <div class="col-md-12">
-      <div class="aside-pricing-head">
-        <h6>Top features</h6>
+    <!-- pricing fee-->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="aside-pricing-head">
+          <h6>Pricing</h6>
+        </div>
       </div>
     </div>
-  </div>
+    <div class="card pricing-table-card-wrapper p-3">
+      <!-- Platform Fee -->
+      <div class="row">
+        <div class="col-md-2">
+          <p class="option-name m-0">Platform Fee
+            <i class="material-icons" (click)="modalInfo='A monthly fee collected based on the plan you choose'; modalService.open(infoModal, { size: 'md', centered: true});">
+              help_outline
+            </i>
+          </p>
+        </div>
+        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Transaction Fee -->
+      <div class="row">
+        <div class="col-md-2">
+          <p class="option-name m-0">Transaction Fee
+            <i class="material-icons" (click)="modalInfo='Charges applicable on the overall monthly sale'; modalService.open(infoModal, { size: 'md', centered: true});">
+              help_outline
+            </i>
+          </p>
+        </div>
+        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].transaction_fees}}%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Transaction Waiver -->
+      <div class="row">
+        <div class="col-md-2">
+          <p class="option-name m-0">Transaction Waiver
+            <i class="material-icons" (click)="modalInfo='Transaction free sale upto a respective charges based on your plan'; modalService.open(infoModal, { size: 'md', centered: true});">
+              help_outline
+            </i>
+          </p>
+        </div>
+        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Live Fee -->
+      <div class="row">
+        <div class="col-md-2">
+          <p class="option-name m-0">Live Fee
+            <i class="material-icons" (click)="modalInfo='A charge collected to keep the service live'; modalService.open(infoModal, { size: 'md', centered: true});">
+              help_outline
+            </i>
+          </p>
+        </div>
+        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div class="card pricing-table-card-wrapper p-3">
     <!-- Top features -->
-    <div class="row" *ngFor="let x of pricing_table.top_features">
-      <div class="col-md-2">
-        <p class="option-name m-0">{{x.name}}
-          <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-            help_outline
-          </i>
-        </p>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.free_plan}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.lite_plan}}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.starter_plan}}</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.growth_plan}}
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 d-flex pricing-col p-0">
-        <div class="pricing-col-inner w-100">
-          <div class="">
-            <p class="m-0">{{x.premium_plan}}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="row mt-4">
-    <div class="col-md-12 d-flex justify-content-center align-items-center">
-      <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-    </div>
-  </div>
-
-  <!-- All Features and support-->
-  <section class="" *ngIf="view_all">
-    <!-- All Features-->
     <div class="row mt-4">
       <div class="col-md-12">
         <div class="aside-pricing-head">
-          <h6>All Features</h6>
+          <h6>Top features</h6>
         </div>
       </div>
     </div>
+
     <div class="card pricing-table-card-wrapper p-3">
-      <div class="row" *ngFor="let x of pricing_table.all_features">
+      <!-- Top features -->
+      <div class="row" *ngFor="let x of pricing_table.top_features">
         <div class="col-md-2">
           <p class="option-name m-0">{{x.name}}
-            <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
+            <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
               help_outline
             </i>
           </p>
@@ -251,301 +136,172 @@
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0" *ngIf="x.free_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.lite_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.lite_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.starter_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.starter_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.growth_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.growth_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.premium_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.premium_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <!-- Support and services-->
-    <div class="row mt-4">
-      <div class="col-md-12">
-        <div class="aside-pricing-head">
-          <h6>Support and services</h6>
-        </div>
-      </div>
-    </div>
-    <div class="card pricing-table-card-wrapper p-3">
-      <div class="row" *ngFor="let x of pricing_table.support_service">
-        <div class="col-md-2">
-          <p class="option-name m-0">{{x.name}}
-            <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
-          </p>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.free_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.lite_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.lite_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.starter_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.starter_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.growth_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.growth_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0" *ngIf="x.premium_plan == true">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.premium_plan == false">
-
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-
-</section>
-
-<section class="pricing-section-wrapper mobile-pricing-table">
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs sticky-pricing-nav">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#free">Free</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#lite">lite</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#starter">Starter</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#growth">Growth</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#premium">Premium</a>
-    </li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content p-0">
-    <!-- mobile free plan content -->
-    <div id="free" class="container tab-pane active p-0">
-      <h3>Free</h3>
-      <ul>
-        <li>Good for New Businesses</li>
-        <li>Basic Operational Tools</li>
-        <li>Built for Word of Mouth Marketing</li>
-        <li>Upgradeable to Starter</li>
-      </ul>
-      <div class="mb-2">
-        <button class="btn btn-primary w-100">Select Plan</button>
-      </div>
-      <div class="tab-inner-content pl-3 pr-3">
-        <!--mobile Pricing -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Pricing</h5>
-          </div>
-        </div>
-        <div class="row" *ngFor="let x of pricing_table.pricing">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
               <p class="m-0">{{x.free_plan}}</p>
             </div>
           </div>
         </div>
-        <!-- Mobile Top Features -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Top Features</h5>
-          </div>
-        </div>
-
-        <div class="row" *ngFor="let x of m_pricing_table.top_features">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                {{x.free_plan}}
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.free_plan == false">
+        <div class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.lite_plan}}
               </p>
             </div>
           </div>
         </div>
-
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-          </div>
-        </div>
-
-        <!-- All Features and support-->
-        <section class="" *ngIf="view_all">
-          <!-- All Features-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">All Features</h5>
+        <div class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.starter_plan}}</p>
             </div>
           </div>
-          <div class="row" *ngFor="let x of pricing_table.all_features">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
+        </div>
+        <div class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.growth_plan}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 d-flex pricing-col p-0">
+          <div class="pricing-col-inner w-100">
+            <div class="">
+              <p class="m-0">{{x.premium_plan}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <button class="btn btn-primary" type="button" (click)="viewAll=!viewAll">{{(viewAll)? 'Hide': 'View'}} All Features</button>
+      </div>
+    </div>
+
+    <!-- All Features and support-->
+    <section class="" *ngIf="viewAll">
+      <!-- All Features-->
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="aside-pricing-head">
+            <h6>All Features</h6>
+          </div>
+        </div>
+      </div>
+      <div class="card pricing-table-card-wrapper p-3">
+        <div class="row" *ngFor="let x of pricing_table.all_features">
+          <div class="col-md-2">
+            <p class="option-name m-0">{{x.name}}
+              <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                help_outline
+              </i>
+            </p>
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.free_plan == 'info'">
+                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                    error_outline
                   </i>
+                </p>
+                <p class="m-0" *ngIf="x.free_plan == true">
+                  <i class="material-icons-outlined checked">
+                    check_circle
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.free_plan == false">
+
                 </p>
               </div>
             </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.lite_plan == true">
+                  <i class="material-icons-outlined checked">
+                    check_circle
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.lite_plan == false">
+
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.starter_plan == true">
+                  <i class="material-icons-outlined checked">
+                    check_circle
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.starter_plan == false">
+
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.growth_plan == true">
+                  <i class="material-icons-outlined checked">
+                    check_circle
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.growth_plan == false">
+
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.premium_plan == true">
+                  <i class="material-icons-outlined checked">
+                    check_circle
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.premium_plan == false">
+
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Support and services-->
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="aside-pricing-head">
+            <h6>Support and services</h6>
+          </div>
+        </div>
+      </div>
+      <div class="card pricing-table-card-wrapper p-3">
+        <div class="row" *ngFor="let x of pricing_table.support_service">
+          <div class="col-md-2">
+            <p class="option-name m-0">{{x.name}}
+              <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                help_outline
+              </i>
+            </p>
+          </div>
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
+                <p class="m-0" *ngIf="x.free_plan == 'info'">
+                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                    error_outline
+                  </i>
+                </p>
                 <p class="m-0" *ngIf="x.free_plan == true">
                   <i class="material-icons-outlined checked">
                     check_circle
@@ -556,137 +312,9 @@
               </div>
             </div>
           </div>
-          <!-- Support and services-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">Support and services</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.support_service">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == false">
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
-    <!-- mobile lite plan content -->
-    <div id="lite" class="container tab-pane fade p-0">
-      <h3>Lite</h3>
-      <ul>
-        <li>Good for New Businesses</li>
-        <li>Basic Operational Tools</li>
-        <li>Built for Word of Mouth Marketing</li>
-        <li>Upgradeable to Starter</li>
-      </ul>
-      <div class="mb-2">
-        <button class="btn btn-primary w-100">Select Plan</button>
-      </div>
-      <div class="tab-inner-content pl-3 pr-3">
-        <!--mobile Pricing -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Pricing</h5>
-          </div>
-        </div>
-        <div class="row" *ngFor="let x of pricing_table.pricing">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0">{{x.lite_plan}}</p>
-            </div>
-          </div>
-        </div>
-        <!-- Mobile Top Features -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Top Features</h5>
-          </div>
-        </div>
-
-        <div class="row" *ngFor="let x of m_pricing_table.top_features">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                {{x.lite_plan}}
-              </p>
-              <p class="m-0" *ngIf="x.lite_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.lite_plan == true && x.name !== 'Staff Accounts'">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.lite_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-          </div>
-        </div>
-
-        <!-- All Features and support-->
-        <section class="" *ngIf="view_all">
-          <!-- All Features-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">All Features</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.all_features">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
                 <p class="m-0" *ngIf="x.lite_plan == true">
                   <i class="material-icons-outlined checked">
                     check_circle
@@ -697,442 +325,82 @@
               </div>
             </div>
           </div>
-          <!-- Support and services-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">Support and services</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.support_service">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.lite_plan == true && x.name !== 'Staff Accounts'">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.lite_plan == false">
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
-    <!-- mobile starter plan content -->
-    <div id="starter" class="container tab-pane fade p-0">
-      <h3>Starter</h3>
-      <ul>
-        <li>Good for New Businesses</li>
-        <li>Basic Operational Tools</li>
-        <li>Built for Word of Mouth Marketing</li>
-        <li>Upgradeable to Growth</li>
-      </ul>
-      <div class="mb-2">
-        <button class="btn btn-primary w-100">Select Plan</button>
-      </div>
-      <div class="tab-inner-content pl-3 pr-3">
-        <!--mobile Pricing -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Pricing</h5>
-          </div>
-        </div>
-        <div class="row" *ngFor="let x of pricing_table.pricing">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0">{{x.starter_plan}}</p>
-            </div>
-          </div>
-        </div>
-        <!-- Mobile Top Features -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Top Features</h5>
-          </div>
-        </div>
-
-        <div class="row" *ngFor="let x of m_pricing_table.top_features">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                {{x.starter_plan}}
-              </p>
-              <p class="m-0" *ngIf="x.starter_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.starter_plan == true && x.name !== 'Staff Accounts'">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.starter_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-          </div>
-        </div>
-
-        <!-- All Features and support-->
-        <section class="" *ngIf="view_all">
-          <!-- All Features-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">All Features</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.all_features">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
                 <p class="m-0" *ngIf="x.starter_plan == true">
                   <i class="material-icons-outlined checked">
                     check_circle
                   </i>
                 </p>
                 <p class="m-0" *ngIf="x.starter_plan == false">
+
                 </p>
               </div>
             </div>
           </div>
-          <!-- Support and services-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">Support and services</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.support_service">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.starter_plan == true && x.name !== 'Staff Accounts'">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.starter_plan == false">
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-    </div>
-    <!-- mobile growth plan content -->
-    <div id="growth" class="container tab-pane fade p-0">
-      <h3>Growth</h3>
-      <ul>
-        <li>Good for New Businesses</li>
-        <li>Basic Operational Tools</li>
-        <li>Built for Word of Mouth Marketing</li>
-        <li>Upgradeable to Premium</li>
-      </ul>
-      <div class="mb-2">
-        <button class="btn btn-primary w-100">Select Plan</button>
-      </div>
-      <div class="tab-inner-content pl-3 pr-3">
-        <!--mobile Pricing -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Pricing</h5>
-          </div>
-        </div>
-        <div class="row" *ngFor="let x of pricing_table.pricing">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0">{{x.growth_plan}}</p>
-            </div>
-          </div>
-        </div>
-        <!-- Mobile Top Features -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Top Features</h5>
-          </div>
-        </div>
-
-        <div class="row" *ngFor="let x of m_pricing_table.top_features">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                {{x.growth_plan}}
-              </p>
-              <p class="m-0" *ngIf="x.growth_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.growth_plan == true && x.name !== 'Staff Accounts'">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.growth_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-          </div>
-        </div>
-
-        <!-- All Features and support-->
-        <section class="" *ngIf="view_all">
-          <!-- All Features-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">All Features</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.all_features">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
                 <p class="m-0" *ngIf="x.growth_plan == true">
                   <i class="material-icons-outlined checked">
                     check_circle
                   </i>
                 </p>
                 <p class="m-0" *ngIf="x.growth_plan == false">
+
                 </p>
               </div>
             </div>
           </div>
-          <!-- Support and services-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">Support and services</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.support_service">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.growth_plan == true && x.name !== 'Staff Accounts'">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.growth_plan == false">
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-    </div>
-    <!-- mobile premium plan content -->
-    <div id="premium" class="container tab-pane fade p-0">
-      <h3>Premium</h3>
-      <ul>
-        <li>Good for New Businesses</li>
-        <li>Basic Operational Tools</li>
-        <li>Built for Word of Mouth Marketing</li>
-        <li>Upgradeable to Enterprise</li>
-      </ul>
-      <div class="mb-2">
-        <button class="btn btn-primary w-100">Select Plan</button>
-      </div>
-      <div class="tab-inner-content pl-3 pr-3">
-        <!--mobile Pricing -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Pricing</h5>
-          </div>
-        </div>
-        <div class="row" *ngFor="let x of pricing_table.pricing">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0">{{x.premium_plan}}</p>
-            </div>
-          </div>
-        </div>
-        <!-- Mobile Top Features -->
-        <div class="row">
-          <div class="col-12 p-0">
-            <h5 class="m_pricing_sub_head">Top Features</h5>
-          </div>
-        </div>
-
-        <div class="row" *ngFor="let x of m_pricing_table.top_features">
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner">
-              <p class="m_option-name">{{x.name}}
-                <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                  help_outline
-                </i>
-              </p>
-            </div>
-          </div>
-          <div class="col-6 p-0">
-            <div class="m_pricing-col-inner m-pricing-r">
-              <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                {{x.premium_plan}}
-              </p>
-              <p class="m-0" *ngIf="x.premium_plan == 'info'">
-                <i class="material-icons-outlined features_info" (click)="onInfoView(x, infoModal); modalService.open(infoModal, { size: 'md', centered: true});">
-                  error_outline
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.premium_plan == true && x.name !== 'Staff Accounts'">
-                <i class="material-icons-outlined checked">
-                  check_circle
-                </i>
-              </p>
-              <p class="m-0" *ngIf="x.premium_plan == false">
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-3 mb-3">
-          <div class="col-md-12 d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary" type="button" (click)="viewAll();"> View All Features</button>
-          </div>
-        </div>
-
-        <!-- All Features and support-->
-        <section class="" *ngIf="view_all">
-          <!-- All Features-->
-          <div class="row mt-4">
-            <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">All Features</h5>
-            </div>
-          </div>
-          <div class="row" *ngFor="let x of pricing_table.all_features">
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
-              </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
+          <div class="col-md-2 d-flex pricing-col p-0">
+            <div class="pricing-col-inner w-100">
+              <div class="">
                 <p class="m-0" *ngIf="x.premium_plan == true">
                   <i class="material-icons-outlined checked">
                     check_circle
                   </i>
                 </p>
                 <p class="m-0" *ngIf="x.premium_plan == false">
+
                 </p>
               </div>
             </div>
           </div>
-          <!-- Support and services-->
-          <div class="row mt-4">
+        </div>
+      </div>
+
+    </section>
+
+  </section>
+
+  <!-- mobile -->
+  <section class="pricing-section-wrapper mobile-pricing-table">
+    <ul class="nav nav-tabs sticky-pricing-nav">
+      <li *ngFor="let x of packageList; let i=index;" class="nav-item">
+        <a class="nav-link" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.name}}</a>
+      </li>
+    </ul>
+    <div *ngIf="packageList[selectedIndex]" class="p-0">
+      <div class="containerp-0">
+        <h3>{{packageList[selectedIndex].name}}</h3>
+        <p [innerHTML]="packageList[selectedIndex].description"></p>
+        <div class="mb-2">
+          <button class="btn btn-primary w-100" (click)="onSelectPlan(packageList[selectedIndex], subscriptionModal);">Select Plan</button>
+        </div>
+        <div class="pl-3 pr-3">
+          <!--mobile Pricing -->
+          <div class="row">
             <div class="col-12 p-0">
-              <h5 class="m_pricing_sub_head">Support and services</h5>
+              <h5 class="m_pricing_sub_head">Pricing</h5>
             </div>
           </div>
-          <div class="row" *ngFor="let x of pricing_table.support_service">
+          <div class="row">
+            <!-- Platform Fee -->
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="onView(x, helpModal); modalService.open(helpModal, { size: 'md', centered: true});">
+                <p class="m_option-name">Platform Fee
+                  <i class="material-icons" (click)="modalInfo='A monthly fee collected based on the plan you choose'; modalService.open(infoModal, { size: 'md', centered: true});">
                     help_outline
                   </i>
                 </p>
@@ -1140,49 +408,205 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.premium_plan == true && x.name !== 'Staff Accounts'">
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- Transaction Fee -->
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner">
+                <p class="m_option-name">Transaction Fee
+                  <i class="material-icons" (click)="modalInfo='Charges applicable on the overall monthly sale'; modalService.open(infoModal, { size: 'md', centered: true});">
+                    help_outline
+                  </i>
+                </p>
+              </div>
+            </div>
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner m-pricing-r">
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].transaction_fees}}%</p>
+              </div>
+            </div>
+            <!-- Transaction Waiver -->
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner">
+                <p class="m_option-name">Transaction Waiver
+                  <i class="material-icons" (click)="modalInfo='Transaction free sale upto a respective charges based on your plan'; modalService.open(infoModal, { size: 'md', centered: true});">
+                    help_outline
+                  </i>
+                </p>
+              </div>
+            </div>
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner m-pricing-r">
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].transaction_limit
+                  | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+              </div>
+            </div>
+            <!-- Live Fee -->
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner">
+                <p class="m_option-name">Live Fee
+                  <i class="material-icons" (click)="modalInfo='A charge collected to keep the service live'; modalService.open(infoModal, { size: 'md', centered: true});">
+                    help_outline
+                  </i>
+                </p>
+              </div>
+            </div>
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner m-pricing-r">
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Top Features -->
+          <div class="row">
+            <div class="col-12 p-0">
+              <h5 class="m_pricing_sub_head">Top Features</h5>
+            </div>
+          </div>
+
+          <div class="row" *ngFor="let x of m_pricing_table.top_features">
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner">
+                <p class="m_option-name">{{x.name}}
+                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                    help_outline
+                  </i>
+                </p>
+              </div>
+            </div>
+            <div class="col-6 p-0">
+              <div class="m_pricing-col-inner m-pricing-r">
+                <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
+                  {{x.free_plan}}
+                </p>
+                <p class="m-0" *ngIf="x.free_plan == 'info'">
+                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                    error_outline
+                  </i>
+                </p>
+                <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
                   <i class="material-icons-outlined checked">
                     check_circle
                   </i>
                 </p>
-                <p class="m-0" *ngIf="x.premium_plan == false">
+                <p class="m-0" *ngIf="x.free_plan == false">
                 </p>
               </div>
             </div>
           </div>
-        </section>
 
+          <div class="row mt-3 mb-3">
+            <div class="col-md-12 d-flex justify-content-center align-items-center">
+              <button class="btn btn-primary" type="button" (click)="viewAll=!viewAll">{{(viewAll)? 'Hide': 'View'}} All Features</button>
+            </div>
+          </div>
+
+          <!-- All Features and support-->
+          <section class="" *ngIf="viewAll">
+            <!-- All Features-->
+            <div class="row mt-4">
+              <div class="col-12 p-0">
+                <h5 class="m_pricing_sub_head">All Features</h5>
+              </div>
+            </div>
+            <div class="row" *ngFor="let x of pricing_table.all_features">
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner">
+                  <p class="m_option-name">{{x.name}}
+                    <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                      help_outline
+                    </i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner m-pricing-r">
+                  <p class="m-0" *ngIf="x.free_plan == true">
+                    <i class="material-icons-outlined checked">
+                      check_circle
+                    </i>
+                  </p>
+                  <p class="m-0" *ngIf="x.free_plan == false">
+                  </p>
+                </div>
+              </div>
+            </div>
+            <!-- Support and services-->
+            <div class="row mt-4">
+              <div class="col-12 p-0">
+                <h5 class="m_pricing_sub_head">Support and services</h5>
+              </div>
+            </div>
+            <div class="row" *ngFor="let x of pricing_table.support_service">
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner">
+                  <p class="m_option-name">{{x.name}}
+                    <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
+                      help_outline
+                    </i>
+                  </p>
+                </div>
+              </div>
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner m-pricing-r">
+                  <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
+                    <i class="material-icons-outlined checked">
+                      check_circle
+                    </i>
+                  </p>
+                  <p class="m-0" *ngIf="x.free_plan == false">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
-
     </div>
-  </div>
-
-</section>
-
-
-
-<!-- HELP MODAL -->
-<ng-template #helpModal let-modal>
-  <div class="modal-body">
-    <h6>{{feature_help}}</h6>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-      <span class="black-outline-txt">Close</span>
-    </button>
-
-  </div>
-</ng-template>
+  </section>
+</div>
 
 <!-- INFO MODAL -->
 <ng-template #infoModal let-modal>
   <div class="modal-body">
-    <h6>{{feature_info}}</h6>
+    <h6>{{modalInfo}}</h6>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Close</span>
     </button>
+  </div>
+</ng-template>
 
+<!-- Subscription Modal -->
+<ng-template #subscriptionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{packageForm.name}} Plan
+    </h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-4" *ngFor="let x of packageForm.sub_list;">
+          <label class="radio radio-success">
+            <input type="radio" [(ngModel)]="packageForm.selected_option" [value]="x.month" name="subscription">
+            <span>{{x.name}} - {{x.price | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</span>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="packageForm.errorMsg">
+      <p class="text-danger">{{ packageForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" class="btn btn-wide btn-primary">Submit</button>
   </div>
 </ng-template>

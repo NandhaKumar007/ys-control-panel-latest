@@ -114,7 +114,7 @@ export class CommonService {
   payment_list: any = [];
   ys_payment_list: any = [];
   branch_list: any =[];
-  deploy_stages:any = {};
+  deploy_stages: any = {};
   deploy_details: any = {};
 
   page_attr: any;
@@ -245,6 +245,8 @@ export class CommonService {
     this.store_currency = {};
     this.vendor_permissions = {};
     this.subuser_permissions = {};
+    this.deploy_stages = {};
+    this.deploy_details = {};
 
     this.vendor_list = [];
     this.archive_list = [];

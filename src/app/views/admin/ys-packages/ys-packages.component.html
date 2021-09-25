@@ -92,22 +92,29 @@
             <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel"
               required />
           </div>
-          <div class="col-md-6"></div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Description</label>
+            <textarea name="description" [(ngModel)]="packageForm.description" #description="ngModel" class="form-control" required></textarea>
+          </div>
           <ng-container *ngFor="let x of currency_list; let i=index;">
             <div class="col-md-12">
               <span class="primary-color"><b>{{x.base}}</b></span>
             </div>
-            <div class="col-md-4 form-group mb-3">
+            <div class="col-md-3 form-group mb-3">
+              <label>Live Fees</label>
+              <input type="text" name="live{{i}}" class="form-control" [(ngModel)]="x.live" #live="ngModel" appNumberOnly required />
+            </div>
+            <div class="col-md-3 form-group mb-3">
               <label>Cost per month</label>
               <input type="text" name="cost{{i}}" class="form-control" [(ngModel)]="x.amount" #amount="ngModel"
                 appNumberOnly required />
             </div>
-            <div class="col-md-4 form-group mb-3">
+            <div class="col-md-3 form-group mb-3">
               <label>Transaction rate(%)</label>
               <input type="text" name="rate{{i}}" class="form-control" [(ngModel)]="x.transaction_fees"
                 #transaction_fees="ngModel" appNumberOnly required />
             </div>
-            <div class="col-md-4 form-group mb-3">
+            <div class="col-md-3 form-group mb-3">
               <label>Transaction free (sales limit)</label>
               <input type="text" name="limit{{i}}" class="form-control" [(ngModel)]="x.transaction_limit"
                 #transaction_limit="ngModel" appNumberOnly required />

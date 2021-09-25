@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../../services/common.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 
 @Component({
   selector: 'app-deploy-packages',
@@ -10,9 +11,14 @@ import { CommonService } from '../../../../services/common.service';
 
 export class DeployPackagesComponent implements OnInit {
 
-  feature_help: string;
-  feature_info: string;
-  view_all: boolean = false;
+  pageLoader: boolean; packageList: any = [];
+  selectedIndex = 0; packageForm: any = {};
+  modalInfo: string; viewAll: boolean;
+  subList: any = [
+    { name: "1 month", month: 1 },
+    { name: "6 month", month: 6 },
+    { name: "1 year", month: 12 }
+  ];
   pricing_table: any = {
     "pricing": [
       {
@@ -524,7 +530,6 @@ export class DeployPackagesComponent implements OnInit {
       },
     ]
   }
-
   m_pricing_table: any = {
     "top_features": [
       {
@@ -576,23 +581,27 @@ export class DeployPackagesComponent implements OnInit {
     ],
   };
 
-
-  constructor(public modalService: NgbModal, public commonService: CommonService) { }
+  constructor(public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService) { }
 
   ngOnInit() {
-    // console.log("=>>>>>>>>", this.pricing_table);
-    // console.log("=>>>>>>>>", this.pricing_table.top_features);
+    this.pageLoader = true;
+    this.api.PACKAGE_LIST().subscribe(result => {
+      setTimeout(() => { this.pageLoader = false; }, 500);
+      if(result.status) this.packageList = result.list;
+      else console.log("response", result);
+    });
   }
 
-  viewAll() {
-    this.view_all = !this.view_all;
-    console.log('=>>>>>>>', this.view_all);
-  }
-  onView(x, modalName) {
-    this.feature_help = x.help_content;
+  onSelectPlan(x, modalName) {
+    this.packageForm = x;
+    let priceDetails = x.currency_types[this.commonService.store_currency.country_code];
+    this.subList.forEach(element => {
+      element.price = priceDetails.live;
+      element.price += (priceDetails.amount*element.month);
+    });
+    this.packageForm.sub_list = this.subList;
+    this.packageForm.selected_option = this.subList[0].month;
+    this.modalService.open(modalName);
   }
 
-  onInfoView(x, modalName) {
-    this.feature_info = x.info_content;
-  }
 }

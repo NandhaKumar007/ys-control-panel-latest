@@ -52,8 +52,8 @@ export class YsPackagesComponent implements OnInit {
     let currencyTypes: any = {};
     this.currency_list.forEach(element => {
       currencyTypes[element.base] = {
-        amount: parseFloat(element.amount), transaction_fees: parseFloat(element.transaction_fees),
-        transaction_limit: parseFloat(element.transaction_limit)
+        live: parseFloat(element.live), amount: parseFloat(element.amount),
+        transaction_fees: parseFloat(element.transaction_fees), transaction_limit: parseFloat(element.transaction_limit)
       };
     });
     if(this.formType=='add') {
@@ -91,8 +91,9 @@ export class YsPackagesComponent implements OnInit {
 
   onEdit(x, modalName) {
     this.formType = 'edit';
-    this.packageForm = { _id: x._id, name: x.name, trial_status: x.trial_status, trial_upto_in_days: x.trial_upto_in_days };
+    this.packageForm = { _id: x._id, name: x.name, description: x.description, trial_status: x.trial_status, trial_upto_in_days: x.trial_upto_in_days };
     this.currency_list.forEach(element => {
+      element.live = x.currency_types[element.base].live;
       element.amount = x.currency_types[element.base].amount;
       element.transaction_fees = x.currency_types[element.base].transaction_fees;
       element.transaction_limit = x.currency_types[element.base].transaction_limit;
