@@ -80,7 +80,8 @@ export class WebSigninComponent implements OnInit {
             }
           });
           this.sidebar.BUILD_CATEGORY_LIST();
-          this.router.navigateByUrl('/deployment');
+          this.commonService.route_permission_list.push("deployment");
+          this.router.navigate(['/deployment']);
         }
         else {
           this.commonService.signOut('/session/signin');
