@@ -62,6 +62,8 @@ const storeRoutes: Routes = [
 const routes: Routes = [
   { path: '', redirectTo: 'session/signin', pathMatch: 'full' },
   { path: '404', loadChildren: () => import('./views/others/not-found/not-found.module').then(m => m.NotFoundModule) },
+  { path: 'payment-summary/:type/:id', loadChildren: () => import('./views/others/payment-summary/payment-summary.module').then(m => m.PaymentSummaryModule) },
+  { path: 'payment-failure', loadChildren: () => import('./views/others/payment-failure/payment-failure.module').then(m => m.PaymentFailureModule) },
   { path: '', component: AuthLayoutComponent, children: sessionRoutes },
   { path: 'admin', component: AdminLayoutComponent, children: adminRoutes, canActivate: [MasterGuard] },
   { path: '', component: StoreLayoutComponent, children: storeRoutes },

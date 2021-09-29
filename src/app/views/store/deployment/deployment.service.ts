@@ -25,6 +25,11 @@ export class DeploymentService {
     return this.http.get<any>(environment.ws_url+'/store/packages', httpOptions);
   }
 
+  PACKAGE_RENEWAL(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/package_renewal', x, httpOptions);
+  }
+
   UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
   LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }
 

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../../../../environments/environment';
 import { CommonService } from '../../../../services/common.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 
@@ -19,6 +21,13 @@ export class DeployPackagesComponent implements OnInit {
     { name: "6 month", month: 6 },
     { name: "1 year", month: 12 }
   ];
+  environment: any = environment;
+  razorpayOptions: any = {
+    my_order_type: "sub_renewal",
+    customer_email: this.commonService.store_details.email,
+    customer_name: this.commonService.store_details.company_details.name,
+    customer_mobile: this.commonService.store_details.company_details.mobile
+  };
   pricing_table: any = {
     "pricing": [
       {
@@ -581,7 +590,9 @@ export class DeployPackagesComponent implements OnInit {
     ],
   };
 
-  constructor(public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService) { }
+  @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
+
+  constructor(public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService, public router: Router) { }
 
   ngOnInit() {
     this.pageLoader = true;
@@ -602,6 +613,26 @@ export class DeployPackagesComponent implements OnInit {
     this.packageForm.sub_list = this.subList;
     this.packageForm.selected_option = this.subList[0].month;
     this.modalService.open(modalName);
+  }
+
+  onSubscribe(x) {
+    this.packageForm.submit = true;
+    this.api.PACKAGE_RENEWAL({ package_id: this.packageForm._id, month: x, payment_details: { name: "Razorpay" } }).subscribe(result => {
+      if(result.status) {
+        let paymentConfig = result.data.payment_config;
+        this.razorpayOptions.my_order_id = result.data.order_id;
+        this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+        this.razorpayOptions.key = paymentConfig.key;
+        this.razorpayOptions.store_name = paymentConfig.name;
+        this.razorpayOptions.description = paymentConfig.description;
+        setTimeout(_ => this.razorpayForm.nativeElement.submit());
+      }
+      else {
+        this.packageForm.submit = false;
+        this.packageForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
 }

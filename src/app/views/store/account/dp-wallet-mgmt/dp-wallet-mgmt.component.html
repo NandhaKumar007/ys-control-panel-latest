@@ -113,6 +113,6 @@
   <input type="hidden" name="prefill[contact]" value="{{razorpayOptions.customer_mobile}}">
   <input type="hidden" name="notes[my_order_id]" value="{{razorpayOptions.my_order_id}}">
   <input type="hidden" name="notes[my_order_type]" value="{{razorpayOptions.my_order_type}}">
-  <input type="hidden" name="callback_url" value="{{environment.razorpay_dp_wallet_redirect_url}}">
+  <input type="hidden" name="callback_url" value="{{environment.razorpay_redirect_url}}">
   <input type="hidden" name="cancel_url" value="{{environment.base_url+router.url}}">
 </form>

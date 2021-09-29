@@ -50,7 +50,7 @@ export class DpWalletMgmtComponent implements OnInit {
     this.api.WALLET_TOPUP({ order_price: this.orderForm.price, order_info: "Top Up", payment_details:{ name: "Razorpay" } }).subscribe(result => {
       this.orderForm.submit = false;
       if(result.status) {
-        let paymentConfig = result.payment_config;
+        let paymentConfig = result.data.payment_config;
         this.razorpayOptions.my_order_id = result.data.order_id;
         this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
         this.razorpayOptions.key = paymentConfig.key;
