@@ -56,7 +56,7 @@
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].transaction_fees}}%</p>
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code].live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
             </div>
           </div>
         </div>
@@ -408,7 +408,7 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>
             <!-- Transaction Fee -->
@@ -423,7 +423,7 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].transaction_fees}}%</p>
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
               </div>
             </div>
             <!-- Transaction Waiver -->
@@ -438,7 +438,7 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].transaction_limit
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_limit
                   | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
               </div>
             </div>
@@ -454,7 +454,7 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code].live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>
           </div>

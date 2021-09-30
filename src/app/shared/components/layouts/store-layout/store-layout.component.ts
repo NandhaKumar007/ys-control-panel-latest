@@ -103,7 +103,8 @@ export class StoreLayoutComponent implements OnInit {
       if(Utils.isMobile()) { this.navService.sidebarState.sidenavOpen = false; }
     });
     this.nav = this.navService.getSidePanelList();
-    this.setActiveFlag();
+    if(this.nav.length) this.setActiveFlag();
+    else this.navService.sidebarState.sidenavOpen = false;
   }
 
   selectItem(item) {

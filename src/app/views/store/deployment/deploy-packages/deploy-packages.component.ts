@@ -617,7 +617,11 @@ export class DeployPackagesComponent implements OnInit {
 
   onSubscribe(x) {
     this.packageForm.submit = true;
-    this.api.PACKAGE_RENEWAL({ package_id: this.packageForm._id, month: x, payment_details: { name: "Razorpay" } }).subscribe(result => {
+    let formData = {
+      store_id: this.commonService.store_details._id, package_id: this.packageForm._id,
+      month: x, payment_details: { name: "Razorpay" }
+    };
+    this.api.PACKAGE_RENEWAL(formData).subscribe(result => {
       if(result.status) {
         let paymentConfig = result.data.payment_config;
         this.razorpayOptions.my_order_id = result.data.order_id;

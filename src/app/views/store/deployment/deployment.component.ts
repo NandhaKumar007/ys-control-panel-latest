@@ -74,7 +74,7 @@ export class DeploymentComponent implements OnInit {
 
   ngOnInit(): void {
     this.pageLoader = true;
-    this.api.DEPLOY_DETAILS().subscribe(result => {
+    this.api.DEPLOY_DETAILS(this.commonService.store_details._id).subscribe(result => {
       if(result.status) {
         let completedCount = 0;
         let deployStages = result.data.deploy_stages;

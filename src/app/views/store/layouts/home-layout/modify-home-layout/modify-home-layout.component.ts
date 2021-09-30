@@ -103,7 +103,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
 
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['home_layouts']) {
-      let formData = { "deploy_stages.home_layouts": true };
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.home_layouts": true };
       this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
         if(result.status) {
           this.commonService.deploy_stages = result.data.deploy_stages;

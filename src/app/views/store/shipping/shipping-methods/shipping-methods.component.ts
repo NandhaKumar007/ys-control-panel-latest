@@ -88,7 +88,7 @@ export class ShippingMethodsComponent implements OnInit {
 
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['shipping']) {
-      let formData = { "deploy_stages.shipping": true };
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.shipping": true };
       this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
         if(result.status) {
           this.commonService.deploy_stages = result.data.deploy_stages;

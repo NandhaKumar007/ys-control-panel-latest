@@ -233,7 +233,7 @@ export class PaymentMethodsComponent implements OnInit {
 
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['payments']) {
-      let formData = { "deploy_stages.payments": true };
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.payments": true };
       this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
         if(result.status) {
           this.commonService.deploy_stages = result.data.deploy_stages;

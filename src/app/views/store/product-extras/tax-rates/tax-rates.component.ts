@@ -101,7 +101,7 @@ export class TaxRatesComponent implements OnInit {
 
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['tax_rates']) {
-      let formData = { "deploy_stages.tax_rates": true };
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.tax_rates": true };
       this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
         if(result.status) {
           this.commonService.deploy_stages = result.data.deploy_stages;

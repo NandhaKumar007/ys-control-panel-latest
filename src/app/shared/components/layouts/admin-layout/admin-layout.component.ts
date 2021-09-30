@@ -77,7 +77,6 @@ export class AdminLayoutComponent implements OnInit {
       this.closeChildNav();
       if(Utils.isMobile()) { this.navService.sidebarState.sidenavOpen = false; }
     });
-    this.nav = this.navService.getSidePanelList();
     this.nav = [
       { name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/admin/dashboard' },
       { name: 'Currencies', type: 'link', icon: 'attach_money', state: '/admin/currencies' },

@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="main-header">
 
-      <div class="menu-toggle" (click)="toggelSidebar()">
+      <div *ngIf="nav?.length" class="menu-toggle" (click)="toggelSidebar()">
         <i class="material-icons">menu</i>
       </div>
       <div routerLink="/whats-new" class="logo cursor">

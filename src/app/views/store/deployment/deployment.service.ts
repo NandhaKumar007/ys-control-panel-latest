@@ -11,24 +11,11 @@ export class DeploymentService {
 
   constructor(private http: HttpClient) { }
 
-  DEPLOY_DETAILS() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/deploy', httpOptions);
-  }
-  UPDATE_DEPLOY_DETAILS(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/deploy', x, httpOptions);
-  }
+  DEPLOY_DETAILS(storeId) { return this.http.get<any>(environment.ws_url+'/others/deploy?store_id='+storeId); }
+  UPDATE_DEPLOY_DETAILS(x) { return this.http.put<any>(environment.ws_url+'/others/deploy', x); }
 
-  PACKAGE_LIST() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/packages', httpOptions);
-  }
-
-  PACKAGE_RENEWAL(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/package_renewal', x, httpOptions);
-  }
+  PACKAGE_LIST() { return this.http.get<any>(environment.ws_url+'/others/packages'); }
+  PACKAGE_RENEWAL(x) { return this.http.post<any>(environment.ws_url+'/others/package_renewal', x); }
 
   UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
   LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }

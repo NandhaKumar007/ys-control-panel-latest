@@ -78,7 +78,7 @@ export class DeployLogoComponent implements OnInit {
     this.colorFields.forEach(element => {
       colorForm[element.keyword] = element.color_code;
     });
-    this.api.UPDATE_DEPLOY_DETAILS({ theme_colors: colorForm }).subscribe(result => {
+    this.api.UPDATE_DEPLOY_DETAILS({ store_id: this.commonService.store_details._id, theme_colors: colorForm }).subscribe(result => {
       if(result.status) {
         this.commonService.deploy_details = result.data;
         delete this.commonService.deploy_details.deploy_stages;
@@ -91,7 +91,7 @@ export class DeployLogoComponent implements OnInit {
 
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['logo']) {
-      let formData = { "deploy_stages.logo": true };
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.logo": true };
       this.api.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
         if(result.status) {
           this.commonService.deploy_stages = result.data.deploy_stages;
