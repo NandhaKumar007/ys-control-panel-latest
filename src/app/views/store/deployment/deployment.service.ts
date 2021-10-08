@@ -20,4 +20,6 @@ export class DeploymentService {
   UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
   LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }
 
+  BILLING_DETAILS(x) { return this.http.post<any>(environment.ws_url+'/others/billing_details', x); }
+
 }

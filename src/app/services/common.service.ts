@@ -272,4 +272,18 @@ export class CommonService {
     return timeString;
   }
 
+  uninstallApp(keyword, storeDetails) {
+    let paidFeatures = storeDetails.package_details.paid_features;
+    if(paidFeatures.indexOf(keyword) == -1) {
+      let yIndex = this.ys_features.indexOf(keyword);
+      if(yIndex!=-1) {
+        this.ys_features.splice(yIndex, 1);
+        this.updateLocalData('ys_features', this.ys_features);
+        return true;
+      }
+      else return false;
+    }
+    else return false;
+  }
+
 }

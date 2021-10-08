@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="main-header">
 
-      <div *ngIf="nav?.length" class="menu-toggle" (click)="toggelSidebar()">
+      <div *ngIf="navService.sidePanelList?.length" class="menu-toggle" (click)="toggelSidebar()">
         <i class="material-icons">menu</i>
       </div>
       <div routerLink="/whats-new" class="logo cursor">
@@ -127,7 +127,7 @@
       [perfectScrollbar]="{suppressScrollX: true}">
       <ul class="navigation-left">
         <li [ngClass]="{active: item.active}" (click)="onClickChangeActiveFlag(item)" class="nav-item lvl1"
-          *ngFor="let item of nav">
+          *ngFor="let item of navService.sidePanelList">
           <div class="nav-item-hold" routerLink="{{item.state}}" (mouseenter)="closeChildNav();"
             (click)="closeChildNav();" *ngIf="item.type==='link'">
             <i class="material-icons-outlined">{{item.icon}}</i>

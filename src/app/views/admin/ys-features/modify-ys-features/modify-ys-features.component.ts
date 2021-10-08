@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AdminApiService } from '../../../../services/admin-api.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-modify-ys-features',
@@ -11,11 +12,12 @@ import { CommonService } from '../../../../services/common.service';
 
 export class ModifyYsFeaturesComponent implements OnInit {
 
-  pageLoader: boolean; featureForm: any = {};
+  pageLoader: boolean; featureForm: any = { image_list: [] };
   currencyList: any = this.commonService.currency_types.filter(obj => obj.store_base);
   discountCurrencyList: any =[];
   packageList: any = [];
   params: any = {};
+  imgBaseUrl = environment.img_baseurl;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, public commonService: CommonService) { }
 
@@ -102,6 +104,17 @@ export class ModifyYsFeaturesComponent implements OnInit {
           console.log("response", result);
         }
       });
+    }
+  }
+
+  fileChangeListener(index, event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.featureForm.image_list[index].image = (<FileReader>event.target).result;
+        this.featureForm.image_list[index].img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
     }
   }
 

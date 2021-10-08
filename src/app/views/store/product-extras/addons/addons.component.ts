@@ -97,7 +97,7 @@ export class AddonsComponent implements OnInit {
   }
 
   goModifyPage() {
-    this.commonService.page_attr = { page_no: this.page, search: this.search_bar, scroll_pos: sessionStorage.getItem("scroll_y_pos") };
+    this.commonService.page_attr = { page_no: this.page, search: this.search_bar, scroll_pos: this.commonService.scroll_y_pos };
   }
 
 }

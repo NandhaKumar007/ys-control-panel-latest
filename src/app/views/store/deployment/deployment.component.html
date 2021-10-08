@@ -35,11 +35,11 @@
     <div class="col-md-12 p-0">
       <div class="data-list-card-wrapper">
         <div class="data-list-card-inner">
-          <div *ngFor="let x of list;" class="data-list-card p-4">
+          <div *ngFor="let x of list; let i=index;" class="data-list-card p-4">
             <div class="row">
               <div class="col-md-3">
                 <div class="data-list-inner-data">
-                  <p class="m-0 data-head" [ngClass]="x.completed? 'complete-strike': ''">{{x.heading}}</p>
+                  <p class="m-0 data-head" [ngClass]="i===0? 'complete-strike': ''">{{x.heading}}</p>
                   <div *ngIf="x.sub_heading" class="hint-route-breadcrumb-wrapper">
                     <div class="hint-route-breadcrumb">
                       <span>{{x.sub_heading}}</span>
@@ -72,8 +72,10 @@
               </div>
               <div class="col-md-2">
                 <div class="data-list-inner-data d-flex justify-content-center">
-                  <button *ngIf="!x.completed" class="btn-primary w-100" type="button" [routerLink]="x.redirect">Start</button>
-                  <p *ngIf="x.completed" class="m-0 text-small w-sm-100">
+                  <button *ngIf="!x.completed || i>0" class="btn-primary w-100" type="button" [routerLink]="x.redirect">
+                    {{ (x.completed)? 'View': 'Start' }}
+                  </button>
+                  <p *ngIf="i===0 && x.completed" class="m-0 text-small w-sm-100">
                     <span class="badge badge-success">Done</span>
                   </p>
                 </div>

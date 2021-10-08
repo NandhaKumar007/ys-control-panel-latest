@@ -54,6 +54,7 @@ export class SigninComponent implements OnInit {
           created_on: result.data.created_on,
           additional_features: result.data.additional_features,
           company_details: result.data.company_details,
+          package_details: result.data.package_details,
           status: result.data.status
         };
         if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
@@ -75,6 +76,16 @@ export class SigninComponent implements OnInit {
         if(result.data.status=='active') {
           // ys features
           this.commonService.ys_features = result.ys_features;
+          // trial features
+          let trialFeatures = this.commonService.deploy_details.trial_features.filter(obj => !obj.uninstalled && obj.status=='active');
+          if(trialFeatures.length) {
+            trialFeatures.forEach(obj => {
+              let expiryDate = new Date(new Date(obj.create_on).setDate(new Date(obj.create_on).getDate() + 15)).setHours(23,59,59,999);
+              if(new Date(expiryDate) >= new Date() && this.commonService.ys_features.indexOf(obj.name)==-1) {
+                this.commonService.ys_features.push(obj.name);
+              }
+            });
+          }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
           // sub-user features
           this.commonService.subuser_features = result.subuser_features;

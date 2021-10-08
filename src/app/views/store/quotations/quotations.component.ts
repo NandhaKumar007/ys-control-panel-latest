@@ -125,7 +125,7 @@ export class QuotationsComponent implements OnInit {
   }
 
   capturePageData() {
-    this.commonService.page_attr = { page_no: this.page, search: this.search_bar, filter_form: this.filterForm, scroll_pos: sessionStorage.getItem("scroll_y_pos") };
+    this.commonService.page_attr = { page_no: this.page, search: this.search_bar, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
   }
 
 }

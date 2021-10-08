@@ -83,4 +83,26 @@ export class AccountService {
     return this.http.post<any>(environment.ws_url+'/store/courier_partner/wallet', x, httpOptions);
   }
 
+  // app store
+  YS_FEATURES_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/ys_features', httpOptions);
+  }
+  YS_FEATURE_DETAILS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/ys_features?id='+x, httpOptions);
+  }
+  YS_FEATURES_CREATE_PAYMENT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/ys_features/create_payment', x, httpOptions);
+  }
+  INSTALL_FEATURE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/ys_features/app', x, httpOptions);
+  }
+  UNINSTALL_FEATURE(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/ys_features/app', x, httpOptions);
+  }
+
 }

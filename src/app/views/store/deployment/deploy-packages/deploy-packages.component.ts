@@ -18,12 +18,13 @@ export class DeployPackagesComponent implements OnInit {
   modalInfo: string; viewAll: boolean;
   subList: any = [
     { name: "1 month", month: 1 },
+    { name: "3 month", month: 3 },
     { name: "6 month", month: 6 },
     { name: "1 year", month: 12 }
   ];
   environment: any = environment;
   razorpayOptions: any = {
-    my_order_type: "sub_renewal",
+    my_order_type: "package_renewal",
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
     customer_mobile: this.commonService.store_details.company_details.mobile
@@ -623,6 +624,7 @@ export class DeployPackagesComponent implements OnInit {
     };
     this.api.PACKAGE_RENEWAL(formData).subscribe(result => {
       if(result.status) {
+        this.updateDeployStatus();
         let paymentConfig = result.data.payment_config;
         this.razorpayOptions.my_order_id = result.data.order_id;
         this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
@@ -637,6 +639,18 @@ export class DeployPackagesComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['package']) {
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.package": true };
+      this.api.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
   }
 
 }

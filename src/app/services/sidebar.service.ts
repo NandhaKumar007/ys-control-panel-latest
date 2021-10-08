@@ -47,7 +47,8 @@ export class SidebarService {
 	public sidebarState: ISidebarState = {
 		sidenavOpen: true,
 		childnavOpen: false
-	};
+  };
+  sidePanelList: IMenuItem[] = [];
 
 	constructor(private storeApi: StoreApiService, private commonService: CommonService) { }
 
@@ -62,23 +63,19 @@ export class SidebarService {
   }
   
   getSidePanelList() {
+    this.sidePanelList = [];
     let routePermissionList = [];
     // whats new
-    let sidePanelList: IMenuItem[] = [];
-    // let sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
+    // this.sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
     let subuserFeatures = this.commonService.subuser_features;;
     // admin
     if(this.commonService.store_details.login_type=='admin') {
       if(this.commonService.store_details.status=='active') {
-        routePermissionList.push("deployment", "dashboard", "customers", "profile");
+        routePermissionList.push("dashboard", "customers", "profile");
         if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
-        // deployment
-        if(this.commonService.master_token) {
-          sidePanelList.push({ name: 'Deployment', type: 'link', icon: 'construction', state: '/deployment' });
-        }
         // dashboard
-        sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
+        this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
         // product extras
         let prodExtraList: IChildItem[] = [];
         if(ysFeatures.indexOf('measurements')!=-1) {
@@ -122,7 +119,7 @@ export class SidebarService {
           prodList.push({ icon: 'rate_review', name: 'Product Reviews', state: '/features/product-reviews', type: 'link' });
           routePermissionList.push("product_reviews");
         }
-        sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
+        this.sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
         // quotations
         if(this.commonService.store_details.type == 'quot_based' || this.commonService.store_details.type == 'quot_with_order_based') {
           let quotList: IChildItem[] = [
@@ -132,7 +129,7 @@ export class SidebarService {
             { icon: 'no_sim', name: 'Abandoned Quotes', state: '/abandoned-quotes', type: 'link' }
           ];
           if(this.commonService.store_details.type == 'quot_based') quotList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
-          sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
+          this.sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
           routePermissionList.push("quotations", "abandoned_quotes");
         }
         // orders
@@ -184,13 +181,13 @@ export class SidebarService {
               { name: 'Guest Users', state: '/guest-users', type: 'link' }
             ] });
           }
-          sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
+          this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
           routePermissionList.push("orders", "inactive_orders");
           if(ysFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
         }
         // customers
         if(this.commonService.store_details.type == 'quot_with_order_based') {
-          sidePanelList.push(
+          this.sidePanelList.push(
             { name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' },
             { name: 'Guest Users', type: 'link', icon: 'no_accounts', state: '/guest-users' }
           );
@@ -213,7 +210,7 @@ export class SidebarService {
           toolList.push({ icon: 'feedback', name: 'Feedback', state: '/feedback', type: 'link' });
           routePermissionList.push("feedback");
         }
-        if(toolList.length) sidePanelList.push({ name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle', sub: toolList });
+        if(toolList.length) this.sidePanelList.push({ name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle', sub: toolList });
         // website
         let seoList: IChildItem[] = [];
         if(ysFeatures.indexOf('advanced_seo')!=-1) {
@@ -269,7 +266,7 @@ export class SidebarService {
           routePermissionList.push("extra_pages");
         }
         webList.push({ icon: 'wysiwyg', name: 'Footer Configuration', state: '/setup/footer-content', type: 'link' });
-        sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
+        this.sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
         // store modules
         let moduleList: IChildItem[] = [];
         if(ysFeatures.indexOf('shopping_assistant')!=-1) {
@@ -304,7 +301,7 @@ export class SidebarService {
           moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-categories', type: 'link' });
           routePermissionList.push("appointment_services");
         }
-        if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
+        if(moduleList.length) this.sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
         // setting
         let settingList: IChildItem[] = [];
         if(ysFeatures.indexOf('tax_rates')!=-1) {
@@ -332,9 +329,9 @@ export class SidebarService {
           { icon: 'payment', name: 'Payment Gateway', state: '/setup/payment-gateway', type: 'link' },
           { icon: 'room_preferences', name: 'Store Settings', state: '/store-setting', type: 'link' }
         );
-        sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
+        this.sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
         // my account
-        routePermissionList.push("billing", "branches");
+        routePermissionList.push("deployment", "app_store", "billing", "branches");
         let accountList: IChildItem[] = [];
         accountList.push(
           { icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' },
@@ -348,14 +345,18 @@ export class SidebarService {
           accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
           routePermissionList.push("vendors");
         }
-        if(this.commonService.store_details.dp_wallet_status) {
+        if(ysFeatures.indexOf('courier_partners')!=-1 && this.commonService.store_details.dp_wallet_status) {
           accountList.push({ icon: 'account_balance_wallet', name: 'Wallet', state: '/account/wallet', type: 'link' });
           routePermissionList.push("dp_wallet");
         }
         if(this.commonService.master_token) {
-          accountList.push({ icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' });
+          accountList.push(
+            { icon: 'construction', name: 'Deployment', state: '/deployment', type: 'link' },
+            { icon: 'widgets', name: 'App Store', state: '/account/app-store', type: 'link' },
+            { icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' }
+          );
         }
-        sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
+        this.sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
       }
       else {
         routePermissionList.push("deployment", "billing");
@@ -365,7 +366,7 @@ export class SidebarService {
     else if(this.commonService.store_details.login_type=='subuser') {
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       if(subuserFeatures.indexOf('dashboard')!=-1) {
-        sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
+        this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
         routePermissionList.push("dashboard");
       }
       // product extras
@@ -417,7 +418,7 @@ export class SidebarService {
         prodList.push({ icon: 'rate_review', name: 'Product Reviews', state: '/features/product-reviews', type: 'link' });
         routePermissionList.push("product_reviews");
       }
-      if(prodList.length) sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
+      if(prodList.length) this.sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
       // quotations
       // if(this.commonService.store_details.type == 'quot_based' || this.commonService.store_details.type == 'quot_with_order_based') {
       //   let quotList: IChildItem[] = [
@@ -427,7 +428,7 @@ export class SidebarService {
       //     { icon: 'no_sim', name: 'Abandoned Quotes', state: '/abandoned-quotes', type: 'link' }
       //   ];
       //   if(this.commonService.store_details.type == 'quot_based') quotList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
-      //   sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
+      //   this.sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
       //   routePermissionList.push("quotations", "abandoned_quotes");
       // }
       // orders
@@ -490,12 +491,12 @@ export class SidebarService {
             routePermissionList.push("customers");
           }
         }
-        if(orderList.length) sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
+        if(orderList.length) this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
         if(ysFeatures.indexOf('manual_order')!=-1 && subuserFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
       }
       // customers
       if(this.commonService.store_details.type == 'quot_with_order_based' && subuserFeatures.indexOf('customers')!=-1) {
-        sidePanelList.push(
+        this.sidePanelList.push(
           { name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' },
           { name: 'Guest Users', type: 'link', icon: 'no_accounts', state: '/guest-users' }
         );
@@ -521,7 +522,7 @@ export class SidebarService {
         toolList.push({ icon: 'feedback', name: 'Feedback', state: '/feedback', type: 'link' });
         routePermissionList.push("feedback");
       }
-      if(toolList.length) sidePanelList.push({ name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle', sub: toolList });
+      if(toolList.length) this.sidePanelList.push({ name: 'Marketing Tools', type: 'dropDown', icon: 'build_circle', sub: toolList });
       // website
       let seoList: IChildItem[] = [];
       if(ysFeatures.indexOf('advanced_seo')!=-1 && subuserFeatures.indexOf('seo')!=-1) {
@@ -589,7 +590,7 @@ export class SidebarService {
         webList.push({ icon: 'wysiwyg', name: 'Footer Configuration', state: '/setup/footer-content', type: 'link' });
         routePermissionList.push("footer_content");
       }
-      if(webList.length) sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
+      if(webList.length) this.sidePanelList.push({ name: 'Website', type: 'dropDown', icon: 'language', sub: webList });
       // store modules
       let moduleList: IChildItem[] = [];
       if(ysFeatures.indexOf('shopping_assistant')!=-1 && subuserFeatures.indexOf('shopping_assistant')!=-1) {
@@ -624,7 +625,7 @@ export class SidebarService {
         moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-categories', type: 'link' });
         routePermissionList.push("appointment_services");
       }
-      if(moduleList.length) sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
+      if(moduleList.length) this.sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
       // setting
       let settingList: IChildItem[] = [];
       if(ysFeatures.indexOf('tax_rates')!=-1 && subuserFeatures.indexOf('tax_rates')!=-1) {
@@ -655,7 +656,7 @@ export class SidebarService {
         settingList.push({ icon: 'room_preferences', name: 'Store Settings', state: '/store-setting', type: 'link' });
         routePermissionList.push("store_setting");
       }
-      if(settingList.length) sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
+      if(settingList.length) this.sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
       // my account
       let accountList: IChildItem[] = [];
       if(subuserFeatures.indexOf('branches')!=-1) {
@@ -666,11 +667,10 @@ export class SidebarService {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
       }
-      if(accountList.length) sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
+      if(accountList.length) this.sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
     }
     this.commonService.route_permission_list = routePermissionList;
     this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);
-    return sidePanelList;
   }
 
 }

@@ -20,7 +20,6 @@ export class StoreLayoutComponent implements OnInit {
   moduleLoading: boolean;
   notifications: any[];
   selectedItem: IMenuItem;
-  nav: IMenuItem[];
   currentYear: any = (new Date()).getFullYear();
   imgBaseUrl = environment.img_baseurl;
   audio: any;
@@ -102,8 +101,8 @@ export class StoreLayoutComponent implements OnInit {
       this.closeChildNav();
       if(Utils.isMobile()) { this.navService.sidebarState.sidenavOpen = false; }
     });
-    this.nav = this.navService.getSidePanelList();
-    if(this.nav.length) this.setActiveFlag();
+    this.navService.getSidePanelList();
+    if(this.navService.sidePanelList.length) this.setActiveFlag();
     else this.navService.sidebarState.sidenavOpen = false;
   }
 
@@ -121,14 +120,14 @@ export class StoreLayoutComponent implements OnInit {
     this.setActiveMainItem(item);
   }
   setActiveMainItem(item) {
-    this.nav.forEach(item => { item.active = false; });
+    this.navService.sidePanelList.forEach(item => { item.active = false; });
     item.active = true;
   }
 
   setActiveFlag() {
     if(window && window.location) {
       const activeRoute = window.location.hash || window.location.pathname;
-      this.nav.forEach(item => {
+      this.navService.sidePanelList.forEach(item => {
         item.active = false;
         if(activeRoute.indexOf(item.state) !== -1) {
           this.selectedItem = item;
