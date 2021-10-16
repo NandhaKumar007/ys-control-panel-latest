@@ -84,7 +84,7 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="orderForm.price" (input)="orderForm.errorMsg=null;" #name="ngModel" required />
+            <input type="number" name="price" class="form-control" min="100" [(ngModel)]="orderForm.price" (input)="orderForm.errorMsg=null;" #name="ngModel" required />
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export class DeploymentService {
   UPDATE_DEPLOY_DETAILS(x) { return this.http.put<any>(environment.ws_url+'/others/deploy', x); }
 
   PACKAGE_LIST() { return this.http.get<any>(environment.ws_url+'/others/packages'); }
-  PACKAGE_RENEWAL(x) { return this.http.post<any>(environment.ws_url+'/others/package_renewal', x); }
+  PURCHASE_PLAN(x) { return this.http.post<any>(environment.ws_url+'/others/purchase_plan', x); }
 
   UPDATE_STORE_LOGO(x) { return this.http.post<any>(environment.ws_url+'/logo_upload', x); }
   LOGO_COLORS(x) { return this.http.post<any>(environment.ws_url+'/logo_colors', x); }

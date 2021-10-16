@@ -50,11 +50,13 @@
             <p>
               <b>Current Billing</b>
             </p>
-            <p>Next Billing on {{billDetails?.store_package_details?.expiry_date | date: "dd MMM y"}}</p>
+            <p>Next Payment Due {{billDetails?.store_package_details?.expiry_date | date: "dd MMM y"}}</p>
           </div>
           <div class="col-md-6">
             <div class="d-flex justify-content-end">
-              <button class="btn-primary" type="button">Make Payment</button>
+              <button type="button" [disabled]="!enablePayment" (click)="modalService.open(subscriptionModal);" class="btn btn-wide btn-primary">
+                Make Payment
+              </button>
             </div>
           </div>
         </div>
@@ -67,7 +69,7 @@
           </div>
           <div class="col-6 d-flex justify-content-end">
             <div class="d-flex justify-content-end">
-              <p>{{billDetails?.package_details.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <p>{{billDetails?.subscription_charge | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
             </div>
           </div>
           <div class="col-6">
@@ -96,7 +98,7 @@
           <div class="col-6">
             <div class="">
               <p>
-                <b>Running Total</b>
+                <b>Total</b>
               </p>
             </div>
           </div>
@@ -131,7 +133,7 @@
           <div *ngIf="billDetails?.next_package_details" class="col-md-12">
             <div class="">
               <p>
-                <b>Upgrade to Growth Plan</b>
+                <b>Upgrade to {{billDetails?.next_package_details?.name}} Plan</b>
               </p>
             </div>
             <div class="">
@@ -205,3 +207,46 @@
     </div>
   </div>
 </div>
+
+<!-- Subscription Modal -->
+<ng-template #subscriptionModal let-modal>
+  <div class="modal-header">
+    <div>
+      <h4 class="modal-title" id="modal-basic-title">Payment</h4>
+    </div>
+    <div class="d-flex">
+      <i class="material-icons" (click)="modal.dismiss('Cross click');">close</i>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-12">
+          <p>Payable amount {{(billDetails?.payable_amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="billDetails.errorMsg">
+      <p class="text-danger">{{ billDetails.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="billDetails.submit" [ladda]="billDetails.submit">{{x.btn_name}}</button>
+  </div>
+</ng-template>
+
+<!-- razorpay form -->
+<form #razorpayForm method="POST" action="{{environment.razorpay_payment_url}}">
+  <input type="hidden" name="key_id" value="{{razorpayOptions.key}}">
+  <input type="hidden" name="order_id" value="{{razorpayOptions.razorpay_order_id}}">
+  <input type="hidden" name="name" value="{{razorpayOptions.store_name}}">
+  <input type="hidden" name="description" value="{{razorpayOptions.description}}">
+  <input type="hidden" name="prefill[name]" value="{{razorpayOptions.customer_name}}">
+  <input type="hidden" name="prefill[email]" value="{{razorpayOptions.customer_email}}">
+  <input type="hidden" name="prefill[contact]" value="{{razorpayOptions.customer_mobile}}">
+  <input type="hidden" name="notes[my_order_id]" value="{{razorpayOptions.my_order_id}}">
+  <input type="hidden" name="notes[my_order_type]" value="{{razorpayOptions.my_order_type}}">
+  <input type="hidden" name="callback_url" value="{{environment.razorpay_redirect_url}}">
+  <input type="hidden" name="cancel_url" value="{{environment.base_url+router.url}}">
+</form>

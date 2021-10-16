@@ -16,15 +16,10 @@ export class DeployPackagesComponent implements OnInit {
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
   modalInfo: string; viewAll: boolean;
-  subList: any = [
-    { name: "1 month", month: 1 },
-    { name: "3 month", month: 3 },
-    { name: "6 month", month: 6 },
-    { name: "1 year", month: 12 }
-  ];
+  paymentTypes: any = []; daywiseDiscounts: any = [];
+  discAmount: number = 0; discPercent: number = 0;
   environment: any = environment;
   razorpayOptions: any = {
-    my_order_type: "package_renewal",
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
     customer_mobile: this.commonService.store_details.company_details.mobile
@@ -593,13 +588,19 @@ export class DeployPackagesComponent implements OnInit {
 
   @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
 
-  constructor(public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService, public router: Router) { }
+  constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService, public router: Router) {
+    config.backdrop = 'static'; config.keyboard = false;
+  }
 
   ngOnInit() {
     this.pageLoader = true;
     this.api.PACKAGE_LIST().subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) this.packageList = result.list;
+      if(result.status) {
+        this.packageList = result.list;
+        this.paymentTypes = result.payment_types;
+        this.daywiseDiscounts = result.daywise_discounts;
+      }
       else console.log("response", result);
     });
   }
@@ -607,12 +608,15 @@ export class DeployPackagesComponent implements OnInit {
   onSelectPlan(x, modalName) {
     this.packageForm = x;
     let priceDetails = x.currency_types[this.commonService.store_currency.country_code];
-    this.subList.forEach(element => {
-      element.price = priceDetails.live;
-      element.price += (priceDetails.amount*element.month);
-    });
-    this.packageForm.sub_list = this.subList;
-    this.packageForm.selected_option = this.subList[0].month;
+    let date1: any = new Date(new Date(this.commonService.store_details.created_on).setHours(0,0,0,0));
+    let date2: any = new Date(new Date().setHours(23,59,59,999));
+    let diffTime = Math.abs(date2 - date1);
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))-1;
+    this.discPercent = 0; this.discAmount = 0;
+    let dIndex = this.daywiseDiscounts.findIndex(obj => obj.days==diffDays);
+    if(dIndex!=-1) this.discPercent = this.daywiseDiscounts[dIndex].discount;
+    if(this.discPercent > 0) this.discAmount = Math.round(priceDetails.amount*(this.discPercent/100));
+    this.packageForm.payable_amount = priceDetails.live + priceDetails.amount;
     this.modalService.open(modalName);
   }
 
@@ -620,12 +624,13 @@ export class DeployPackagesComponent implements OnInit {
     this.packageForm.submit = true;
     let formData = {
       store_id: this.commonService.store_details._id, package_id: this.packageForm._id,
-      month: x, payment_details: { name: "Razorpay" }
+      month: 1, payment_details: { name: x.name }
     };
-    this.api.PACKAGE_RENEWAL(formData).subscribe(result => {
+    this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
         this.updateDeployStatus();
         let paymentConfig = result.data.payment_config;
+        this.razorpayOptions.my_order_type = "purchase_plan";
         this.razorpayOptions.my_order_id = result.data.order_id;
         this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
         this.razorpayOptions.key = paymentConfig.key;
