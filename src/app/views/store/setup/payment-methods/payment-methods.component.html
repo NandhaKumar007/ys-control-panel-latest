@@ -99,8 +99,7 @@
         <div class="row">
           <div *ngIf="payForm.form_type=='add'" class="col-md-6 form-group mb-3">
             <label>Payment Types</label>
-            <select name="name" class="form-control" [(ngModel)]="payForm.name"
-              (change)="(!payForm.cod_config)? payForm.cod_config={} : ''" #name="ngModel" required>
+            <select name="name" class="form-control" [(ngModel)]="payForm.name" (change)="changeOption(payForm.name);" #name="ngModel" required>
               <option value="COD">COD</option>
               <ng-container *ngIf="commonService.store_details?.country=='India'">
                 <option value="Razorpay">Razorpay</option>
@@ -115,6 +114,7 @@
                 <option value="Telr">Telr</option>
                 <option value="Foloosi">Foloosi</option>
               </ng-container>
+              <option value="Bank Payment">Bank Payment</option>
             </select>
           </div>
           <div class="col-md-6 form-group mb-3">
@@ -333,6 +333,32 @@
             <div class="col-md-6 form-group mb-3">
               <label>UPI ID</label>
               <input type="text" name="upi_id" class="form-control" [(ngModel)]="payForm.upi_id" #upi_id="ngModel" required />
+            </div>
+          </ng-container>
+          <!-- Bank Payment -->
+          <ng-container *ngIf="payForm.name=='Bank Payment'">
+            <div *ngFor="let x of payForm.field_list; let i=index;" class="col-md-6 form-group mb-3">
+              <div class="card p-2">
+                <span *ngIf="payForm.field_list.length>2" (click)="payForm.field_list.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                <label>Title</label>
+                <input type="text" name="field_title{{i}}" class="form-control" [(ngModel)]="x.title" #field_title="ngModel" required />
+                <label>Value</label>
+                <input type="text" name="field_value{{i}}" class="form-control" [(ngModel)]="x.value" #field_value="ngModel" required />
+              </div>
+            </div>
+            <div class="col-md-12 mb-1">
+              <span class="add-another x-close" (click)="payForm.field_list.push({});"><b>ADD ANOTHER FIELD</b></span>
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Description</label>
+              <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="payForm.description" #description="ngModel" required></textarea>
+            </div>
+            <div class="form-group mb-3 col-md-12">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="pay_id_field_status" [(ngModel)]="payForm.pay_id_field_status" #pay_id_field_status="ngModel">
+                <span>Enable Payment ID Field</span>
+                <span class="checkmark"></span>
+              </label>
             </div>
           </ng-container>
           <!-- mode -->

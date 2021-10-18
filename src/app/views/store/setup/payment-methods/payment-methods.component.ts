@@ -117,6 +117,11 @@ export class PaymentMethodsComponent implements OnInit {
       this.payForm.merchant_name = x.app_config.merchant_name;
       this.payForm.merchant_code = x.app_config.merchant_code;
     }
+    else if(x.name=='Bank Payment') {
+      this.payForm.field_list = x.app_config.field_list;
+      this.payForm.description = x.app_config.description;
+      this.payForm.pay_id_field_status = x.app_config.pay_id_field_status;
+    }
     this.modalService.open(modalName, {size: 'lg'});
   }
 
@@ -182,6 +187,13 @@ export class PaymentMethodsComponent implements OnInit {
 		});
   }
 
+  changeOption(x) {
+    if(!this.payForm.cod_config) this.payForm.cod_config = {};
+    if(x='Bank Payment') {
+      if(!this.payForm.field_list || !this.payForm.field_list.length) this.payForm.field_list = [{ title: "Account Name", value: "" }, { title: "Account No", value: "" }];
+    }
+  }
+
   structureFormData() {
     let paymentData: any = { name: this.payForm.name, btn_name: this.payForm.btn_name, status: this.payForm.status };
     if(this.payForm.cod_config) paymentData.cod_config = this.payForm.cod_config;
@@ -227,6 +239,9 @@ export class PaymentMethodsComponent implements OnInit {
     }
     else if(paymentData.name=='Gpay') {
       paymentData.app_config = { upi_id: this.payForm.upi_id, merchant_name: this.payForm.merchant_name, merchant_code: this.payForm.merchant_code };
+    }
+    else if(paymentData.name=='Bank Payment') {
+      paymentData.app_config = { field_list: this.payForm.field_list, description: this.payForm.description, pay_id_field_status: this.payForm.pay_id_field_status };
     }
     return paymentData;
   }
