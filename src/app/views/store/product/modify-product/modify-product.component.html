@@ -625,6 +625,10 @@
                 <label>Image Label</label>
                 <input type="text" name="title{{i}}" class="form-control" [(ngModel)]="x.title" #title="ngModel" />
               </div>
+              <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-1" align="left">
+                <label>Image Alt Name</label>
+                <input type="text" name="img_alt{{i}}" class="form-control" [(ngModel)]="x.img_alt" #img_alt="ngModel" />
+              </div>
               <div class="mt-1" *ngIf="commonService.ys_features.indexOf('variant_image_tag')!=-1 && productForm.image_tag_status" align="left">
                 <label>Image Tag</label>
                 <select name="img_tag{{i}}" class="form-control" [(ngModel)]="x.tag" #tag="ngModel">
@@ -671,17 +675,16 @@
                           <label>Image Label</label>
                           <input type="text" name="title{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.title" #title="ngModel" />
                         </div>
-                      </div>
-                    </div>
-                    <div *ngIf="x.image_list.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mb-3 z-i-0">
-                      <div class="add-another-opt w-100" (click)="x.image_list.push({});">
-                        <p>ADD ANOTHER IMAGE</p>
+                        <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-1" align="left">
+                          <label>Image Alt Name</label>
+                          <input type="text" name="v_img_alt{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.img_alt" #img_alt="ngModel" />
+                        </div>
                       </div>
                     </div>
                   </ng-container>
-                  <div *ngIf="!x.image_list?.length" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
-                    <div class="add-another-opt w-100" (click)="x.image_list=[{}];">
-                      <p>ADD NEW IMAGE</p>
+                  <div *ngIf="!x.image_list?.length || x.image_list?.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
+                    <div class="add-another-opt w-100" (click)="x.image_list.length? x.image_list.push({}): x.image_list=[{}];">
+                      <p>ADD {{ x.image_list.length? 'ANOTHER': 'NEW' }} IMAGE</p>
                     </div>
                   </div>
                 </div>

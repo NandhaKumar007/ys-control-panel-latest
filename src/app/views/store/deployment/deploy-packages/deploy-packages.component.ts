@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../../environments/environment';
 import { CommonService } from '../../../../services/common.service';
+import { SidebarService } from '../../../../services/sidebar.service';
 import { DeploymentService } from '../../deployment/deployment.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 
 @Component({
   selector: 'app-deploy-packages',
@@ -18,12 +20,14 @@ export class DeployPackagesComponent implements OnInit {
   modalInfo: string; viewAll: boolean;
   paymentTypes: any = []; daywiseDiscounts: any = [];
   discAmount: number = 0; discPercent: number = 0;
-  environment: any = environment;
+  environment: any = environment; packageRank: number = 0;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
     customer_mobile: this.commonService.store_details.company_details.mobile
   };
+  imgBaseUrl = environment.img_baseurl;
+  upgradeData: any = {};
   pricing_table: any = {
     "pricing": [
       {
@@ -588,7 +592,10 @@ export class DeployPackagesComponent implements OnInit {
 
   @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService, public router: Router) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService,
+    public router: Router, private sbService: SidebarService, private storeApi: StoreApiService
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -600,6 +607,8 @@ export class DeployPackagesComponent implements OnInit {
         this.packageList = result.list;
         this.paymentTypes = result.payment_types;
         this.daywiseDiscounts = result.daywise_discounts;
+        let pIndex = this.packageList.findIndex(obj => obj._id==this.commonService.store_details.package_details.package_id);
+        if(pIndex!=-1) this.packageRank = this.packageList[pIndex].rank;
       }
       else console.log("response", result);
     });
@@ -611,13 +620,67 @@ export class DeployPackagesComponent implements OnInit {
     let date1: any = new Date(new Date(this.commonService.store_details.created_on).setHours(0,0,0,0));
     let date2: any = new Date(new Date().setHours(23,59,59,999));
     let diffTime = Math.abs(date2 - date1);
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))-1;
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     this.discPercent = 0; this.discAmount = 0;
     let dIndex = this.daywiseDiscounts.findIndex(obj => obj.days==diffDays);
     if(dIndex!=-1) this.discPercent = this.daywiseDiscounts[dIndex].discount;
     if(this.discPercent > 0) this.discAmount = Math.round(priceDetails.amount*(this.discPercent/100));
     this.packageForm.payable_amount = priceDetails.live + priceDetails.amount;
     this.modalService.open(modalName);
+  }
+
+  onChangePlan(x, modalName) {
+    this.api.CHANGE_PLAN({ store_id: this.commonService.store_details._id, package_id: x._id, month: 1 }).subscribe(result => {
+      if(result.status) {
+        this.upgradeData = result.data;
+        this.upgradeData.package_details = x;
+        this.calcAppCharges();
+        this.modalService.open(modalName, { size: 'lg'});
+      }
+      else console.log("response", result);
+    });
+  }
+
+  onUpgrade(x) {
+    this.upgradeData.submit = true;
+    let formData = {
+      store_id: this.commonService.store_details._id, package_id: this.upgradeData.package_details._id, month: 1,
+      payment_details: { name: x.name }, upgrade_apps: this.upgradeData.upgrade_apps
+    };
+    this.api.CHANGE_PLAN(formData).subscribe(result => {
+      if(result.status) {
+        if(result.data) {
+          let paymentConfig = result.data.payment_config;
+          this.razorpayOptions.my_order_type = "plan_change";
+          this.razorpayOptions.my_order_id = result.data.order_id;
+          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+          this.razorpayOptions.key = paymentConfig.key;
+          this.razorpayOptions.store_name = paymentConfig.name;
+          this.razorpayOptions.description = paymentConfig.description;
+          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        }
+        else {
+          this.storeApi.ADV_STORE_DETAILS().subscribe(result => {
+            document.getElementById('closeModal').click();
+            if(result.status) this.sbService.resetStoreDetails(result);
+            else console.log("response", result);
+          });
+        }
+      }
+      else console.log("response", result);
+    });
+  }
+
+  calcAppCharges() {
+    this.upgradeData.credit = 0;
+    this.upgradeData.app_charges = 0;
+    this.upgradeData.payable_amount = 0;
+    this.upgradeData.upgrade_apps.forEach(element => {
+      this.upgradeData.app_charges += element.price;
+    });
+    this.upgradeData.total = this.upgradeData.subscription_charges + this.upgradeData.app_charges + this.upgradeData.transaction_charges;
+    if(this.upgradeData.total >= this.upgradeData.discount) this.upgradeData.payable_amount = this.upgradeData.total - this.upgradeData.discount;
+    else this.upgradeData.credit = this.upgradeData.discount - this.upgradeData.total;
   }
 
   onSubscribe(x) {

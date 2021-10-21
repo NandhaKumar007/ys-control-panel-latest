@@ -65,6 +65,10 @@
                   <label class="custom-file-label">Choose file</label>
                 </div>
               </div>
+              <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-3">
+                <label>Image Alt Name</label>
+                <input type="text" name="img_alt{{i}}" class="form-control" [(ngModel)]="x.img_alt" #img_alt="ngModel" />
+              </div>
             </div>
           </div>
           <!-- #Desktop Image -->
@@ -364,6 +368,10 @@
                   <input type="file" name="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/jpeg">
                   <label class="custom-file-label">Choose file</label>
                 </div>
+              </div>
+              <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-3">
+                <label>Image Alt Name</label>
+                <input type="text" name="sa_img_alt" class="form-control" [(ngModel)]="shopping_assist_config.img_alt" #img_alt="ngModel" />
               </div>
             </div>
           </div>

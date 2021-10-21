@@ -31,7 +31,10 @@
               <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
             </div>
             <div *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
-              <button class="btn btn-primary">Upgrade Plan</button>
+              <button *ngIf="x.rank===packageRank" class="btn btn-primary" disabled>Current Plan</button>
+              <button *ngIf="x.rank!=packageRank" (click)="onChangePlan(x, upgradeModal);" class="btn btn-primary">
+                {{ (packageRank < x.rank)? 'Upgrade': 'Degrade' }} Plan
+              </button>
             </div>
           </div>
         </div>
@@ -392,7 +395,10 @@
           <button class="btn btn-primary w-100" (click)="onSelectPlan(packageList[selectedIndex], subscriptionModal);">Select Plan</button>
         </div>
         <div class="mb-2" *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
-          <button class="btn btn-primary w-100">Upgrade Plan</button>
+          <button *ngIf="packageList[selectedIndex].rank===packageRank" class="btn btn-primary w-100" disabled>Current Plan</button>
+          <button *ngIf="packageList[selectedIndex].rank!=packageRank" (click)="onChangePlan(packageList[selectedIndex], upgradeModal);" class="btn btn-primary w-100">
+            {{ (packageRank < packageList[selectedIndex].rank)? 'Upgrade': 'Degrade' }} Plan
+          </button>
         </div>
         <div class="pl-3 pr-3">
           <!--mobile Pricing -->
@@ -617,6 +623,63 @@
   <div class="modal-footer">
     <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
     [disabled]="packageForm.submit" [ladda]="packageForm.submit">{{x.btn_name}}</button>
+  </div>
+</ng-template>
+
+<!-- Upgrade Modal -->
+<ng-template #upgradeModal let-modal>
+  <div class="modal-header">
+    <div>
+      <h4 class="modal-title" id="modal-basic-title">
+        {{upgradeData.package_details?.name}} Plan
+      </h4>
+    </div>
+    <div class="d-flex">
+      <i class="material-icons" id="closeModal" (click)="modal.dismiss('Cross click');">close</i>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="row">
+        <div *ngIf="upgradeData.upgrade_apps?.length" class="col-md-12">
+          <p>Paid Apps</p>
+        </div>
+        <div *ngFor="let x of upgradeData.upgrade_apps; let i=index;" class="col-md-12 d-flex">
+          <div class="card apps-card w-100 p-3 mb-4">
+            <span (click)="upgradeData.upgrade_apps.splice(i, 1); calcAppCharges();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+            <div class="app-image">
+              <span *ngIf="!x.image_list.length" class="material-icons-outlined">widgets</span>
+              <img *ngIf="x.image_list.length" [src]="imgBaseUrl+x.image_list[0].image" alt="app-icons">
+            </div>
+            <div class="app-content">
+              <h5>{{x.name}}</h5>
+              <div class="app-description">
+                <p class="two-line-txt-ellipsis" [innerHTML]="x.description"></p>
+              </div>
+              <p>{{x.price | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <p>Subscription Charges {{upgradeData.subscription_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <ng-container *ngIf="upgradeData.app_charges>0 || upgradeData.transaction_charges>0">
+            <p>App Charges: {{upgradeData.app_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+            <p>Transaction Charges: {{upgradeData.transaction_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+            <p>Total: {{upgradeData.total | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          </ng-container>
+          <p>Discount: {{upgradeData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="upgradeData.credit>0">Credit {{upgradeData.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Payable amount: {{upgradeData.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="upgradeData.errorMsg">
+      <p class="text-danger">{{ upgradeData.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngFor="let x of paymentTypes;" (click)="onUpgrade(x);" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="upgradeData.submit" [ladda]="upgradeData.submit">{{x.btn_name}}</button>
   </div>
 </ng-template>
 
