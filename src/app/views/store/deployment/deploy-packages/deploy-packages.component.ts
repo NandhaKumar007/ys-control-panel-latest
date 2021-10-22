@@ -650,14 +650,17 @@ export class DeployPackagesComponent implements OnInit {
     this.api.CHANGE_PLAN(formData).subscribe(result => {
       if(result.status) {
         if(result.data) {
-          let paymentConfig = result.data.payment_config;
-          this.razorpayOptions.my_order_type = "plan_change";
-          this.razorpayOptions.my_order_id = result.data.order_id;
-          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
-          this.razorpayOptions.key = paymentConfig.key;
-          this.razorpayOptions.store_name = paymentConfig.name;
-          this.razorpayOptions.description = paymentConfig.description;
-          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+          if(x.name=="Razorpay") {
+            let paymentConfig = result.data.payment_config;
+            this.razorpayOptions.my_order_type = "plan_change";
+            this.razorpayOptions.my_order_id = result.data.order_id;
+            this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+            this.razorpayOptions.key = paymentConfig.key;
+            this.razorpayOptions.store_name = paymentConfig.name;
+            this.razorpayOptions.description = paymentConfig.description;
+            setTimeout(_ => this.razorpayForm.nativeElement.submit());
+          }
+          else console.log("Invalid payment method");
         }
         else {
           this.storeApi.ADV_STORE_DETAILS().subscribe(result => {
@@ -692,14 +695,17 @@ export class DeployPackagesComponent implements OnInit {
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
         this.updateDeployStatus();
-        let paymentConfig = result.data.payment_config;
-        this.razorpayOptions.my_order_type = "purchase_plan";
-        this.razorpayOptions.my_order_id = result.data.order_id;
-        this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
-        this.razorpayOptions.key = paymentConfig.key;
-        this.razorpayOptions.store_name = paymentConfig.name;
-        this.razorpayOptions.description = paymentConfig.description;
-        setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        if(x.name=="Razorpay") {
+          let paymentConfig = result.data.payment_config;
+          this.razorpayOptions.my_order_type = "purchase_plan";
+          this.razorpayOptions.my_order_id = result.data.order_id;
+          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+          this.razorpayOptions.key = paymentConfig.key;
+          this.razorpayOptions.store_name = paymentConfig.name;
+          this.razorpayOptions.description = paymentConfig.description;
+          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        }
+        else console.log("Invalid payment method");
       }
       else {
         this.packageForm.submit = false;

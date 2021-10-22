@@ -28,43 +28,62 @@
           </select>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
-        </div>
-      </div>
     </div>
   </div>
 
-  <div class="apps-cards-section mt-5">
-    <div class="row">
-      <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar;" class="col-md-4 d-flex">
-        <div class="card apps-card w-100 p-3 mb-4" (click)="onSelectApp(x, alertModal);">
-          <div class="app-image">
-            <span *ngIf="!x.image_list.length" class="material-icons-outlined">widgets</span>
-            <img *ngIf="x.image_list.length" [src]="imgBaseUrl+x.image_list[0].image" alt="app-icons">
+  <div *ngIf="!notFound" class="apps-cards-section">
+    <ng-container *ngFor="let cat of commonService.feature_categories | orderAsc:'rank';">
+      <div *ngIf="cat.apps.length" class="row">
+        <div class="col-md-12 mb-3">
+          <div class="row border-btm">
+            <div class="col-6 d-flex align-items-center p-0">
+              <div class="plans-app-head">
+                <h4 class="mt-2 mb-2">{{cat.name}}</h4>
+              </div>
+            </div>
+            <div *ngIf="cat.apps.length>3" class="col-6 d-flex align-items-center justify-content-end p-0">
+              <div class="plans-app-btn-sec">
+                <button class="btn btn-primary" type="button">View all</button>
+              </div>
+            </div>
           </div>
-          <div class="app-content">
-            <h5>{{x.name}}</h5>
-            <div class="app-description">
-              <p class="two-line-txt-ellipsis" [innerHTML]="x.description"></p>
+        </div>
+
+        <div *ngFor="let x of cat.apps | orderAsc:'rank' | slice:0:3;" class="col-md-4 d-flex">
+          <div class="card apps-card w-100 p-3 mb-4" (click)="onSelectApp(x, alertModal);">
+            <div class="app-image">
+              <span *ngIf="!x.image_list.length" class="material-icons-outlined">widgets</span>
+              <img *ngIf="x.image_list.length" [src]="imgBaseUrl+x.image_list[0].image" alt="app-icons">
             </div>
-            <div *ngIf="commonService.ys_features.indexOf(x.keyword)!=-1 && !x.deploy_data" class="app-indicator">
-              <div class="app-installed">
-                <i class="material-icons">check_circle</i> App Installed
+            <div class="app-content">
+              <h5>{{x.name}}</h5>
+              <div class="app-description">
+                <p class="two-line-txt-ellipsis" [innerHTML]="x.description"></p>
               </div>
-            </div>
-            <div *ngIf="x.deploy_data?.status=='active'" class="app-indicator">
-              <div *ngIf="x.deploy_data?.paid" class="app-installed">
-                <i class="material-icons">check_circle</i> App Installed
+              <div *ngIf="commonService.ys_features.indexOf(x.keyword)!=-1 && !x.deploy_data" class="app-indicator">
+                <div class="app-installed">
+                  <i class="material-icons">check_circle</i> App Installed
+                </div>
               </div>
-              <div *ngIf="!x.deploy_data?.paid" class="app-not-installed">
-                <i class="material-icons">paid</i> Make payment
+              <div *ngIf="x.deploy_data?.status=='active'" class="app-indicator">
+                <div *ngIf="x.deploy_data?.paid" class="app-installed">
+                  <i class="material-icons">check_circle</i> App Installed
+                </div>
+                <div *ngIf="!x.deploy_data?.paid" class="app-not-installed">
+                  <i class="material-icons">paid</i> Make payment
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </ng-container>
+  </div>
+
+  <div *ngIf="notFound" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display.</p>
     </div>
   </div>
 </div>

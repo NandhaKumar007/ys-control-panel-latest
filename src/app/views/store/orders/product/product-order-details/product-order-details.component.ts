@@ -305,7 +305,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         else formData.payment_method = "DUNZO_CREDIT";
         if(this.courierForm.special_instructions) formData.drop_details[0].special_instructions = this.courierForm.special_instructions;
         // scheduled time
-        if(this.order_details.shipping_method.delivery_method) {
+        if(this.order_details.shipping_method.delivery_method && this.courierForm.schedule_status) {
           let deliveryDate = this.order_details.shipping_method.delivery_date.split("(")[0]+this.order_details.shipping_method.delivery_time.split(" - ")[0];
           let minDelayTime = new Date().setMinutes(new Date().getMinutes() + 35);
           if(new Date(deliveryDate) > new Date(minDelayTime)) {

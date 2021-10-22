@@ -13,9 +13,9 @@ import { environment } from '../../../../../environments/environment';
 
 export class AppStoreComponent implements OnInit {
 
-  pageLoader: boolean; search_bar: string;
+  pageLoader: boolean;
   selected_package: string = 'all';
-  list: any = []; package_list: any = [];
+  package_list: any = []; notFound: boolean;
   parent_list:any = []; scrollPos: number = 0;
   imgBaseUrl = environment.img_baseurl;
 
@@ -30,7 +30,6 @@ export class AppStoreComponent implements OnInit {
       delete this.commonService.page_attr;
       this.scrollPos = pageInfo.scroll_pos;
       this.selected_package = pageInfo.selected_package;
-      this.search_bar = pageInfo.search;
     }
     this.api.YS_FEATURES_LIST().subscribe(result => {
       setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos); }, 500);
@@ -50,17 +49,23 @@ export class AppStoreComponent implements OnInit {
 
   onSelectApp(x, modalName) {
     if(this.commonService.store_details.package_details && this.commonService.store_details.package_details.billing_status) {
-      this.commonService.page_attr = { selected_package: this.selected_package, search: this.search_bar, scroll_pos: this.commonService.scroll_y_pos };
+      this.commonService.page_attr = { selected_package: this.selected_package, scroll_pos: this.commonService.scroll_y_pos };
       this.router.navigate(["/account/app-store/"+x._id]);
     }
     else this.modalService.open(modalName, { centered: true });
   }
 
   onChange(x) {
+    let list = [];
     if(x!='all') {
-      this.list = this.parent_list.filter(obj => obj.linked_packages.findIndex(el => el.package_id==x)!=-1);
+      list = this.parent_list.filter(obj => obj.linked_packages.findIndex(el => el.package_id==x)!=-1);
     }
-    else this.list = this.parent_list;
+    else list = this.parent_list;
+    this.notFound = true;
+    this.commonService.feature_categories.forEach(obj => {
+      obj.apps = list.filter(el => el.category==obj.name);
+      if(obj.apps.length) this.notFound = false;
+    });
   }
 
 }

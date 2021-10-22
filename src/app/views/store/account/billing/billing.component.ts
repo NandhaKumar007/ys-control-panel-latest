@@ -58,13 +58,16 @@ export class BillingComponent implements OnInit {
     this.billDetails.submit = true;
     this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, payment_details: { name: x.name }, month: 1 }).subscribe(result => {
       if(result.status) {
-        let paymentConfig = result.data.payment_config;
-        this.razorpayOptions.my_order_id = result.data.order_id;
-        this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
-        this.razorpayOptions.key = paymentConfig.key;
-        this.razorpayOptions.store_name = paymentConfig.name;
-        this.razorpayOptions.description = paymentConfig.description;
-        setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        if(x.name=="Razorpay") {
+          let paymentConfig = result.data.payment_config;
+          this.razorpayOptions.my_order_id = result.data.order_id;
+          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+          this.razorpayOptions.key = paymentConfig.key;
+          this.razorpayOptions.store_name = paymentConfig.name;
+          this.razorpayOptions.description = paymentConfig.description;
+          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        }
+        else console.log("Invalid payment method");
       }
       else {
         this.billDetails.submit = false;

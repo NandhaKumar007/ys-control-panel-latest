@@ -966,11 +966,19 @@
                     {{addedCourier?.name}}</option>
                 </select>
               </div>
-              <div *ngIf="order_details?.selected_cp?.name=='Dunzo'" class="col-md-12 form-group mb-3 summary-section">
-                <label>Special Instructions</label>
-                <input type="text" name="special_instructions" class="form-control"
-                  [(ngModel)]="courierForm.special_instructions" />
-              </div>
+              <ng-container *ngIf="order_details?.selected_cp?.name=='Dunzo'">
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Special Instructions</label>
+                  <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                </div>
+                <div *ngIf="order_details.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
+                  <label class="checkbox checkbox-primary">
+                    <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
+                    <span>Enable Scheduled Delivery</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </ng-container>
               <ng-container *ngIf="order_details?.selected_cp?.name=='Others'">
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Courier Name</label>

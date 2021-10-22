@@ -87,13 +87,16 @@ export class AppStorePaymentsComponent implements OnInit {
     this.payForm.submit = true;
     this.api.YS_FEATURES_CREATE_PAYMENT({ payment_details: { name: x.name } }).subscribe(result => {
       if(result.status) {
-        let paymentConfig = result.data.payment_config;
-        this.razorpayOptions.my_order_id = result.data.order_id;
-        this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
-        this.razorpayOptions.key = paymentConfig.key;
-        this.razorpayOptions.store_name = paymentConfig.name;
-        this.razorpayOptions.description = paymentConfig.description;
-        setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        if(x.name=="Razorpay") {
+          let paymentConfig = result.data.payment_config;
+          this.razorpayOptions.my_order_id = result.data.order_id;
+          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+          this.razorpayOptions.key = paymentConfig.key;
+          this.razorpayOptions.store_name = paymentConfig.name;
+          this.razorpayOptions.description = paymentConfig.description;
+          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        }
+        else console.log("Invalid payment method");
       }
       else {
         this.payForm.submit = false;
