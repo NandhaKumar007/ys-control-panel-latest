@@ -7,6 +7,13 @@
   background: $data-list-body-bg;
 }
 
+.underline-link-btn {
+  text-decoration: underline;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 .home-progress-section-wrapper {
   .progress-step-count {
     .progress-step-count-inner {

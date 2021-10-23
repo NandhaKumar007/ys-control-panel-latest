@@ -8,7 +8,6 @@ import { ShippingService } from '../../../shipping/shipping.service';
 import { CustomerApiService } from '../../../../../services/customer-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-create-product-order',
@@ -42,7 +41,7 @@ export class CreateProductOrderComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: StoreApiService, private shippingApi: ShippingService,
-    public location: Location, public commonService: CommonService, private customerApi: CustomerApiService, private OrderApi: OrderService
+    public commonService: CommonService, private customerApi: CustomerApiService, private OrderApi: OrderService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -133,7 +132,7 @@ export class CreateProductOrderComponent implements OnInit {
       this.orderForm.submit = true;
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.location.back();
+        this.commonService.goBack();
       }
       else {
         console.log("response", result);

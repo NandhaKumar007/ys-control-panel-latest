@@ -7,7 +7,6 @@ import { AccountService } from '../../../account/account.service';
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-product-order-details',
@@ -39,7 +38,7 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
-    private router: Router, private api: OrderService, public commonService: CommonService, public location: Location, private extrasApi: ProductExtrasApiService
+    private router: Router, private api: OrderService, public commonService: CommonService, private extrasApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -169,7 +168,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.VENDOR_ORDER_CONFIRM({ _id: this.order_details._id, vendor_id: vendorId }).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        if(this.commonService.store_details.login_type=='vendor') this.location.back();
+        if(this.commonService.store_details.login_type=='vendor') this.commonService.goBack();
         else this.ngOnInit();
       }
       else {
@@ -438,7 +437,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         }
         else {
           document.getElementById('closeModal').click();
-          this.location.back();
+          this.commonService.goBack();
         }
       }
       else {
@@ -675,7 +674,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.PLACE_INACTIVE_ORDER(x).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.location.back();
+        this.commonService.goBack();
       }
       else {
         this.editForm.errorMsg = result.message;

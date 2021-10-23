@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
@@ -23,7 +22,7 @@ export class ModelHistoryComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private customerApi: CustomerApiService,
-    private activeRoute: ActivatedRoute, public commonService: CommonService, public location: Location) {
+    private activeRoute: ActivatedRoute, public commonService: CommonService) {
       config.backdrop = 'static'; config.keyboard = false;
     }
 

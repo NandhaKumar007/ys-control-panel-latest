@@ -5,7 +5,6 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { FeaturesApiService } from '../../features-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-review-details',
@@ -25,7 +24,7 @@ export class ReviewDetailsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute,
-    private api: FeaturesApiService, public commonService: CommonService, public location: Location
+    private api: FeaturesApiService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }

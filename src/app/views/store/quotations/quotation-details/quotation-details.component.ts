@@ -5,7 +5,6 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuotationService } from '../quotation.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-quotation-details',
@@ -31,7 +30,7 @@ export class QuotationDetailsComponent implements OnInit {
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
-    private router: Router, private api: QuotationService, public commonService: CommonService, public location: Location
+    private router: Router, private api: QuotationService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }

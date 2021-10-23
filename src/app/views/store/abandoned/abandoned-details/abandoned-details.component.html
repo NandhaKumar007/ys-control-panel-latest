@@ -9,7 +9,7 @@
         <h1>{{ router.url.includes('cart')? 'Cart': 'Quote' }} Items</h1>
       </div>
       <div class="col-md-4" align="right">
-        <button type="button" class="btn btn-wide btn-outline-secondary" (click)="location.back();">
+        <button type="button" class="btn btn-wide btn-outline-secondary" (click)="commonService.goBack();">
           Back
         </button>
       </div>

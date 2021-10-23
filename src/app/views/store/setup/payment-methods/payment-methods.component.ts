@@ -195,7 +195,7 @@ export class PaymentMethodsComponent implements OnInit {
   }
 
   structureFormData() {
-    let paymentData: any = { name: this.payForm.name, btn_name: this.payForm.btn_name, status: this.payForm.status };
+    let paymentData: any = { name: this.payForm.name, btn_name: this.payForm.btn_name, status: this.payForm.status, supported_currrencies: [] };
     if(this.payForm.cod_config) paymentData.cod_config = this.payForm.cod_config;
     if(this.payForm.sms_config) paymentData.sms_config = this.payForm.sms_config;
     if(this.payForm.form_type=='update') {
@@ -219,6 +219,7 @@ export class PaymentMethodsComponent implements OnInit {
     else if(paymentData.name=='PayPal') {
       paymentData.mode = this.payForm.mode;
       paymentData.config = { client_id: this.payForm.client_id, client_secret: this.payForm.client_secret };
+      paymentData.supported_currrencies = [ "AUD", "CHF", "EUR", "GBP", "HKD", "JPY", "MYR", "SGD", "USD" ];
     }
     else if(paymentData.name=='Square') {
       paymentData.mode = this.payForm.mode;

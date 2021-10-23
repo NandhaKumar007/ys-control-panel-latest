@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 declare const CryptoJS: any;
 declare const $: any;
@@ -133,7 +134,7 @@ export class CommonService {
   socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp", "website"];
   verNum: any = new Date().valueOf();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     if(localStorage.getItem('admin_packages')) this.admin_packages = this.decryptData(localStorage.getItem("admin_packages"));
     if(localStorage.getItem('admin_features')) this.admin_features = this.decryptData(localStorage.getItem("admin_features"));
 
@@ -161,6 +162,10 @@ export class CommonService {
 
     if(localStorage.getItem('master_token')) this.master_token = localStorage.getItem("master_token");
     if(localStorage.getItem('store_token')) this.store_token = localStorage.getItem("store_token");
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   updateLocalData(key: string, value: any) {

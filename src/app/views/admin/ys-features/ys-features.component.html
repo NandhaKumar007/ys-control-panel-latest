@@ -12,13 +12,22 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="row mb-4">
-    <div class="col-md-6">
-      <button type="button" class="btn btn-primary" routerLink="/admin/features/add">Add Feature</button>
+    <div class="col-md-3">
+      <div class="form-group">
+        <select name="type" (change)="onChange(selected_package);" [(ngModel)]="selected_package" class="form-control select-arrow">
+          <option value="all">All</option>
+          <option *ngFor="let x of commonService.feature_categories | orderAsc:'rank';" value="{{x.name}}">{{x.name}}</option>
+        </select>
+      </div>
     </div>
-    <!-- search box -->
-    <div *ngIf="list?.length" class="col-md-6">
+    <div class="col-md-6">
       <div class="form-group">
         <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="pull-right">
+        <button type="button" class="btn btn-primary" routerLink="/admin/features/add">Add Feature</button>
       </div>
     </div>
   </div>

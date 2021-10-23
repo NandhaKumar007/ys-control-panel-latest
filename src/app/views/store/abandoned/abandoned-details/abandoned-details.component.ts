@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { CustomerApiService } from '../../../../services/customer-api.service';
 import { CommonService } from '../../../../services/common.service';
@@ -20,7 +19,7 @@ export class AbandonedDetailsComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl;
 
   constructor(
-    private activeRoute: ActivatedRoute, private customerApi: CustomerApiService, public location: Location,
+    private activeRoute: ActivatedRoute, private customerApi: CustomerApiService,
     public router: Router, public commonService: CommonService) { }
 
   ngOnInit() {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { CommonService } from '../../../../services/common.service';
@@ -27,7 +26,7 @@ export class CustomerDetailsComponent implements OnInit {
   measurementList: any;
 
   constructor(
-    config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private router: Router, public location: Location,
+    config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private router: Router,
     public commonService: CommonService, private customerApi: CustomerApiService, private prodExtApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
