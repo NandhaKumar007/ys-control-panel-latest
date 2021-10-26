@@ -104,7 +104,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end">
-              <p>{{billDetails?.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <p>{{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
             </div>
           </div>
         </div>
@@ -222,7 +222,9 @@
     <div class="form-group">
       <div class="row">
         <div class="col-md-12">
-          <p>Payable amount {{(billDetails?.payable_amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Total: {{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Credit: - {{billDetails?.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Payable amount {{billDetails?.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
         </div>
       </div>
     </div>
@@ -231,8 +233,12 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
-    [disabled]="billDetails.submit" [ladda]="billDetails.submit">{{x.btn_name}}</button>
+    <ng-container *ngIf="billDetails?.payable_amount > 0">
+      <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
+      [disabled]="billDetails.submit" [ladda]="billDetails.submit">{{x.btn_name}}</button>
+    </ng-container>
+    <button *ngIf="billDetails?.payable_amount===0" type="button" (click)="onSubscribe({ name: '' });" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="billDetails.submit" [ladda]="billDetails.submit">Submit</button>
   </div>
 </ng-template>
 

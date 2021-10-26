@@ -830,7 +830,9 @@
                         </div>
                         <div class="col-6">
                           <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.shipping_address.location_url}}</p>
+                            <a [href]="order_details.shipping_address.location_url" target="_blank" class="pull-right text-right">
+                              {{order_details.shipping_address.location_url}}
+                            </a>
                           </div>
                         </div>
                       </ng-container>

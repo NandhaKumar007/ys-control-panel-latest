@@ -678,8 +678,12 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" *ngFor="let x of paymentTypes;" (click)="onUpgrade(x);" class="btn btn-wide btn-primary ladda-button m-1"
-    [disabled]="upgradeData.submit" [ladda]="upgradeData.submit">{{x.btn_name}}</button>
+    <ng-container *ngIf="upgradeData?.payable_amount > 0">
+      <button type="button" *ngFor="let x of paymentTypes;" (click)="onUpgrade(x);" class="btn btn-wide btn-primary ladda-button m-1"
+      [disabled]="upgradeData.submit" [ladda]="upgradeData.submit">{{x.btn_name}}</button>
+    </ng-container>
+    <button *ngIf="upgradeData?.payable_amount===0" type="button" (click)="onUpgrade({ name: '' });" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="upgradeData.submit" [ladda]="upgradeData.submit">Submit</button>
   </div>
 </ng-template>
 
