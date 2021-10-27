@@ -74,9 +74,9 @@ export class AccountService {
   }
 
   // deivery-partner wallet
-  WALLET_STATEMENT() {
+  WALLET_STATEMENT(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partner/wallet', httpOptions);
+    return this.http.post<any>(environment.ws_url+'/store/courier_partner/wallet_stmt', x, httpOptions);
   }
   WALLET_TOPUP(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

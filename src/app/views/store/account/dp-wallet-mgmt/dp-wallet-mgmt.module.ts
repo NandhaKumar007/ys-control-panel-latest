@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { DpWalletMgmtRoutingModule } from './dp-wallet-mgmt-routing.module';
@@ -8,7 +9,8 @@ import { DpWalletMgmtComponent } from './dp-wallet-mgmt.component';
   declarations: [DpWalletMgmtComponent],
   imports: [
     SharedModule,
-    DpWalletMgmtRoutingModule
+    DpWalletMgmtRoutingModule,
+    BsDatepickerModule.forRoot()
   ]
 })
 

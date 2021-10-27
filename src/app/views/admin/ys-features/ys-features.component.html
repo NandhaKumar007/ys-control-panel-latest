@@ -14,7 +14,7 @@
   <div class="row mb-4">
     <div class="col-md-3">
       <div class="form-group">
-        <select name="type" (change)="onChange(selected_package);" [(ngModel)]="selected_package" class="form-control select-arrow">
+        <select name="type" (change)="onChange(selected_category);" [(ngModel)]="selected_category" class="form-control select-arrow">
           <option value="all">All</option>
           <option *ngFor="let x of commonService.feature_categories | orderAsc:'rank';" value="{{x.name}}">{{x.name}}</option>
         </select>

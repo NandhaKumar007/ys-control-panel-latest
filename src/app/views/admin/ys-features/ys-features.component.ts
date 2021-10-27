@@ -17,7 +17,7 @@ export class YsFeaturesComponent implements OnInit {
   pageLoader: boolean; parent_list: any = []; list: any = [];
   deleteForm: any; search_bar: string;
   curr_end_date: any = new Date().setHours(23,59,59,999);
-  selected_package: string = 'all';
+  selected_category: string = 'all';
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -41,7 +41,7 @@ export class YsFeaturesComponent implements OnInit {
             if(new Date(obj.disc_to).setHours(23,59,59,999) < new Date().setHours(0,0,0,0)) obj.disc_expired = true;
           }
           this.parent_list.push(obj);
-          this.onChange(this.selected_package);
+          this.onChange(this.selected_category);
         });
       }
       else console.log("response", result);

@@ -19,6 +19,7 @@ export class DpWalletMgmtComponent implements OnInit {
   page = 1; pageSize = 10;
   list: any = []; orderForm: any = {};
   environment: any = environment;
+  filterForm:any = {};
   razorpayOptions: any = {
     my_order_type: "dp_wallet",
     customer_email: this.commonService.store_details.email,
@@ -34,8 +35,13 @@ export class DpWalletMgmtComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date() };
+    this.getList();
+  }
+
+  getList() {
     this.pageLoader = true;
-    this.api.WALLET_STATEMENT().subscribe(result => {
+    this.api.WALLET_STATEMENT(this.filterForm).subscribe(result => {
       if(result.status) {
         this.list = result.list;
         this.balance = result.balance;

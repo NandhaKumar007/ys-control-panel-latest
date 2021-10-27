@@ -25,6 +25,25 @@
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <input type="text" placeholder="Select Date" class="form-control" name="from_date"
+            [(ngModel)]="filterForm.from_date" (ngModelChange)="getList();" bsDatepicker
+            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <input type="text" placeholder="Select Date" class="form-control" name="to_date"
+            [(ngModel)]="filterForm.to_date" (ngModelChange)="getList();" bsDatepicker
+            [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- DATA LIST -->
   <div *ngIf="list?.length" class="list-horizontal">
     <div class="data-list-card-wrapper">
