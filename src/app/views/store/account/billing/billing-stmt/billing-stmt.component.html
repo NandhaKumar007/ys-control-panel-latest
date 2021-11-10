@@ -79,6 +79,9 @@
                     <button (click)="selectedBill=x; modalService.open(detailsModal);" class="btn btn-wide black-outline-btn w-md-100 mr-3">
                       <span class="black-outline-txt">View</span>
                     </button>
+                    <a [href]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/invoices/'+x._id+'.pdf'" target="_blank">
+                      <i class="material-icons">download</i>
+                    </a>
                   </p>
                 </div>
               </div>
@@ -120,7 +123,6 @@
             <h5 class="mb-3">Purchase Plan</h5>
             <p>{{ packageDetails[selectedBill.package_details?._id] }}: {{ selectedBill.package_details?.price | currency: selectedBill.currency_type?.country_code }}</p>
             <p *ngIf="selectedBill.package_details?.discount">Discount: {{ selectedBill.package_details?.discount | currency: selectedBill.currency_type?.country_code }}</p>
-            <p>Bill Amount: {{ selectedBill?.amount | currency: selectedBill.currency_type?.country_code }}</p>
           </ng-container>
           <!-- Purchase App -->
           <ng-container *ngIf="selectedBill.order_type=='purchase_app'">
@@ -128,7 +130,6 @@
             <p *ngFor="let x of selectedBill.app_list;">
               {{x.name}}: {{ x.price | currency: selectedBill.currency_type?.country_code }}
             </p>
-            <p>Bill Amount: {{ selectedBill?.amount | currency: selectedBill.currency_type?.country_code }}</p>
           </ng-container>
           <!-- Plan Renewal -->
           <ng-container *ngIf="selectedBill.order_type=='plan_renewal'">
@@ -140,7 +141,6 @@
             <p>Transaction Charges: {{ selectedBill.transaction_charges | currency: selectedBill.currency_type?.country_code }}</p>
             <p>Total: {{ (selectedBill.credit+selectedBill.amount) | currency: selectedBill.currency_type?.country_code }}</p>
             <p>Claimed Credits: {{ selectedBill.credit | currency: selectedBill.currency_type?.country_code }}</p>
-            <p>Bill Amount: {{ selectedBill.amount | currency: selectedBill.currency_type?.country_code }}</p>
           </ng-container>
           <!-- Plan Change -->
           <ng-container *ngIf="selectedBill.order_type=='plan_change'">
@@ -150,9 +150,13 @@
               {{x.name}}: {{ x.price | currency: selectedBill.currency_type?.country_code }}
             </p>
             <p *ngIf="selectedBill.credit">Credits: {{ selectedBill.credit | currency: selectedBill.currency_type?.country_code }}</p>
-            <p *ngIf="selectedBill.upgrade_discount">Discount: {{ selectedBill.upgrade_discount | currency: selectedBill.currency_type?.country_code }}</p>
-            <p>Bill Amount: {{ selectedBill?.amount | currency: selectedBill.currency_type?.country_code }}</p>
+            <p *ngIf="selectedBill.upgrade_discount">Discount: {{ selectedBill.upgrade_discount - selectedBill.credit | currency: selectedBill.currency_type?.country_code }}</p>
           </ng-container>
+
+          <p *ngIf="selectedBill.cgst">CGST({{selectedBill.cgst.percentage}}%) {{selectedBill.cgst.amount | currency: selectedBill.currency_type?.country_code}}</p>
+          <p *ngIf="selectedBill.sgst">SGST({{selectedBill.sgst.percentage}}%) {{selectedBill.sgst.amount | currency: selectedBill.currency_type?.country_code}}</p>
+          <p *ngIf="selectedBill.igst">IGST({{selectedBill.igst.percentage}}%) {{selectedBill.igst.amount | currency: selectedBill.currency_type?.country_code}}</p>
+          <p>Bill Amount: {{ selectedBill?.amount | currency: selectedBill.currency_type?.country_code }}</p>
         </div>
       </div>
     </div>

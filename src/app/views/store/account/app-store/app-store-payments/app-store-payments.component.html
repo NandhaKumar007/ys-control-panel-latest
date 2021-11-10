@@ -31,8 +31,17 @@
           </div>
         </div>
       </div>
+      <div class="col-md-12" *ngIf="paymentData.cgst">
+        <p class="pull-right">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+      </div>
+      <div class="col-md-12" *ngIf="paymentData.sgst">
+        <p class="pull-right">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+      </div>
+      <div class="col-md-12" *ngIf="paymentData.igst">
+        <p class="pull-right">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+      </div>
       <div class="col-md-12">
-        <p class="pull-right">Total: {{total | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+        <p class="pull-right">Payable Amount: {{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
       </div>
       <div *ngFor="let x of payment_types;" class="col-md-12">
         <button class="pull-right btn btn-primary" (click)="makePayment(x);">{{x.btn_name}}</button>

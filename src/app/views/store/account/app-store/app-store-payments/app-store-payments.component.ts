@@ -18,7 +18,7 @@ export class AppStorePaymentsComponent implements OnInit {
   pageLoader: boolean;
   list: any= []; payment_types: any = [];
   imgBaseUrl = environment.img_baseurl;
-  total: number = 0;
+  paymentData: any = {};
   environment: any = environment;
   razorpayOptions: any = {
     my_order_type: "purchase_app",
@@ -44,7 +44,7 @@ export class AppStorePaymentsComponent implements OnInit {
       if(result.status) {
         this.list = result.list;
         this.payment_types = result.payment_types;
-        this.total = result.total;
+        this.paymentData = result.data;
       }
       else console.log("response", result);
     });

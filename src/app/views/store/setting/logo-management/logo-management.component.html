@@ -1,4 +1,8 @@
-<div>
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-8">

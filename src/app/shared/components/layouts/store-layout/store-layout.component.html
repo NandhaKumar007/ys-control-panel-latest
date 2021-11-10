@@ -192,20 +192,16 @@
     </div>
     <!-- #Footer -->
 
-    <div class="module-loader" *ngIf="moduleLoading">
-      <div class="spinner spinner-bubble spinner-bubble-primary mr-3"></div>
-    </div>
-
   </div>
-
 </div>
 
 <audio controls id="audio-file" style="display: none;">
   <source src="assets/audio/notification.mp3" type="audio/mpeg">
 </audio>
 
-<div id="openNewOrderModal" (click)="modalService.open(deleteModal, { centered: true });"></div>
-<ng-template #deleteModal let-modal>
+<!-- New Order Modal -->
+<div id="openNewOrderModal" (click)="modalService.open(newOrderModal, { centered: true });"></div>
+<ng-template #newOrderModal let-modal>
   <div id="newOrderModalContent" class="modal-body">
     <p><strong>You have a new order</strong></p>
   </div>
@@ -215,6 +211,22 @@
     </button>
     <button (click)="stopAudio(); modal.dismiss('Cross click');" routerLink="/orders/product/live/all" type="button" class="btn btn-wide orng-outline-btn">
       <span class="orng-outline-txt">Go to live order</span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- Deploy Alert Modal -->
+<div id="openDeployAlertModal" (click)="modalService.open(deployAlertModal, { centered: true });"></div>
+<ng-template #deployAlertModal let-modal>
+  <div class="modal-body">
+    <p><strong>{{commonService.alert_popup_content?.content}}</strong></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Close</span>
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click');" routerLink="{{commonService.alert_popup_content?.btn_link}}" class="btn btn-wide orng-outline-btn">
+      <span class="black-outline-txt">{{commonService.alert_popup_content?.btn_name}}</span>
     </button>
   </div>
 </ng-template>

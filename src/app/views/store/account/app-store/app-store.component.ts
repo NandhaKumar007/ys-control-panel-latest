@@ -59,7 +59,7 @@ export class AppStoreComponent implements OnInit {
     }
   }
 
-  onSelectApp(x, modalName) {
+  onSelectApp(x) {
     if(this.commonService.store_details.package_details && this.commonService.store_details.package_details.billing_status) {
       this.commonService.page_attr = {
         selected_package: this.selected_package, scroll_pos: this.commonService.scroll_y_pos,
@@ -67,7 +67,7 @@ export class AppStoreComponent implements OnInit {
       };
       this.router.navigate(["/account/app-store/"+x._id]);
     }
-    else this.modalService.open(modalName, { centered: true });
+    else this.commonService.openDeployAlertModal('plan', 'Please choose the right plan for your business before use the apps');
   }
 
   viewAll(x) {

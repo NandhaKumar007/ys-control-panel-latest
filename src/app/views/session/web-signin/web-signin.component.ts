@@ -37,15 +37,19 @@ export class WebSigninComponent implements OnInit {
             country: result.data.country,
             created_on: result.data.created_on,
             additional_features: result.data.additional_features,
-            company_details: {}
+            company_details: result.data.company_details,
+            package_details: result.data.package_details,
+            status: result.data.status
           };
           if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
-          if(result.data.company_details) this.commonService.store_details.company_details = result.data.company_details;
           if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
           let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
           this.commonService.store_currency = result.data.currency_types[currencyIndex];
           this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
           this.commonService.updateLocalData('store_details', this.commonService.store_details);
+          // payment list
+          this.commonService.payment_list = result.data.payment_types;
+          this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
           // deploy stages
           this.commonService.deploy_stages = result.data.deployDetails[0].deploy_stages;
           this.commonService.updateLocalData('deploy_stages', this.commonService.deploy_stages);
@@ -55,13 +59,20 @@ export class WebSigninComponent implements OnInit {
           this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
           // ys features
           this.commonService.ys_features = result.ys_features;
+          // trial features
+          let trialFeatures = this.commonService.deploy_details.trial_features.filter(obj => !obj.uninstalled && obj.status=='active');
+          if(trialFeatures.length) {
+            trialFeatures.forEach(obj => {
+              let expiryDate = new Date(new Date(obj.create_on).setDate(new Date(obj.create_on).getDate() + 15)).setHours(23,59,59,999);
+              if(new Date(expiryDate) >= new Date() && this.commonService.ys_features.indexOf(obj.name)==-1) {
+                this.commonService.ys_features.push(obj.name);
+              }
+            });
+          }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
           // sub-user features
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
-          // payment list
-          this.commonService.payment_list = result.data.payment_types;
-          this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
           // store features
           this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
           this.commonService.updateLocalData('user_list', this.commonService.user_list);

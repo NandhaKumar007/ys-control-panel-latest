@@ -18,18 +18,24 @@ export class ExtraPagesEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {
-      this.params = params;
-      if(this.params.id) {
+      if(!this.commonService.deploy_stages.domain) {
         this.pageLoader = true;
-        this.api.EXTRA_PAGE_DETAILS(this.params.id).subscribe(result => {
-          setTimeout(() => { this.pageLoader = false; }, 500);
-          if(result.status) {
-            this.formData = result.data;
-            delete this.formData.seo_status;
-            delete this.formData.seo_details;
-          }
-          else console.log("response", result);
-        });
+        this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the extra pages');
+      }
+      else {
+        this.params = params;
+        if(this.params.id) {
+          this.pageLoader = true;
+          this.api.EXTRA_PAGE_DETAILS(this.params.id).subscribe(result => {
+            setTimeout(() => { this.pageLoader = false; }, 500);
+            if(result.status) {
+              this.formData = result.data;
+              delete this.formData.seo_status;
+              delete this.formData.seo_details;
+            }
+            else console.log("response", result);
+          });
+        }
       }
     });
   }

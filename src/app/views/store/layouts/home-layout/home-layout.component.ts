@@ -62,6 +62,15 @@ export class HomeLayoutComponent implements OnInit {
     });
   }
 
+  onAddNewSgment(modalName) {
+    if(!this.commonService.deploy_stages.logo)
+      this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before add new segment');
+    else {
+      this.addForm = { layout_list: [{}], rank: this.maxRank+1 };
+      this.modalService.open(modalName, {size: 'lg'});
+    }
+  }
+
   onAdd() {
     if(this.addForm.type!="multiple_featured_product") delete this.addForm.multitab_list;
     this.api.ADD_LAYOUT(this.addForm).subscribe(result => {

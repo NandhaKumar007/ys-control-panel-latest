@@ -608,11 +608,12 @@
     <div class="form-group">
       <div class="row">
         <div class="col-md-12">
-          <ng-container *ngIf="discAmount>0">
-            <p>Subscription Charges {{packageForm.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-            <p>Discount({{discPercent}}%) {{discAmount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          </ng-container>
-          <p>Payable amount {{(packageForm.payable_amount - discAmount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Subscription Charges {{packageForm.subscription_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="discAmount>0">Discount({{discPercent}}%) {{discAmount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="packageForm.sgst">SGST({{taxConfig.sgst}}%) {{packageForm.sgst | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="packageForm.cgst">CGST({{taxConfig.cgst}}%) {{packageForm.cgst | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="packageForm.igst">IGST({{taxConfig.igst}}%) {{packageForm.igst | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Payable Amount {{packageForm.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
         </div>
       </div>
     </div>
@@ -669,6 +670,9 @@
           </ng-container>
           <p>Discount: {{upgradeData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="upgradeData.credit>0">Credit {{upgradeData.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p>Payable amount: {{upgradeData.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
         </div>
       </div>

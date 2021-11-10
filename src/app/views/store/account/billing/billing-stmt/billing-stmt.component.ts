@@ -3,6 +3,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { CommonService } from '../../../../../services/common.service';
 import { DeploymentService } from '../../../deployment/deployment.service';
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-billing-stmt',
@@ -17,6 +18,7 @@ export class BillingStmtComponent implements OnInit {
   page = 1; pageSize = 10;
   list: any = []; filterForm:any = {};
   packageDetails: any = {}; selectedBill: any = {};
+  imgBaseUrl = environment.img_baseurl;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService) {
     config.backdrop = 'static'; config.keyboard = false;

@@ -24,12 +24,16 @@ export class BlogSeoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pageLoader = true;
-    this.featureApi.BLOG_LIST().subscribe(result => {
-      if(result.status) this.list = result.list;
-      else console.log("response", result);
-      setTimeout(() => { this.pageLoader = false; }, 500);
-    });
+    if(!this.commonService.deploy_stages.domain)
+      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the blog seo');
+    else {
+      this.pageLoader = true;
+      this.featureApi.BLOG_LIST().subscribe(result => {
+        if(result.status) this.list = result.list;
+        else console.log("response", result);
+        setTimeout(() => { this.pageLoader = false; }, 500);
+      });
+    }
   }
 
   // EDIT

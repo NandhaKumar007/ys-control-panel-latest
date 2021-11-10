@@ -46,13 +46,13 @@
       <ng-container *ngIf="!colorList.length">
         <div *ngFor="let sec of colorSections; let i=index;" class="col-md-12 mt-3">
           <div class="card card-in-card p-3">
-            <h5>{{sec.name | titlecase}} Color - <span [ngStyle]="{'background': sec.value, 'border-radius': '15px', 'color': sec.value}">0000000</span></h5>
+            <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
           </div>
         </div>
       </ng-container>
       <ng-container *ngIf="colorList.length">
         <div *ngFor="let sec of colorFields; let i=index;" class="col-md-12 mt-3">
-          <div class="card card-in-card p-3">
+          <div class="card card-in-card z-i-unset p-3">
             <h5>{{sec.name}}</h5>
             <div class="row ml-3 mt-3">
               <div class="form-group mb-3 col-md-12">
@@ -73,7 +73,7 @@
                 <div class="col-lg-2 col-md-3 form-group mb-3" *ngFor="let x of colorList;">
                   <label class="radio radio-success">
                     <input type="radio" [(ngModel)]="sec.color_code" [value]="x" name="color_code{{i}}">
-                    <span [ngStyle]="{'background': x, 'border-radius': '15px', 'color': x}">0000000</span>
+                    <span class="color-span" [ngStyle]="{'background': x}"></span>
                     <span class="checkmark"></span>
                   </label>
                 </div>

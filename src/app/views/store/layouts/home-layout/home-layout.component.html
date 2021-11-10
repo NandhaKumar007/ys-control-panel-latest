@@ -13,9 +13,7 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary"
-          (click)="addForm={ layout_list: [{}], rank: maxRank+1 }; modalService.open(addModal, {size: 'lg'});">Add New
-          Segment</button>
+        <button type="button" class="btn btn-primary" (click)="onAddNewSgment(addModal);">Add New Segment</button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15">

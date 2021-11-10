@@ -4210,3 +4210,20 @@ p svg:hover {
 .rating-hint {
   color: rgba(115, 214, 115, 1) !important;
 }
+
+.color-span {
+  padding: 0px 40px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+.z-i-unset {
+  z-index: unset;
+}
+
+.firework {
+  width: 100%;
+  height: 100vh;
+  background: #000000;
+  position: absolute;
+}

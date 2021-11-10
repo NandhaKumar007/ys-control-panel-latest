@@ -27,7 +27,8 @@ export class DeployPackagesComponent implements OnInit {
     customer_mobile: this.commonService.store_details.company_details.mobile
   };
   imgBaseUrl = environment.img_baseurl;
-  upgradeData: any = {};
+  upgradeData: any = {}; taxConfig: any = {};
+  paymentData: any = {};
   pricing_table: any = {
     "pricing": [
       {
@@ -606,6 +607,7 @@ export class DeployPackagesComponent implements OnInit {
       if(result.status) {
         this.packageList = result.list;
         this.paymentTypes = result.payment_types;
+        this.taxConfig = result.tax_config;
         this.daywiseDiscounts = result.daywise_discounts;
         let pIndex = this.packageList.findIndex(obj => obj._id==this.commonService.store_details.package_details.package_id);
         if(pIndex!=-1) this.packageRank = this.packageList[pIndex].rank;
@@ -624,8 +626,19 @@ export class DeployPackagesComponent implements OnInit {
     this.discPercent = 0; this.discAmount = 0;
     let dIndex = this.daywiseDiscounts.findIndex(obj => obj.days==diffDays);
     if(dIndex!=-1) this.discPercent = this.daywiseDiscounts[dIndex].discount;
-    if(this.discPercent > 0) this.discAmount = Math.round(priceDetails.amount*(this.discPercent/100));
-    this.packageForm.payable_amount = priceDetails.live + priceDetails.amount;
+    this.packageForm.subscription_charges = priceDetails.live + priceDetails.amount;
+    if(this.discPercent > 0) this.discAmount = parseFloat(((this.packageForm.subscription_charges)*(this.discPercent/100)).toFixed(2));
+    this.packageForm.payable_amount = this.packageForm.subscription_charges - this.discAmount;
+    // tax calc
+    if(this.taxConfig.country==this.commonService.store_details.country && this.taxConfig.state==this.commonService.store_details.company_details.state) {
+      this.packageForm.sgst = parseFloat((((this.taxConfig.sgst)/100)*this.packageForm.payable_amount).toFixed(2));
+      this.packageForm.cgst = parseFloat((((this.taxConfig.cgst)/100)*this.packageForm.payable_amount).toFixed(2));
+      this.packageForm.payable_amount += (this.packageForm.sgst + this.packageForm.cgst);
+  }
+  else {
+      this.packageForm.igst = parseFloat((((this.taxConfig.igst)/100)*this.packageForm.payable_amount).toFixed(2));
+      this.packageForm.payable_amount += this.packageForm.igst;
+  }
     this.modalService.open(modalName);
   }
 
@@ -633,6 +646,7 @@ export class DeployPackagesComponent implements OnInit {
     this.api.CHANGE_PLAN({ store_id: this.commonService.store_details._id, package_id: x._id, month: 1 }).subscribe(result => {
       if(result.status) {
         this.upgradeData = result.data;
+        this.paymentData = result.payment_data;
         this.upgradeData.package_details = x;
         this.calcAppCharges();
         this.modalService.open(modalName, { size: 'lg'});

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
@@ -50,7 +51,10 @@ export class SettingComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl;
   btnLoader: boolean;
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: StoreApiService, private atp: AmazingTimePickerService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService,
+    private api: StoreApiService, private atp: AmazingTimePickerService, private router: Router
+  ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -144,6 +148,12 @@ export class SettingComponent implements OnInit {
     }
   }
 
+  // logo management
+  logoMgmt() {
+    if(!this.commonService.deploy_stages.logo) this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before use the logo management');
+    else this.router.navigate(['/store-setting/logo-management']);
+  }
+
   // invoice configuration
   onOpenInvoiceModal(modalName) {
     this.api.STORE_DETAILS().subscribe((result) => {
@@ -185,6 +195,13 @@ export class SettingComponent implements OnInit {
     });
   }
 
+  // social login
+  socialLogin(modalName) {
+    if(!this.commonService.deploy_stages.domain)
+      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the social login');
+    else
+      this.onOpenSettingModal(modalName);
+  }
 
   // setting
   onOpenSettingModal(modalName) {

@@ -39,7 +39,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 d-flex">
-      <div routerLink="/store-setting/logo-management" class="card setting-card w-100 p-3 mb-4 cursor">
+      <div (click)="logoMgmt();" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title cursor">Logo Management</label>
         </div>
@@ -87,7 +87,7 @@
     </div>
 
     <div *ngIf="commonService.ys_features.indexOf('social_login')!=-1" class="col-md-6 col-lg-4 d-flex">
-      <div (click)="onOpenSettingModal(socialModal);" class="card setting-card w-100 p-3 mb-4 cursor">
+      <div (click)="socialLogin(socialModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title cursor">Social Logins</label>
         </div>

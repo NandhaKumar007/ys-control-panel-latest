@@ -212,7 +212,7 @@
 <ng-template #subscriptionModal let-modal>
   <div class="modal-header">
     <div>
-      <h4 class="modal-title" id="modal-basic-title">Payment</h4>
+      <h4 class="modal-title" id="modal-basic-title">Payment Info</h4>
     </div>
     <div class="d-flex">
       <i class="material-icons" (click)="modal.dismiss('Cross click');">close</i>
@@ -224,7 +224,10 @@
         <div class="col-md-12">
           <p>Total: {{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p>Credit: - {{billDetails?.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Payable amount {{billDetails?.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Payable amount {{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
         </div>
       </div>
     </div>
@@ -233,11 +236,11 @@
     </div>
   </div>
   <div class="modal-footer">
-    <ng-container *ngIf="billDetails?.payable_amount > 0">
+    <ng-container *ngIf="paymentData.amount > 0">
       <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
       [disabled]="billDetails.submit" [ladda]="billDetails.submit">{{x.btn_name}}</button>
     </ng-container>
-    <button *ngIf="billDetails?.payable_amount===0" type="button" (click)="onSubscribe({ name: '' });" class="btn btn-wide btn-primary ladda-button m-1"
+    <button *ngIf="paymentData.amount===0" type="button" (click)="onSubscribe({ name: '' });" class="btn btn-wide btn-primary ladda-button m-1"
     [disabled]="billDetails.submit" [ladda]="billDetails.submit">Submit</button>
   </div>
 </ng-template>

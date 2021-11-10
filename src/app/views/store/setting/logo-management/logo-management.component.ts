@@ -12,6 +12,7 @@ import { environment } from '../../../../../environments/environment';
 
 export class LogoManagementComponent implements OnInit {
 
+  pageLoader: boolean;
   logoForm: any = {}; verNum: any;
   imgBaseUrl = environment.img_baseurl; btnLoader: boolean;
 
@@ -20,7 +21,11 @@ export class LogoManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.verNum = new Date().valueOf();
+    if(!this.commonService.deploy_stages.logo) {
+      this.pageLoader = true;
+      this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before use the logo management');
+    }
+    else this.verNum = new Date().valueOf();
   }
 
   onUpdate(modalName) {

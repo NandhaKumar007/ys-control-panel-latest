@@ -128,6 +128,7 @@ export class CommonService {
   product_page_attr: any;
   selected_customer: any;
   custom_model: any;
+  alert_popup_content: any;
   
   scroll_y_pos: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
@@ -295,6 +296,21 @@ export class CommonService {
       else return false;
     }
     else return false;
+  }
+
+  openDeployAlertModal(type, content) {
+    this.alert_popup_content = {};
+    if(type=='logo') {
+      this.alert_popup_content = { btn_name: "Add Logo", btn_link: "/deployment/logo" };
+    }
+    else if(type=='plan') {
+      this.alert_popup_content = { btn_name: "Choose Plan", btn_link: "/deployment/plans" };
+    }
+    else if(type=='domain') {
+      this.alert_popup_content = { btn_name: "Setup Domain", btn_link: "/deployment/domain" };
+    }
+    this.alert_popup_content.content = content;
+    document.getElementById("openDeployAlertModal").click();
   }
 
 }

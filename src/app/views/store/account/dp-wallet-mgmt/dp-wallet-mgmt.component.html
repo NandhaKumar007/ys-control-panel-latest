@@ -62,7 +62,7 @@
                   <p class="m-0 w-10 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}</p>
                   <p class="m-0 w-20 w-sm-100 m-b-0">
                     <span class="badge" [ngClass]="(x.order_type=='credit')? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
-                      <span class="badge-green-outline-txt">{{x.order_type | titlecase}}</span>
+                      <span [ngClass]="(x.order_type=='credit')? 'badge-green-outline-txt': 'badge-red-outline-txt'">{{x.order_type | titlecase}}</span>
                     </span>
                   </p>
                   <p class="m-0 w-20 w-sm-100 m-b-0">{{x.order_info}}</p>

@@ -17,7 +17,6 @@ import { CommonService } from '../../../../services/common.service';
 
 export class StoreLayoutComponent implements OnInit {
 
-  moduleLoading: boolean;
   notifications: any[];
   selectedItem: IMenuItem;
   currentYear: any = (new Date()).getFullYear();

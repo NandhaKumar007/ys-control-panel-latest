@@ -18,7 +18,7 @@ export class ModifyYsClientsComponent implements OnInit {
   features_list: any = this.commonService.admin_features;
   free_features_list: any = []; paid_features_list: any = [];
   clientForm: any; step_num: number; params: any = {};
-  imgBaseUrl = environment.img_baseurl;
+  imgBaseUrl = environment.img_baseurl; state_list: any = [];
   currencyList: any = this.commonService.currency_types.filter(obj => obj.store_base);
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, private adminApi: AdminApiService, private api: ApiService, public commonService: CommonService) { }
@@ -33,6 +33,12 @@ export class ModifyYsClientsComponent implements OnInit {
           if(result.status) {
             this.clientForm = result.data;
             this.clientForm.currency_types = this.clientForm.currency_types[0];
+            this.onCountryChange(this.clientForm.country);
+            if(this.clientForm.package_details.billing_status) {
+              this.clientForm.package_details.expiry_date = new Date(this.clientForm.package_details.expiry_date);
+              this.clientForm.package_details.transaction_range.from = new Date(this.clientForm.package_details.transaction_range.from);
+              this.clientForm.package_details.transaction_range.to = new Date(this.clientForm.package_details.transaction_range.to);
+            }
           }
           else console.log("response", result);
         });
@@ -125,15 +131,10 @@ export class ModifyYsClientsComponent implements OnInit {
     });
   }
 
-  fileChangeListener(type, event) {
-    if(event.target.files && event.target.files[0]) {
-      let reader = new FileReader();
-      reader.onload = (event: ProgressEvent) => {
-        this.clientForm.img_change = true;
-        this.clientForm.store_logo = (<FileReader>event.target).result;
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }
+  onCountryChange(x) {
+    this.state_list = [];
+    let index = this.commonService.country_list.findIndex(object => object.name==x);
+    if(index!=-1) this.state_list = this.commonService.country_list[index].states;
   }
 
 }

@@ -17,7 +17,7 @@ export class BillingComponent implements OnInit {
 
   pageLoader: boolean; billingStatus: boolean;
   billDetails: any = {}; paymentTypes: any = [];
-  environment: any = environment;
+  environment: any = environment; paymentData: any = {};
   razorpayOptions: any = {
     my_order_type: "plan_renewal",
     customer_email: this.commonService.store_details.email,
@@ -36,11 +36,12 @@ export class BillingComponent implements OnInit {
 
   ngOnInit(): void {
     this.pageLoader = true;
-    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id }).subscribe(result => {
+    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, month: 1 }).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.billDetails = result.data;
         this.paymentTypes = result.payment_types;
+        this.paymentData = result.payment_data;
         if(this.billDetails.store_package_details.billing_status && this.billDetails.store_package_details.expiry_date) {
           this.billingStatus = true;
           this.billDetails.payable_amount = this.billDetails.subscription_charge + this.billDetails.addon_price + this.billDetails.transaction_charges;
