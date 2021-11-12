@@ -42,8 +42,9 @@
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <!-- OTHER DATA -->
                   <p class="m-0 w-20 w-sm-100 m-b-0">{{ x.name }}</p>
-                  <p class="m-0 text-muted text-small w-20 w-sm-100">{{ x.currency_types.INR.amount |
-                    currency:'INR':'symbol':'1.0' }} / Month</p>
+                  <p class="m-0 text-muted text-small w-20 w-sm-100">
+                    {{ (x.currency_types.INR.live + x.currency_types.INR.amount) | currency:'INR':'symbol':'1.0' }} / Month
+                  </p>
                   <p class="m-0 text-muted text-small w-20 w-sm-100">{{ x.currency_types.INR.transaction_fees }}%
                     Transaction
                   </p>
@@ -105,7 +106,7 @@
               <input type="text" name="live{{i}}" class="form-control" [(ngModel)]="x.live" #live="ngModel" appNumberOnly required />
             </div>
             <div class="col-md-3 form-group mb-3">
-              <label>Cost per month</label>
+              <label>Platform Fees</label>
               <input type="text" name="cost{{i}}" class="form-control" [(ngModel)]="x.amount" #amount="ngModel"
                 appNumberOnly required />
             </div>
@@ -120,14 +121,14 @@
                 #transaction_limit="ngModel" appNumberOnly required />
             </div>
           </ng-container>
-          <div *ngIf="formType!='add'" class="col-md-12 form-group mb-3">
+          <!-- <div *ngIf="formType!='add'" class="col-md-12 form-group mb-3">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="trial_status" [(ngModel)]="packageForm.trial_status"
                 #trial_status="ngModel">
               <span>Allow paid features for trial</span>
               <span class="checkmark"></span>
             </label>
-          </div>
+          </div> -->
           <div *ngIf="packageForm.trial_status" class="col-md-6 form-group mb-3 ml-3">
             <label>Trail upto in days</label>
             <input type="text" name="trial_upto_in_days" class="form-control"

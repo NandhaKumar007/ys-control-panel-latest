@@ -18,16 +18,15 @@ export class DeployPackagesComponent implements OnInit {
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
   modalInfo: string; viewAll: boolean;
-  paymentTypes: any = []; daywiseDiscounts: any = [];
-  discAmount: number = 0; discPercent: number = 0;
-  environment: any = environment; packageRank: number = 0;
+  paymentTypes: any = []; packageRank: number = 0;
+  environment: any = environment;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
     customer_mobile: this.commonService.store_details.company_details.mobile
   };
   imgBaseUrl = environment.img_baseurl;
-  upgradeData: any = {}; taxConfig: any = {};
+  upgradeData: any = {};
   paymentData: any = {};
   pricing_table: any = {
     "pricing": [
@@ -606,9 +605,6 @@ export class DeployPackagesComponent implements OnInit {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.packageList = result.list;
-        this.paymentTypes = result.payment_types;
-        this.taxConfig = result.tax_config;
-        this.daywiseDiscounts = result.daywise_discounts;
         let pIndex = this.packageList.findIndex(obj => obj._id==this.commonService.store_details.package_details.package_id);
         if(pIndex!=-1) this.packageRank = this.packageList[pIndex].rank;
       }
@@ -618,28 +614,43 @@ export class DeployPackagesComponent implements OnInit {
 
   onSelectPlan(x, modalName) {
     this.packageForm = x;
-    let priceDetails = x.currency_types[this.commonService.store_currency.country_code];
-    let date1: any = new Date(new Date(this.commonService.store_details.created_on).setHours(0,0,0,0));
-    let date2: any = new Date(new Date().setHours(23,59,59,999));
-    let diffTime = Math.abs(date2 - date1);
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    this.discPercent = 0; this.discAmount = 0;
-    let dIndex = this.daywiseDiscounts.findIndex(obj => obj.days==diffDays);
-    if(dIndex!=-1) this.discPercent = this.daywiseDiscounts[dIndex].discount;
-    this.packageForm.subscription_charges = priceDetails.live + priceDetails.amount;
-    if(this.discPercent > 0) this.discAmount = parseFloat(((this.packageForm.subscription_charges)*(this.discPercent/100)).toFixed(2));
-    this.packageForm.payable_amount = this.packageForm.subscription_charges - this.discAmount;
-    // tax calc
-    if(this.taxConfig.country==this.commonService.store_details.country && this.taxConfig.state==this.commonService.store_details.company_details.state) {
-      this.packageForm.sgst = parseFloat((((this.taxConfig.sgst)/100)*this.packageForm.payable_amount).toFixed(2));
-      this.packageForm.cgst = parseFloat((((this.taxConfig.cgst)/100)*this.packageForm.payable_amount).toFixed(2));
-      this.packageForm.payable_amount += (this.packageForm.sgst + this.packageForm.cgst);
+    let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
+    this.api.PURCHASE_PLAN(formData).subscribe(result => {
+      if(result.status) {
+        this.paymentData = result.data;
+        this.paymentTypes = result.payment_types;
+        this.modalService.open(modalName);
+      }
+      else console.log("response", result);
+    });
   }
-  else {
-      this.packageForm.igst = parseFloat((((this.taxConfig.igst)/100)*this.packageForm.payable_amount).toFixed(2));
-      this.packageForm.payable_amount += this.packageForm.igst;
-  }
-    this.modalService.open(modalName);
+  onSubscribe(x) {
+    this.packageForm.submit = true;
+    let formData = {
+      store_id: this.commonService.store_details._id, package_id: this.packageForm._id,
+      month: 1, payment_details: { name: x.name }
+    };
+    this.api.PURCHASE_PLAN(formData).subscribe(result => {
+      if(result.status) {
+        this.updateDeployStatus();
+        if(x.name=="Razorpay") {
+          let paymentConfig = result.data.payment_config;
+          this.razorpayOptions.my_order_type = "purchase_plan";
+          this.razorpayOptions.my_order_id = result.data.order_id;
+          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
+          this.razorpayOptions.key = paymentConfig.key;
+          this.razorpayOptions.store_name = paymentConfig.name;
+          this.razorpayOptions.description = paymentConfig.description;
+          setTimeout(_ => this.razorpayForm.nativeElement.submit());
+        }
+        else console.log("Invalid payment method");
+      }
+      else {
+        this.packageForm.submit = false;
+        this.packageForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   onChangePlan(x, modalName) {
@@ -654,7 +665,6 @@ export class DeployPackagesComponent implements OnInit {
       else console.log("response", result);
     });
   }
-
   onUpgrade(x) {
     this.upgradeData.submit = true;
     let formData = {
@@ -698,35 +708,6 @@ export class DeployPackagesComponent implements OnInit {
     this.upgradeData.total = this.upgradeData.subscription_charges + this.upgradeData.app_charges + this.upgradeData.transaction_charges;
     if(this.upgradeData.total >= this.upgradeData.discount) this.upgradeData.payable_amount = this.upgradeData.total - this.upgradeData.discount;
     else this.upgradeData.credit = this.upgradeData.discount - this.upgradeData.total;
-  }
-
-  onSubscribe(x) {
-    this.packageForm.submit = true;
-    let formData = {
-      store_id: this.commonService.store_details._id, package_id: this.packageForm._id,
-      month: 1, payment_details: { name: x.name }
-    };
-    this.api.PURCHASE_PLAN(formData).subscribe(result => {
-      if(result.status) {
-        this.updateDeployStatus();
-        if(x.name=="Razorpay") {
-          let paymentConfig = result.data.payment_config;
-          this.razorpayOptions.my_order_type = "purchase_plan";
-          this.razorpayOptions.my_order_id = result.data.order_id;
-          this.razorpayOptions.razorpay_order_id = result.data.razorpay_response.id;
-          this.razorpayOptions.key = paymentConfig.key;
-          this.razorpayOptions.store_name = paymentConfig.name;
-          this.razorpayOptions.description = paymentConfig.description;
-          setTimeout(_ => this.razorpayForm.nativeElement.submit());
-        }
-        else console.log("Invalid payment method");
-      }
-      else {
-        this.packageForm.submit = false;
-        this.packageForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
   }
 
   updateDeployStatus() {

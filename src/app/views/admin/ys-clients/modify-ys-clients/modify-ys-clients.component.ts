@@ -39,6 +39,8 @@ export class ModifyYsClientsComponent implements OnInit {
               this.clientForm.package_details.transaction_range.from = new Date(this.clientForm.package_details.transaction_range.from);
               this.clientForm.package_details.transaction_range.to = new Date(this.clientForm.package_details.transaction_range.to);
             }
+            if(this.clientForm.package_details.trial_expiry)
+              this.clientForm.package_details.trial_expiry = new Date(this.clientForm.package_details.trial_expiry);
           }
           else console.log("response", result);
         });

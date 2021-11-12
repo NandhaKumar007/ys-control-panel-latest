@@ -88,7 +88,7 @@ export class ControlPanelComponent implements OnInit {
           let trialFeatures = this.commonService.deploy_details.trial_features.filter(obj => !obj.uninstalled && obj.status=='active');
           if(trialFeatures.length) {
             trialFeatures.forEach(obj => {
-              let expiryDate = new Date(new Date(obj.create_on).setDate(new Date(obj.create_on).getDate() + 15)).setHours(23,59,59,999);
+              let expiryDate = new Date(new Date(obj.create_on).setDate(new Date(obj.create_on).getDate() + 14)).setHours(23,59,59,999);
               if(new Date(expiryDate) >= new Date() && this.commonService.ys_features.indexOf(obj.name)==-1) {
                 this.commonService.ys_features.push(obj.name);
               }

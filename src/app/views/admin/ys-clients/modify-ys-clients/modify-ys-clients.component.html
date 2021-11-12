@@ -147,6 +147,11 @@
           </div>
         </div>
       </div>
+      <div class="form-group mb-3 col-md-4">
+        <label>Trial Expiry On</label>
+        <input type="text" placeholder="Select Date" class="form-control" name="trial_expiry" autocomplete="off"
+        [(ngModel)]="clientForm.package_details.trial_expiry" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+      </div>
       <!-- billing -->
       <div class="form-group mb-3 col-md-12">
         <label class="checkbox checkbox-primary">

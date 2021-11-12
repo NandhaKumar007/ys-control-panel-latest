@@ -27,8 +27,10 @@
             <p>
               <b>Trial Account</b>
             </p>
-            <p *ngIf="billDetails.trial_expiry >= billDetails.current_date">Valid till {{billDetails?.trial_expiry | date: "dd MMM y"}}</p>
-            <p *ngIf="billDetails.trial_expiry < billDetails.current_date">
+            <p *ngIf="billDetails.store_package_details?.trial_expiry >= billDetails.current_date">
+              Valid till {{billDetails.store_package_details?.trial_expiry | date: "dd MMM y"}}
+            </p>
+            <p *ngIf="billDetails.store_package_details?.trial_expiry < billDetails.current_date">
               <span class="badge badge-warning badge-red">Expired</span>
             </p>
           </div>

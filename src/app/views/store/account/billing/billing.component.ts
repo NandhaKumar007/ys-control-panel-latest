@@ -40,6 +40,7 @@ export class BillingComponent implements OnInit {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.billDetails = result.data;
+        this.billDetails.current_date = new Date();
         this.paymentTypes = result.payment_types;
         this.paymentData = result.payment_data;
         if(this.billDetails.store_package_details.billing_status && this.billDetails.store_package_details.expiry_date) {
@@ -55,11 +56,8 @@ export class BillingComponent implements OnInit {
           }
           else this.billDetails.payable_amount = this.billDetails.payable_amount - this.billDetails.store_package_details.credit;
         }
-        else {
-          this.billDetails.current_date = new Date();
-          this.billDetails.trial_expiry = new Date(this.commonService.store_details.created_on).setDate(new Date(this.commonService.store_details.created_on).getDate() + 15);
-          this.billDetails.trial_expiry = new Date(new Date(this.billDetails.trial_expiry).setHours(23,59,59,999));
-        }
+        if(this.billDetails.store_package_details.trial_expiry)
+          this.billDetails.store_package_details.trial_expiry = new Date(this.billDetails.store_package_details.trial_expiry);
       }
       else console.log("response", result);
     });
