@@ -3,13 +3,20 @@
 </div>
 
 <div class="modify-product-page" *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>{{productForm.name}}</h1>
-    <ul>
-      <li *ngIf="step_num==1">Edit your product details</li>
-      <li *ngIf="step_num==2">Edit your product's appearance</li>
-      <li *ngIf="step_num==3">Link your product to catalogs</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>{{productForm.name}}</h1>
+        <ul>
+          <li *ngIf="step_num==1">Edit your product details</li>
+          <li *ngIf="step_num==2">Edit your product's appearance</li>
+          <li *ngIf="step_num==3">Link your product to catalogs</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button *ngIf="step_num==3" type="button" (click)="intForm = {}; modalService.open(catalogModal);" class="btn btn-primary">Add New Catalog</button>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
@@ -380,11 +387,19 @@
           <div class="row ml-3" *ngIf="productForm.tag_status">
             <div class="col-md-12 form-group mb-3" *ngFor="let x of tagList | orderAsc:'rank'; let i=index;">
               <div class="card card-in-card p-3">
-                <label class="checkbox checkbox-success">
-                  <input class="form-check-input" type="checkbox" name="tag_checked{{i}}" [(ngModel)]="x.tag_checked" #tag_checked="ngModel">
-                  <span>{{x.name}}</span>
-                  <span class="checkmark"></span>
-                </label>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="checkbox checkbox-success">
+                      <input class="form-check-input" type="checkbox" name="tag_checked{{i}}" [(ngModel)]="x.tag_checked" #tag_checked="ngModel">
+                      <span>{{x.name}}</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <span *ngIf="x.tag_checked" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
+                    class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
+                  </div>
+                </div>
                 <div *ngIf="x.tag_checked" class="row ml-3 mt-3">
                   <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'name'; let j=index;">
                     <label class="checkbox checkbox-warning">
@@ -415,12 +430,20 @@
           <div class="row ml-3" *ngIf="productForm.note_status">
             <div class="col-md-12 form-group mb-3" *ngFor="let x of noteList | orderAsc:'rank'; let i=index;">
               <div class="card card-in-card p-3">
-                <label class="checkbox checkbox-success">
-                  <input class="form-check-input" type="checkbox" name="note_checked{{i}}" [(ngModel)]="x.note_checked" (change)="x.selected_option=x.option_list[0].description"
-                    #note_checked="ngModel">
-                  <span>{{x.name}}</span>
-                  <span class="checkmark"></span>
-                </label>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label class="checkbox checkbox-success">
+                      <input class="form-check-input" type="checkbox" name="note_checked{{i}}" [(ngModel)]="x.note_checked" (change)="x.selected_option=x.option_list[0].description"
+                        #note_checked="ngModel">
+                      <span>{{x.name}}</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <span *ngIf="x.note_checked" (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
+                    class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
+                  </div>
+                </div>
                 <div *ngIf="x.note_checked" class="row ml-3 mt-3">
                   <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'description'; let j=index;">
                     <label class="radio radio-warning d-inline-block">
@@ -770,3 +793,112 @@
   </ng-container>
 
 </div>
+
+<!-- CATALOG MODAL -->
+<ng-template #catalogModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New Catalog</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onAddCatalog();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="intForm.name" #name="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="intForm.errorMsg">
+        <p class="text-danger">{{ intForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Add</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- TAG MODAL -->
+<ng-template #tagModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ intForm.name }}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateTag();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6" *ngFor="let x of intForm.option_list; let i=index;">
+            <div class="row">
+              <div class="col-md-12 form-group mb-3">
+                <div class="card p-2">
+                  <label>Option {{i+1}}</label>
+                  <span *ngIf="intForm.option_list.length > 1" (click)="intForm.option_list.splice(i, 1);"
+                  class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                  <input type="text" name="name{{i}}" id="name" class="form-control" [(ngModel)]="x.name" #name="ngModel" required />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 form-group">
+            <p class="add-another  x-close" (click)="intForm.option_list.push({});">
+              <b>ADD ANOTHER OPTION</b>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="intForm.errorMsg">
+        <p class="text-danger">{{ intForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- NOTE MODAL -->
+<ng-template #noteModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ intForm.name }}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateNote();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12" *ngFor="let x of intForm.option_list; let i=index;">
+            <div class="row">
+              <div class="col-md-12 form-group mb-3">
+                <div class="card p-2">
+                  <label>Description {{i+1}}</label>
+                  <span *ngIf="intForm.option_list.length > 1" (click)="intForm.option_list.splice(i, 1);"
+                    class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                  <textarea class="form-control" aria-label="With textarea" name="description{{i}}"
+                    [(ngModel)]="x.description" #description="ngModel" required></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 form-group">
+            <span class="add-another  x-close" (click)="intForm.option_list.push({});"><b>ADD ANOTHER OPTION</b></span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="intForm.errorMsg">
+        <p class="text-danger">{{ intForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>

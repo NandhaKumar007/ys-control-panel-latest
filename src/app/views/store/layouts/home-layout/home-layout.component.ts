@@ -65,6 +65,8 @@ export class HomeLayoutComponent implements OnInit {
   onAddNewSgment(modalName) {
     if(!this.commonService.deploy_stages.logo)
       this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before add new segment');
+    else if(!this.commonService.deploy_details.theme_colors)
+      this.commonService.openDeployAlertModal('color', 'Please set colors for your website before add new segment');
     else {
       this.addForm = { layout_list: [{}], rank: this.maxRank+1 };
       this.modalService.open(modalName, {size: 'lg'});

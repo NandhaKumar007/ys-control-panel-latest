@@ -23,13 +23,13 @@ export class ProductComponent implements OnInit {
 
   btnLoader: boolean; pageLoader: boolean; productCount: any = 0;
 	page = 1; pageSize = 10; search_bar: string;
-  parent_list : any = []; list: any = [];
+  list: any = [];
   filterForm: any = {}; exportLoader: boolean;
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   limitedProdCount = environment.limited_product_count;
   categoryList: any = []; vendorList: any = [];
-  product_filter: any = "all"; sort_by: any = 'created_desc'; scrollPos: number = 0;
+  sort_by: any = 'created_desc'; scrollPos: number = 0;
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
@@ -40,7 +40,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     // vendors
-    this.filterForm = { category_id: 'all', vendor_id: 'all' };
+    this.filterForm = { category_id: 'all', vendor_id: 'all', product_type: 'in' };
     if(this.commonService.vendor_list.length) {
       this.vendorList = [{_id: 'all', name: "All Vendors"}];
       this.commonService.vendor_list.forEach(obj => { this.vendorList.push(obj) });
@@ -52,7 +52,6 @@ export class ProductComponent implements OnInit {
       this.page = pageInfo.page_no;
       this.search_bar = pageInfo.search;
       this.sort_by = pageInfo.sort;
-      this.product_filter = pageInfo.filter;
       this.filterForm.category_id = pageInfo.filter_form.category_id;
       this.filterForm.vendor_id = pageInfo.filter_form.vendor_id;
       if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
@@ -116,12 +115,10 @@ export class ProductComponent implements OnInit {
         this.pageLoader = true;
         this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
           if(result.status) {
-            this.parent_list = result.list;
             this.list = result.list;
             this.productCount = result.product_count;
           }
           else console.log("response", result);
-          this.onChangeFilter(this.product_filter);
           setTimeout(() => {
             this.pageLoader = false; this.onChangeSort(this.sort_by); this.commonService.pageTop(this.scrollPos);
           }, 500);
@@ -132,24 +129,15 @@ export class ProductComponent implements OnInit {
       this.pageLoader = true;
       this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
         if(result.status) {
-          this.parent_list = result.list;
           this.list = result.list;
           this.productCount = result.product_count;
         }
         else console.log("response", result);
-        this.onChangeFilter(this.product_filter);
         setTimeout(() => {
           this.pageLoader = false; this.onChangeSort(this.sort_by); this.commonService.pageTop(this.scrollPos);
         }, 500);
       });
     }
-  }
-
-  onChangeFilter(x) {
-    let productList = this.parent_list;
-    this.list = productList;
-    if(x=='in') this.list = productList.filter(obj => obj.stock>0)
-    else if(x=='out') this.list = productList.filter(obj => obj.stock<=0)
   }
 
   onChangeSort(x) {
@@ -208,11 +196,11 @@ export class ProductComponent implements OnInit {
   }
 
   goModifyPage(product, stepNum) {
-    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter: this.product_filter, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/products/modify/"+product._id+"/"+this.productCount+"/"+stepNum]);
   }
   goReviewPage(x) {
-    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter: this.product_filter, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/features/selected-product-reviews/"+x._id]);
   }
 

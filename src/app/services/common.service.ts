@@ -303,6 +303,9 @@ export class CommonService {
     if(type=='logo') {
       this.alert_popup_content = { btn_name: "Add Logo", btn_link: "/deployment/logo" };
     }
+    else if(type=='color') {
+      this.alert_popup_content = { btn_name: "Set Colors", btn_link: "/deployment/logo" };
+    }
     else if(type=='plan') {
       this.alert_popup_content = { btn_name: "Choose Plan", btn_link: "/deployment/plans" };
     }

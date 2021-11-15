@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker';
@@ -22,7 +23,7 @@ export class ModifyProductComponent implements OnInit {
   maxRank: any = 0; existVariantList: any = [];
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
-  categoryList: any = [];
+  categoryList: any = []; intForm: any = {};
   addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
   sizeCharts: any; faqList: any; aiStyleList: any;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
@@ -33,9 +34,11 @@ export class ModifyProductComponent implements OnInit {
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
   constructor(
-    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, private peApi: ProductExtrasApiService,
-    public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService, private deployApi: DeploymentService
+    config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
+    private peApi: ProductExtrasApiService, public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService,
+    private deployApi: DeploymentService
   ) {
+    config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
     this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
     this.cropperSettings = new CropperSettings();
@@ -592,6 +595,84 @@ export class ModifyProductComponent implements OnInit {
     amazingTimePicker.afterClose().subscribe(time => {
       this.productForm.available_days[i].opening_hrs[j][variable] = this.commonService.timeConversion(time);
     });
+  }
+
+  onAddCatalog() {
+    if(!this.intForm.social_media_status) this.intForm.social_media_links = [];
+    if(!this.intForm.content_status) this.intForm.content_details = {};
+    this.api.ADD_CATALOG(this.intForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.api.CATALOG_LIST().subscribe(result => {
+          if(result.status) {
+            this.commonService.catalog_list = result.list;
+            this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
+            this.commonService.catalog_list.forEach(element => {
+              element.selected = false;
+              if(this.categoryList.findIndex(obj => obj.selected && obj._id==element._id) != -1) element.selected = true;
+            });
+            this.categoryList = this.commonService.catalog_list;
+          }
+          else console.log("response", result);
+        });
+      }
+      else {
+        this.intForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+  onUpdateTag() {
+    let newOptionList = []; let selectedTag = this.intForm.selected_tag;
+    selectedTag.option_list.forEach(element => { newOptionList.push(element); });
+    this.intForm.option_list.forEach(element => { newOptionList.push(element); });
+    let formData = {
+      _id: selectedTag._id, name: selectedTag.name, rank: selectedTag.rank,
+      prev_rank: selectedTag.prev_rank, status: selectedTag.status, option_list: newOptionList
+    };
+    this.peApi.UPDATE_TAG(formData).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        let newTagIndex = result.list.findIndex(obj => obj._id==formData._id);
+        if(newTagIndex!=-1) {
+          let updatedOptList = result.list[newTagIndex].option_list;
+          updatedOptList.forEach(element => {
+            let optIndex = newOptionList.findIndex(obj => obj.tag_option_checked && obj.name==element.name);
+            if(optIndex!=-1) element.tag_option_checked = true;
+          });
+          let tIndex = this.tagList.findIndex(obj => obj._id==formData._id);
+          if(tIndex!=-1) this.tagList[tIndex].option_list = updatedOptList;
+        }
+      }
+      else {
+				this.intForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+		});
+  }
+  onUpdateNote() {
+    let newOptionList = []; let selectedNote = this.intForm.selected_note;
+    selectedNote.option_list.forEach(element => { newOptionList.push(element); });
+    this.intForm.option_list.forEach(element => { newOptionList.push(element); });
+    let formData = {
+      _id: selectedNote._id, name: selectedNote.name, rank: selectedNote.rank,
+      prev_rank: selectedNote.prev_rank, option_list: newOptionList
+    };
+    this.peApi.UPDATE_FOOTNOTE(formData).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        let newNoteIndex = result.list.findIndex(obj => obj._id==formData._id);
+        if(newNoteIndex!=-1) {
+          let updatedOptList = result.list[newNoteIndex].option_list;
+          let nIndex = this.noteList.findIndex(obj => obj._id==formData._id);
+          if(nIndex!=-1) this.noteList[nIndex].option_list = updatedOptList;
+        }
+      }
+      else {
+				this.intForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+		});
   }
 
 }
