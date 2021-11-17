@@ -658,6 +658,7 @@ export class DeployPackagesComponent implements OnInit {
       if(result.status) {
         this.upgradeData = result.data;
         this.paymentData = result.payment_data;
+        this.paymentTypes = result.payment_types;
         this.upgradeData.package_details = x;
         this.calcAppCharges();
         this.modalService.open(modalName, { size: 'lg'});
@@ -708,6 +709,23 @@ export class DeployPackagesComponent implements OnInit {
     this.upgradeData.total = this.upgradeData.subscription_charges + this.upgradeData.app_charges + this.upgradeData.transaction_charges;
     if(this.upgradeData.total >= this.upgradeData.discount) this.upgradeData.payable_amount = this.upgradeData.total - this.upgradeData.discount;
     else this.upgradeData.credit = this.upgradeData.discount - this.upgradeData.total;
+    // taxes
+    if(this.upgradeData.payable_amount > 0) {
+      let orderAmount = this.upgradeData.payable_amount;
+      if(this.paymentData.cgst) {
+        this.paymentData.cgst.amount = parseFloat((((this.paymentData.cgst.percentage)/100)*orderAmount).toFixed(2));
+        this.upgradeData.payable_amount += this.paymentData.cgst.amount;
+      }
+      if(this.paymentData.sgst) {
+        this.paymentData.sgst.amount = parseFloat((((this.paymentData.sgst.percentage)/100)*orderAmount).toFixed(2));
+        this.upgradeData.payable_amount += this.paymentData.sgst.amount;
+      }
+      if(this.paymentData.igst) {
+        this.paymentData.igst.amount = parseFloat((((this.paymentData.igst.percentage)/100)*orderAmount).toFixed(2));
+        this.upgradeData.payable_amount += this.paymentData.igst.amount;
+      }
+    }
+    this.upgradeData.payable_amount = parseFloat(this.upgradeData.payable_amount.toFixed(2));
   }
 
   updateDeployStatus() {

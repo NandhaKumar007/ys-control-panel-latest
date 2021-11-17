@@ -225,7 +225,8 @@
       <div class="row">
         <div class="col-md-12">
           <p>Total: {{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Credit: - {{billDetails?.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Discount: - {{paymentData?.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <p>Credit: - {{paymentData?.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>

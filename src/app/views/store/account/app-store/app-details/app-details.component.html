@@ -74,7 +74,7 @@
                 </button>
                 <ng-container *ngIf="appDetails?.status=='active'">
                   <button (click)="openModal('uninstall', confirmModal)" *ngIf="!appDetails?.uninstalled" class="btn btn-primary app-btn mt-3">Uninstall App</button>
-                  <button *ngIf="!appDetails?.paid" routerLink="/account/app-store/payments" class="btn btn-primary app-btn mt-3">
+                  <button *ngIf="!appDetails?.paid" routerLink="/account/app-store/payments" class="btn btn-primary app-btn ml-3 mt-3">
                     Make Payment
                   </button>
                 </ng-container>
