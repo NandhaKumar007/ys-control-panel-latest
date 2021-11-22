@@ -65,7 +65,10 @@ export class DeployLogoComponent implements OnInit {
       this.commonService.verNum = new Date().valueOf();
       this.updateDeployStatus();
       this.ngOnInit();
-      if(result.status) this.colorList = result.colors;
+      if(result.status) {
+        let filteredList = new Set(result.colors);
+        this.colorList = Array.from(filteredList);
+      }
       else {
 				this.logoForm.errorMsg = result.message;
 				console.log("response", result);
