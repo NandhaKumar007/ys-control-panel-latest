@@ -131,9 +131,9 @@
                 <img [src]="imgBaseUrl+x.image_list[0].image" alt="">
               </div>
               <div class="flex-grow-1 pl-2 d-flex mtb-20">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="m-0 prod-card-content">{{x.name}}</p>
+                  <p class="m-0 text-muted text-small w-sm-100">{{x.sku}}</p>
                   <p class="m-0 text-muted text-small w-sm-100">{{x.created_on | date: "dd MMM y"}}</p>
                   <p class="m-0 text-muted text-small w-sm-100">
                     {{x?.discounted_price | currency:commonService.store_currency?.country_code}}
