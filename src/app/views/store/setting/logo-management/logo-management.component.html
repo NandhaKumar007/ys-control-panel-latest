@@ -83,10 +83,13 @@
             </div>
             <div *ngIf="!logoForm.image">
               <img [src]="imgBaseUrl+logoForm?.root_path+'/'+logoForm?.file_name+'.'+logoForm?.file_type+'?v='+verNum" height="100px;" width="auto;">
-              <div class="mt-4">
-                <input *ngIf="logoForm?.file_type=='jpg'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg" />
-                <input *ngIf="logoForm?.file_type=='png'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/png" />
-                <input *ngIf="logoForm?.file_type=='any'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+              <div class="h-100 d-flex align-items-end">
+                <div class="custom-file mt-2">
+                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='jpg'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg" />
+                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='png'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/png" />
+                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='any'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+                  <label class="custom-file-label">Choose file</label>
+                </div>
               </div>
             </div>
           </div>

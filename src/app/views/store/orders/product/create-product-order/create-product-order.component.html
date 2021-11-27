@@ -642,7 +642,7 @@
               <div *ngFor="let x of selected_customer.address_list;" class="col-md-12 list-item data-list-card p-0">
                 <div class="d-flex flex-row">
                   <div class="flex-grow-1 pl-2 d-flex flex-column">
-                    <div *ngIf="x.billing_address || x.shipping_address" class="m-t--15">
+                    <div *ngIf="x.billing_address || x.shipping_address" class="">
                       <p class="billing-add d-inline-block mr-2">
                         {{ (x.billing_address && x.shipping_address)? 'Billing & Shipping': (x.billing_address)?
                         'Billing':
@@ -682,7 +682,9 @@
       maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
   </div>
   <div *ngIf="selected_customer" class="modal-footer">
-    <button class="btn btn-wide black-outline-btn" type="button" (click)="selected_customer='';">Go Back</button>
+    <button class="btn btn-wide black-outline-btn" type="button" (click)="selected_customer='';">
+      <span class="black-outline-txt">Go Back</span>
+    </button>
   </div>
 </ng-template>
 
