@@ -4,12 +4,12 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>{{params.client_id? clientForm.name: 'New Client'}}
+    <h1>{{clientForm.name}}
       <span class="breadcrumb-steps">(Step {{step_num}} of 2)</span>
     </h1>
     <ul>
-      <li *ngIf="step_num==1">{{params.client_id? 'Update': 'Add your'}} client details</li>
-      <li *ngIf="step_num==2">{{params.client_id? 'Update': 'Select'}} rental package</li>
+      <li *ngIf="step_num==1">Update client details</li>
+      <li *ngIf="step_num==2">Update rental package</li>
     </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -41,22 +41,11 @@
           </div>
           <div class="col-md-3 form-group mb-3">
             <label>Domain</label>
-            <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required [readonly]="params.client_id" />
+            <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required readonly />
           </div>
-          <!-- <div *ngIf="!params.client_id && clientForm.account_type=='client'" class="form-group mb-3 col-md-12">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="allow_deploy" [(ngModel)]="clientForm.allow_deploy" #allow_deploy="ngModel">
-              <span class="access-inner-head">Enable Auto-Deployment</span>
-              <span class="checkmark"></span>
-            </label>
-          </div> -->
           <div class="col-md-6 form-group mb-3">
             <label>Email</label>
-            <input type="email" name="email" class="form-control" [(ngModel)]="clientForm.email" #email="ngModel" required [readonly]="params.client_id" />
-          </div>
-          <div *ngIf="!params.client_id" class="col-md-6 form-group mb-3">
-            <label>Password</label>
-            <input type="text" name="password" class="form-control" [(ngModel)]="clientForm.password" #password="ngModel" required />
+            <input type="email" name="email" class="form-control" [(ngModel)]="clientForm.email" #email="ngModel" required readonly />
           </div>
           <!-- company details -->
           <div class="mb-2 col-md-12">
@@ -84,16 +73,13 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
-            <select name="country" class="form-control" [(ngModel)]="clientForm.country" (change)="onCountryChange(clientForm.country);" #country="ngModel" [disabled]="params.client_id" required>
+            <select name="country" class="form-control" [(ngModel)]="clientForm.country" (change)="onCountryChange(clientForm.country);" #country="ngModel" disabled required>
               <option *ngFor="let x of commonService.country_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
             </select>
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Currency</label>
-            <select *ngIf="!params.client_id" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types" required>
-              <option *ngFor="let x of currencyList;" [ngValue]="x">{{x.country_code}}</option>
-            </select>
-            <input *ngIf="params.client_id" type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
+            <input type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
           </div>
           <div *ngIf="state_list.length" class="col-md-3 form-group mb-3">
             <label>State</label>
@@ -263,7 +249,7 @@
       <div align="center" class="col-md-12">
         <button type="button" (click)="step_num=1;" class="btn btn-wide btn-outline-secondary">Go Back</button>&nbsp; &nbsp; &nbsp;
         <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="clientForm.btnLoader" [ladda]="clientForm.btnLoader">
-          {{params.client_id? 'Update': 'Add'}}
+          Update
         </button>
       </div>
     </div>

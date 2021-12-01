@@ -146,6 +146,10 @@
             <select name="featured_category_id" class="form-control select-arrow"
               [(ngModel)]="addForm.featured_category_id" #featured_category_id="ngModel" required>
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
+              <option value="all_products">/all-products</option>
+              <option value="new_arrivals">/new-arrivals</option>
+              <option value="on_sale">/on-sale</option>
+              <option value="featured_products">/featured-products</option>
             </select>
           </div>
           <ng-container
@@ -288,6 +292,10 @@
             <select name="featured_category_id" class="form-control select-arrow"
               [(ngModel)]="editForm.featured_category_id" #featured_category_id="ngModel" required>
               <option [ngValue]="x._id" *ngFor="let x of commonService.catalog_list">{{x.name}}</option>
+              <option value="all_products">/all-products</option>
+              <option value="new_arrivals">/new-arrivals</option>
+              <option value="on_sale">/on-sale</option>
+              <option value="featured_products">/featured-products</option>
             </select>
           </div>
           <ng-container

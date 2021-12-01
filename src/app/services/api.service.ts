@@ -21,6 +21,5 @@ export class ApiService {
 
   // common
   COUNTRIES_LIST() { return this.http.get<any>(environment.ws_url+'/store_details/country_list'); }
-  CHECK_EMAIL_AVAILABILITY(x) { return this.http.post<any>(environment.ws_url+'/others/check_email', x); }
 
 }

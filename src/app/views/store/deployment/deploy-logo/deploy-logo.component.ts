@@ -19,6 +19,7 @@ export class DeployLogoComponent implements OnInit {
     { name: "Choose Secondary Color", keyword: "secondary", color_code: "" }
   ];
   colorSections: any = [];
+  btnLoader: boolean;
 
   constructor(public commonService: CommonService, private api: DeploymentService) { }
 
@@ -34,6 +35,7 @@ export class DeployLogoComponent implements OnInit {
   }
 
   findColors() {
+    this.btnLoader = false;
     this.api.LOGO_COLORS({ file_name: this.storeLogo }).subscribe(result => {
       this.ngOnInit();
       if(result.status) {
@@ -77,11 +79,12 @@ export class DeployLogoComponent implements OnInit {
   }
 
   updateThemeColor() {
-    let colorForm = {};
+    let colorForm = {}; this.btnLoader = true;
     this.colorFields.forEach(element => {
       colorForm[element.keyword] = element.color_code;
     });
     this.api.UPDATE_DEPLOY_DETAILS({ store_id: this.commonService.store_details._id, theme_colors: colorForm }).subscribe(result => {
+      this.btnLoader = false;
       if(result.status) {
         this.commonService.deploy_details = result.data;
         delete this.commonService.deploy_details.deploy_stages;

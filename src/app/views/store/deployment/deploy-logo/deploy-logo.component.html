@@ -86,7 +86,8 @@
             <button type="button" class="btn btn-wide black-outline-btn mr-3" (click)="colorList=[];">
               <span class="black-outline-txt">Cancel</span>
             </button>
-            <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary">Update</button>
+            <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary ladda-button"
+            [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
           </div>
         </div>
       </ng-container>

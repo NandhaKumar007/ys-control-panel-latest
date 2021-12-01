@@ -4,7 +4,6 @@ import { YsClientsComponent } from './ys-clients.component';
 
 const routes: Routes = [
   { path: '', component: YsClientsComponent},
-  { path: 'add', loadChildren: () => import('./modify-ys-clients/modify-ys-clients.module').then(m => m.ModifyYsClientsModule) },
   { path: 'update/:client_id', loadChildren: () => import('./modify-ys-clients/modify-ys-clients.module').then(m => m.ModifyYsClientsModule) }
 ];
 
