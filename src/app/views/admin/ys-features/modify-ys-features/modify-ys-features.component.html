@@ -28,63 +28,69 @@
         <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="featureForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
       </div>
       <div class="col-md-12 form-group mb-3">
-        <label class="checkbox checkbox-primary">
-          <input class="form-check-input" type="checkbox" name="link_to_package" [(ngModel)]="featureForm.link_to_package" #link_to_package="ngModel">
-          <span>Link to Package</span>
-          <span class="checkmark"></span>
-        </label>
+        <div [ngClass]="featureForm.link_to_package? 'card p-3': ''">
+          <label class="checkbox checkbox-primary">
+            <input class="form-check-input" type="checkbox" name="link_to_package" [(ngModel)]="featureForm.link_to_package" #link_to_package="ngModel">
+            <span>Link to Package</span>
+            <span class="checkmark"></span>
+          </label>
+          <div class="row">
+            <ng-container *ngIf="featureForm.link_to_package">
+              <ng-container *ngFor="let x of packageList; let i=index;">
+                <div class="col-md-12 form-group ml-5" [ngClass]="x.package_selected? 'mb-2': 'mb-3'">
+                  <label class="checkbox checkbox-primary">
+                    <input class="form-check-input" type="checkbox" name="package_selected{{i}}" [(ngModel)]="x.package_selected" #package_selected="ngModel">
+                    <span>{{x.name}}</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <div *ngIf="x.package_selected" class="col-md-12 mb-3 ml-5">
+                  <div class="row">
+                    <div *ngFor="let y of x.currency_list; let j=index;" class="col-md-2 form-group mb-1">
+                      <label>Cost per Month ({{y.base}})</label>
+                      <input type="text" name="price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" appNumberOnly required />
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
       </div>
-      <ng-container *ngIf="featureForm.link_to_package">
-        <ng-container *ngFor="let x of packageList; let i=index;">
-          <div class="col-md-12 form-group ml-5" [ngClass]="x.package_selected? 'mb-2': 'mb-3'">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="package_selected{{i}}" [(ngModel)]="x.package_selected" #package_selected="ngModel">
-              <span>{{x.name}}</span>
-              <span class="checkmark"></span>
-            </label>
-          </div>
-          <div *ngIf="x.package_selected" class="col-md-12 mb-3 ml-5">
-            <div class="row">
-              <div *ngFor="let y of x.currency_list; let j=index;" class="col-md-2 form-group mb-1">
-                <label>Cost per Month ({{y.base}})</label>
-                <input type="text" name="price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" appNumberOnly required />
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
       <!-- discount -->
       <div class="col-md-12 form-group mb-3">
-        <label class="checkbox checkbox-primary">
-          <input class="form-check-input" type="checkbox" name="disc_status" [(ngModel)]="featureForm.disc_status" #disc_status="ngModel">
-          <span>Apply Discount</span>
-          <span class="checkmark"></span>
-        </label>
+        <div [ngClass]="featureForm.disc_status? 'card p-3': ''">
+          <label class="checkbox checkbox-primary">
+            <input class="form-check-input" type="checkbox" name="disc_status" [(ngModel)]="featureForm.disc_status" #disc_status="ngModel">
+            <span>Apply Discount</span>
+            <span class="checkmark"></span>
+          </label>
+          <ng-container *ngIf="featureForm.disc_status" class="ml-5">
+            <div class="col-md-12 ml-5">
+              <div class="row">
+                <div *ngFor="let cur of discountCurrencyList; let k=index;" class="col-md-2 form-group mb-3">
+                  <label>Discount Value ({{cur.base}})</label>
+                  <input type="text" name="disc_amount{{k}}" class="form-control" [(ngModel)]="cur.price" #disc_amount="ngModel" appNumberOnly required />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3 ml-5">
+              <div class="row">
+                <div class="col-md-2 form-group mb-3">
+                  <label>Start Date</label>
+                  <input type="text" placeholder="Select Start Date" class="form-control" name="disc_from" autocomplete="off" placement="top"
+                  [(ngModel)]="featureForm.disc_from" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+                </div>
+                <div class="col-md-2 form-group mb-3">
+                  <label>End Date</label>
+                  <input type="text" placeholder="Select End Date" class="form-control" name="disc_to" autocomplete="off" placement="top"
+                    [(ngModel)]="featureForm.disc_to" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
       </div>
-      <ng-container *ngIf="featureForm.disc_status" class="ml-5">
-        <div class="col-md-12 ml-5">
-          <div class="row">
-            <div *ngFor="let cur of discountCurrencyList; let k=index;" class="col-md-2 form-group mb-3">
-              <label>Discount Value ({{cur.base}})</label>
-              <input type="text" name="disc_amount{{k}}" class="form-control" [(ngModel)]="cur.price" #disc_amount="ngModel" appNumberOnly required />
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 mb-3 ml-5">
-          <div class="row">
-            <div class="col-md-2 form-group mb-3">
-              <label>Start Date</label>
-              <input type="text" placeholder="Select Start Date" class="form-control" name="disc_from" autocomplete="off" placement="top"
-              [(ngModel)]="featureForm.disc_from" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
-            </div>
-            <div class="col-md-2 form-group mb-3">
-              <label>End Date</label>
-              <input type="text" placeholder="Select End Date" class="form-control" name="disc_to" autocomplete="off" placement="top"
-              [(ngModel)]="featureForm.disc_to" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
-            </div>
-          </div>
-        </div>
-      </ng-container>
     </div>
 
     <div class="row">

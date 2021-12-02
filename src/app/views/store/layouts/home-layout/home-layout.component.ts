@@ -109,7 +109,7 @@ export class HomeLayoutComponent implements OnInit {
 		this.api.UPDATE_LAYOUT(this.editForm).subscribe(result => {
       this.updateDeployStatus();
       if(result.status) {
-        document.getElementById('closeEditModal').click();
+        document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {
@@ -126,7 +126,23 @@ export class HomeLayoutComponent implements OnInit {
       this.updateDeployStatus();
       this.deleteForm.btnLoader = false;
       if(result.status) {
-        document.getElementById('closeDeleteModal').click();
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+				this.deleteForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+		});
+  }
+
+  // RESET
+  onResetLayout() {
+    this.deleteForm.btnLoader = true;
+    this.api.RESET_LAYOUT().subscribe(result => {
+      this.deleteForm.btnLoader = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {

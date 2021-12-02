@@ -16,90 +16,103 @@
 
   <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="clientForm.package_details? '': clientForm.package_details={}; step_num=2; onChoosePackage();" ngNativeValidate>
     <div class="row">
-      <div class="col-md-1"></div>
-      <div class="col-md-10">
-        <div class="row">
-          <div class="col-md-3 form-group mb-3">
-            <label>Store Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="clientForm.name" #name="ngModel" required />
+      <!-- <div class="col-md-1"></div> -->
+      <div class="col-md-10 offset-md-1">
+        <div class="">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card p-3">
+                <div class="row">
+                  <div class="col-md-3 form-group mb-3">
+                    <label>Store Name</label>
+                    <input type="text" name="name" class="form-control" [(ngModel)]="clientForm.name" #name="ngModel" required />
+                  </div>
+                  <div class="col-md-3 form-group mb-3">
+                    <label>Account Type</label>
+                    <select name="account_type" class="form-control" [(ngModel)]="clientForm.account_type" #account_type="ngModel" required>
+                      <option value="client">Client</option>
+                      <option value="demo">Demo</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 form-group mb-3">
+                    <label>Store Type</label>
+                    <select name="type" class="form-control" [(ngModel)]="clientForm.type" #type="ngModel" required>
+                      <option value="order_based">General</option>
+                      <option value="quot_based">Quotation</option>
+                      <!-- <option value="quot_with_order_based">General with Quotation</option> -->
+                      <option value="restaurant_based">Restaurant</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 form-group mb-3">
+                    <label>Domain</label>
+                    <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required readonly />
+                  </div>
+                  <div class="col-md-6 form-group mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" [(ngModel)]="clientForm.email" #email="ngModel" required readonly />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- company details -->
+            <div class="mt-4 mb-2 col-md-12">
+              <span class="access-inner-head">Company Details</span>
+            </div>
+            <div class="col-md-12">
+              <div class="card p-3">
+              <div class="row">
+                <div class="col-md-6 form-group mb-3">
+                  <label>Company Name</label>
+                  <input type="text" name="company_name" class="form-control" [(ngModel)]="clientForm.company_details.name" #company_name="ngModel" required />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>GST Number</label>
+                  <input type="text" name="gst_no" class="form-control" [(ngModel)]="clientForm.gst_no" #gst_no="ngModel" />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>Contact Person</label>
+                  <input type="text" name="contact_person" class="form-control" [(ngModel)]="clientForm.company_details.contact_person" #contact_person="ngModel" required />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>Mobile</label>
+                  <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" />
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                  <label>Complete Address</label>
+                  <textarea name="address" [(ngModel)]="clientForm.company_details.address" #address="ngModel" class="form-control"></textarea>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>Country</label>
+                  <select name="country" class="form-control" [(ngModel)]="clientForm.country" (change)="onCountryChange(clientForm.country);" #country="ngModel" disabled required>
+                    <option *ngFor="let x of commonService.country_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>Currency</label>
+                  <input type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
+                </div>
+                <div *ngIf="state_list.length" class="col-md-3 form-group mb-3">
+                  <label>State</label>
+                  <select name="state" class="form-control" [(ngModel)]="clientForm.company_details.state" #state="ngModel" required>
+                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <div class="form-group mb-3" [ngClass]="state_list.length? 'col-md-3': 'col-md-6'">
+                  <label>City</label>
+                  <input type="text" name="city" class="form-control" [(ngModel)]="clientForm.company_details.city" #city="ngModel" />
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                  <label>Pincode</label>
+                  <input type="text" name="pincode" class="form-control" [(ngModel)]="clientForm.company_details.pincode" #pincode="ngModel" />
+                </div>
+              </div>
+              </div>
+            </div>
+            <!-- end company details -->
           </div>
-          <div class="col-md-3 form-group mb-3">
-            <label>Account Type</label>
-            <select name="account_type" class="form-control" [(ngModel)]="clientForm.account_type" #account_type="ngModel" required>
-              <option value="client">Client</option>
-              <option value="demo">Demo</option>
-            </select>
-          </div>
-          <div class="col-md-3 form-group mb-3">
-            <label>Store Type</label>
-            <select name="type" class="form-control" [(ngModel)]="clientForm.type" #type="ngModel" required>
-              <option value="order_based">General</option>
-              <option value="quot_based">Quotation</option>
-              <!-- <option value="quot_with_order_based">General with Quotation</option> -->
-              <option value="restaurant_based">Restaurant</option>
-            </select>
-          </div>
-          <div class="col-md-3 form-group mb-3">
-            <label>Domain</label>
-            <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required readonly />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" [(ngModel)]="clientForm.email" #email="ngModel" required readonly />
-          </div>
-          <!-- company details -->
-          <div class="mb-2 col-md-12">
-            <span class="access-inner-head">Company Details</span>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Company Name</label>
-            <input type="text" name="company_name" class="form-control" [(ngModel)]="clientForm.company_details.name" #company_name="ngModel" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>GST Number</label>
-            <input type="text" name="gst_no" class="form-control" [(ngModel)]="clientForm.gst_no" #gst_no="ngModel" />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Contact Person</label>
-            <input type="text" name="contact_person" class="form-control" [(ngModel)]="clientForm.company_details.contact_person" #contact_person="ngModel" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Mobile</label>
-            <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" />
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Complete Address</label>
-            <textarea name="address" [(ngModel)]="clientForm.company_details.address" #address="ngModel" class="form-control"></textarea>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Country</label>
-            <select name="country" class="form-control" [(ngModel)]="clientForm.country" (change)="onCountryChange(clientForm.country);" #country="ngModel" disabled required>
-              <option *ngFor="let x of commonService.country_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
-            </select>
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Currency</label>
-            <input type="text" name="currency_types" class="form-control" [(ngModel)]="clientForm.currency_types.country_code" readonly />
-          </div>
-          <div *ngIf="state_list.length" class="col-md-3 form-group mb-3">
-            <label>State</label>
-            <select name="state" class="form-control" [(ngModel)]="clientForm.company_details.state" #state="ngModel" required>
-              <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
-            </select>
-          </div>
-          <div class="form-group mb-3" [ngClass]="state_list.length? 'col-md-3': 'col-md-6'">
-            <label>City</label>
-            <input type="text" name="city" class="form-control" [(ngModel)]="clientForm.company_details.city" #city="ngModel" />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Pincode</label>
-            <input type="text" name="pincode" class="form-control" [(ngModel)]="clientForm.company_details.pincode" #pincode="ngModel" />
-          </div>
-          <!-- end company details -->
         </div>
-      </div> 
+      </div>
     </div>
-
     <div class="separator-breadcrumb border-top mt-5"></div>
     <div class="row">
       <div align="center" class="col-md-12">

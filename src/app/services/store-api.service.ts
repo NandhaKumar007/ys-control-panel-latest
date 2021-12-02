@@ -136,13 +136,17 @@ export class StoreApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/layout', x, httpOptions);
   }
+  DELETE_LAYOUT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/layout', x, httpOptions);
+  }
   UPDATE_LAYOUT_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/layout_list', x, httpOptions);
   }
-  DELETE_LAYOUT(x) {
+  RESET_LAYOUT() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.patch<any>(environment.ws_url+'/store/layout', x, httpOptions);
+    return this.http.patch<any>(environment.ws_url+'/store/layout_list', {}, httpOptions);
   }
 
   // features
