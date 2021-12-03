@@ -76,7 +76,7 @@ export class ProductOrdersComponent implements OnInit {
             orderList.forEach(obj => {
               if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
               if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
-              obj.customer_name = obj.shipping_address.name;
+              if(!obj.customer_name) obj.customer_name = obj.shipping_address.name;
               obj.customer_email = obj.guest_email;
               obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
               // delivery time
@@ -112,14 +112,14 @@ export class ProductOrdersComponent implements OnInit {
               if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
               if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
               if(obj.customerDetails.length) {
-                obj.customer_name = obj.customerDetails[0].name;
+                if(!obj.customer_name) obj.customer_name = obj.customerDetails[0].name;
                 obj.customer_email = obj.customerDetails[0].email;
                 obj.customer_mobile = obj.shipping_address.mobile;
                 if(obj.customerDetails[0].mobile) obj.customer_mobile = obj.customerDetails[0].mobile;
                 else if(obj.order_type=='pickup') obj.customer_mobile = 'NA';
               }
               else {
-                obj.customer_name = obj.shipping_address.name;
+                if(!obj.customer_name) obj.customer_name = obj.shipping_address.name;
                 obj.customer_email = obj.guest_email;
                 obj.customer_mobile = obj.shipping_address.mobile;
               }

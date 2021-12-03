@@ -35,8 +35,12 @@
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">
-                    {{ (order_details.order_by=='guest')? order_details?.shipping_address?.name:
-                    order_details.customerDetails[0]?.name }}
+                    <ng-container *ngIf="order_details.order_by=='guest'">
+                      {{ (order_details.customer_name)? order_details.customer_name: order_details?.shipping_address?.name }}
+                    </ng-container>
+                    <ng-container *ngIf="order_details.order_by!='guest'">
+                      {{ (order_details.customer_name)? order_details.customer_name: order_details.customerDetails[0]?.name }}
+                    </ng-container>
                   </p>
                   <p class="w-30 w-sm-100 m-b-0">
                     {{ (order_details.order_by=='guest')? order_details?.guest_email:
