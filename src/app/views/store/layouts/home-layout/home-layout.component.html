@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div *ngIf="commonService.store_details.login_type=='admin' && list?.length" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" (click)="deleteForm = {}; modalService.open(resetModal, { centered: true });" class="btn btn-primary">Reset Layout</button>
+        <button type="button" (click)="openResetModal(resetModal);" class="btn btn-primary">Reset Layout</button>
       </div>
     </div>
   </div>
@@ -20,7 +20,11 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary" (click)="onAddNewSgment(addModal);">Add New Segment</button>
+        <button *ngIf="list?.length" type="button" class="btn btn-primary" (click)="onAddNewSgment(addModal);">
+          Add New Segment
+        </button>
+        <button *ngIf="!list?.length" type="button" class="btn btn-wide btn-primary ladda-button" (click)="deleteForm={}; onResetLayout();"
+        [disabled]="deleteForm?.btnLoader" [ladda]="deleteForm?.btnLoader">Create Default Segments</button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15">
@@ -37,8 +41,7 @@
       <div class="data-list-card-inner">
         <div class="row m-0">
 
-          <div
-          *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
           class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
           <div class="d-flex flex-row">
             <div class="flex-grow-1 pl-2 d-flex">

@@ -52,7 +52,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
           this.order_details = result.data;
-          if(this.order_details.order_type=='pickup') this.order_details.billing_address = this.order_details.shipping_address;
+          if(!this.order_details.billing_address) this.order_details.billing_address = this.order_details.shipping_address;
           if(this.commonService.store_details._id=='60805f647ee34b5a03e4ca0d') {
             this.processItemListExcludeTax(this.order_details.item_list).then((respData) => {
               this.itemList = respData;

@@ -38,6 +38,7 @@ export class HomeLayoutComponent implements OnInit {
     { type: "discounted", disp_name: "Discounted" },
     { type: "category", disp_name: "Catalog" }
   ];
+  themeColorExists: boolean;
 
   constructor(
     private router: Router, config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService,
@@ -47,6 +48,7 @@ export class HomeLayoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.commonService.deploy_details.theme_colors && this.commonService.deploy_details.theme_colors.primary) this.themeColorExists = true;
     if(this.commonService.ys_features.indexOf('testimonials') !== -1) this.layoutTypes.push({ name: "Testimonial", value: "testimonial" });
     if(this.commonService.ys_features.indexOf('shopping_assistant') !== -1) this.layoutTypes.push({ name: "Shopping Assistant", value: "shopping_assistant" });
     if(this.commonService.ys_features.indexOf('blogs') !== -1) this.layoutTypes.push({ name: "Blogs", value: "blogs" });
@@ -65,7 +67,7 @@ export class HomeLayoutComponent implements OnInit {
   onAddNewSgment(modalName) {
     if(!this.commonService.deploy_stages.logo)
       this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before adding a new segment');
-    else if(!this.commonService.deploy_details.theme_colors)
+    else if(!this.themeColorExists)
       this.commonService.openDeployAlertModal('color', 'Please set colors for your website before adding a new segment');
     else {
       this.addForm = { layout_list: [{}], rank: this.maxRank+1 };
@@ -136,13 +138,24 @@ export class HomeLayoutComponent implements OnInit {
 		});
   }
 
+  openResetModal(modalName) {
+    if(!this.commonService.deploy_stages.logo)
+      this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before adding a new segment');
+    else if(!this.themeColorExists)
+      this.commonService.openDeployAlertModal('color', 'Please set colors for your website before adding a new segment');
+    else {
+      this.deleteForm = {};
+      this.modalService.open(modalName, { centered: true });
+    }
+  }
+
   // RESET
   onResetLayout() {
     this.deleteForm.btnLoader = true;
     this.api.RESET_LAYOUT().subscribe(result => {
       this.deleteForm.btnLoader = false;
       if(result.status) {
-        document.getElementById('closeModal').click();
+        if(document.getElementById('closeModal')) document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {
