@@ -195,14 +195,6 @@ export class SettingComponent implements OnInit {
     });
   }
 
-  // social login
-  socialLogin(modalName) {
-    if(!this.commonService.deploy_stages.domain)
-      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the social login');
-    else
-      this.onOpenSettingModal(modalName);
-  }
-
   // setting
   onOpenSettingModal(modalName) {
     this.api.STORE_PROPERTY_DETAILS().subscribe((result) => {

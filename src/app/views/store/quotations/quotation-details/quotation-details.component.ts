@@ -121,12 +121,16 @@ export class QuotationDetailsComponent implements OnInit {
 
   // update
   onUpdateProduct() {
-    this.editForm.final_price = 0;
+    this.editForm.sub_total = 0;
     this.editForm.item_list.forEach((product) => {
-      this.editForm.final_price += (product.final_price * product.quantity);
-      if(product.unit!="Pcs") this.editForm.final_price += product.addon_price;
+      this.editForm.sub_total += (product.revised_final_price * product.quantity);
+      if(product.unit!="Pcs") this.editForm.sub_total += parseFloat(product.revised_addon_price);
     });
-    let formData = { _id: this.editForm._id, item_list: this.editForm.item_list, final_price: this.editForm.final_price };
+    this.editForm.final_price = parseFloat(this.editForm.sub_total)+parseFloat(this.editForm.shipping_cost);
+    let formData = {
+      _id: this.editForm._id, item_list: this.editForm.item_list, sub_total: this.editForm.sub_total,
+      shipping_cost: this.editForm.shipping_cost, final_price: this.editForm.final_price
+    };
     this.api.UPDATE_QUOTATION_DETAILS(formData).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

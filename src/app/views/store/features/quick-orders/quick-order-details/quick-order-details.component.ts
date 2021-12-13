@@ -37,55 +37,51 @@ export class QuickOrderDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.pageLoader = true;
-      if(!this.commonService.deploy_stages.domain)
-        this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the extra pages');
-      else {
-        // product features
-        this.storeApi.PRODUCT_FEATURES().subscribe(result => {
-          if(result.status) {
-            let productFeatures = result.data;
-            this.addonList = productFeatures.addon_list.filter(obj => obj.status == 'active').sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
-          }
-          // edit
-          if(this.params.id) {
-            this.formType = 'update';
-            this.api.QUICK_ORDER_DETAILS(this.params.id).subscribe(result => {
-              if(result.status) {
-                this.orderForm = result.data;
-                let itemIds = [];
-                this.orderForm.item_list.forEach(obj => {
-                  if(itemIds.indexOf(obj.product_id)==-1) itemIds.push(obj.product_id);
-                });
-                this.storeApi.MULTI_PRODUCTS({ ids: itemIds }).subscribe(result => {
-                  setTimeout(() => { this.pageLoader = false; }, 500);
-                  if(result.status) {
-                    let parentProductList = result.list;
-                    this.orderForm.item_list.forEach(obj => {
-                      let prodIndex = parentProductList.findIndex(prod => prod._id==obj.product_id);
-                      if(prodIndex!=-1) this.createProduct(parentProductList[prodIndex], obj);
-                    });
-                    // cart total
-                    this.cart_total = 0;
-                    this.cart_list.forEach((product) => { this.cart_total += product.final_price; });
-                    if(this.orderForm.disc_status) this.changeDiscValue();
-                  }
-                  else console.log("response", result);
-                });
-                if(this.orderForm.expiry_status) {
-                  this.orderForm.expiry_date = new Date(this.orderForm.expiry_on);
-                  this.orderForm.expiry_time = this.datePipe.transform(new Date(this.orderForm.expiry_on), 'hh:mm a');
+      // product features
+      this.storeApi.PRODUCT_FEATURES().subscribe(result => {
+        if(result.status) {
+          let productFeatures = result.data;
+          this.addonList = productFeatures.addon_list.filter(obj => obj.status == 'active').sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
+        }
+        // edit
+        if(this.params.id) {
+          this.formType = 'update';
+          this.api.QUICK_ORDER_DETAILS(this.params.id).subscribe(result => {
+            if(result.status) {
+              this.orderForm = result.data;
+              let itemIds = [];
+              this.orderForm.item_list.forEach(obj => {
+                if(itemIds.indexOf(obj.product_id)==-1) itemIds.push(obj.product_id);
+              });
+              this.storeApi.MULTI_PRODUCTS({ ids: itemIds }).subscribe(result => {
+                setTimeout(() => { this.pageLoader = false; }, 500);
+                if(result.status) {
+                  let parentProductList = result.list;
+                  this.orderForm.item_list.forEach(obj => {
+                    let prodIndex = parentProductList.findIndex(prod => prod._id==obj.product_id);
+                    if(prodIndex!=-1) this.createProduct(parentProductList[prodIndex], obj);
+                  });
+                  // cart total
+                  this.cart_total = 0;
+                  this.cart_list.forEach((product) => { this.cart_total += product.final_price; });
+                  if(this.orderForm.disc_status) this.changeDiscValue();
                 }
+                else console.log("response", result);
+              });
+              if(this.orderForm.expiry_status) {
+                this.orderForm.expiry_date = new Date(this.orderForm.expiry_on);
+                this.orderForm.expiry_time = this.datePipe.transform(new Date(this.orderForm.expiry_on), 'hh:mm a');
               }
-              else console.log("response", result);
-            });
-          }
-          // add
-          if(this.params.count) {
-            this.orderForm.name = "Quick Order "+this.params.count;
-            setTimeout(() => { this.pageLoader = false; }, 500);
-          }
-        });
-      }
+            }
+            else console.log("response", result);
+          });
+        }
+        // add
+        if(this.params.count) {
+          this.orderForm.name = "Quick Order "+this.params.count;
+          setTimeout(() => { this.pageLoader = false; }, 500);
+        }
+      });
     });
   }
 

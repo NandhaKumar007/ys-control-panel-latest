@@ -23,9 +23,7 @@ export class ProductSeoComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(!this.commonService.deploy_stages.domain)
-      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the product seo');
-    else this.onChangeCategory(this.category_id);
+    this.onChangeCategory(this.category_id);
   }
 
   onChangeCategory(x) {

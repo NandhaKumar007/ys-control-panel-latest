@@ -27,20 +27,16 @@ export class CatalogSeoComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(!this.commonService.deploy_stages.domain)
-      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the catalog seo');
-    else {
-      this.pageLoader = true;
-      this.storeApi.CATALOG_LIST().subscribe(result => {
-        if(result.status) {
-          this.list = result.list;
-          this.commonService.catalog_list = result.list;
-          this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
-        }
-        else console.log("response", result);
-        setTimeout(() => { this.pageLoader = false; }, 500);
-      });
-    }
+    this.pageLoader = true;
+    this.storeApi.CATALOG_LIST().subscribe(result => {
+      if(result.status) {
+        this.list = result.list;
+        this.commonService.catalog_list = result.list;
+        this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
+      }
+      else console.log("response", result);
+      setTimeout(() => { this.pageLoader = false; }, 500);
+    });
   }
 
   // EDIT

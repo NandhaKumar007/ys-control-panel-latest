@@ -25,16 +25,12 @@ export class ExtraPagesSeoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(!this.commonService.deploy_stages.domain)
-      this.commonService.openDeployAlertModal('domain', 'Please setup domain for your business before use the extra pages seo');
-    else {
-      this.pageLoader = true;
-      this.api.EXTRA_PAGE_LIST().subscribe(result => {
-        setTimeout(() => { this.pageLoader = false; }, 500);
-        if(result.status) this.list = result.list;
-        else console.log("response", result);
-      });
-    }
+    this.pageLoader = true;
+    this.api.EXTRA_PAGE_LIST().subscribe(result => {
+      setTimeout(() => { this.pageLoader = false; }, 500);
+      if(result.status) this.list = result.list;
+      else console.log("response", result);
+    });
   }
 
   // EDIT

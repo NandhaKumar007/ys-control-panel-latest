@@ -309,9 +309,6 @@ export class CommonService {
     else if(type=='plan') {
       this.alert_popup_content = { btn_name: "Choose Plan", btn_link: "/deployment/plans" };
     }
-    else if(type=='domain') {
-      this.alert_popup_content = { btn_name: "Setup Domain", btn_link: "/deployment/domain" };
-    }
     this.alert_popup_content.content = content;
     document.getElementById("openDeployAlertModal").click();
   }

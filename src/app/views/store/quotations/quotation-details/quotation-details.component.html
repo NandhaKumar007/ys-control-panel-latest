@@ -72,8 +72,8 @@
                 </div>
 
                 <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
-                <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">{{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
-                <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">{{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
+                <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">{{ (x.revised_final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
+                <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">{{ ((x.revised_final_price*x.quantity)+x.revised_addon_price) | currency: commonService.store_currency?.country_code}}</div>
               </div>
             </div>
           </div>
@@ -102,14 +102,14 @@
           <div class="col-md-6 d-flex">
             <div class="summary-section mtb-10">
               <div class="order-summary-header pb-2">
-                <p class="sec-desc" style="display: inline-block;">Company Address</p>
+                <p class="sec-desc" style="display: inline-block;">Address</p>
                 <i *ngIf="params?.type!='confirmed' && params?.type!='cancelled'" style="float:right;" (click)="addressType='shipping'; onEdit('address', addressModal);" class="material-icons edit-icon">edit</i>
               </div>
               <div class="card order-summary-details h-100">
                 <div class="row mtb-20">
                   <div class="col-6">
                     <div class="box-card card-head">
-                      <p>Company Name</p>
+                      <p>Name</p>
                     </div>
                   </div>
                   <div class="col-6">
@@ -117,7 +117,7 @@
                       <p class="pull-right text-right">{{order_details.company_address?.name}}</p>
                     </div>
                   </div>
-                  <div class="col-6">
+                  <!-- <div class="col-6">
                     <div class="box-card card-head">
                       <p>Designation</p>
                     </div>
@@ -136,7 +136,7 @@
                     <div class="box-card">
                       <p class="pull-right text-right">{{order_details.company_address?.employees_count}}</p>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="col-6">
                     <div class="box-card card-head">
                       <p>Mobile No</p>
@@ -228,6 +228,26 @@
           <div class="row mtb-10">
             <div class="col-6">
               <div class="box-card card-head">
+                <p>Sub Total</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="box-card">
+                <p class="pull-right text-right">{{order_details.sub_total | currency: commonService.store_currency?.country_code}}</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="box-card card-head">
+                <p>Shipping Cost</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="box-card">
+                <p class="pull-right text-right">{{order_details.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="box-card card-head">
                 <p>Grand Total</p>
               </div>
             </div>
@@ -308,6 +328,10 @@
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdateProduct();" ngNativeValidate>
     <div class="modal-body">
+      <div class="col-md-6 form-group mb-3">
+        <label>Shipping Cost</label>
+        <input type="text" name="shipping_cost" [(ngModel)]="editForm.shipping_cost" #shipping_cost="ngModel" class="form-control" appNumberOnly required />
+      </div>
       <div class="col-md-12 list-item p-0">
         <div *ngFor="let x of editForm.item_list; let i=index;" class="card o-hidden mb-4 d-flex flex-row">
           <div class="list-thumb d-flex mtb-20">
@@ -315,7 +339,7 @@
           </div>
           <div class="flex-grow-1 pl-2 d-flex mtb-20">
             <div class="card-body row">
-              <div class="col-md-6 d-flex justify-content-center flex-column">
+              <div class="col-md-4 d-flex justify-content-center flex-column">
                 <span>{{x.name}}</span>
                 <ng-container *ngIf="x.variant_status">
                   <ng-container *ngFor="let y of x.variant_types;">
@@ -327,16 +351,18 @@
                   <span class="w-100">{{x.selected_addon?.name}}</span>
                 </div>
               </div>
-              <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
+              <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit}}</div>
+              <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">{{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
+              <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">{{ ((x.final_price*x.quantity)+x.addon_price) | currency: commonService.store_currency?.country_code}}</div>
               <div class="col-md-4 flex-center">
                 <div class="row">
                   <div class="col-md-12 form-group mb-3">
-                    <label>Price</label>
-                    <input type="text" name="final_price{{i}}" [(ngModel)]="x.final_price" #final_price="ngModel" class="form-control" appNumberOnly required />
+                    <label>Discounted Price</label>
+                    <input type="text" name="revised_final_price{{i}}" [(ngModel)]="x.revised_final_price" #revised_final_price="ngModel" class="form-control" appNumberOnly required />
                   </div>
-                  <div *ngIf="x.unit!='Pcs' && x.addon_price>0" class="col-md-12 form-group mb-3">
+                  <div *ngIf="x.unit!='Pcs' && x.revised_addon_price>0" class="col-md-12 form-group mb-3">
                     <label>Addon Price</label>
-                    <input type="text" name="addon_price{{i}}" [(ngModel)]="x.addon_price" #addon_price="ngModel" class="form-control" appNumberOnly required />
+                    <input type="text" name="revised_addon_price{{i}}" [(ngModel)]="x.revised_addon_price" #revised_addon_price="ngModel" class="form-control" appNumberOnly required />
                   </div>
                 </div>
               </div>
@@ -393,17 +419,17 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
-            <label>Company Name</label>
+            <label>Name</label>
             <input type="text" name="name" [(ngModel)]="addressForm.name" #name="ngModel" class="form-control" required />
           </div>
-          <div class="col-md-6 form-group mb-3">
+          <!-- <div class="col-md-6 form-group mb-3">
             <label>Designation</label>
             <input type="text" name="designation" [(ngModel)]="addressForm.designation" #designation="ngModel" class="form-control" required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Company Employee Strength</label>
             <input type="text" name="employees_count" [(ngModel)]="addressForm.employees_count" #employees_count="ngModel" class="form-control" required />
-          </div>
+          </div> -->
           <div class="col-md-6 form-group mb-3">
             <label>Country</label>
             <select name="country" [(ngModel)]="addressForm.country" (change)="addressForm.state=null; onCountryChange(addressForm.country);"
