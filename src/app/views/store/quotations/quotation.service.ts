@@ -18,7 +18,7 @@ export class QuotationService {
   }
   QUOTATION_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/quotation_details?quot_id='+x, httpOptions);
+    return this.http.post<any>(environment.ws_url+'/store/quotation_list', { quot_id: x }, httpOptions);
   }
   UPDATE_QUOTATION_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

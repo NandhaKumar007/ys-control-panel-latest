@@ -256,9 +256,9 @@
                 <p class="pull-right text-right">{{order_details.final_price | currency: commonService.store_currency?.country_code}}</p>
               </div>
             </div>
-            <div class="col-12">
+            <!-- <div class="col-12">
               <button type="button" (click)="onViewInvoice(invoiceModal);" class="btn btn-primary w-100 mt-10">View Invoice</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -306,7 +306,8 @@
           </ng-container>
 
           <div *ngIf="params?.type!='confirmed' && params?.type!='cancelled'" class="col-md-12">
-            <button type="button" (click)="quotForm = { _id: order_details._id, email: order_details.customerDetails[0]?.email }; modalService.open(sendQuotationModal);" class="btn btn-primary ladda-button w-100">Send Quotation</button>
+            <button type="button" (click)="quotForm = { _id: order_details._id, email: order_details.customerDetails[0]?.email }; modalService.open(sendQuotationModal);"
+            class="btn btn-primary ladda-button w-100">Send Revised Quotation</button>
           </div>
         </div>
       </div>
@@ -500,7 +501,7 @@
 <!-- send quotation -->
 <ng-template #sendQuotationModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Send Quotation</h4>
+    <h4 class="modal-title" id="modal-basic-title">Send Revised Quotation</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSendQuotation(quotForm);" ngNativeValidate>
     <div class="modal-body">
