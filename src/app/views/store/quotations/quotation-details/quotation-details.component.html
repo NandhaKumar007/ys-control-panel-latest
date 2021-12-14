@@ -256,9 +256,6 @@
                 <p class="pull-right text-right">{{order_details.final_price | currency: commonService.store_currency?.country_code}}</p>
               </div>
             </div>
-            <!-- <div class="col-12">
-              <button type="button" (click)="onViewInvoice(invoiceModal);" class="btn btn-primary w-100 mt-10">View Invoice</button>
-            </div> -->
           </div>
         </div>
       </div>
@@ -282,7 +279,7 @@
             </div>
             <div class="col-5">
               <div class="box-card card-head">
-                <p>Updated on</p>
+                <p>Processed on</p>
               </div>
             </div>
             <div class="col-7">
@@ -316,6 +313,13 @@
       <ng-container *ngIf="params?.type!='confirmed' && params?.type!='cancelled'">
         <button type="button" (click)="errorMsg=null; btnLoader=false; modalService.open(confirmModal, { centered: true });" class="btn btn-success w-100 mtb-10">Finalize Quotation</button>
         <button type="button" (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });" class="btn btn-info w-100 mtb-10">Cancel Quotation</button>
+      </ng-container>
+
+      <ng-container *ngIf="params?.type=='confirmed'">
+        <button *ngIf="!order_details.order_id" (click)="orderForm={}; modalService.open(createOrderModal);"
+        type="button" class="btn btn-success w-100 mtb-10">Create Order</button>
+        <button *ngIf="order_details.order_id" routerLink="/orders/product/view/all/{{order_details.order_id}}"
+        type="button" class="btn btn-success w-100 mtb-10">View Order</button>
       </ng-container>
 
     </div>
@@ -519,7 +523,8 @@
     </div>
     <div class="modal-footer">
       <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('cancel');">Cancel</button>
-      <button type="submit" class="btn btn-primary">Send</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="quotForm.submit"
+      [ladda]="quotForm.submit">Send</button>
     </div>
   </form>
 </ng-template>
@@ -558,5 +563,45 @@
   </div>
 </ng-template>
 
-<!-- invoice -->
-<ng-template #invoiceModal let-modal></ng-template>
+<!-- create order -->
+<ng-template #createOrderModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create Order</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onCreateOrder();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Shipping Name</label>
+            <input type="text" name="shipping_name" [(ngModel)]="orderForm.shipping_name" class="form-control" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Delivery Time</label>
+            <select name="delivery_time" class="form-control" [(ngModel)]="orderForm.delivery_time" required>
+              <option value="Same day">Same day</option>
+              <option value="Next day">Next day</option>
+              <option value="1 to 2 days">1 to 2 days</option>
+              <option value="2 to 5 days">2 to 5 days</option>
+              <option value="More than 5 days">More than 5 days</option>
+            </select>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Payment Method</label>
+            <select name="payment_type" class="form-control" [(ngModel)]="orderForm.payment_type" required>
+              <option *ngFor="let x of commonService.payment_list | orderAsc: 'rank';" [ngValue]="x.name">{{x.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="orderForm.errorMsg">
+        <p class="text-danger">{{ orderForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary" (click)="modal.dismiss('cancel');">Cancel</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="orderForm.submit"
+      [ladda]="orderForm.submit">Submit</button>
+    </div>
+  </form>
+</ng-template>

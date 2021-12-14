@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuotationService } from '../quotation.service';
+import { OrderService } from '../../orders/order.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -26,11 +27,11 @@ export class QuotationDetailsComponent implements OnInit {
   custom_list: any = []; customIndex: number;
   existing_custom_list = []; selected_custom_list = [];
   invoice_details: any; invoice_order_list: any;
-  quotForm: any = {};
+  quotForm: any = {}; orderForm: any = {};
 
   constructor(
-    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
-    private router: Router, private api: QuotationService, public commonService: CommonService
+    config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private router: Router,
+    private api: QuotationService, public commonService: CommonService, private orderApi: OrderService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -52,16 +53,69 @@ export class QuotationDetailsComponent implements OnInit {
       });
     });
   }
+
+  onCreateOrder() {
+    this.orderForm.submit = true;
+    let orderData = {
+      quot_id: this.order_details._id,
+      item_list: [], currency_type: this.order_details.currency_type,
+      sub_total: this.order_details.sub_total,
+      shipping_cost: this.order_details.shipping_cost,
+      grand_total: this.order_details.final_price,
+      final_price: this.order_details.final_price,
+      shipping_address: this.order_details.company_address,
+      shipping_method: {
+        _id: this.commonService.store_details._id,
+        name: this.orderForm.shipping_name,
+        shipping_price: this.order_details.shipping_cost,
+        delivery_time: this.orderForm.delivery_time
+      },
+      payment_details: { name: this.orderForm.payment_type },
+      order_status: "confirmed",
+      confirmed_on: new Date(),
+      customer_id: this.order_details.customer_id
+    };
+    for(let item of this.order_details.item_list) {
+      let itemDetails: any = {};
+      for(let key in item) {
+        if(item.hasOwnProperty(key)) itemDetails[key] = item[key];
+      }
+      itemDetails.addon_price = item.revised_addon_price;
+      itemDetails.final_price = item.revised_final_price;
+      orderData.item_list.push(itemDetails);
+    };
+    this.orderApi.CREATE_ORDER(orderData).subscribe(result => {
+      if(result.status) {
+        this.api.UPDATE_QUOTATION_DETAILS({ _id: this.order_details._id, order_id: result.data._id }).subscribe(result => {
+          this.orderForm.submit = false;
+          if(result.status) {
+            document.getElementById('closeModal').click();
+            this.ngOnInit();
+          }
+          else {
+            this.orderForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
+      }
+      else {
+        this.orderForm.submit = false;
+        this.orderForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
   
   onSendQuotation(x) {
+    this.quotForm.submit = true;
     this.api.SEND_QUOTATION(x).subscribe(result => {
-      this.btnLoader = false;
+      this.quotForm.submit = false;
       if(result.status) {
         document.getElementById('closeModal').click();
         this.router.navigate(["/quotations/live/"+this.params.customer_id]);
       }
       else {
-        this.errorMsg = result.message;
+        this.quotForm.errorMsg = result.message;
         console.log("response", result);
       }
     });
@@ -175,16 +229,6 @@ export class QuotationDetailsComponent implements OnInit {
       this.state_list = this.country_list[index].states;
       this.addressForm.dial_code = this.country_list[index].dial_code;
     }
-  }
-
-  // INVOICE
-  onViewInvoice(modalName) {
-    // this.invoice_details = this.order_details;
-    // this.invoice_order_list = [];
-    // this.processItemList(this.invoice_details.item_list).then((respData) => {
-    //   this.invoice_order_list = respData;
-    // });
-    // this.modalService.open(modalName, { size: 'lg' });
   }
 
   processItemList(itemList) {

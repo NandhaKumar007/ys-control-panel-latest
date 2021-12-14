@@ -1113,7 +1113,7 @@
         <!-- # Create new item group -->
 
         <!-- cancel order -->
-        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='inactive'" type="button"
+        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive'" type="button"
           (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
           class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
