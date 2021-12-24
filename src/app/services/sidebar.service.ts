@@ -126,12 +126,23 @@ export class SidebarService {
           let quotList: IChildItem[] = [
             { icon: 'slow_motion_video', name: 'Live Requests', state: '/quotations/live/all', type: 'link' },
             { icon: 'check_circle_outline', name: 'Confirmed Requests', state: '/quotations/confirmed/all', type: 'link' },
-            { icon: 'highlight_off', name: 'Cancelled Requests', state: '/quotations/cancelled/all', type: 'link' },
-            { icon: 'no_sim', name: 'Abandoned Quotes', state: '/abandoned-quotes', type: 'link' }
+            { icon: 'highlight_off', name: 'Cancelled Requests', state: '/quotations/cancelled/all', type: 'link' }
           ];
-          if(this.commonService.store_details.type == 'quot_based') quotList.push({ icon: 'supervisor_account', name: 'Customers', state: '/customers', type: 'link' });
+          // abandoned
+          if(ysFeatures.indexOf('abandoned_cart')!=-1) {
+            quotList.push({ name: 'Abandoned Quote', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
+              { name: 'Customers', state: '/abandoned-quote/customer', type: 'link' },
+              { name: 'Guest Users', state: '/abandoned-quote/guest-user', type: 'link' }
+            ] });
+            routePermissionList.push("abandoned_quotes");
+          }
+          // customer
+          quotList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
+            { name: 'Customers', state: '/customers', type: 'link' },
+            { name: 'Guest Users', state: '/guest-users', type: 'link' }
+          ] });
           this.sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
-          routePermissionList.push("quotations", "abandoned_quotes");
+          routePermissionList.push("quotations");
         }
         // orders
         if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based' || this.commonService.store_details.type == 'restaurant_based') {
@@ -149,7 +160,7 @@ export class SidebarService {
             routePermissionList.push("inactive_gift_orders");
           }
           // quick order
-          if(ysFeatures.indexOf('quick_order')!=-1) {
+          if(this.commonService.store_details.type!='quot_with_order_based' && ysFeatures.indexOf('quick_order')!=-1) {
             orderList.push({ icon: 'timer', name: 'Quick Orders', state: '/features/quick-orders', type: 'link' });
             routePermissionList.push("quick_order");
           }
@@ -164,19 +175,19 @@ export class SidebarService {
             orderList.push({ icon: 'book_online', name: 'Appointments', state: '/orders/appointments', type: 'link' });
             routePermissionList.push("appointments");
           }
-          // inactive orders
-          if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
-          else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
-          // abandoned
-          if(ysFeatures.indexOf('abandoned_cart')!=-1) {
-            orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
-              { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
-              { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }
-            ] });
-            routePermissionList.push("abandoned_cart");
-          }
-          // customer
-          if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'restaurant_based') {
+          if(this.commonService.store_details.type!='quot_with_order_based') {
+            // inactive orders
+            if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
+            else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
+            // abandoned
+            if(ysFeatures.indexOf('abandoned_cart')!=-1) {
+              orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
+                { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
+                { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }
+              ] });
+              routePermissionList.push("abandoned_cart");
+            }
+            // customer
             orderList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
               { name: 'Customers', state: '/customers', type: 'link' },
               { name: 'Guest Users', state: '/guest-users', type: 'link' }
@@ -185,13 +196,6 @@ export class SidebarService {
           this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
           routePermissionList.push("orders", "inactive_orders");
           if(ysFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
-        }
-        // customers
-        if(this.commonService.store_details.type == 'quot_with_order_based') {
-          this.sidePanelList.push(
-            { name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' },
-            { name: 'Guest Users', type: 'link', icon: 'no_accounts', state: '/guest-users' }
-          );
         }
         // marketing tools
         let toolList: IChildItem[] = [];
@@ -494,14 +498,6 @@ export class SidebarService {
         }
         if(orderList.length) this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
         if(ysFeatures.indexOf('manual_order')!=-1 && subuserFeatures.indexOf('manual_order')!=-1) routePermissionList.push("manual_order");
-      }
-      // customers
-      if(this.commonService.store_details.type == 'quot_with_order_based' && subuserFeatures.indexOf('customers')!=-1) {
-        this.sidePanelList.push(
-          { name: 'Customers', type: 'link', icon: 'supervisor_account', state: '/customers' },
-          { name: 'Guest Users', type: 'link', icon: 'no_accounts', state: '/guest-users' }
-        );
-        routePermissionList.push("customers");
       }
       // marketing tools
       let toolList: IChildItem[] = [];

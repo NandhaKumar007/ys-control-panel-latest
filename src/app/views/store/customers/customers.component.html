@@ -22,8 +22,7 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-6">
-        <button *ngIf="commonService.store_details?.login_type=='admin'" type="button"
-          (click)="addCustomerModal(customerModal);" class="btn btn-primary ladda-button mr-2">Add New Customer</button>
+        <button type="button" (click)="addCustomerModal(customerModal);" class="btn btn-primary ladda-button mr-2">Add New Customer</button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15">
@@ -56,8 +55,7 @@
                       <span class="black-outline-txt">View</span>
                     </a>
                   </p>
-                  <div *ngIf="commonService.store_details?.login_type=='admin'"
-                    class="product-btn-group text-muted text-small w-15 w-sm-100 d-lg-block item-actions mr-3 c-m-md-0">
+                  <div class="product-btn-group text-muted text-small w-15 w-sm-100 d-lg-block item-actions mr-3 c-m-md-0">
                     <div class="btn-group w-md-100">
                       <!-- orders -->
                       <div

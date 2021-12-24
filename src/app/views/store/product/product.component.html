@@ -141,17 +141,16 @@
                   <p *ngIf="x.stock>0" class="m-0 text-muted text-small w-sm-100">{{x.stock}} {{x.unit}} in Stock</p>
                   <p *ngIf="x.stock==0" class="m-0 text-muted text-small w-sm-100">Out of Stock</p>
                   <div class="m-0 text-muted text-small w-sm-100 d-lg-block item-actions">
-                    <div *ngIf="commonService.store_details?.login_type!='vendor'"
-                      class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                    <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
                       <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                         <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
-                          <span class="black-outline-txt">Edit</span></button>
+                          <span class="black-outline-txt">Edit</span>
+                        </button>
                         <div class="dropdown-menu" ngbDropdownMenu>
                           <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
                           <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
                             <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
-                            <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item"
-                              (click)="goModifyPage(x, 3);">Catalogs</button>
+                            <button class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
                             <button *ngIf="commonService.store_details._id=='60b52edf58954c13bf58b5a2' && commonService.ys_features.indexOf('product_reviews')!=-1"
                               class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
                           </ng-container>
