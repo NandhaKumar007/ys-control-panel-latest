@@ -1,6 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../../services/store-api.service';
 import { OrderService } from '../../order.service';
@@ -17,7 +16,9 @@ import { environment } from '../../../../../../environments/environment';
 
 export class CreateProductOrderComponent implements OnInit {
 
-  imgBaseUrl = environment.img_baseurl; orderForm: any; page = 1;
+  imgBaseUrl = environment.img_baseurl; orderForm: any;
+  page = 1; pageSize = 10;
+  totalPages: number = 0; pagesList: any = []; categoryList: any = [];
   customer_list: any = []; customer_list_modal_config: any; selected_customer: any;
   product_list: any = []; product_list_modal_config: any; productDetails: any;
   shipping_list: any = []; shipping_list_modal_config: any; selected_shipping: any;
@@ -44,6 +45,13 @@ export class CreateProductOrderComponent implements OnInit {
     public commonService: CommonService, private customerApi: CustomerApiService, private OrderApi: OrderService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
+    // catalogs
+    if(this.commonService.catalog_list.length) {
+      this.categoryList.push({_id: 'all', name: "All Catalogs"});
+      this.commonService.catalog_list.forEach(element => {
+        this.categoryList.push(element)
+      });
+    }
   }
 
   ngOnInit() {
@@ -433,15 +441,30 @@ export class CreateProductOrderComponent implements OnInit {
   }
 
   openCustomerListModal(modalName) {
-    this.customer_list_modal_config = { search_input: "" };
+    this.page = 1;
+    this.customer_list_modal_config = { search: "" };
     this.modalService.open(modalName, { windowClass:'xlModal' });
-    if(!this.customer_list.length) {
-      this.customer_list_modal_config.pageLoader = true;
-      this.customerApi.CUSTOMER_LIST(null).subscribe(result => {
-        this.customer_list_modal_config.pageLoader = false;
-        if(result.status) this.customer_list = result.list;
-      });
-    }
+    this.customer_list_modal_config.pageLoader = true;
+    this.onLoadCustomerData();
+  }
+  onLoadCustomerData() {
+    this.commonService.scrollModalTop(0);
+    this.customer_list_modal_config.skip = (this.page-1)*this.pageSize;
+    this.customer_list_modal_config.limit = this.pageSize;
+    this.customerApi.CUSTOMER_LIST(this.customer_list_modal_config).subscribe(result => {
+      this.customer_list_modal_config.pageLoader = false;
+      if(result.status) {
+        this.customer_list = result.list;
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
+      }
+      else console.log("response", result);
+    });
+  }
+  onChangeCustomerPage(type) {
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.onLoadCustomerData();
   }
 
   changeDisc() {
@@ -486,16 +509,32 @@ export class CreateProductOrderComponent implements OnInit {
 
   // product list
   openProductListModal(modalName) {
-    delete this.productDetails;
-    this.product_list_modal_config = { search_input: "" };
+    this.page = 1; delete this.productDetails;
+    this.product_list_modal_config = {
+      search: "", category_id: 'all', product_type: 'in', sort_by: 'created_desc'
+    };
     this.modalService.open(modalName, { windowClass:'xlModal' });
-    if(!this.product_list.length) {
-      this.product_list_modal_config.pageLoader = true;
-      this.api.PRODUCT_LIST({ category_id: 'all' }).subscribe( result => {
-        this.product_list_modal_config.pageLoader = false;
-        if(result.status) this.product_list = result.list.filter(obj => obj.stock>0);
-      });
-    }
+    this.product_list_modal_config.pageLoader = true;
+    this.onLoadProductData();
+  }
+  onLoadProductData() {
+    this.commonService.scrollModalTop(0);
+    this.product_list_modal_config.skip = (this.page-1)*this.pageSize;
+    this.product_list_modal_config.limit = this.pageSize;
+    this.api.PRODUCT_LIST(this.product_list_modal_config).subscribe(result => {
+      this.product_list_modal_config.pageLoader = false;
+      if(result.status) {
+        this.product_list = result.list;
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
+      }
+      else console.log("response", result);
+    });
+  }
+  onChangeProductPage(type) {
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.onLoadProductData();
   }
 
   // shipping methods

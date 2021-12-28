@@ -23,7 +23,7 @@
           </div>
           <div class="col-md-2 mt-3" align="right">
             <div class="top-filter-sec">
-              <select name="product_type" class="form-control select-arrow" [(ngModel)]="filterForm.product_type" (change)="getProductList(false);">
+              <select name="product_type" class="form-control select-arrow" [(ngModel)]="filterForm.product_type" (change)="ngOnInit();">
                 <option value="all">All</option>
                 <option value="in">In Stock</option>
                 <option value="out">Out Of Stock</option>
@@ -41,7 +41,7 @@
       <div class="col-md-3 col-6">
         <div class="form-group">
           <select name="category_id" class="form-control select-arrow" [(ngModel)]="filterForm.category_id"
-            (change)="getProductList(false);">
+            (change)="ngOnInit();">
             <option [ngValue]="x._id" *ngFor="let x of categoryList">{{x.name}}</option>
           </select>
         </div>
@@ -49,7 +49,7 @@
       <!-- sort -->
       <div class="col-md-3 col-6">
         <select name="sort_by" class="form-control select-arrow" [(ngModel)]="filterForm.sort_by"
-          (change)="getProductList(false);">
+          (change)="ngOnInit();">
           <option value="null" selected hidden>Sort by</option>
           <option value="rank">Rank: Low to High</option>
           <option value="rank_desc">Rank: High to Low</option>
@@ -68,7 +68,7 @@
       <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" placeholder="Select From Date" class="form-control" name="from_date" autocomplete="off"
-            [(ngModel)]="filterForm.from_date" (ngModelChange)="getProductList(false);" bsDatepicker
+            [(ngModel)]="filterForm.from_date" (ngModelChange)="(filterForm.from_date && filterForm.to_date)? ngOnInit(): '';" bsDatepicker
             [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
@@ -76,7 +76,7 @@
       <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" placeholder="Select To Date" class="form-control" name="to_date" autocomplete="off"
-            [(ngModel)]="filterForm.to_date" (ngModelChange)="getProductList(false);" bsDatepicker
+            [(ngModel)]="filterForm.to_date" (ngModelChange)="(filterForm.from_date && filterForm.to_date)? ngOnInit(): '';" bsDatepicker
             [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
@@ -88,16 +88,16 @@
       <!-- add btn -->
       <div class="col-6" [ngClass]="vendorList.length? 'col-md-3': 'col-md-6'">
         <ng-container
-          *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || productCount<limitedProdCount">
+          *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || globalCount<limitedProdCount">
           <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
-            routerLink="/products/add/{{productCount+1}}">Add New Product</button>
+            routerLink="/products/add/{{globalCount+1}}">Add New Product</button>
         </ng-container>
       </div>
       <!-- vendor list -->
       <div *ngIf="vendorList.length" class="col-md-3 col-6">
         <div class="form-group">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
-            (change)="getProductList(false);">
+            (change)="ngOnInit();">
             <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.name}}</option>
           </select>
         </div>
@@ -121,7 +121,7 @@
       <div class="data-list-card-inner">
 
         <div class="row m-0">
-          <div *ngFor="let x of list | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+          <div *ngFor="let x of list; let i = index;"
             class="list-item data-list-card col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="d-flex flex-row">
@@ -181,13 +181,30 @@
     </div>
 
     <!-- PAGINATION CONTROL -->
-    <div class="row mt-4">
+    <div *ngIf="list.length" class="row mt-4">
       <div class="col-md-10">
-        <pagination-controls (pageChange)="onChangePage($event);" autoHide="true" responsive="true"
-          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+        <ul role="navigation" class="ngx-pagination responsive" aria-label="Pagination">
+          <li class="pagination-previous mr-3">
+            <a (click)="(page>1)? onChangePage('prev'): ''" [ngClass]="(page>1)? 'cursor': 'disabled'" aria-label="page">
+              <span class="cursor show-for-sr"></span>
+            </a>
+          </li>
+            <li class="current">
+              <span>{{page}}</span>
+            </li>
+          <li class="pagination-next ml-3">
+            <a (click)="(page<totalPages)? onChangePage('next'): ''" [ngClass]="(page<totalPages)? 'cursor': 'disabled'" aria-label="page">
+              <span class="cursor show-for-sr"></span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <div *ngIf="list.length" class="col-md-2">
-        <p class="pull-right">{{list.length}} of {{totalCount}}</p>
+      <div class="col-md-2">
+        <div class="pull-right">
+          go to <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="commonService.pageTop(0); getProductList();">
+            <option [ngValue]="i+1" *ngFor="let num of pagesList; let i=index;">{{i+1}}</option>
+          </select> page
+        </div>
       </div>
     </div>
    

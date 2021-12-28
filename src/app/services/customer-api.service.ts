@@ -14,12 +14,7 @@ export class CustomerApiService {
   // Customers
   CUSTOMER_LIST(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    if(params) {
-      return this.http.get<any>(environment.ws_url+'/store/customer?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
-    }
-    else {
-      return this.http.get<any>(environment.ws_url+'/store/customer', httpOptions);
-    }
+    return this.http.get<any>(environment.ws_url+'/store/customer?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
   }
   EMAIL_VALIDATE(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

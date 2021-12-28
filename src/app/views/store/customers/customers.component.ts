@@ -16,8 +16,8 @@ import { CommonService } from '../../../services/common.service';
 
 export class CustomersComponent implements OnInit {
 
-  filterForm: any = { search: "" };
-  page = 1; pageSize = 10; totalCount: number = 0;
+  filterForm: any = { search: "" }; totalPages: number = 0;
+  page = 1; pageSize = 10; pagesList: any = [];
   pageLoader: boolean; exportLoader: boolean;
   list: any = []; addressForm: any = {}; customerForm: any = {};
   country_details: any; address_fields: any = []; mobile_pattern: any; state_list: any = [];
@@ -30,49 +30,45 @@ export class CustomersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.page = 1; this.list = []; this.pageLoader = true;
-    this.filterForm.skip = 0; this.filterForm.limit = 50;
+    this.page = 1;
+    if(this.commonService.page_attr && this.commonService.page_attr.type=='customer') {
+      let pageAttr = this.commonService.page_attr;
+      this.page = pageAttr.page;
+      this.filterForm.search = pageAttr.search;
+      delete this.commonService.page_attr;
+    }
+    this.pageLoader = true;
+    this.commonService.pageTop(0);
+    this.onLoadData();
+  }
+
+  onLoadData() {
+    this.filterForm.skip = (this.page-1)*this.pageSize; this.filterForm.limit = this.pageSize;
     this.customerApi.CUSTOMER_LIST(this.filterForm).subscribe(result => {
       if(result.status) {
-        this.totalCount = result.count;
         this.list = result.list;
         this.list.forEach(element => {
-          this.processData(element);
+          if(!element.dial_code && !element.mobile && element.address_list.length) {
+            let filteredAddress = element.address_list.filter(obj => obj.billing_address);
+            if(filteredAddress.length) {
+              element.dial_code = filteredAddress[0].dial_code;
+              element.mobile = filteredAddress[0].mobile;
+            }
+          }
         });
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
   }
 
-  onChangePage(selectedPage) {
-    this.page = selectedPage; this.commonService.pageTop(0);
-    let totalPages = this.list.length/this.pageSize;
-    if(totalPages===selectedPage && this.totalCount>this.list.length) {
-      this.filterForm.skip = this.list.length;
-      this.filterForm.limit = 20;
-      this.customerApi.CUSTOMER_LIST(this.filterForm).subscribe(result => {
-        if(result.status) {
-          this.totalCount = result.count;
-          result.list.forEach(element => {
-            element = this.processData(element);
-            this.list.push(element);
-          });
-        }
-        else console.log("response", result);
-      });
-    }
-  }
-
-  processData(element) {
-    if(!element.dial_code && !element.mobile && element.address_list.length) {
-      let filteredAddress = element.address_list.filter(obj => obj.billing_address);
-      if(filteredAddress.length) {
-        element.dial_code = filteredAddress[0].dial_code;
-        element.mobile = filteredAddress[0].mobile;
-      }
-    }
-    return element;
+  onChangePage(type) {
+    this.commonService.pageTop(0);
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.onLoadData();
   }
 
   // ADD CUSTOMER
@@ -104,13 +100,22 @@ export class CustomersComponent implements OnInit {
   }
 
   goOrdersPage(customer, type) {
+    this.catchPageData();
     this.commonService.selected_customer = customer;
     this.router.navigate(["/orders/product/"+type+"/"+customer._id])
   }
 
   goQuotPage(customer, type) {
+    this.catchPageData();
     this.commonService.selected_customer = customer;
     this.router.navigate(["/quotations/"+type+"/"+customer._id])
+  }
+
+  catchPageData() {
+    this.commonService.page_attr = {
+      type: 'customer', page: this.page, search: this.filterForm.search,
+      scroll_pos: this.commonService.scroll_y_pos
+    };
   }
 
   // EXPORT

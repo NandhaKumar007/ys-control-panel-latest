@@ -41,7 +41,7 @@
       <div class="data-list-card-inner">
         <div class="row m-0">
 
-          <div *ngFor="let x of list | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          <div *ngFor="let x of list; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
             <div class="d-flex flex-row">
               <div class="flex-grow-1 pl-2 d-flex">
@@ -52,7 +52,7 @@
                   <p class="w-30 w-sm-100 m-b-0">{{x.email}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{ (x.dial_code && x.mobile)? x.dial_code+' '+x.mobile: 'NA' }}</p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions order-md-2">
-                    <a class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="/customers/{{x._id}}">
+                    <a class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="catchPageData();" routerLink="/customers/{{x._id}}">
                       <span class="black-outline-txt">View</span>
                     </a>
                   </p>
@@ -92,13 +92,30 @@
 
 
     <!-- PAGINATION CONTROL -->
-    <div class="row mt-4">
+    <div *ngIf="list.length" class="row mt-4">
       <div class="col-md-10">
-        <pagination-controls (pageChange)="onChangePage($event);" autoHide="true" responsive="true"
-          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+        <ul role="navigation" class="ngx-pagination responsive" aria-label="Pagination">
+          <li class="pagination-previous mr-3">
+            <a (click)="(page>1)? onChangePage('prev'): ''" [ngClass]="(page>1)? 'cursor': 'disabled'" aria-label="page">
+              <span class="cursor show-for-sr"></span>
+            </a>
+          </li>
+            <li class="current">
+              <span>{{page}}</span>
+            </li>
+          <li class="pagination-next ml-3">
+            <a (click)="(page<totalPages)? onChangePage('next'): ''" [ngClass]="(page<totalPages)? 'cursor': 'disabled'" aria-label="page">
+              <span class="cursor show-for-sr"></span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <div *ngIf="list.length" class="col-md-2">
-        <p class="pull-right">{{list.length}} of {{totalCount}}</p>
+      <div class="col-md-2">
+        <div class="pull-right">
+          go to <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="commonService.pageTop(0); onLoadData();">
+            <option [ngValue]="i+1" *ngFor="let num of pagesList; let i=index;">{{i+1}}</option>
+          </select> page
+        </div>
       </div>
     </div>
     
@@ -116,7 +133,7 @@
 <!-- ADD CUSTOMER -->
 <ng-template #customerModal let-modal>
   <!-- header -->
-	<div class="modal-header pb-0">
+    <div class="modal-header pb-0">
     <div>
       <h4 class="modal-title" id="modal-basic-title">Add New Customer</h4>
       <p>Fill in the details of the customer</p>

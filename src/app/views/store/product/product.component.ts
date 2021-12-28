@@ -20,48 +20,101 @@ import jsonProducts from '../../../../assets/json/products.json';
 
 export class ProductComponent implements OnInit {
 
-  btnLoader: boolean; pageLoader: boolean; productCount: number = 0;
+  btnLoader: boolean; pageLoader: boolean; globalCount: number = 0;
+  totalPages: number = 0; pagesList: any = [];
 	page = 1; pageSize = 10;
   list: any = []; totalCount: number = 0;
-  filterForm: any = { search: "", sort_by: 'created_desc' }; exportLoader: boolean;
+  filterForm: any = {
+    search: "", sort_by: 'created_desc', category_id: 'all',
+    vendor_id: 'all', product_type: 'all'
+  };
+  exportLoader: boolean;
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   limitedProdCount = environment.limited_product_count;
   categoryList: any = []; vendorList: any = [];
-  scrollPos: number = 0;
 
   constructor(
-    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
+    config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
     private router: Router, private excelService: ExcelService, public commonService: CommonService, private extraApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
-  }
-
-  ngOnInit() {
-    this.filterForm.category_id = 'all'; this.filterForm.vendor_id = 'all';
-    this.filterForm.product_type = 'all';
     // vendors
     if(this.commonService.vendor_list.length) {
       this.vendorList = [{_id: 'all', name: "All Vendors"}];
       this.commonService.vendor_list.forEach(obj => { this.vendorList.push(obj) });
     }
-    if(this.commonService.product_page_attr) {
-      let pageInfo = this.commonService.product_page_attr;
-      delete this.commonService.product_page_attr;
-      this.scrollPos = pageInfo.scroll_pos;
-      this.page = pageInfo.page_no;
-      this.filterForm.category_id = pageInfo.filter_form.category_id;
-      this.filterForm.vendor_id = pageInfo.filter_form.vendor_id;
-      if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
-      if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
-    }
+    // catalogs
     if(this.commonService.catalog_list.length) {
       this.categoryList.push({_id: 'all', name: "All Catalogs"});
       this.commonService.catalog_list.forEach(element => {
         this.categoryList.push(element)
       });
     }
-    this.getProductList(false);
+  }
+
+  ngOnInit() {
+    this.pageLoader = true; this.page = 1; this.list = [];
+    if(this.commonService.product_page_attr) {
+      let pageInfo = this.commonService.product_page_attr;
+      this.page = pageInfo.page;
+      this.filterForm = pageInfo.filter_form;
+      if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
+      if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
+      delete this.commonService.product_page_attr;
+    }
+    this.getProductList();
+  }
+
+  getProductList() {
+    this.filterForm.skip = (this.page-1)*this.pageSize; this.filterForm.limit = this.pageSize;
+    this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
+      if(result.status) {
+        this.list = result.list;
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
+        this.globalCount = result.product_count;
+      }
+      else console.log("response", result);
+      setTimeout(() => { this.pageLoader = false; }, 500);
+    });
+  }
+
+  onChangePage(type) {
+    this.commonService.pageTop(0);
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.getProductList();
+  }
+
+  onMoveToArchive() {
+    this.storeApi.MOVE_PRODUCT_TO_ARCHIVE(this.archiveForm).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.archiveForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  // Delete
+  onDelete() {
+    this.btnLoader = true;
+    this.storeApi.DELETE_PRODUCT({ _id: this.deleteForm._id, rank: this.deleteForm.rank }).subscribe(result => {
+      this.updateDeployStatus();
+      setTimeout(() => { this.btnLoader = false; }, 500);
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.deleteForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   importProduct() {
@@ -107,76 +160,6 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  getProductList(mergeStatus) {
-    if(!mergeStatus) {
-      this.page = 1; this.list = [];
-      this.filterForm.skip = 0; this.filterForm.limit = 50;
-    }
-    if(this.filterForm.from_date || this.filterForm.to_date) {
-      if(this.filterForm.from_date && this.filterForm.to_date) {
-        this.callApi(mergeStatus);
-      }
-    }
-    else this.callApi(mergeStatus);
-  }
-  callApi(mergeStatus) {
-    if(!mergeStatus) this.pageLoader = true;
-    this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
-      if(result.status) {
-        if(mergeStatus) {
-          result.list.forEach(element => {
-            this.list.push(element);
-          });
-        }
-        else this.list = result.list;
-        this.totalCount = result.count;
-        this.productCount = result.product_count;
-      }
-      else console.log("response", result);
-      setTimeout(() => { this.pageLoader = false; }, 500);
-    });
-  }
-
-  onChangePage(selectedPage) {
-    this.page = selectedPage; this.commonService.pageTop(0);
-    let totalPages = this.list.length/this.pageSize;
-    if(totalPages===selectedPage && this.totalCount>this.list.length) {
-      this.filterForm.skip = this.list.length;
-      this.filterForm.limit = 20;
-      this.getProductList(true);
-    }
-  }
-
-  onMoveToArchive() {
-    this.storeApi.MOVE_PRODUCT_TO_ARCHIVE(this.archiveForm).subscribe(result => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.getProductList(false);
-      }
-      else {
-        this.archiveForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
-  }
-
-  // Delete
-  onDelete() {
-    this.btnLoader = true;
-    this.storeApi.DELETE_PRODUCT({ _id: this.deleteForm._id, rank: this.deleteForm.rank }).subscribe(result => {
-      this.updateDeployStatus();
-      setTimeout(() => { this.btnLoader = false; }, 500);
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.getProductList(false);
-      }
-      else {
-        this.deleteForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
-  }
-
   updateDeployStatus() {
     if(!this.commonService.deploy_stages['products']) {
       let formData = { store_id: this.commonService.store_details._id, "deploy_stages.products": true };
@@ -190,11 +173,11 @@ export class ProductComponent implements OnInit {
   }
 
   goModifyPage(product, stepNum) {
-    this.commonService.product_page_attr = { page_no: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
-    this.router.navigate(["/products/modify/"+product._id+"/"+this.productCount+"/"+stepNum]);
+    this.commonService.product_page_attr = { page: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.router.navigate(["/products/modify/"+product._id+"/"+this.globalCount+"/"+stepNum]);
   }
   goReviewPage(x) {
-    this.commonService.product_page_attr = { page_no: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.commonService.product_page_attr = { page: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/features/selected-product-reviews/"+x._id]);
   }
 
