@@ -12,9 +12,14 @@ export class CustomerApiService {
   constructor(private http: HttpClient) { }
 
   // Customers
-  CUSTOMER_LIST() {
+  CUSTOMER_LIST(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/customer', httpOptions);
+    if(params) {
+      return this.http.get<any>(environment.ws_url+'/store/customer?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
+    }
+    else {
+      return this.http.get<any>(environment.ws_url+'/store/customer', httpOptions);
+    }
   }
   EMAIL_VALIDATE(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -33,9 +38,9 @@ export class CustomerApiService {
     return this.http.get<any>(environment.ws_url+'/store/customer_details?customer_id='+x, httpOptions);
   }
 
-  ABANDONED_CARTS() {
+  ABANDONED_CARTS(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/abandoned_carts', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/abandoned_carts?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
   }
 
   CUSTOMER_MODEL_HISTORY_LIST(x, y) {

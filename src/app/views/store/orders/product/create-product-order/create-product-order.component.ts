@@ -437,7 +437,7 @@ export class CreateProductOrderComponent implements OnInit {
     this.modalService.open(modalName, { windowClass:'xlModal' });
     if(!this.customer_list.length) {
       this.customer_list_modal_config.pageLoader = true;
-      this.customerApi.CUSTOMER_LIST().subscribe(result => {
+      this.customerApi.CUSTOMER_LIST(null).subscribe(result => {
         this.customer_list_modal_config.pageLoader = false;
         if(result.status) this.customer_list = result.list;
       });

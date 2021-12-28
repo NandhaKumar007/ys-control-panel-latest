@@ -8,7 +8,6 @@ import { ProductExtrasApiService } from '../product-extras/product-extras-api.se
 import { CommonService } from '../../../services/common.service';
 import { ExcelService } from '../../../services/excel.service';
 import { DeploymentService } from '../deployment/deployment.service';
-import { GridSearchPipe } from '../../../shared/pipes/grid-search.pipe';
 import { environment } from '../../../../environments/environment';
 import jsonProducts from '../../../../assets/json/products.json';
 
@@ -21,15 +20,15 @@ import jsonProducts from '../../../../assets/json/products.json';
 
 export class ProductComponent implements OnInit {
 
-  btnLoader: boolean; pageLoader: boolean; productCount: any = 0;
-	page = 1; pageSize = 10; search_bar: string;
-  list: any = [];
-  filterForm: any = {}; exportLoader: boolean;
+  btnLoader: boolean; pageLoader: boolean; productCount: number = 0;
+	page = 1; pageSize = 10;
+  list: any = []; totalCount: number = 0;
+  filterForm: any = { search: "", sort_by: 'created_desc' }; exportLoader: boolean;
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   limitedProdCount = environment.limited_product_count;
   categoryList: any = []; vendorList: any = [];
-  sort_by: any = 'created_desc'; scrollPos: number = 0;
+  scrollPos: number = 0;
 
   constructor(
     private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
@@ -39,8 +38,9 @@ export class ProductComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.filterForm.category_id = 'all'; this.filterForm.vendor_id = 'all';
+    this.filterForm.product_type = 'all';
     // vendors
-    this.filterForm = { category_id: 'all', vendor_id: 'all', product_type: 'in' };
     if(this.commonService.vendor_list.length) {
       this.vendorList = [{_id: 'all', name: "All Vendors"}];
       this.commonService.vendor_list.forEach(obj => { this.vendorList.push(obj) });
@@ -50,8 +50,6 @@ export class ProductComponent implements OnInit {
       delete this.commonService.product_page_attr;
       this.scrollPos = pageInfo.scroll_pos;
       this.page = pageInfo.page_no;
-      this.search_bar = pageInfo.search;
-      this.sort_by = pageInfo.sort;
       this.filterForm.category_id = pageInfo.filter_form.category_id;
       this.filterForm.vendor_id = pageInfo.filter_form.vendor_id;
       if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
@@ -63,7 +61,7 @@ export class ProductComponent implements OnInit {
         this.categoryList.push(element)
       });
     }
-    this.getProductList();
+    this.getProductList(false);
   }
 
   importProduct() {
@@ -109,47 +107,43 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  getProductList() {
+  getProductList(mergeStatus) {
+    if(!mergeStatus) {
+      this.page = 1; this.list = [];
+      this.filterForm.skip = 0; this.filterForm.limit = 50;
+    }
     if(this.filterForm.from_date || this.filterForm.to_date) {
       if(this.filterForm.from_date && this.filterForm.to_date) {
-        this.pageLoader = true;
-        this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
-          if(result.status) {
-            this.list = result.list;
-            this.productCount = result.product_count;
-          }
-          else console.log("response", result);
-          setTimeout(() => {
-            this.pageLoader = false; this.onChangeSort(this.sort_by); this.commonService.pageTop(this.scrollPos);
-          }, 500);
-        });
+        this.callApi(mergeStatus);
       }
     }
-    else {
-      this.pageLoader = true;
-      this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
-        if(result.status) {
-          this.list = result.list;
-          this.productCount = result.product_count;
+    else this.callApi(mergeStatus);
+  }
+  callApi(mergeStatus) {
+    if(!mergeStatus) this.pageLoader = true;
+    this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
+      if(result.status) {
+        if(mergeStatus) {
+          result.list.forEach(element => {
+            this.list.push(element);
+          });
         }
-        else console.log("response", result);
-        setTimeout(() => {
-          this.pageLoader = false; this.onChangeSort(this.sort_by); this.commonService.pageTop(this.scrollPos);
-        }, 500);
-      });
-    }
+        else this.list = result.list;
+        this.totalCount = result.count;
+        this.productCount = result.product_count;
+      }
+      else console.log("response", result);
+      setTimeout(() => { this.pageLoader = false; }, 500);
+    });
   }
 
-  onChangeSort(x) {
-    if(x) {
-      let searchValue = this.search_bar; this.search_bar = null;
-      if(x=='rank_desc') this.list.sort((a, b) => 0 - (a.rank > b.rank ? 1 : -1));
-      else if(x=='price_desc') this.list.sort((a, b) => 0 - (a.discounted_price > b.discounted_price ? 1 : -1));
-      else if(x=='stock_desc') this.list.sort((a, b) => 0 - (a.stock > b.stock ? 1 : -1));
-      else if(x=='created_desc') this.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-      else if(x=='modified_desc') this.list.sort((a, b) => 0 - (a.modified_on > b.modified_on ? 1 : -1));
-      else this.list.sort((a, b) => 0 - (a[x] > b[x] ? -1 : 1));
-      setTimeout(() => { this.search_bar = searchValue; }, 10);
+  onChangePage(selectedPage) {
+    this.page = selectedPage; this.commonService.pageTop(0);
+    let totalPages = this.list.length/this.pageSize;
+    if(totalPages===selectedPage && this.totalCount>this.list.length) {
+      this.filterForm.skip = this.list.length;
+      this.filterForm.limit = 20;
+      this.getProductList(true);
     }
   }
 
@@ -157,7 +151,7 @@ export class ProductComponent implements OnInit {
     this.storeApi.MOVE_PRODUCT_TO_ARCHIVE(this.archiveForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.getProductList();
+        this.getProductList(false);
       }
       else {
         this.archiveForm.errorMsg = result.message;
@@ -174,7 +168,7 @@ export class ProductComponent implements OnInit {
       setTimeout(() => { this.btnLoader = false; }, 500);
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.getProductList();
+        this.getProductList(false);
       }
       else {
         this.deleteForm.errorMsg = result.message;
@@ -196,18 +190,17 @@ export class ProductComponent implements OnInit {
   }
 
   goModifyPage(product, stepNum) {
-    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.commonService.product_page_attr = { page_no: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/products/modify/"+product._id+"/"+this.productCount+"/"+stepNum]);
   }
   goReviewPage(x) {
-    this.commonService.product_page_attr = { page_no: this.page, search: this.search_bar, sort: this.sort_by, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
+    this.commonService.product_page_attr = { page_no: this.page, filter_form: this.filterForm, scroll_pos: this.commonService.scroll_y_pos };
     this.router.navigate(["/features/selected-product-reviews/"+x._id]);
   }
 
   exportAsXLSX() {
     this.exportLoader = true;
-    let productList = new GridSearchPipe().transform(this.list, {name: this.search_bar, sku: this.search_bar});
-    this.createList(this.commonService.catalog_list, productList).then((exportList: any[]) => {
+    this.createList(this.commonService.catalog_list, this.list).then((exportList: any[]) => {
       this.excelService.exportAsExcelFile(exportList, 'product'+' export '+new Date().getTime());
       setTimeout(() => { this.exportLoader = false; }, 500);
     })

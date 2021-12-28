@@ -16,8 +16,8 @@ import { CommonService } from '../../../services/common.service';
 
 export class CustomersComponent implements OnInit {
 
-  search_bar: string;
-  page = 1; pageSize = 10;
+  filterForm: any = { search: "" };
+  page = 1; pageSize = 10; totalCount: number = 0;
   pageLoader: boolean; exportLoader: boolean;
   list: any = []; addressForm: any = {}; customerForm: any = {};
   country_details: any; address_fields: any = []; mobile_pattern: any; state_list: any = [];
@@ -30,25 +30,49 @@ export class CustomersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pageLoader = true;
-    this.customerApi.CUSTOMER_LIST().subscribe(result => {
+    this.page = 1; this.list = []; this.pageLoader = true;
+    this.filterForm.skip = 0; this.filterForm.limit = 50;
+    this.customerApi.CUSTOMER_LIST(this.filterForm).subscribe(result => {
       if(result.status) {
+        this.totalCount = result.count;
         this.list = result.list;
         this.list.forEach(element => {
-          if(!element.dial_code && !element.mobile) {
-            if(element.address_list.length) {
-              let filteredAddress = element.address_list.filter(obj => obj.billing_address);
-              if(filteredAddress.length) {
-                element.dial_code = filteredAddress[0].dial_code;
-                element.mobile = filteredAddress[0].mobile;
-              }
-            }
-          }
+          this.processData(element);
         });
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
+  }
+
+  onChangePage(selectedPage) {
+    this.page = selectedPage; this.commonService.pageTop(0);
+    let totalPages = this.list.length/this.pageSize;
+    if(totalPages===selectedPage && this.totalCount>this.list.length) {
+      this.filterForm.skip = this.list.length;
+      this.filterForm.limit = 20;
+      this.customerApi.CUSTOMER_LIST(this.filterForm).subscribe(result => {
+        if(result.status) {
+          this.totalCount = result.count;
+          result.list.forEach(element => {
+            element = this.processData(element);
+            this.list.push(element);
+          });
+        }
+        else console.log("response", result);
+      });
+    }
+  }
+
+  processData(element) {
+    if(!element.dial_code && !element.mobile && element.address_list.length) {
+      let filteredAddress = element.address_list.filter(obj => obj.billing_address);
+      if(filteredAddress.length) {
+        element.dial_code = filteredAddress[0].dial_code;
+        element.mobile = filteredAddress[0].mobile;
+      }
+    }
+    return element;
   }
 
   // ADD CUSTOMER
@@ -93,7 +117,6 @@ export class CustomersComponent implements OnInit {
   exportAsXLSX() {
     this.exportLoader = true;
     let fileName = "customers";
-    // let orderList = new FieldSearchPipe().transform(this.list, 'order_number', this.search_bar);
     this.createList(this.list).then((exportList: any[]) => {
       this.excelService.exportAsExcelFile(exportList, fileName);
       setTimeout(() => { this.exportLoader = false; }, 500);
