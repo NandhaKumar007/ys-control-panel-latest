@@ -157,6 +157,7 @@ export class ModifyProductComponent implements OnInit {
 
   onUpdateDetails() {
     this.btnLoader = true;
+    this.productForm.sku = this.productForm.sku.toUpperCase();
     // discount
     if(!this.productForm.disc_status) {
       this.productForm.disc_percentage = null;

@@ -18,7 +18,7 @@ export class CreateProductOrderComponent implements OnInit {
 
   imgBaseUrl = environment.img_baseurl; orderForm: any;
   page = 1; pageSize = 10;
-  totalPages: number = 0; pagesList: any = []; categoryList: any = [];
+  totalPages: number = 0; pagesList: any = []; categoryList: any = [{_id: 'all', name: "All Catalogs"}];
   customer_list: any = []; customer_list_modal_config: any; selected_customer: any;
   product_list: any = []; product_list_modal_config: any; productDetails: any;
   shipping_list: any = []; shipping_list_modal_config: any; selected_shipping: any;
@@ -47,7 +47,6 @@ export class CreateProductOrderComponent implements OnInit {
     config.backdrop = 'static'; config.keyboard = false;
     // catalogs
     if(this.commonService.catalog_list.length) {
-      this.categoryList.push({_id: 'all', name: "All Catalogs"});
       this.commonService.catalog_list.forEach(element => {
         this.categoryList.push(element)
       });

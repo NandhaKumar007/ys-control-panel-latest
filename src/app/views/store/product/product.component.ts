@@ -32,7 +32,7 @@ export class ProductComponent implements OnInit {
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
   limitedProdCount = environment.limited_product_count;
-  categoryList: any = []; vendorList: any = [];
+  categoryList: any = [{_id: 'all', name: "All Catalogs"}]; vendorList: any = [];
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
@@ -46,7 +46,6 @@ export class ProductComponent implements OnInit {
     }
     // catalogs
     if(this.commonService.catalog_list.length) {
-      this.categoryList.push({_id: 'all', name: "All Catalogs"});
       this.commonService.catalog_list.forEach(element => {
         this.categoryList.push(element)
       });

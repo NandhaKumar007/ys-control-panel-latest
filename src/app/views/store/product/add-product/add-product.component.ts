@@ -107,6 +107,7 @@ export class AddProductComponent implements OnInit {
 
   onAdd() {
     this.btnLoader = true;
+    this.productForm.sku = this.productForm.sku.toUpperCase();
     // category list
     this.productForm.category_id = [];
     this.categoryList.forEach(element => {
