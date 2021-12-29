@@ -990,6 +990,43 @@ tag-input{
 }
 /* blue-fill-btn-end */
 
+/* green-outline-btn */
+.success-outline-btn {
+  background-color: $success-btn-bg;
+  border: 2px solid $success-btn-bdr;
+  border-radius: $btn-bdr-rds;
+  position: relative;
+  text-align: center;
+  // padding: 0.375rem 0.75rem;
+  padding: 8px 15px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+
+  .success-outline-txt {
+    color: $success-btn-txt-clr !important;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $success-btn-hvr-bg;
+    border-color: $success-btn-hvr-bdr;
+    .success-outline-txt {
+      color: $success-btn-hvr-txt !important;
+    }
+  }
+  &:focus {
+    box-shadow: none !important;
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+/* green-outline-btn end*/
+
 // -----------------------------------------BUTTONS SECTION------------
 
 .label_hint {
@@ -4087,6 +4124,87 @@ p svg:hover {
   height: 100vh;
   background: #000000;
   position: absolute;
+}
+
+// payment alerts
+.payment-alert-section {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .payment-alert-vector-top {
+    position: absolute;
+    top: 0;
+    right: 0;
+    img {
+      width: 400px;
+    }
+  }
+  .payment-center-section {
+    width: 100%;
+    .payment-center-section-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      img {
+        width: 300px;
+        margin-bottom: 20px;
+      }
+      .payment-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        h2 {
+          font-size: 2.5rem;
+          margin-bottom: 20px;
+        }
+        h6 {
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+  .payment-alert-vector-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    img {
+      width: 400px;
+    }
+  }
+}
+@media only screen and (max-width: 576px) {
+  .payment-alert-section {
+    .payment-center-section {
+      .payment-center-section-inner {
+        img {
+          width: 200px;
+          margin-bottom: 40px;
+        }
+        .payment-message{
+          h2{
+            font-size: 2rem;
+            margin-bottom: 15px;
+          }
+          h6{
+            font-size: 1rem;
+            margin-bottom: 40px;
+          }
+        }
+      }
+    }
+  }
 }
 
 // ashok
