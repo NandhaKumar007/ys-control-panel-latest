@@ -4126,6 +4126,31 @@ p svg:hover {
   position: absolute;
 }
 
+.product-pagination-wrapper {
+  position: relative;
+  .product-pagination {
+    .pagination-previous {
+      a.disabled{
+        &::before{
+          opacity: .5;
+        }
+      }
+    }
+    .pagination-next {
+      a.disabled{
+        &::after{
+          opacity: .5;
+        }
+      }
+    }
+  }
+  .page-count-pagination {
+    position: absolute;
+    top: 3px;
+    right: 17px;
+  }
+}
+
 // payment alerts
 .payment-alert-section {
   position: fixed;
@@ -4203,6 +4228,18 @@ p svg:hover {
           }
         }
       }
+    }
+  }
+
+  .product-pagination-wrapper {
+    .page-count-pagination {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      top: unset;
+      right: unset;
     }
   }
 }

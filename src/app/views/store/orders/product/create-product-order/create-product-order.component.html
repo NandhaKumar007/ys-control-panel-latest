@@ -641,13 +641,12 @@
           </div>
         </div>
 
+        <div *ngIf="selected_customer.address_list?.length" class="col-md-12 d-flex align-items-center">
+          <p class="add-another x-close mb-3">ADDRESS LIST</p>
+        </div>
         <div class="data-list-card-wrapper">
           <div class="data-list-card-inner">
             <div class="row m-0">
-
-              <div *ngIf="selected_customer.address_list?.length" class="col-md-12 d-flex align-items-center">
-                <p class="add-another x-close mb-0">ADDRESS LIST</p>
-              </div>
               <div *ngFor="let x of selected_customer.address_list;" class="col-md-12 list-item data-list-card p-0">
                 <div class="d-flex flex-row">
                   <div class="flex-grow-1 pl-2 d-flex flex-column">
@@ -683,28 +682,28 @@
     </div>
   </div>
   <div *ngIf="!selected_customer && !customer_list_modal_config.pageLoader && customer_list.length" class="modal-footer">
-    <div class="col-md-10">
-      <ul role="navigation" class="ngx-pagination responsive" aria-label="Pagination">
+    <div class="col-md-12 product-pagination-wrapper">
+      <ul role="navigation" class="ngx-pagination responsive product-pagination" aria-label="Pagination">
         <li class="pagination-previous mr-3">
           <a (click)="(page>1)? onChangeCustomerPage('prev'): ''" [ngClass]="(page>1)? 'cursor': 'disabled'" aria-label="page">
             <span class="cursor show-for-sr"></span>
           </a>
         </li>
-          <li class="current">
-            <span>{{page}}</span>
-          </li>
+        <li class="current">
+          <span>{{page}}</span>
+        </li>
         <li class="pagination-next ml-3">
           <a (click)="(page<totalPages)? onChangeCustomerPage('next'): ''" [ngClass]="(page<totalPages)? 'cursor': 'disabled'" aria-label="page">
             <span class="cursor show-for-sr"></span>
           </a>
         </li>
       </ul>
-    </div>
-    <div class="col-md-2">
-      <div class="pull-right">
-        go to <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="onLoadCustomerData();">
+      <div class="page-count-pagination">
+        <b class="mr-2">Go to</b>
+        <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="onLoadCustomerData();">
           <option [ngValue]="i+1" *ngFor="let num of pagesList; let i=index;">{{i+1}}</option>
-        </select> page
+        </select>
+        <b class="ml-2">page</b>
       </div>
     </div>
   </div>
@@ -966,28 +965,28 @@
     </div>
   </div>
   <div *ngIf="!productDetails && !product_list_modal_config.pageLoader && product_list.length" class="modal-footer">
-    <div class="col-md-10">
-      <ul role="navigation" class="ngx-pagination responsive" aria-label="Pagination">
+    <div class="col-md-12 product-pagination-wrapper">
+      <ul role="navigation" class="ngx-pagination responsive product-pagination" aria-label="Pagination">
         <li class="pagination-previous mr-3">
           <a (click)="(page>1)? onChangeProductPage('prev'): ''" [ngClass]="(page>1)? 'cursor': 'disabled'" aria-label="page">
             <span class="cursor show-for-sr"></span>
           </a>
         </li>
-          <li class="current">
-            <span>{{page}}</span>
-          </li>
+        <li class="current">
+          <span>{{page}}</span>
+        </li>
         <li class="pagination-next ml-3">
           <a (click)="(page<totalPages)? onChangeProductPage('next'): ''" [ngClass]="(page<totalPages)? 'cursor': 'disabled'" aria-label="page">
             <span class="cursor show-for-sr"></span>
           </a>
         </li>
       </ul>
-    </div>
-    <div class="col-md-2">
-      <div class="pull-right">
-        go to <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="onLoadProductData();">
+      <div class="page-count-pagination">
+        <b class="mr-2">Go to</b>
+        <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="onLoadProductData();">
           <option [ngValue]="i+1" *ngFor="let num of pagesList; let i=index;">{{i+1}}</option>
-        </select> page
+        </select>
+        <b class="ml-2">page</b>
       </div>
     </div>
   </div>

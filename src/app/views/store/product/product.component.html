@@ -183,28 +183,28 @@
 
     <!-- PAGINATION CONTROL -->
     <div *ngIf="list.length" class="row mt-4">
-      <div class="col-md-10">
-        <ul role="navigation" class="ngx-pagination responsive" aria-label="Pagination">
+      <div class="col-md-12 product-pagination-wrapper">
+        <ul role="navigation" class="ngx-pagination responsive product-pagination" aria-label="Pagination">
           <li class="pagination-previous mr-3">
             <a (click)="(page>1)? onChangePage('prev'): ''" [ngClass]="(page>1)? 'cursor': 'disabled'" aria-label="page">
               <span class="cursor show-for-sr"></span>
             </a>
           </li>
-            <li class="current">
-              <span>{{page}}</span>
-            </li>
+          <li class="current">
+            <span>{{page}}</span>
+          </li>
           <li class="pagination-next ml-3">
             <a (click)="(page<totalPages)? onChangePage('next'): ''" [ngClass]="(page<totalPages)? 'cursor': 'disabled'" aria-label="page">
               <span class="cursor show-for-sr"></span>
             </a>
           </li>
         </ul>
-      </div>
-      <div class="col-md-2">
-        <div class="pull-right">
-          go to <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="commonService.pageTop(0); getProductList();">
+        <div class="page-count-pagination">
+          <b class="mr-2">Go to</b>
+          <select name="select_page" style="width: 70px; display: inline;" class="form-control select-arrow" [(ngModel)]="page" (change)="commonService.pageTop(0); getProductList();">
             <option [ngValue]="i+1" *ngFor="let num of pagesList; let i=index;">{{i+1}}</option>
-          </select> page
+          </select>
+          <b class="ml-2">page</b>
         </div>
       </div>
     </div>
