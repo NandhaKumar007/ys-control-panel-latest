@@ -71,7 +71,8 @@ export class ProductComponent implements OnInit {
     this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
       if(result.status) {
         this.list = result.list;
-        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.totalCount = result.count;
+        this.totalPages = Math.ceil(this.totalCount/this.pageSize);
         this.pagesList = new Array(this.totalPages);
         this.globalCount = result.product_count;
       }

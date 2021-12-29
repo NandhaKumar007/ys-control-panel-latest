@@ -4075,6 +4075,7 @@ p svg:hover {
   padding: 0px 40px;
   margin-left: 10px;
   border-radius: 10px;
+  border: 1px solid grey;
 }
 
 .z-i-unset {
@@ -4086,4 +4087,19 @@ p svg:hover {
   height: 100vh;
   background: #000000;
   position: absolute;
+}
+
+// ashok
+.color-chips {
+  padding: 5px 10px 5px 10px;
+  background: #F0F0F0;
+  border-radius: 20px;
+}
+.chip-close {
+  top: 6px;
+  position: relative;
+  font-size: 20px;
+  margin-left: 5px;
+  color: #808080;
+  cursor: pointer;
 }

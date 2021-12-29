@@ -25,11 +25,12 @@ export class ModifyProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = []; intForm: any = {};
   addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
-  sizeCharts: any; faqList: any; aiStyleList: any;
+  sizeCharts: any; faqList: any; aiStyleList: any; colorList: any;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
+  selectedVariantOptions: any []; selectedVariantIndex: number;
 
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
@@ -73,6 +74,7 @@ export class ModifyProductComponent implements OnInit {
             }
           }
           this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
+          this.colorList = result.data.color_list;
           this.api.PRODUCT_DETAILS(params.product_id).subscribe(result => {
             if(result.status) {
               this.productForm = result.data;
@@ -476,6 +478,24 @@ export class ModifyProductComponent implements OnInit {
     let discountedPrice = 0;
     if(parseFloat(price) >= discAmt) discountedPrice = price - discAmt;
     return discountedPrice;
+  }
+
+  onAddColorOptions(modalName) {
+    this.selectedVariantOptions = [];
+    this.productForm.variant_types[this.selectedVariantIndex].options.forEach(obj => {
+      this.selectedVariantOptions.push({display: obj.display});
+    });
+    if(!this.selectedVariantOptions.length) this.selectedVariantOptions = [{}];
+    this.modalService.open(modalName);
+  }
+  onSetVariantColors() {
+    let newOptions = [];
+    this.selectedVariantOptions.forEach(obj => {
+      if(newOptions.findIndex(el => el.display==obj.display) == -1) newOptions.push({display: obj.display, value: obj.display});
+    });
+    this.productForm.variant_types[this.selectedVariantIndex].options = newOptions;
+    document.getElementById('closeModal').click();
+    this.onCreateVariantList(this.productForm.variant_types);
   }
 
   onChangeVariant(x) {

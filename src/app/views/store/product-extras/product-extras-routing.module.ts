@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: 'size-chart', loadChildren: () => import('./size-chart/size-chart.module').then(m => m.SizeChartModule), canActivate: [PermissionGuard], data: { name: "size_chart" } },
   { path: 'tags', loadChildren: () => import('./tag/tag.module').then(m => m.TagModule), canActivate: [PermissionGuard], data: { name: "tags" } },
   { path: 'tax-rates', loadChildren: () => import('./tax-rates/tax-rates.module').then(m => m.TaxRatesModule), canActivate: [PermissionGuard], data: { name: "tax_rates" } },
-  { path: 'product-taxonomy', loadChildren: () => import('./product-taxonomy/product-taxonomy.module').then(m => m.ProductTaxonomyModule), canActivate: [PermissionGuard], data: { name: "product_taxonomy" } }
+  { path: 'product-taxonomy', loadChildren: () => import('./product-taxonomy/product-taxonomy.module').then(m => m.ProductTaxonomyModule), canActivate: [PermissionGuard], data: { name: "product_taxonomy" } },
+  { path: 'variant-colors', loadChildren: () => import('./colors/colors.module').then(m => m.ColorsModule), canActivate: [PermissionGuard], data: { name: "variant_colors" } }
 ];
 
 @NgModule({

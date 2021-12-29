@@ -182,10 +182,23 @@
                   <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" (focusout)="onCreateVariantList(productForm.variant_types)"
                     required />
                 </div>
-                <div class="col-md-8 form-group mb-3">
+                <div *ngIf="x.name!='Color' && x.name!='color' && x.name!='Colour' && x.name!='colour'" class="col-md-8 form-group mb-3">
                   <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
                     [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);"
                     required></tag-input>
+                </div>
+                <div *ngIf="x.name=='Color' || x.name=='color' || x.name=='Colour' || x.name=='colour'" class="col-md-8 form-group mb-3">
+                  <span *ngFor="let opt of x.options; let m=index;" class="mr-1">
+                    <span class="color-chips">
+                      {{opt.display}}
+                      <span (click)="x.options.splice(m, 1); onCreateVariantList(productForm.variant_types);" class="chip-close material-icons">close</span>
+                    </span>
+                  </span>
+                  <div class="pt-3">
+                    <button type="button" (click)="selectedVariantIndex=i; onAddColorOptions(colorModal);" class="btn btn-wide btn-primary">
+                      Add Options
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -725,6 +738,41 @@
   </ng-container>
 
 </div>
+
+<!-- COLOR MODAL -->
+<ng-template #colorModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Colors</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onSetVariantColors();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div *ngFor="let x of selectedVariantOptions; let i=index;" class="col-md-4 form-group mb-3">
+            <div class="card p-2">
+              <span *ngIf="selectedVariantOptions.length > 1" (click)="selectedVariantOptions.splice(i, 1);"
+              class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+              <select name="variant_color{{i}}" class="form-control" [(ngModel)]="x.display" required>
+                <option *ngFor="let color of colorList;" [ngValue]="color.name">{{color.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <button type="button" (click)="selectedVariantOptions.push({});" class="btn btn-wide btn-primary">
+              Add New
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Submit</button>
+    </div>
+  </form>
+</ng-template>
 
 <!-- CATALOG MODAL -->
 <ng-template #catalogModal let-modal>

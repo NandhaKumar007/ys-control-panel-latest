@@ -24,11 +24,12 @@ export class AddProductComponent implements OnInit {
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.catalog_list;
-  addonList: any; tagList: any; noteList: any; taxRates: any;
+  addonList: any; tagList: any; noteList: any; taxRates: any;  colorList: any;
   sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
+  selectedVariantOptions: any []; selectedVariantIndex: number;
 
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 
@@ -87,6 +88,7 @@ export class AddProductComponent implements OnInit {
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
           this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
           if(this.taxonomyList.length) this.productForm.taxonomy_id = this.taxonomyList[0]._id;
+          this.colorList = result.data.color_list;
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
@@ -291,6 +293,24 @@ export class AddProductComponent implements OnInit {
     let discountedPrice = 0;
     if(parseFloat(price) >= discAmt) discountedPrice = price - discAmt;
     return discountedPrice;
+  }
+
+  onAddColorOptions(modalName) {
+    this.selectedVariantOptions = [];
+    this.productForm.variant_types[this.selectedVariantIndex].options.forEach(obj => {
+      this.selectedVariantOptions.push({display: obj.display});
+    });
+    if(!this.selectedVariantOptions.length) this.selectedVariantOptions = [{}];
+    this.modalService.open(modalName);
+  }
+  onSetVariantColors() {
+    let newOptions = [];
+    this.selectedVariantOptions.forEach(obj => {
+      if(newOptions.findIndex(el => el.display==obj.display) == -1) newOptions.push({display: obj.display, value: obj.display});
+    });
+    this.productForm.variant_types[this.selectedVariantIndex].options = newOptions;
+    document.getElementById('closeModal').click();
+    this.onCreateVariantList(this.productForm.variant_types);
   }
 
   onChangeVariant(x) {

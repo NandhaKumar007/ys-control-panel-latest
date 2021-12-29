@@ -23,6 +23,7 @@
           </div>
           <div class="col-md-2 mt-3" align="right">
             <div class="top-filter-sec">
+              <p class="m-0">Total {{totalCount}} product<ng-container *ngIf="totalCount>1">s</ng-container></p>
               <select name="product_type" class="form-control select-arrow" [(ngModel)]="filterForm.product_type" (change)="ngOnInit();">
                 <option value="all">All</option>
                 <option value="in">In Stock</option>
