@@ -89,7 +89,6 @@ export class ModifyHomeLayoutComponent implements OnInit {
     this.btnLoader = true;
     if(this.layoutDetails.type=='shopping_assistant') this.layoutDetails.shopping_assistant_config = this.shopping_assist_config;
     this.api.UPDATE_LAYOUT_LIST(this.layoutDetails).subscribe(result => {
-      this.updateDeployStatus();
       if(result.status) {
         this.router.navigate(["/layouts/home"]);
       }
@@ -99,18 +98,6 @@ export class ModifyHomeLayoutComponent implements OnInit {
       }
       this.btnLoader = false;
     });
-  }
-
-  updateDeployStatus() {
-    if(!this.commonService.deploy_stages['home_layouts']) {
-      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.home_layouts": true };
-      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
-        if(result.status) {
-          this.commonService.deploy_stages = result.data.deploy_stages;
-          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
-        }
-      });
-    }
   }
 
   fileChangeListener(devType, index, event) {

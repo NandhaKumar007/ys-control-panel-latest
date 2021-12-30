@@ -78,7 +78,6 @@ export class HomeLayoutComponent implements OnInit {
   onAdd() {
     if(this.addForm.type!="multiple_featured_product") delete this.addForm.multitab_list;
     this.api.ADD_LAYOUT(this.addForm).subscribe(result => {
-      this.updateDeployStatus();
 			if(result.status) {
 				document.getElementById('closeAddModal').click();
 				this.ngOnInit();
@@ -109,7 +108,6 @@ export class HomeLayoutComponent implements OnInit {
   // UPDATE
 	onUpdate() {
 		this.api.UPDATE_LAYOUT(this.editForm).subscribe(result => {
-      this.updateDeployStatus();
       if(result.status) {
         document.getElementById('closeModal').click();
         this.ngOnInit();
@@ -125,7 +123,6 @@ export class HomeLayoutComponent implements OnInit {
   onDelete() {
     this.deleteForm.btnLoader = true;
     this.api.DELETE_LAYOUT(this.deleteForm).subscribe(result => {
-      this.updateDeployStatus();
       this.deleteForm.btnLoader = false;
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -138,31 +135,30 @@ export class HomeLayoutComponent implements OnInit {
 		});
   }
 
-  openResetModal(modalName) {
+  onResetLayout(modalName) {
     if(!this.commonService.deploy_stages.logo)
       this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before adding a new segment');
     else if(!this.themeColorExists)
       this.commonService.openDeployAlertModal('color', 'Please set colors for your website before adding a new segment');
     else {
       this.deleteForm = {};
-      this.modalService.open(modalName, { centered: true });
-    }
-  }
-
-  // RESET
-  onResetLayout() {
-    this.deleteForm.btnLoader = true;
-    this.api.RESET_LAYOUT().subscribe(result => {
-      this.deleteForm.btnLoader = false;
-      if(result.status) {
-        if(document.getElementById('closeModal')) document.getElementById('closeModal').click();
-        this.ngOnInit();
-      }
+      if(modalName) this.modalService.open(modalName, { centered: true });
       else {
-				this.deleteForm.errorMsg = result.message;
-        console.log("response", result);
+        this.deleteForm.btnLoader = true;
+        this.api.RESET_LAYOUT().subscribe(result => {
+          this.updateDeployStatus();
+          this.deleteForm.btnLoader = false;
+          if(result.status) {
+            if(document.getElementById('closeModal')) document.getElementById('closeModal').click();
+            this.ngOnInit();
+          }
+          else {
+            this.deleteForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
       }
-		});
+    }
   }
 
   updateDeployStatus() {

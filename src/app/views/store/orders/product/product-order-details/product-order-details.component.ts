@@ -447,6 +447,22 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
   }
 
+  // mark as paid
+  onMarkPaid() {
+    this.btnLoader = true; delete this.errorMsg;
+    this.api.UPDATE_ORDER_DETAILS({ _id: this.order_details._id, payment_success: true }).subscribe(result => {
+      this.btnLoader = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
   // cancel order
   onCancelOrder() {
     this.btnLoader = true;

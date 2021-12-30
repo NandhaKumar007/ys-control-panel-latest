@@ -17,13 +17,102 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="row">
+    <div class="col-md-4 d-flex"></div>
+    <div class="col-md-4 d-flex">
+      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column">
+          <ng-container *ngIf="logoForm.img_change">
+            <span (click)="logoForm={};" class="material-icons item-close float-right" aria-hidden="true">close</span>
+            <img [src]="logoForm.image" height="150px;" width="auto;">
+          </ng-container>
+          <img *ngIf="!logoForm.img_change" [src]="storeLogo" height="150px;" width="auto;">
+        </div>
+        <div class="h-100 d-flex align-items-end mt-3">
+          <div class="custom-file mt-2">
+            <input type="file" name="store_logo" class="custom-file-input" (change)="fileChangeListener($event);" accept="image/png" required>
+            <label class="custom-file-label">Choose file</label>
+          </div>
+        </div>
+        <div>
+          <button type="button" (click)="uploadLogo();" class="btn btn-wide btn-primary ladda-button mt-3 w-100"
+          [disabled]="logoForm.submit || !logoForm.image" [ladda]="logoForm.submit">Upload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="colorList.length || colorSections.length">
+    <div class="separator-breadcrumb border-top mb-3 mt-4"></div>
+    <div class="row">
+      <div class="col-md-8">
+        <h4 class="mt-2">Theme Colors</h4>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+        <button type="button" class="btn btn-primary" (click)="findColors();">Change Theme Colors</button>
+      </div>
+      <ng-container *ngIf="!colorList.length">
+        <div *ngFor="let sec of colorSections; let i=index;" class="col-md-12 mt-3">
+          <div class="card card-in-card p-3">
+            <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="colorList.length">
+        <div *ngFor="let sec of colorFields; let i=index;" class="col-md-12 mt-3">
+          <div class="card card-in-card z-i-unset p-3">
+            <h5>{{sec.name}}</h5>
+            <div class="row ml-3 mt-3">
+              <div class="form-group mb-3 col-md-12">
+                <label class="checkbox checkbox-primary">
+                  <input class="form-check-input" type="checkbox" name="manual_status{{i}}" [(ngModel)]="sec.manual_status">
+                  <span>Choose from color picker</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div *ngIf="sec.manual_status" class="col-md-4 form-group mb-3">
+                <label>Color Picker</label>
+                <input name="color_code{{i}}" class="form-control" [colorPicker]="sec.color_code"
+                  (colorPickerChange)="sec.color_code=$event;" [style.background]="sec.color_code"
+                  [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]="'btn btn-primary'"
+                  [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]="'btn black-outline-btn'" />
+              </div>
+              <ng-container *ngIf="!sec.manual_status">
+                <div class="col-lg-2 col-md-3 form-group mb-3" *ngFor="let x of colorList;">
+                  <label class="radio radio-success">
+                    <input type="radio" [(ngModel)]="sec.color_code" [value]="x" name="color_code{{i}}">
+                    <span class="color-span" [ngStyle]="{'background': x}"></span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3">
+          <div class="pull-right">
+            <button type="button" class="btn btn-wide black-outline-btn mr-3" (click)="colorList=[];">
+              <span class="black-outline-txt">Cancel</span>
+            </button>
+            <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary ladda-button"
+            [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <div class="separator-breadcrumb border-top mb-3 mt-4"></div>
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Store Logos</h4>
+    </div>
     <div class="col-md-3 d-flex">
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/favicon.png?v='+verNum" height="100px;" width="auto;">
           <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Favicon 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>
@@ -35,7 +124,7 @@
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
           <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Site Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>
@@ -47,7 +136,7 @@
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
           <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Social Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>
@@ -59,7 +148,7 @@
           <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/mail_logo.png?v='+verNum" height="100px;" width="auto;">
           <label class="text-title d-flex align-items-center justify-content-center mt-3">
             Mail Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; logoForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'mail_logo', file_type: 'png', resolution: 'autox80' }; modalService.open(imageModal);">create</i>
+            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'mail_logo', file_type: 'png', resolution: 'autox80' }; modalService.open(imageModal);">create</i>
           </label>
         </div>
       </div>
@@ -72,22 +161,22 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Update Image</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate(imageModal);" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
           <div class="col-md-12" align="center">
-            <p>Photo Resolution: {{logoForm?.resolution}}</p>
-            <div *ngIf="logoForm.image">
-              <img [src]="logoForm.image" height="100px;" width="auto;">
+            <p>Photo Resolution: {{uploadForm?.resolution}}</p>
+            <div *ngIf="uploadForm.image">
+              <img [src]="uploadForm.image" height="100px;" width="auto;">
             </div>
-            <div *ngIf="!logoForm.image">
-              <img [src]="imgBaseUrl+logoForm?.root_path+'/'+logoForm?.file_name+'.'+logoForm?.file_type+'?v='+verNum" height="100px;" width="auto;">
+            <div *ngIf="!uploadForm.image">
+              <img [src]="imgBaseUrl+uploadForm?.root_path+'/'+uploadForm?.file_name+'.'+uploadForm?.file_type+'?v='+verNum" height="100px;" width="auto;">
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='jpg'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg" />
-                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='png'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/png" />
-                  <input class="custom-file-input" *ngIf="logoForm?.file_type=='any'" type="file" name="image" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+                  <input class="custom-file-input" *ngIf="uploadForm?.file_type=='jpg'" type="file" name="image" (change)="uploadChangeListener($event);" accept="image/jpeg" />
+                  <input class="custom-file-input" *ngIf="uploadForm?.file_type=='png'" type="file" name="image" (change)="uploadChangeListener($event);" accept="image/png" />
+                  <input class="custom-file-input" *ngIf="uploadForm?.file_type=='any'" type="file" name="image" (change)="uploadChangeListener($event);" accept="image/jpeg, image/png" />
                   <label class="custom-file-label">Choose file</label>
                 </div>
               </div>
@@ -95,8 +184,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="logoForm.errorMsg">
-        <p class="text-danger">{{ logoForm.errorMsg }}</p>
+      <div *ngIf="uploadForm.errorMsg">
+        <p class="text-danger">{{ uploadForm.errorMsg }}</p>
       </div>
     </div>
     <div class="modal-footer">

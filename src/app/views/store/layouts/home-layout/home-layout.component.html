@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div *ngIf="commonService.store_details.login_type=='admin' && list?.length" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" (click)="openResetModal(resetModal);" class="btn btn-primary">Reset Layout</button>
+        <button type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary">Reset Layout</button>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
         <button *ngIf="list?.length" type="button" class="btn btn-primary" (click)="onAddNewSgment(addModal);">
           Add New Segment
         </button>
-        <button *ngIf="!list?.length" type="button" class="btn btn-wide btn-primary ladda-button" (click)="deleteForm={}; onResetLayout();"
+        <button *ngIf="!list?.length" type="button" class="btn btn-wide btn-primary ladda-button" (click)="onResetLayout(null);"
         [disabled]="deleteForm?.btnLoader" [ladda]="deleteForm?.btnLoader">Create Default Segments</button>
       </div>
       <!-- search box -->
@@ -444,7 +444,7 @@
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
-    <button type="button" (click)="onResetLayout();" class="btn btn-wide orng-outline-btn ladda-button m-1"
+    <button type="button" (click)="onResetLayout(null);" class="btn btn-wide orng-outline-btn ladda-button m-1"
       [disabled]="deleteForm?.btnLoader" [ladda]="deleteForm?.btnLoader">
       <span class="orng-outline-txt">Yes</span>
     </button>

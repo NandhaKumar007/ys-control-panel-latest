@@ -83,8 +83,7 @@
                 </p>
                 <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
                   <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
-                    [disabled]="x.payment_details?.name=='PayPal' || x.loader" [ladda]="x.loader">Check Status</button>
-    
+                  [disabled]="x.loader" [ladda]="x.loader">Check Status</button>
                 </div>
                 <div class="c-w-15 w-md-100 d-lg-block item-actions">
                   <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"

@@ -813,7 +813,13 @@
         <!-- order summary -->
         <div class="summary-section mtb-10">
           <div class="order-summary-header">
-            <p class="sec-desc">Order Summary</p>
+            <p class="sec-desc">Order Summary
+              <span [ngClass]="order_details.payment_success? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'" class="badge pull-right" style="font-size: 10px;">
+                <span [ngClass]="order_details.payment_success? 'badge-green-outline-txt': 'badge-red-outline-txt'">
+                  {{ order_details.payment_success? 'Paid': 'Pending' }}
+                </span>
+              </span>
+            </p>
           </div>
           <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
@@ -1103,6 +1109,15 @@
         </ng-container>
         <!-- # order status -->
 
+        <!-- Mark as paid -->
+        <ng-container *ngIf="!order_details.payment_success">
+          <button *ngIf="params?.type=='live' || params?.type=='inactive'" type="button" class="btn blue-outline-btn w-100 mtb-10"
+          (click)="errorMsg=null; btnLoader=false; modalService.open(markPaidModal, { centered: true });">
+            <span class="blue-outline-txt">Mark as Paid</span>
+          </button>
+        </ng-container>
+        <!-- # Mark as paid -->
+
         <!-- Create new item group -->
         <ng-container *ngIf="order_details.existing_status=='placed' || order_details.existing_status=='confirmed'">
           <button
@@ -1126,14 +1141,14 @@
          <span class="blue-outline-txt">Resend Email</span> </button>
         <!-- # Resend mail -->
 
-        <!-- Mark as paid -->
+        <!-- Place order -->
         <button *ngIf="!params?.coupon_id && params?.type=='inactive'" type="button"
         (click)="editForm = { payment_id: order_details.payment_details?.payment_id }; modalService.open(placeOrderModal);"
         class="btn blue-outline-btn w-100 mtb-10">
         <span class="blue-outline-txt">
           Place Order
         </span> </button>
-        <!-- # Mark as paid -->
+        <!-- # Place order -->
 
       </div>
       <!-- vendor login -->
@@ -1675,6 +1690,27 @@
     </button>
     <button type="button" (click)="onVendorOrderConfirm();" class="btn btn-wide btn-primary ladda-button"
       [disabled]="btnLoader" [ladda]="btnLoader">Yes</button>
+  </div>
+</ng-template>
+
+<!-- Mark as Paid -->
+<ng-template #markPaidModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to mark this order as PAID
+        <span class="text-danger">"#{{order_details.order_number}}"</span>?
+      </strong>
+    </p>
+    <div *ngIf="errorMsg">
+      <p class="text-danger">{{ errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" (click)="onMarkPaid();" class="btn btn-wide btn-primary ladda-button"
+      [disabled]="btnLoader" [ladda]="btnLoader">Confirm</button>
   </div>
 </ng-template>
 
