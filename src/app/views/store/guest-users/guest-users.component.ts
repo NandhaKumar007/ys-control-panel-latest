@@ -16,8 +16,8 @@ import { CommonService } from '../../../services/common.service';
 
 export class GuestUsersComponent implements OnInit {
 
-  search_bar: string;
-  page = 1; pageSize = 10;
+  filterForm: any = { search: "" }; totalPages: number = 0;
+  page = 1; pageSize = 10; pagesList: any = [];
   pageLoader: boolean; exportLoader: boolean;
   list: any = []; selected_customer: any; addressForm: any;
   country_details: any; address_fields: any = [];
@@ -30,8 +30,21 @@ export class GuestUsersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.page = 1;
+    if(this.commonService.page_attr && this.commonService.page_attr.type=='guest_user') {
+      let pageAttr = this.commonService.page_attr;
+      this.page = pageAttr.page;
+      this.filterForm.search = pageAttr.search;
+      delete this.commonService.page_attr;
+    }
     this.pageLoader = true;
-    this.customerApi.GUEST_USERS_LIST().subscribe(result => {
+    this.commonService.pageTop(0);
+    this.onLoadData();
+  }
+
+  onLoadData() {
+    this.filterForm.skip = (this.page-1)*this.pageSize; this.filterForm.limit = this.pageSize;
+    this.customerApi.GUEST_USERS_LIST(this.filterForm).subscribe(result => {
       if(result.status) {
         this.list = result.list;
         this.list.forEach(element => {
@@ -42,10 +55,19 @@ export class GuestUsersComponent implements OnInit {
             element.mobile = element.address_list[0].dial_code+" "+element.address_list[0].mobile;
           }
         });
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
+  }
+
+  onChangePage(type) {
+    this.commonService.pageTop(0);
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.onLoadData();
   }
 
   onViewCustomer(x, modalName) {
@@ -76,13 +98,22 @@ export class GuestUsersComponent implements OnInit {
   }
 
   goOrdersPage(customer, type) {
+    this.catchPageData();
     this.commonService.selected_customer = customer;
     this.router.navigate(["/orders/product/"+type+"/"+customer.email])
   }
 
   goQuotPage(customer, type) {
+    this.catchPageData();
     this.commonService.selected_customer = customer;
     this.router.navigate(["/quotations/"+type+"/"+customer.email])
+  }
+
+  catchPageData() {
+    this.commonService.page_attr = {
+      type: 'guest_user', page: this.page, search: this.filterForm.search,
+      scroll_pos: this.commonService.scroll_y_pos
+    };
   }
 
   // EXPORT

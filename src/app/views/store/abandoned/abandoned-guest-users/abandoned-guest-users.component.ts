@@ -13,18 +13,31 @@ import { CommonService } from '../../../../services/common.service';
 
 export class AbandonedGuestUsersComponent implements OnInit {
 
-  search_bar: string;
   page = 1; pageSize = 10;
-  list: any = [];
+  filterForm: any = { search: "" }; totalPages: number = 0;
+  pagesList: any = []; list: any = [];
   pageLoader: boolean;
 
   constructor(private customerApi: CustomerApiService, public router: Router, public commonService: CommonService) { }
 
   ngOnInit() {
+    this.page = 1;
+    if(this.commonService.page_attr && this.commonService.page_attr.type=='abandoned_guest_user') {
+      let pageAttr = this.commonService.page_attr;
+      this.page = pageAttr.page;
+      this.filterForm.search = pageAttr.search;
+      delete this.commonService.page_attr;
+    }
     this.pageLoader = true;
-    this.customerApi.ABANDONED_GUEST_USERS().subscribe(result => {
+    this.commonService.pageTop(0);
+    this.onLoadData();
+  }
+
+  onLoadData() {
+    this.filterForm.skip = (this.page-1)*this.pageSize; this.filterForm.limit = this.pageSize;
+    this.customerApi.ABANDONED_GUEST_USERS(this.filterForm).subscribe(result => {
       if(result.status) {
-        this.list = result.list.sort((a, b) => 0 - (a.cart_updated_on > b.cart_updated_on ? 1 : -1));
+        this.list = result.list;
         this.list.forEach(element => {
           element.name = "NA";
           element.mobile = "NA";
@@ -36,16 +49,32 @@ export class AbandonedGuestUsersComponent implements OnInit {
           }
           element.cart_total = this.calcCartTotal(element.cart_list);
         });
+        this.totalPages = Math.ceil(result.count/this.pageSize);
+        this.pagesList = new Array(this.totalPages);
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
   }
 
+  onChangePage(type) {
+    this.commonService.pageTop(0);
+    if(type=='prev') this.page--;
+    else this.page++;
+    this.onLoadData();
+  }
+
   calcCartTotal(itemList) {
     return itemList.reduce((accumulator, currentValue) => {
       return accumulator + (currentValue['final_price'] * currentValue['quantity']);
     }, 0);
+  }
+
+  catchPageData() {
+    this.commonService.page_attr = {
+      type: 'abandoned_guest_user', page: this.page, search: this.filterForm.search,
+      scroll_pos: this.commonService.scroll_y_pos
+    };
   }
 
 }

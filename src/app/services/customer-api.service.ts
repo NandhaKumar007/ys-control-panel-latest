@@ -82,17 +82,17 @@ export class CustomerApiService {
   }
 
   // guest users
-  GUEST_USERS_LIST() {
+  GUEST_USERS_LIST(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/guest-user', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/guest-user?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
   }
   GUEST_USER_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/guest-user?id='+x, httpOptions);
   }
-  ABANDONED_GUEST_USERS() {
+  ABANDONED_GUEST_USERS(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/abandoned-guest-user', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/abandoned-guest-user?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
   }
 
 }
