@@ -3,9 +3,7 @@ import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
-import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-home-layout',
@@ -41,8 +39,8 @@ export class HomeLayoutComponent implements OnInit {
   themeColorExists: boolean;
 
   constructor(
-    private router: Router, config: NgbModalConfig, public modalService: NgbModal, private api: StoreApiService,
-    public commonService: CommonService, private deployApi: DeploymentService
+    private router: Router, config: NgbModalConfig, public modalService: NgbModal,
+    private api: StoreApiService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -146,7 +144,6 @@ export class HomeLayoutComponent implements OnInit {
       else {
         this.deleteForm.btnLoader = true;
         this.api.RESET_LAYOUT().subscribe(result => {
-          this.updateDeployStatus();
           this.deleteForm.btnLoader = false;
           if(result.status) {
             if(document.getElementById('closeModal')) document.getElementById('closeModal').click();
@@ -158,18 +155,6 @@ export class HomeLayoutComponent implements OnInit {
           }
         });
       }
-    }
-  }
-
-  updateDeployStatus() {
-    if(!this.commonService.deploy_stages['home_layouts']) {
-      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.home_layouts": true };
-      this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
-        if(result.status) {
-          this.commonService.deploy_stages = result.data.deploy_stages;
-          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
-        }
-      });
     }
   }
 

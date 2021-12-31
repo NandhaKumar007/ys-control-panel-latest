@@ -1,8 +1,4 @@
-<div *ngIf="pageLoader" class="row">
-  <app-spinner></app-spinner>
-</div>
-
-<div *ngIf="!pageLoader">
+<div>
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-8">
@@ -101,59 +97,61 @@
     </div>
   </ng-container>
 
-  <div class="separator-breadcrumb border-top mb-3 mt-4"></div>
-  <div class="row">
-    <div class="col-md-12">
-      <h4>Store Logos</h4>
-    </div>
-    <div class="col-md-3 d-flex">
-      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
-        <div class="d-flex align-items-center justify-content-center flex-column">
-          <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/favicon.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center mt-3">
-            Favicon 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
-          </label>
+  <ng-container *ngIf="commonService.deploy_stages.logo">
+    <div class="separator-breadcrumb border-top mb-3 mt-4"></div>
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Store Logos</h4>
+      </div>
+      <div class="col-md-3 d-flex">
+        <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/favicon.png?v='+verNum" height="100px;" width="auto;">
+            <label class="text-title d-flex align-items-center justify-content-center mt-3">
+              Favicon 
+              <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'favicon', file_type: 'png', resolution: '50x50' }; modalService.open(imageModal);">create</i>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3 d-flex">
-      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
-        <div class="d-flex align-items-center justify-content-center flex-column">
-          <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center mt-3">
-            Site Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
-          </label>
+      <div class="col-md-3 d-flex">
+        <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/logo.png?v='+verNum" height="100px;" width="auto;">
+            <label class="text-title d-flex align-items-center justify-content-center mt-3">
+              Site Logo 
+              <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: true, file_name: 'logo', file_type: 'png', resolution: 'autox100' }; modalService.open(imageModal);">create</i>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3 d-flex">
-      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
-        <div class="d-flex align-items-center justify-content-center flex-column">
-          <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center mt-3">
-            Social Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
-          </label>
+      <div class="col-md-3 d-flex">
+        <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/social_logo.jpg?v='+verNum" height="100px;" width="auto;">
+            <label class="text-title d-flex align-items-center justify-content-center mt-3">
+              Social Logo 
+              <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'social_logo', file_type: 'jpg', resolution: '200x200' }; modalService.open(imageModal);">create</i>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-3 d-flex">
-      <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
-        <div class="d-flex align-items-center justify-content-center flex-column">
-          <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/mail_logo.png?v='+verNum" height="100px;" width="auto;">
-          <label class="text-title d-flex align-items-center justify-content-center mt-3">
-            Mail Logo 
-            <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'mail_logo', file_type: 'png', resolution: 'autox80' }; modalService.open(imageModal);">create</i>
-          </label>
+      <div class="col-md-3 d-flex">
+        <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <img [src]="imgBaseUrl+'uploads/'+commonService.store_details._id+'/mail_logo.png?v='+verNum" height="100px;" width="auto;">
+            <label class="text-title d-flex align-items-center justify-content-center mt-3">
+              Mail Logo 
+              <i class="material-icons edit-icon ml-2" (click)="btnLoader=false; uploadForm={ root_path: 'uploads/'+commonService.store_details._id, small_image: false, file_name: 'mail_logo', file_type: 'png', resolution: 'autox80' }; modalService.open(imageModal);">create</i>
+            </label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
 
 <!-- IMAGE MODAL -->

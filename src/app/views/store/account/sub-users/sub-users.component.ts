@@ -134,7 +134,7 @@ export class SubUsersComponent implements OnInit {
 
   createPermList() {
     let ysFeatures = this.commonService.ys_features;
-    this.permissionList = [{ keyword: "dashboard", name: "Dashboard", sub_list: [] }];
+    this.permissionList = [{ keyword: "dashboard", name: "Analytics", sub_list: [] }];
     // products
     let productExtras = [
       { keyword: "catalogs", name: "Catalog Management" },

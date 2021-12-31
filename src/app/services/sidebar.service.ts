@@ -67,7 +67,6 @@ export class SidebarService {
     this.sidePanelList = [];
     let routePermissionList = [];
     // whats new
-    // this.sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
     let subuserFeatures = this.commonService.subuser_features;
     // admin
@@ -358,7 +357,6 @@ export class SidebarService {
         }
         if(this.commonService.master_token) {
           accountList.push(
-            { icon: 'construction', name: 'Deployment', state: '/deployment', type: 'link' },
             { icon: 'widgets', name: 'App Store', state: '/account/app-store', type: 'link' },
             { icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' }
           );

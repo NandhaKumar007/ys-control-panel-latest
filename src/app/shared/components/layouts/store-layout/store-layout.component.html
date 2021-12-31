@@ -6,7 +6,7 @@
       <div *ngIf="navService.sidePanelList?.length" class="menu-toggle" (click)="toggelSidebar()">
         <i class="material-icons">menu</i>
       </div>
-      <div routerLink="/whats-new" class="logo cursor">
+      <div class="logo">
         <img *ngIf="!commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo.svg"
           alt="yourstore-logo">
         <img *ngIf="commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo_white.svg"

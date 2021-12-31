@@ -28,7 +28,6 @@ html::-webkit-scrollbar-thumb {
   border-radius: 20px;
 }
 
-
 // ------------------------------------HOME PAGE---------------------
 .main-content-wrap {
   background: $data-list-body-bg;
@@ -223,8 +222,6 @@ html::-webkit-scrollbar-thumb {
         font-size: 1.5rem;
         margin-bottom: 15px;
       }
-      .app-screen-slider-inner-deatils {
-      }
     }
   }
 }
@@ -239,9 +236,6 @@ html::-webkit-scrollbar-thumb {
 }
 
 // --------------------------------DOMAIN PAGES---------------------
-.get-domain-detail-sec {
-}
-
 .domain-prepend-sec {
   position: relative;
   .input-group-text {
@@ -485,7 +479,6 @@ h6,
       border-bottom-left-radius: $primary-theme-bdr-rds;
     }
   }
-
 }
 .has-guest-band,
 .has-quick-band,
@@ -532,7 +525,7 @@ tag-input-form form input[type="text"] {
 .ng2-tag-input__text-input {
   border: none !important;
 }
-tag-input{
+tag-input {
   .ng2-tag-input.ng2-tag-input--focused {
     border-bottom: 2px solid $theme-bdr !important;
   }
@@ -697,12 +690,12 @@ tag-input{
   border-color: $primary-btn-hvr-bdr;
 }
 
-.ladda-button{
-  .ladda-spinner{
-    div{
-      div{
-        div{
-          background:#000000 !important;
+.ladda-button {
+  .ladda-spinner {
+    div {
+      div {
+        div {
+          background: #000000 !important;
         }
       }
     }
@@ -1344,7 +1337,6 @@ a {
 .setting-card label {
   font-weight: 700;
 }
-
 
 /* Custom btns */
 .apply-coupon-btn {
@@ -4130,16 +4122,16 @@ p svg:hover {
   position: relative;
   .product-pagination {
     .pagination-previous {
-      a.disabled{
-        &::before{
-          opacity: .5;
+      a.disabled {
+        &::before {
+          opacity: 0.5;
         }
       }
     }
     .pagination-next {
-      a.disabled{
-        &::after{
-          opacity: .5;
+      a.disabled {
+        &::after {
+          opacity: 0.5;
         }
       }
     }
@@ -4217,12 +4209,12 @@ p svg:hover {
           width: 200px;
           margin-bottom: 40px;
         }
-        .payment-message{
-          h2{
+        .payment-message {
+          h2 {
             font-size: 2rem;
             margin-bottom: 15px;
           }
-          h6{
+          h6 {
             font-size: 1rem;
             margin-bottom: 40px;
           }
@@ -4244,10 +4236,81 @@ p svg:hover {
   }
 }
 
+.row-flex {
+  align-items: center;
+}
+.show-more-data-list-card {
+  &:hover {
+    border-left: none !important;
+    &:last-child {
+      border-bottom-right-radius: 14px;
+      border-bottom-left-radius: 14px;
+    }
+  }
+}
+.show-more-accordian {
+  .acc-card {
+    border-radius: 0;
+    box-shadow: none;
+    .card-header {
+      background-color: transparent;
+      border-bottom: none;
+      h5 {
+        button {
+          font-weight: bold;
+          line-height: normal;
+          font-size: 0.815rem;
+          color: $primary-txt-clr;
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          .gray-icon-btn {
+            transition: transform 0.24s ease-in-out;
+          }
+          &:hover,
+          &:focus {
+            text-decoration: none;
+          }
+        }
+        button[aria-expanded="true"] {
+          .gray-icon-btn {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+    &:last-child {
+      border-bottom-right-radius: 14px;
+      border-bottom-left-radius: 14px;
+    }
+    .card-body {
+      .data-list-card-wrapper {
+        border-radius: 0;
+        box-shadow: none;
+        .data-list-card-inner {
+          .data-list-card {
+            &:last-child {
+              border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            &:hover {
+              &:first-child {
+                border-top-left-radius: 0;
+              }
+              &:last-child {
+                border-bottom-left-radius: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // ashok
 .color-chips {
   padding: 5px 10px 5px 10px;
-  background: #F0F0F0;
+  background: #f0f0f0;
   border-radius: 20px;
 }
 .chip-close {

@@ -27,8 +27,6 @@ const adminRoutes: Routes = [
 ];
 
 const storeRoutes: Routes = [
-  { path: 'whats-new', loadChildren: () => import('./views/store/whats-new/whats-new.module').then(m => m.WhatsNewModule), canActivate: [StoreGuard] },
-
   { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule), canActivate: [PermissionGuard], data: { name: "dashboard" } },
   { path: 'vendors-dashboard', loadChildren: () => import('./views/store/dashboard/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule), canActivate: [PermissionGuard], data: { name: "vendor_dashboard" } },
 

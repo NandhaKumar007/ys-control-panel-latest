@@ -114,7 +114,7 @@ export class ControlPanelComponent implements OnInit {
             }
           });
           this.sidebar.BUILD_CATEGORY_LIST();
-          this.router.navigateByUrl('/whats-new');
+          this.router.navigateByUrl('/dashboard');
         }
         else {
           this.errorMsg = result.message;

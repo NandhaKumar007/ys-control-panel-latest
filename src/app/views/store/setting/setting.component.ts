@@ -148,12 +148,6 @@ export class SettingComponent implements OnInit {
     }
   }
 
-  // logo management
-  logoMgmt() {
-    if(!this.commonService.deploy_stages.logo) this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before use the logo management');
-    else this.router.navigate(['/store-setting/logo-management']);
-  }
-
   // invoice configuration
   onOpenInvoiceModal(modalName) {
     this.api.STORE_DETAILS().subscribe((result) => {

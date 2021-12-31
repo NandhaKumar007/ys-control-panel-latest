@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { echartStyles } from '../../../shared/animations/echart-styles';
+import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
 
@@ -28,7 +29,7 @@ export class DashboardComponent implements OnInit {
       keyword: "logo", heading: "Add your logo",
       sub_heading: "",
       description: "",
-      duration: "1", completed: false, redirect: "/deployment/logo"
+      duration: "1", completed: false, redirect: "/store-setting/logo-management"
     },
     {
       keyword: "products", heading: "List your products",
@@ -100,7 +101,16 @@ export class DashboardComponent implements OnInit {
     }
   ];
 
-  constructor(private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService) { }
+  constructor(private api: ApiService, private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService) {
+    if(!localStorage.getItem("country_list")) {
+      let countryList: any = [];
+      this.api.COUNTRIES_LIST().subscribe(result => {
+        if(result.status) countryList = result.list;
+        this.commonService.country_list = countryList;
+        this.commonService.updateLocalData('country_list', countryList);
+      });
+    }
+  }
 
   ngOnInit() {
     this.commonService.pageTop(0);

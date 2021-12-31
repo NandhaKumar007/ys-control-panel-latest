@@ -13,7 +13,6 @@ import { environment } from '../../../../../environments/environment';
 
 export class LogoManagementComponent implements OnInit {
 
-  pageLoader: boolean;
   uploadForm: any = {}; logoForm: any = {}; verNum: any;
   imgBaseUrl = environment.img_baseurl; btnLoader: boolean;
 
@@ -33,19 +32,13 @@ export class LogoManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(!this.commonService.deploy_stages.logo) {
-      this.pageLoader = true;
-      this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before use the logo management');
-    }
-    else {
-      this.verNum = new Date().valueOf();
-      this.uploadForm = {}; this.logoForm = {}; this.colorList = []; this.colorSections = [];
-      this.storeLogo = environment.img_baseurl+'uploads/'+this.commonService.store_details._id+'/logo.png?v='+this.commonService.verNum;
-      if(this.commonService.deploy_details.theme_colors) {
-        let x = this.commonService.deploy_details.theme_colors;
-        for(let key in x) {
-          if(x.hasOwnProperty(key)) this.colorSections.push({ name: key, value: x[key] });
-        }
+    this.verNum = new Date().valueOf();
+    this.uploadForm = {}; this.logoForm = {}; this.colorList = []; this.colorSections = [];
+    this.storeLogo = environment.img_baseurl+'uploads/'+this.commonService.store_details._id+'/logo.png?v='+this.commonService.verNum;
+    if(this.commonService.deploy_details.theme_colors) {
+      let x = this.commonService.deploy_details.theme_colors;
+      for(let key in x) {
+        if(x.hasOwnProperty(key)) this.colorSections.push({ name: key, value: x[key] });
       }
     }
   }

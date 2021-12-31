@@ -114,7 +114,7 @@ export class SigninComponent implements OnInit {
             sessionStorage.removeItem("redirect_url");
             this.router.navigateByUrl(redirectUrl);
           }
-          else this.router.navigateByUrl('/whats-new');
+          else this.router.navigateByUrl('/dashboard');
         }
         else {
           this.commonService.route_permission_list = ["deployment", "billing"];

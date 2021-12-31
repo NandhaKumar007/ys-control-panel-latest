@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { StoreApiService } from '../../../../../services/store-api.service';
 import { CommonService } from '../../../../../services/common.service';
-import { DeploymentService } from '../../../deployment/deployment.service';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
@@ -25,8 +24,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
   shopping_assist_config: any;
 
   constructor(
-    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
-    public commonService: CommonService, private deployApi: DeploymentService
+    private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService
   ) { }
 
   ngOnInit() {
