@@ -115,19 +115,21 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.commonService.pageTop(0);
     if(this.commonService.store_details.login_type=='admin' || this.commonService.subuser_features.indexOf('dashboard')!=-1) {
+      // deploy stages
+      for(let key in this.commonService.deploy_stages) {
+        if(this.commonService.deploy_stages.hasOwnProperty(key)) {
+          console.log(this.commonService.deploy_stages[key])
+          if(!this.commonService.deploy_stages[key]) {
+            this.dispDeployInfo = true;
+            this.updateDeployInfo();
+            break;
+          }
+        }
+      }
+      // dashboard
       this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };
       this.dispDashboard = true;
       this.getDashboardData();
-    }
-    for(let key in this.commonService.deploy_stages) {
-      if(this.commonService.deploy_stages.hasOwnProperty(key)) {
-        console.log(this.commonService.deploy_stages[key])
-        if(!this.commonService.deploy_stages[key]) {
-          this.dispDeployInfo = true;
-          this.updateDeployInfo();
-          break;
-        }
-      }
     }
 	}
 
