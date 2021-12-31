@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { EChartOption } from 'echarts';
 import { DatePipe } from '@angular/common';
 import { echartStyles } from '../../../shared/animations/echart-styles';
 import { StoreApiService } from '../../../services/store-api.service';
@@ -16,13 +15,122 @@ export class DashboardComponent implements OnInit {
   preLoader: boolean; customerLoader: boolean;
   order_details: any; customer_details: any;
 	chartPie: any; chartLine: any; filterForm: any;
+  completedPercentage: any;
+  dispDeployInfo: boolean; dispDashboard: boolean;
+  deployList: any = [
+    {
+      keyword: "account",
+      heading: "Create your account", sub_heading: "",
+      description: "",
+      duration: "", completed: true, redirect: ""
+    },
+    {
+      keyword: "logo", heading: "Add your logo",
+      sub_heading: "",
+      description: "",
+      duration: "1", completed: false, redirect: "/deployment/logo"
+    },
+    {
+      keyword: "products", heading: "List your products",
+      sub_heading: "Products → All Products",
+      description: "Choose a template and add layouts to your website",
+      duration: "1", completed: false, redirect: "/products"
+    },
+    {
+      keyword: "shipping", heading: "Setup shipping methods",
+      sub_heading: "Settings → Shipping Methods",
+      description: "Select shipping options available to customers at checkout",
+      duration: "1", completed: false, redirect: "/shipping/shipping-methods"
+    },
+    {
+      keyword: "payments", heading: "Configure payment collection",
+      sub_heading: "Settings → Payment Gateway",
+      description: "Choose how people pay at checkout, including credit and debit cards, UPI, cash and more",
+      duration: "1", completed: false, redirect: "/setup/payment-gateway"
+    },
+    {
+      keyword: "package", heading: "Choose plan",
+      sub_heading: "",
+      description: "Choose the right plan for your business",
+      duration: "1", completed: false, redirect: "/deployment/plans"
+    }
+  ];
+  moreDeployList: any = [
+    {
+      keyword: "home_layouts", heading: "Design your website",
+      sub_heading: "Website → Website Design",
+      description: "Choose a template and add layouts to your website",
+      duration: "5", completed: false, redirect: "/layouts/home"
+    },
+    {
+      keyword: "domain", heading: "Setup your domain",
+      sub_heading: "",
+      description: "Choose your domain or add your domain for your website",
+      duration: "5", completed: false, redirect: "/deployment/domain"
+    },
+    {
+      keyword: "tax_rates", heading: "Add your taxation",
+      sub_heading: "Settings → Tax Rates",
+      description: "Create percentage tax rates based on state laws",
+      duration: "1", completed: false, redirect: "/product-extras/tax-rates"
+    },
+    {
+      keyword: "social_media", heading: "Social Media",
+      sub_heading: "Website → Footer Configuration",
+      description: "",
+      duration: "1", completed: false, redirect: "/setup/footer-content"
+    },
+    {
+      keyword: "store_seo", heading: "Store SEO",
+      sub_heading: "Website → SEO → Store",
+      description: "Change the appearance of your website in a search engine listing",
+      duration: "1", completed: false, redirect: "/seo/store"
+    },
+    {
+      keyword: "discount", heading: "Discounts",
+      sub_heading: "Marketing Tools → Offers",
+      description: "",
+      duration: "1", completed: false, redirect: "/features/coupon-codes"
+    },
+    {
+      keyword: "policy_builder", heading: "Policies",
+      sub_heading: "",
+      description: "",
+      duration: "1", completed: false, redirect: "/setup/policies/privacy"
+    }
+  ];
 
   constructor(private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService) { }
 
   ngOnInit() {
-    this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };
-    this.getDashboardData();
+    this.commonService.pageTop(0);
+    if(this.commonService.store_details.login_type=='admin' || this.commonService.subuser_features.indexOf('dashboard')!=-1) {
+      this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };
+      this.dispDashboard = true;
+      this.getDashboardData();
+    }
+    for(let key in this.commonService.deploy_stages) {
+      if(this.commonService.deploy_stages.hasOwnProperty(key)) {
+        console.log(this.commonService.deploy_stages[key])
+        if(!this.commonService.deploy_stages[key]) {
+          this.dispDeployInfo = true;
+          this.updateDeployInfo();
+          break;
+        }
+      }
+    }
 	}
+
+  updateDeployInfo() {
+    let completedCount = 0;
+    this.deployList.forEach(element => {
+      if(this.commonService.deploy_stages[element.keyword] || element.completed) {
+        element.completed = true;
+        completedCount++;
+      }
+    });
+    this.completedPercentage = ((completedCount*100)/this.deployList.length).toFixed(1);
+  }
 
   getDashboardData() {
     if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
@@ -200,7 +308,6 @@ export class DashboardComponent implements OnInit {
     else {
       for(let i=0; i<=23; i++)
       {
-        let currDate = "";
         let orderCount = await this.processOrderList(orderList, new Date(this.filterForm.from_date).setHours(i,0,0,0), new Date(this.filterForm.from_date).setHours(i,59,59,999));
         if(orderCount > 0) {
           dayList.push(this.datepipe.transform(new Date(new Date(this.filterForm.from_date).setHours(i,0,0,0)), 'hh:mm a'));

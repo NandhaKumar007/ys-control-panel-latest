@@ -1,13 +1,336 @@
-<div class="breadcrumb">
-  <div>
-    <h1>Dashboard</h1>
+<div class="breadcrumb with-back-btn">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Dashboard</h1>
+    </div>
+    <div class="col-md-6">
+      <div class="pull-right">
+        <a target="_blank" href="https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}">
+          <b>https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}</b>
+        </a>
+      </div>
+    </div>
   </div>
-
 </div>
 <div class="separator-breadcrumb border-top"></div>
 
-<div class="row">
+<!-- deploy stages -->
+<div *ngIf="dispDeployInfo" class="row ml-0 mr-0 mt-4 mb-4">
+  <div class="col-md-4 mb-4">
+    <div class="home-progress-section-wrapper">
+      <div class="progress-step-count">
+        <p class="progress-step-count-inner">
+          <span>{{completedPercentage}}%</span> completed
+        </p>
+      </div>
+      <div class="stpe-progress-bar">
+        <div class="progress-bar">
+          <div class="progress-bar-inner" [ngStyle]="{'width.%':completedPercentage}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 p-0">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div *ngFor="let x of deployList; let i=index;" class="data-list-card p-4">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="data-list-inner-data">
+                <p class="m-0 data-head" [ngClass]="i===0? 'complete-strike': ''">{{x.heading}}</p>
+                <div *ngIf="x.sub_heading" class="hint-route-breadcrumb-wrapper">
+                  <div class="hint-route-breadcrumb">
+                    <span>{{x.sub_heading}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="data-list-inner-data">
+                <p class="m-0 text-small w-sm-100">{{x.description}}</p>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="data-list-inner-data">
+                <p class="d-flex align-items-center m-0 text-small w-sm-100">
+                  <i class="material-icons-outlined mr-1">timer</i> Estimate:{{x.duration}} min
+                </p>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="data-list-inner-data">
+                <p class="m-0 text-small w-sm-100">
+                  <span *ngIf="!x.completed" class="badge badge-disabled">Pending</span>
+                  <span *ngIf="x.completed" class="badge badge-success">Complete</span>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="data-list-inner-data d-flex justify-content-center">
+                <button *ngIf="!x.completed || i>0" class="btn-primary w-100" type="button" [routerLink]="x.redirect">
+                  {{ (x.completed)? 'View': 'Start' }}
+                </button>
+                <p *ngIf="i===0 && x.completed" class="m-0 text-small w-sm-100">
+                  <span class="badge badge-success">Done</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- More Options -->
+  <div id="accordionOne">
+    <div class="card acc-card mt-4">
+      <div class="card-header p-3" id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed w-100 p-0 m-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="fasle" aria-controls="collapseOne">
+            Explore Optional Setup
+            <span class="gray-icon-btn">
+              <i class="material-icons">expand_more</i>
+            </span>
+          </button>
+        </h5>
+      </div>
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionOne">
+        <div class="col-md-12 p-0">
+          <div class="data-list-card-wrapper">
+            <div class="data-list-card-inner">
+              <div *ngFor="let x of moreDeployList; let i=index;" class="data-list-card p-4">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="data-list-inner-data">
+                      <p class="m-0 data-head">{{x.heading}}</p>
+                      <div *ngIf="x.sub_heading" class="hint-route-breadcrumb-wrapper">
+                        <div class="hint-route-breadcrumb">
+                          <span>{{x.sub_heading}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="data-list-inner-data">
+                      <p class="m-0 text-small w-sm-100">{{x.description}}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="data-list-inner-data">
+                      <p class="d-flex align-items-center m-0 text-small w-sm-100">
+                        <i class="material-icons-outlined mr-1">timer</i> Estimate:{{x.duration}} min
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="data-list-inner-data">
+                      <p class="m-0 text-small w-sm-100">
+                        <span *ngIf="!x.completed" class="badge badge-disabled">Pending</span>
+                        <span *ngIf="x.completed" class="badge badge-success">Complete</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="data-list-inner-data d-flex justify-content-center">
+                      <button class="btn-primary w-100" type="button" [routerLink]="x.redirect">
+                        {{ (x.completed)? 'View': 'Start' }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!-- whats new -->
+<div class="whats-new-acc">
+  <div id="accordionTwo">
+    <div class="card acc-card">
+      <div class="card-header p-3" id="headingTwo">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed w-100 p-0 m-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="fasle" aria-controls="collapseTwo">
+            <div class="breadcrumb home-breadcrumb">
+              <h1>What's New</h1>
+            </div>
+            <div class="home-headlines mt-2">
+              <h4>yourstore Anniversary Refresh</h4>
+              <h6>28 Aug 2021</h6>
+            </div>
+          </button>
+        </h5>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionTwo">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Quick Checkout
+                  </h5>
+                  <p>Share a link with pre-filled products to your customers on WhatsApp, Instagram and other channels.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Our New Identity
+                  </h5>
+                  <p>A refreshing new logo and pleasing colour scheme.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">SMS Validation for CoD
+                  </h5>
+                  <p>Avoid fake orders through OTP-style validation for CoD orders.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Sound Notifications
+                  </h5>
+                  <p>Get notified when new orders are placed.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">yourstore PWA
+                  </h5>
+                  <p>Access yourstore quickly by adding it to your home screen.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <hr class="home-sec-spliter">
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Colour Consistency</h5>
+                  <p>Platform-wide vivid colour usage to bring in more consistency and hierarchy of buttons and elements for easy of use.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Language Consistency
+                  </h5>
+                  <p>UI updated with clearer text and terminology for more coherent usage of the Platform.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">More Control over yourstore
+                  </h5>
+                  <p>Manage your Store Plugins and control Store Checkout settings in just a few clicks. Find this under “Settings” in the Plugin Management tab.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Update Critical Information
+                  </h5>
+                  <p>Pixel code, Google Analytics code, Store email and much more can now be updated in the
+                    “<span class="info-highlight">Store Settings</span>”
+                    tab under “<span class="info-highlight">Settings</span>”.
+                  </p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">More Free Features coming your way</h5>
+                  <p>
+                    Send WhatsApp messages, email or call abandoned cart customers directly, manage announcement bar content by
+                    yourself and we’ve thrown in a sale countdown timer for the announcement bar to usher in the urgency to
+                    complete a purchase from your customers.
+                  </p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <hr class="home-sec-spliter">
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Mobile Responsive and Optimised Backend</h5>
+                  <p>Use all the features of the yourstore backend on your mobile. Manage orders, products, SEO & more on the fly.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Optimised UI</h5>
+                  <p>UI Elements Design have been optimized for ease of use and understanding with clear definitions for each section.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Dark mode</h5>
+                  <p>yourstore has just joined the dark mode party. Enjoy using yourstore even at night without straining your eyes with our enhanced dark UI.</p>
+                </div>
+              </div>
+            </div>
+          
+            <div class="col-md-12">
+              <div class="col-md-6">
+                <div class="card home-card p-3 mb-3">
+                  <h5 class="card-title">Dashboard</h5>
+                  <p>The new updated dashboard has all the right features for you to run and analyze your business in real-time.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- dashboard -->
+<div *ngIf="dispDashboard" class="row mt-4">
   <div class="col-md-12">
     <div class="card p-3 mb-4">
       <h5 class="card-title">Filter</h5>
@@ -49,7 +372,6 @@
       </div>
     </div>
   </div>
-
 
   <div class="col-lg-6 col-md-12">
     <!-- CARD ICON -->
@@ -251,5 +573,4 @@
       </div>
     </div>
   </div>
-
 </div>

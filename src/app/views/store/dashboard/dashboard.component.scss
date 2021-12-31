@@ -1,3 +1,16 @@
-i.load-spin{
+i.load-spin {
     font-family: FontAwesome !important;
+}
+
+.whats-new-acc {
+    .card-header {
+        button {
+            text-align: left;
+            color: #3d3d3d;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
 }

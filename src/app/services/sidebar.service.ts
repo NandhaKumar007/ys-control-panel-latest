@@ -69,7 +69,7 @@ export class SidebarService {
     // whats new
     // this.sidePanelList: IMenuItem[] = [{ name: "What's New", type: 'link', icon: 'stars', state: '/whats-new' }];
     let ysFeatures = this.commonService.ys_features;
-    let subuserFeatures = this.commonService.subuser_features;;
+    let subuserFeatures = this.commonService.subuser_features;
     // admin
     if(this.commonService.store_details.login_type=='admin') {
       if(this.commonService.store_details.status=='active') {
@@ -372,10 +372,8 @@ export class SidebarService {
     // SUB USER
     else if(this.commonService.store_details.login_type=='subuser') {
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
-      if(subuserFeatures.indexOf('dashboard')!=-1) {
-        this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
-        routePermissionList.push("dashboard");
-      }
+      this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
+      routePermissionList.push("dashboard");
       // product extras
       let prodExtraList: IChildItem[] = [];
       if(ysFeatures.indexOf('measurements')!=-1 && subuserFeatures.indexOf('measurements')!=-1) {
