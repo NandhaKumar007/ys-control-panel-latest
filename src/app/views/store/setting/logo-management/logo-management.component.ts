@@ -69,6 +69,35 @@ export class LogoManagementComponent implements OnInit {
   }
 
   // DEPLOYMENT LOGO SECTION
+  uploadLogo() {
+    this.logoForm.submit = true; this.colorList = [];
+    this.logoForm.store_id = this.commonService.store_details._id;
+    this.api.UPDATE_STORE_LOGO(this.logoForm).subscribe(result => {
+      this.updateDeployStatus();
+      this.commonService.verNum = new Date().valueOf();
+      this.ngOnInit();
+      if(result.status) {
+        let filteredList = new Set(result.colors);
+        this.colorList = Array.from(filteredList);
+      }
+      else {
+				this.logoForm.errorMsg = result.message;
+				console.log("response", result);
+			}
+    });
+  }
+  updateDeployStatus() {
+    if(!this.commonService.deploy_stages['logo']) {
+      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.logo": true };
+      this.api.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+        if(result.status) {
+          this.commonService.deploy_stages = result.data.deploy_stages;
+          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
+        }
+      });
+    }
+  }
+
   findColors() {
     this.btnLoader = false;
     this.api.LOGO_COLORS({ file_name: this.storeLogo }).subscribe(result => {
@@ -94,24 +123,6 @@ export class LogoManagementComponent implements OnInit {
       else console.log("response", result);
     });
   }
-
-  uploadLogo() {
-    this.logoForm.submit = true; this.colorList = [];
-    this.logoForm.store_id = this.commonService.store_details._id;
-    this.api.UPDATE_STORE_LOGO(this.logoForm).subscribe(result => {
-      this.commonService.verNum = new Date().valueOf();
-      this.ngOnInit();
-      if(result.status) {
-        let filteredList = new Set(result.colors);
-        this.colorList = Array.from(filteredList);
-      }
-      else {
-				this.logoForm.errorMsg = result.message;
-				console.log("response", result);
-			}
-    });
-  }
-
   updateThemeColor() {
     let colorForm = {}; this.btnLoader = true;
     this.colorFields.forEach(element => {

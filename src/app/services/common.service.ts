@@ -301,10 +301,10 @@ export class CommonService {
   openDeployAlertModal(type, content) {
     this.alert_popup_content = {};
     if(type=='logo') {
-      this.alert_popup_content = { btn_name: "Add Logo", btn_link: "/deployment/logo" };
+      this.alert_popup_content = { btn_name: "Add Logo", btn_link: "/store-setting/logo-management" };
     }
     else if(type=='color') {
-      this.alert_popup_content = { btn_name: "Set Colors", btn_link: "/deployment/logo" };
+      this.alert_popup_content = { btn_name: "Set Colors", btn_link: "/store-setting/logo-management" };
     }
     else if(type=='plan') {
       this.alert_popup_content = { btn_name: "Choose Plan", btn_link: "/deployment/plans" };

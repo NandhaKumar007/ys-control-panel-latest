@@ -37,22 +37,26 @@
     </div>
   </div>
 
-  <ng-container *ngIf="colorList.length || colorSections.length">
+  <ng-container *ngIf="commonService.deploy_stages.logo">
     <div class="separator-breadcrumb border-top mb-3 mt-4"></div>
     <div class="row">
       <div class="col-md-8">
-        <h4 class="mt-2">Theme Colors</h4>
+        <h4 class="mt-3">Theme Colors</h4>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" class="btn btn-primary" (click)="findColors();">Change Theme Colors</button>
+        <button type="button" class="btn btn-primary" (click)="findColors();">
+          {{ colorSections.length? 'Change': 'Set' }} Theme Colors
+        </button>
       </div>
-      <ng-container *ngIf="!colorList.length">
+      <!-- theme colors -->
+      <ng-container *ngIf="colorSections.length && !colorList.length">
         <div *ngFor="let sec of colorSections; let i=index;" class="col-md-12 mt-3">
           <div class="card card-in-card p-3">
             <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
           </div>
         </div>
       </ng-container>
+      <!-- color list -->
       <ng-container *ngIf="colorList.length">
         <div *ngFor="let sec of colorFields; let i=index;" class="col-md-12 mt-3">
           <div class="card card-in-card z-i-unset p-3">
