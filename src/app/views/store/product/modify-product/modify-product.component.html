@@ -240,12 +240,14 @@
                       required></tag-input>
                   </div>
                   <div *ngIf="x.name=='Color' || x.name=='color' || x.name=='Colour' || x.name=='colour'" class="col-md-8 form-group mb-3">
-                    <span *ngFor="let opt of x.options; let m=index;" class="mr-1">
-                      <span class="color-chips">
-                        {{opt.display}}
-                        <span (click)="x.options.splice(m, 1); onCreateVariantList(productForm.variant_types);" class="chip-close material-icons">close</span>
+                    <div class="custom-tag-list-wrapper">
+                      <span *ngFor="let opt of x.options; let m=index;" class="custom-tag-list mr-1">
+                        <span class="color-chips">
+                          {{opt.display}}
+                          <span (click)="x.options.splice(m, 1); onCreateVariantList(productForm.variant_types);" class="chip-close material-icons">close</span>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                     <div class="pt-3">
                       <button type="button" (click)="selectedVariantIndex=i; onAddColorOptions(colorModal);" class="btn btn-wide btn-primary">
                         Add Options

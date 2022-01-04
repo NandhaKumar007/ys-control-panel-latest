@@ -2912,6 +2912,7 @@ sup.required {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
+  font-size: 16px;
 }
 .home-headlines h6 {
   font-size: 12px;
@@ -3926,9 +3927,9 @@ p svg:hover {
     padding-left: 0 !important;
   }
 
-  .image-cropper canvas {
-    width: 220px;
-  }
+  // .image-cropper canvas {
+  //   width: 220px;
+  // }
 
   .max-w-200 {
     max-width: 200px;
@@ -4307,17 +4308,72 @@ p svg:hover {
   }
 }
 
-// ashok
-.color-chips {
-  padding: 5px 10px 5px 10px;
-  background: #f0f0f0;
-  border-radius: 20px;
+.gray-icon-btn {
+  outline: none;
+  border-radius: 50%;
+  border: 1px solid $gray-btn-bdr;
+  background-color: $gray-btn-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  i {
+    color: $gray-btn-txt;
+    font-size: 16px;
+  }
 }
-.chip-close {
-  top: 6px;
-  position: relative;
-  font-size: 20px;
-  margin-left: 5px;
-  color: #808080;
-  cursor: pointer;
+.whats-new-acc {
+  .acc-card {
+    border-radius: 0;
+    box-shadow: none;
+    .card-header {
+      background-color: transparent;
+      border-bottom: none;
+      h5 {
+        button {
+          font-weight: bold;
+          line-height: normal;
+          font-size: 0.815rem;
+          color: $primary-txt-clr;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .gray-icon-btn {
+            transition: transform 0.24s ease-in-out;
+          }
+          &:hover {
+            text-decoration: none;
+          }
+        }
+        button[aria-expanded="true"] {
+          .gray-icon-btn {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+  }
 }
+.custom-tag-list-wrapper {
+  .custom-tag-list {
+    display: inline-flex;
+    margin-bottom: 10px;
+    .color-chips {
+      display: flex;
+      align-items: center;
+      padding: 5px 10px 5px 10px;
+      background: #f0f0f0;
+      border-radius: 20px;
+      .chip-close {
+        font-size: 20px;
+        margin-left: 5px;
+        color: #808080;
+        cursor: pointer;
+      }
+    }
+  }
+}
+// .image-cropper canvas {
+//   max-width: 400px;
+//   width: 100%;
+// }

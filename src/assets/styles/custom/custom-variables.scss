@@ -35,7 +35,6 @@ $secondary-txt-clr: #3d3d3d;
 $mute-txt-clr: #3d3d3d;
 $highlighted-txt-clr: #ec848b;
 
-
 // input borders
 $input-bdr-rds: 14px;
 $input-clr: #3d3d3d;
@@ -153,3 +152,8 @@ $error-txt: #fff;
 // Shadow
 $card-primary-shadow:0px 0px 10px rgba(0, 0, 0, 0.1);
 $card-secondary-shadow: 0 5px 20px 0 rgba(0, 0, 0, .1);
+
+// gray btn for round navigation btns
+$gray-btn-bdr: gray;
+$gray-btn-bg: rgba(249,249,249,1);
+$gray-btn-txt: gray;

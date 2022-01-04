@@ -3,18 +3,18 @@
     <div class="row">
       <div class="col-md-12 p-0">
         <div class="row">
-          <div class="col-md-10 d-flex justify-content-end align-items-start flex-column">
+          <div class="col-md-12 d-flex justify-content-end align-items-start flex-column">
             <h1>Store Setting</h1>
             <ul>
               <li>Manage your website settings</li>
             </ul>
           </div>
-          <div class="col-md-2 mt-2 d-flex align-items-end justify-content-end mt-sm-15" align="right">
+          <!-- <div class="col-md-2 mt-2 d-flex align-items-end justify-content-end mt-sm-15" align="right">
             <button *ngIf="commonService.host_name=='localhost' && commonService.master_token" type="button" (click)="createSSL();"
             [disabled]="btnLoader" [ladda]="btnLoader" class="btn btn-primary ladda-button m-0">
               Create SSL
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -253,12 +253,16 @@
             <input type="text" name="from_name" class="form-control" [(ngModel)]="settingForm.from_name" required />
           </div>
           <div class="col-md-6 form-group mb-3">
-            <label>CC Mail</label>
-            <input type="email" name="cc_mail" class="form-control" [(ngModel)]="settingForm.cc_mail" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
             <label>Contact No</label>
             <input type="text" name="contact_no" class="form-control" [(ngModel)]="settingForm.contact_no" />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>CC Mails (separate with comma)</label>
+            <input type="text" name="cc_mail" class="form-control" [(ngModel)]="settingForm.cc_mail" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Billing Mails (separate with comma)</label>
+            <input type="text" name="billing_mail" class="form-control" [(ngModel)]="settingForm.billing_mail" required />
           </div>
           <div class="col-md-12 border-top"></div>
           <div class="mb-3 mt-3 col-md-12">

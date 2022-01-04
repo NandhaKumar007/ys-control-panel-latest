@@ -81,7 +81,7 @@ export class AdminLayoutComponent implements OnInit {
       { name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/admin/dashboard' },
       { name: 'Currencies', type: 'link', icon: 'attach_money', state: '/admin/currencies' },
       { name: 'Packages', type: 'link', icon: 'fact_check', state: '/admin/packages' },
-      { name: 'Features', type: 'link', icon: 'extension', state: '/admin/features' },
+      { name: 'Apps', type: 'link', icon: 'extension', state: '/admin/features' },
       { name: 'Clients', type: 'link', icon: 'supervised_user_circle', state: '/admin/clients' },
       { name: 'Dealers', type: 'link', icon: 'group', state: '/admin/dealers' },
       { name: 'Payments', type: 'dropDown', icon: 'receipt_long', sub: [

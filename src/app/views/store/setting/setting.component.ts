@@ -59,6 +59,7 @@ export class SettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.commonService.loadChat();
     if(this.commonService.payment_list.findIndex(obj => obj.name=='COD') != -1) this.codExist = true;
   }
 
@@ -355,12 +356,16 @@ export class SettingComponent implements OnInit {
     }
   }
 
-  createSSL() {
-    this.btnLoader = true;
-    this.api.CREATE_SSL().subscribe((result) => {
-      this.btnLoader = false;
-      console.log("-----", result);
-    });
+  ngOnDestroy() {
+    this.commonService.hideChat();
   }
+
+  // createSSL() {
+  //   this.btnLoader = true;
+  //   this.api.CREATE_SSL().subscribe((result) => {
+  //     this.btnLoader = false;
+  //     console.log("-----", result);
+  //   });
+  // }
 
 }

@@ -313,4 +313,24 @@ export class CommonService {
     document.getElementById("openDeployAlertModal").click();
   }
 
+  loadChat() {
+    if(document.getElementById("hs-script-loader")) {
+      let chatElem = document.getElementById("hubspot-messages-iframe-container");
+      if(chatElem) chatElem.style.setProperty("display", "block", "important");
+    }
+    else {
+      let script = document.createElement("script");
+      script.type = "text/javascript";
+      script.id = "hs-script-loader";
+      script.defer = true;
+      script.async = true;
+      document.getElementsByTagName("body")[0].appendChild(script);
+      script.src = "https://js.hs-scripts.com/7633683.js";
+    }
+  }
+  hideChat() {
+    let chatElem = document.getElementById("hubspot-messages-iframe-container");
+    if(chatElem) chatElem.style.setProperty("display", "none", "important");
+  }
+
 }
