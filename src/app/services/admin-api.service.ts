@@ -101,9 +101,5 @@ export class AdminApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.post<any>(environment.ws_url+'/admin/inactive_payments', x, httpOptions);
   }
-  RAZORPAY_PAYMENT_STATUS(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
-    return this.http.post<any>(environment.ws_url+'/admin/razorpay_payment_status', x, httpOptions);
-  }
 
 }

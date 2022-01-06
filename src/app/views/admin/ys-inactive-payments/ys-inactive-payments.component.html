@@ -73,10 +73,10 @@
                     <span *ngIf="x.payment_status"><br>({{x.payment_status}})</span>
                   </p>
                   <p class="c-w-15 w-md-100 m-b-0">{{x.amount | currency: x.currency_type?.country_code}}</p>
-                  <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
+                  <!-- <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
                     <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
                       [disabled]="x.loader" [ladda]="x.loader">Check Status</button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

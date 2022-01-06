@@ -4,9 +4,9 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>Features</h1>
+    <h1>Apps</h1>
     <ul>
-      <li>Manage and edit yourstore feature properties</li>
+      <li>Manage and edit yourstore app properties</li>
     </ul>
   </div>
   <div class="separator-breadcrumb border-top"></div>
@@ -95,7 +95,7 @@
 <!-- DELETE MODAL -->
 <ng-template #deleteModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to remove <span class="text-danger">"{{deleteForm.name}}"</span> feature?</strong>
+    <p><strong>Are you sure you want to remove <span class="text-danger">"{{deleteForm.name}}"</span> app?</strong>
     </p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
