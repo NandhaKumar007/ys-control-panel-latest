@@ -86,10 +86,14 @@ export class CommonService {
     { name: "Cms", value: "cms" }
   ];
   feature_categories:any = [
-    { name: "Sales", rank: 1, apps: [] }, { name: "Customer Service", rank: 2, apps: [] }, { name: "Fulfillment", rank: 3, apps: [] },
-    { name: "Marketing", rank: 4, apps: [] }, { name: "Sourcing and selling products", rank: 5, apps: [] }, { name: "Store management", rank: 6, apps: [] },
-    { name: "Shipping and delivery", rank: 7, apps: [] }, { name: "Sourcing and selling products", rank: 8, apps: [] }, { name: "Store design", rank: 9, apps: [] },
-    { name: "Store management", rank: 10, apps: [] }
+    { name: "Customer Service", rank: 1, apps: [] },
+    { name: "Fulfilment", rank: 2, apps: [] },
+    { name: "Marketing", rank: 3, apps: [] },
+    { name: "Sales", rank: 4, apps: [] },
+    { name: "Sourcing and selling products", rank: 5, apps: [] },
+    { name: "Shipping and Delivery", rank: 6, apps: [] },
+    { name: "Store Design", rank: 7, apps: [] },
+    { name: "Store management", rank: 8, apps: [] }
   ];
   host_name: string = window.location.hostname;
   vapidPublicKey: string = "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk";

@@ -17,14 +17,18 @@ export class PaymentSummaryComponent implements OnInit {
   constructor(private storeApi: StoreApiService, private router: Router, private activeRoute: ActivatedRoute, private commonService: CommonService, private sbService: SidebarService) { }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe((params: Params) => {
-      this.pageLoader = true;
-      this.storeApi.ADV_STORE_DETAILS().subscribe(result => {
-        setTimeout(() => { this.pageLoader = false; }, 500);
-        if(result.status) this.sbService.resetStoreDetails(result);
-        else console.log("response", result);
-      });
-    });
+    // this.activeRoute.params.subscribe((params: Params) => {
+    //   this.pageLoader = true;
+    //   this.storeApi.ADV_STORE_DETAILS().subscribe(result => {
+    //     setTimeout(() => { this.pageLoader = false; }, 500);
+    //     if(result.status) this.sbService.resetStoreDetails(result);
+    //     else console.log("response", result);
+    //   });
+    // });
+  }
+
+  ngOnDestroy() {
+    this.commonService.clearData();
   }
 
 }
