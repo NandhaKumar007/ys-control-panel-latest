@@ -356,11 +356,9 @@ export class SidebarService {
           routePermissionList.push("dp_wallet");
         }
         if(this.commonService.master_token) {
-          accountList.push(
-            { icon: 'widgets', name: 'App Store', state: '/account/app-store', type: 'link' },
-            { icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' }
-          );
+          accountList.push({ icon: 'widgets', name: 'App Store', state: '/account/app-store', type: 'link' });
         }
+        accountList.push({ icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' });
         this.sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
       }
       else {

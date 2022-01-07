@@ -366,6 +366,18 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  socialShare() {
+    let windowNav: any = window.navigator;
+    if(windowNav && windowNav.share) {
+      windowNav.share({
+        title: '', text: '',
+        url: 'https://shop.yourstore.io/'+this.commonService.store_details?.sub_domain
+      })
+      .catch( (error) => { console.log(error); });
+    }
+    else console.log("share not supported")
+  }
+
   ngOnDestroy() {
     this.commonService.hideChat();
   }

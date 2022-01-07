@@ -134,7 +134,7 @@ export class CommonService {
   custom_model: any;
   alert_popup_content: any;
   
-  scroll_y_pos: number;
+  scroll_y_pos: number; screen_width: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
   socialTypes: any = ["facebook", "instagram", "tiktok", "twitter", "snapchat", "pinterest", "linkedin", "behance", "dribble", "youtube", "whatsapp", "website"];
   verNum: any = new Date().valueOf();

@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { HostListener } from "@angular/core";
+import { Component, HostListener } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { CommonService } from './services/common.service';
 
@@ -14,6 +13,7 @@ export class AppComponent {
   @HostListener('window:scroll', ['$event'])
   getScrollPosition() {
     this.commonService.scroll_y_pos = window.pageYOffset;
+    this.commonService.screen_width = window.innerWidth;
   }
 
   constructor(private commonService: CommonService, private deviceService: DeviceDetectorService) {

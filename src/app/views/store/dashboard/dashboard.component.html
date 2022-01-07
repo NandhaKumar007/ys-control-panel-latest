@@ -1,13 +1,26 @@
 <div class="breadcrumb with-back-btn">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 d-flex align-items-center">
       <h1>Dashboard</h1>
     </div>
     <div class="col-md-6">
-      <div class="pull-right">
-        <a target="_blank" href="https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}">
-          <b>https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}</b>
-        </a>
+      <div class="card mb-2">
+        <div class="bdr-btm p-3">
+          <div class="row">
+            <div class="col-6 col-sm-6 col-md-7 d-flex align-items-center">
+              <p class="card-data-b-head text-decoration-unl single-line-text-ellipsis mb-0">
+                https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-5 d-flex align-items-center justify-content-end">
+              <a target="_blank" href="https://shop.yourstore.io/{{commonService.store_details?.sub_domain}}">
+                <i class="material-icons edit-icon mr-2">visibility</i>
+              </a>
+              <button (click)="socialShare();" class="btn btn-outline-primary" type="button">
+                <span class="outline-primary-txt">Share Link</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
