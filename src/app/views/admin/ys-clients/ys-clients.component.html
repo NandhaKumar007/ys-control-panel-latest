@@ -83,7 +83,7 @@
                     (click)="openBuildInfoModal(x, buildInfoModal);">
                     Build Info
                   </button> -->
-                  <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });"
+                  <button *ngIf="x.package_details?.trial_expiry" (click)="deleteForm=x; modalService.open(statusModal, { centered: true });"
                     class="btn btn-wide w-md-100"
                     [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
                     {{ (x.status=='active')? 'Disable': 'Enable' }}

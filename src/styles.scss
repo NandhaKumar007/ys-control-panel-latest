@@ -4450,3 +4450,14 @@ p svg:hover {
     border: none;
   }
 }
+
+.payment-steps-modal-body {
+  max-height: 69vh;
+  overflow-y: scroll;
+}
+.payment-steps {
+  .payment-steps-count {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+}
