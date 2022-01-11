@@ -206,7 +206,7 @@
             <div class="flex-column w-55 w-sm-100">
               <label>Mobile</label>
               <input type="text" name="mobile" [(ngModel)]="editForm.mobile" #mobile="ngModel" class="form-control"
-                required />
+              appNumberOnly required />
             </div>
           </div>
         </div>
@@ -324,7 +324,7 @@
               <div class="flex-column w-55 w-sm-100">
                 <label>Mobile</label>
                 <input type="text" name="mobile" [(ngModel)]="addressForm.mobile" #mobile="ngModel" class="form-control"
-                  required />
+                appNumberOnly required />
               </div>
             </div>
           </div>

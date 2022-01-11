@@ -96,7 +96,11 @@ export class ModifyYsClientsComponent implements OnInit {
   onCountryChange(x) {
     this.state_list = [];
     let index = this.commonService.country_list.findIndex(object => object.name==x);
-    if(index!=-1) this.state_list = this.commonService.country_list[index].states;
+    if(index!=-1) {
+      this.state_list = this.commonService.country_list[index].states;
+      if(!this.clientForm.company_details.dial_code)
+        this.clientForm.company_details.dial_code = this.commonService.country_list[index].dial_code;
+    }
   }
 
 }

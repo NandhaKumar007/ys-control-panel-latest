@@ -46,7 +46,7 @@
         <div class="row m-0">
 
           <div
-          *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, website: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
+          *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
           class="list-item data-list-card col-md-12 p-0" [ngClass]="x.account_type=='demo' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
     
           <div class="d-flex flex-row">
@@ -58,7 +58,7 @@
               <div
                 class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                 <!-- OTHER DATA -->
-                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}<br>{{ x.email }}</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{ x._id }}</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y"}}</p>
@@ -78,11 +78,11 @@
                       </div>
                     </div>
                   </div>
-                  <button *ngIf="commonService.host_name=='localhost' && x.account_type=='client'"
+                  <!-- <button *ngIf="commonService.host_name=='localhost' && x.account_type=='client'"
                     class="btn btn-wide btn-outline-secondary w-md-100 mr-3"
                     (click)="openBuildInfoModal(x, buildInfoModal);">
                     Build Info
-                  </button>
+                  </button> -->
                   <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });"
                     class="btn btn-wide w-md-100"
                     [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">

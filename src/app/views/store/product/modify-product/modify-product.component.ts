@@ -44,7 +44,7 @@ export class ModifyProductComponent implements OnInit {
     this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.croppedWidth = this.imgWidth; this.cropperSettings.croppedHeight = this.imgHeight;
-    this.cropperSettings.canvasWidth = this.imgWidth; this.cropperSettings.canvasHeight = this.imgHeight;
+    this.cropperSettings.canvasWidth = this.imgWidth/3; this.cropperSettings.canvasHeight = this.imgHeight/3;
     this.cropperSettings.width = this.imgWidth; this.cropperSettings.height = this.imgHeight;
     this.cropperSettings.cropperDrawSettings.dragIconStrokeWidth = 0;
     this.cropperSettings.cropperDrawSettings.lineDash = true;

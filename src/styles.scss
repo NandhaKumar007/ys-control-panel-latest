@@ -4311,7 +4311,7 @@ p svg:hover {
 .gray-icon-btn {
   outline: none;
   border-radius: 50%;
-  border: 1px solid $gray-btn-bdr;
+  border: 2px solid $gray-btn-bdr;
   background-color: $gray-btn-bg;
   display: flex;
   align-items: center;
@@ -4323,9 +4323,10 @@ p svg:hover {
   }
 }
 .whats-new-acc {
+  overflow: hidden;
   .acc-card {
     border-radius: 0;
-    box-shadow: none;
+    // box-shadow: none;
     .card-header {
       background-color: transparent;
       border-bottom: none;
@@ -4404,13 +4405,16 @@ p svg:hover {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-  .danger-text{
-    color: red;
-  }
+}
+.danger-text{
+  color: red;
+}
 }
 
 @media only screen and (max-width: 768px) {
+  .learn-more-text{
+    display: none;
+  }
   .only-product-list-card {
     // padding: 10px;
     .row > [class*="col-"] {
@@ -4445,21 +4449,4 @@ p svg:hover {
   &::after {
     border: none;
   }
-}
-
-.image-cropper-wrapper {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  // overflow: hidden;
-  overflow: scroll;
-  padding: 5px;
-  text-align: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }

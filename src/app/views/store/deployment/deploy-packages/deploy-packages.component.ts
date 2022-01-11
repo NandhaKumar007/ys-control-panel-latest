@@ -632,7 +632,6 @@ export class DeployPackagesComponent implements OnInit {
     };
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
-        this.updateDeployStatus();
         if(x.name=="Razorpay") {
           let paymentConfig = result.data.payment_config;
           this.razorpayOptions.my_order_type = "purchase_plan";
@@ -726,18 +725,6 @@ export class DeployPackagesComponent implements OnInit {
       }
     }
     this.upgradeData.payable_amount = parseFloat(this.upgradeData.payable_amount.toFixed(2));
-  }
-
-  updateDeployStatus() {
-    if(!this.commonService.deploy_stages['package']) {
-      let formData = { store_id: this.commonService.store_details._id, "deploy_stages.package": true };
-      this.api.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
-        if(result.status) {
-          this.commonService.deploy_stages = result.data.deploy_stages;
-          this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
-        }
-      });
-    }
   }
 
 }

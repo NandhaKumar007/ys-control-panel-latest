@@ -559,9 +559,7 @@
       <div class="row">
         <div align="center" class="col-md-12">
           <p>{{imgWidth}} x {{imgHeight}} pixels @72ppi</p>
-          <div class="image-cropper-wrapper">
-            <img-cropper class="image-cropper" #cropper [image]="productForm.image_list[imageIndex]" [settings]="cropperSettings"></img-cropper>
-          </div>
+          <img-cropper class="image-cropper" #cropper [image]="productForm.image_list[imageIndex]" [settings]="cropperSettings"></img-cropper>
         </div>
       </div>
       <div class="separator-breadcrumb border-top mt-3"></div>
