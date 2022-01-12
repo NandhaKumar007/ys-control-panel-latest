@@ -31,11 +31,12 @@ export class YsClientsComponent implements OnInit {
       if(result.status) {
         this.parent_list = result.list;
         this.parent_list.forEach(obj => {
+          obj.account_expiry = obj.package_details.trial_expiry;
+          if(obj.package_details.billing_status && obj.package_details.expiry_date)
+            obj.account_expiry = obj.package_details.expiry_date;
           obj.package_name = "NA";
-          if(obj.package_details) {
-            let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
-            if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
-          }
+          let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
+          if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
         });
         if(this.listType=='active') this.commonService.store_list = result.list;
         this.changeAccType();

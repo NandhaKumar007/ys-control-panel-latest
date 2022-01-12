@@ -257,12 +257,14 @@
             <input type="text" name="contact_no" class="form-control" [(ngModel)]="settingForm.contact_no" />
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label>CC Mails (separate with comma)</label>
-            <input type="text" name="cc_mail" class="form-control" [(ngModel)]="settingForm.cc_mail" required />
+            <label>CC Mails</label>
+            <tag-input class="w-100" name="cc_mail_list"[(ngModel)]="settingForm.cc_mail_list" #cc_mail_list="ngModel" placeholder=""
+            [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"></tag-input>
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label>Billing Mails (separate with comma)</label>
-            <input type="text" name="billing_mail" class="form-control" [(ngModel)]="settingForm.billing_mail" required />
+            <label>Billing Mails</label>
+            <tag-input class="w-100" name="billing_mail_list"[(ngModel)]="settingForm.billing_mail_list" #billing_mail_list="ngModel" placeholder=""
+            [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"></tag-input>
           </div>
           <div class="col-md-12 border-top"></div>
           <div class="mb-3 mt-3 col-md-12">

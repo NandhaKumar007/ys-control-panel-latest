@@ -116,6 +116,22 @@ export class SettingComponent implements OnInit {
           let splitData = this.settingForm.send_from.split("<");
           this.settingForm.from_name = splitData[0].trim();
         }
+        // cc mail
+        this.settingForm.cc_mail_list = [];
+        if(this.settingForm.cc_mail) {
+          this.settingForm.cc_mail.split(',').forEach(obj => {
+            obj = obj.trim();
+            this.settingForm.cc_mail_list.push({display: obj, value: obj});
+          });
+        }
+        // billing mail
+        this.settingForm.billing_mail_list = [];
+        if(this.settingForm.billing_mail) {
+          this.settingForm.billing_mail.split(',').forEach(obj => {
+            obj = obj.trim();
+            this.settingForm.billing_mail_list.push({display: obj, value: obj});
+          });
+        }
         if(this.settingForm.host_type=='roundcube') {
           this.settingForm.mail_domain = this.settingForm.transporter.name;
           this.settingForm.mail_host = this.settingForm.transporter.host;
@@ -135,6 +151,24 @@ export class SettingComponent implements OnInit {
       if(this.settingForm.host_type=='roundcube') {
         this.settingForm.transporter.name = this.settingForm.mail_domain;
         this.settingForm.transporter.host = this.settingForm.mail_host;
+      }
+      // cc mail
+      delete this.settingForm.cc_mail;
+      if(this.settingForm.cc_mail_list.length) {
+        let mailList = [];
+        this.settingForm.cc_mail_list.forEach(obj => {
+          mailList.push(obj.value.trim());
+        });
+        this.settingForm.cc_mail = mailList.join(',');
+      }
+      // billing mail
+      delete this.settingForm.billing_mail;
+      if(this.settingForm.billing_mail_list.length) {
+        let mailList = [];
+        this.settingForm.billing_mail_list.forEach(obj => {
+          mailList.push(obj.value.trim());
+        });
+        this.settingForm.billing_mail = mailList.join(',');
       }
       this.api.STORE_UPDATE({ mail_config: this.settingForm }).subscribe(result => {
         if(result.status) document.getElementById('closeModal').click();

@@ -77,7 +77,7 @@
                   <div class="input-group">
                     <div class="input-group-prepend flex-column w-40 w-sm-100 mr-3 c-sm-m-0 c-sm-mb-3">
                       <label>Dial Code</label>
-                      <select name="dial_code" class="form-control" [(ngModel)]="clientForm.company_details.dial_code" #dial_code="ngModel">
+                      <select name="dial_code" class="form-control" [(ngModel)]="clientForm.company_details.dial_code" #dial_code="ngModel" required>
                         <option *ngFor="let x of commonService.country_list | orderAsc: 'name';" [ngValue]="x.dial_code">
                           {{x.dial_code}}
                         </option>
@@ -85,13 +85,13 @@
                     </div>
                     <div class="flex-column w-55 w-sm-100">
                       <label>Mobile</label>
-                      <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" appNumberOnly />
+                      <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" appNumberOnly required />
                     </div>
                   </div>
                 </div>
                 <div class="col-md-12 form-group mb-3">
                   <label>Complete Address</label>
-                  <textarea name="address" [(ngModel)]="clientForm.company_details.address" #address="ngModel" class="form-control"></textarea>
+                  <textarea name="address" [(ngModel)]="clientForm.company_details.address" #address="ngModel" class="form-control" required></textarea>
                 </div>
                 <div class="col-md-6 form-group mb-3">
                   <label>Country</label>
