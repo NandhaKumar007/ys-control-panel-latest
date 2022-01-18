@@ -4353,6 +4353,12 @@ p svg:hover {
         }
       }
     }
+    .card-body{
+      border-top: 1px solid $primary-bdr;
+      .separator {
+        border-top: 1px solid $primary-bdr;
+      }
+    }
   }
 }
 .custom-tag-list-wrapper {
@@ -4411,7 +4417,23 @@ p svg:hover {
 }
 }
 
+.whats-new-pagination{
+  display: flex;
+  justify-content: flex-end;
+  button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    i{
+      font-size: 1rem;
+    }
+  }
+}
+
 @media only screen and (max-width: 768px) {
+  .whats-new-pagination{
+    justify-content: center;
+  }
   .learn-more-text{
     display: none;
   }

@@ -34,7 +34,7 @@ export class ProductOrdersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cookieService.set('blockSub', 'true');
+    // this.cookieService.set('blockSub', 'true');
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.page = 1; this.pageSize = 10;
       if(!this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {

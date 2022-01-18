@@ -434,7 +434,7 @@
 <ng-template #resetModal let-modal>
   <div class="modal-body">
     <p>
-      <strong>Are you sure you want to reset the segments?</strong>
+      <strong>Reseting homepage elements will reset the store to default template</strong>
     </p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
@@ -442,11 +442,11 @@
   </div>
   <div class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-      <span class="black-outline-txt">No</span>
+      <span class="black-outline-txt">Cancel</span>
     </button>
     <button type="button" (click)="onResetLayout(null);" class="btn btn-wide orng-outline-btn ladda-button m-1"
       [disabled]="deleteForm?.btnLoader" [ladda]="deleteForm?.btnLoader">
-      <span class="orng-outline-txt">Yes</span>
+      <span class="orng-outline-txt">Confirm</span>
     </button>
   </div>
 </ng-template>

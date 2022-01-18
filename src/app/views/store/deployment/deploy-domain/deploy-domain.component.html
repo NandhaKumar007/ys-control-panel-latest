@@ -1,1 +1,195 @@
-<p>deploy-domain works!</p>
+<div>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-12 p-0">
+        <div class="row">
+          <div class="col-md-8 col-md-8 d-flex justify-content-end align-items-start flex-column">
+            <h1>Domain</h1>
+            <ul>
+              <li>Manage your domain settings</li>
+            </ul>
+          </div>
+          <div class="col-md-4 mt-2 d-flex align-items-end justify-content-end mt-sm-15" align="right">
+            <button type="button" class="btn btn-primary" (click)="domainForm={}; modalService.open(buydomainModal, { centered: true });">
+              Buy a new domain
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="row">
+
+    <!-- <div class="col-md-6">
+      <div class="card setting-card w-100 p-3 mb-4 cursor">
+
+        <div class="">
+          <h3>Take your business online</h3>
+          <p>You're almost done</p>
+
+          <div class="get-domain-detail-sec mb-3">
+            <h6>Do you have a domain name?</h6>
+            <div class="form-group">
+              <select name="type" class="form-control select-arrow">
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="get-domain-detail-sec mb-3">
+            <h6>What's the domain name of your website?</h6>
+            <div class="domain-prepend-sec yes-domain-name-sec">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <strong>https://</strong>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="example.in">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="get-domain-detail-sec mb-3" *ngIf="false">
+            <h6>What temporary domain name you want?</h6>
+            <div class="domain-append-sec no-domain-name-sec">
+              <div class="input-group">
+
+                <input type="text" class="form-control" placeholder="example.in">
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <strong>.yourstore.io</strong>
+                  </span>
+                </div>
+
+              </div>
+
+              <i class="material-icons-outlined close">highlight_off</i>
+            </div>
+          </div>
+
+          <button class="btn-primary" type="submit">Submit</button>
+
+        </div>
+
+      </div>
+    </div> -->
+
+    <!-- <div class="col-md-6 col-lg-6 d-flex">
+      <div class="card setting-card w-100 p-3 mb-4 cursor">
+
+        <div class="">
+          <h3>Primary Domain</h3>
+          <p>Your primary domain is the one you want customers and search engines to see</p>
+          <div class="domain-select-option">
+            <label class="radio radio-primary">
+              <input type="radio" name="domain-list" checked>
+              <span>yourstore.io</span>
+              <span class="checkmark"></span>
+            </label>
+
+            <label class="radio radio-primary">
+              <input type="radio" name="domain-list">
+              <span>dimaic.io</span>
+              <span class="checkmark"></span>
+            </label>
+            <div class="d-flex justify-content-end">
+              <button class="btn-primary" type="button">Save</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div> -->
+
+    <div class="col-md-6 col-lg-6 d-flex">
+      <div class="card setting-card w-100 p-3 mb-4 cursor">
+        <form autocomplete="off" (ngSubmit)="onConnectDomain();" ngNativeValidate>
+          <div class="">
+            <h3>Connect a domain</h3>
+            <p>Make you site more professional, memorable and easy to find with your own custom domain</p>
+
+            <div class="form-group">
+              <select name="provider" class="form-control" [(ngModel)]="domainForm.provider" required>
+                <option *ngFor="let x of providerList;" [ngValue]="x.name">{{x.name}}</option>
+              </select>
+            </div>
+
+            <div *ngIf="domainForm.provider=='Others'" class="form-group">
+              <input type="text" name="other_provider" class="form-control" [(ngModel)]="domainForm.other_provider" placeholder="Provider Name" required />
+            </div>
+
+            <div class="connect-domain-sec">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <div class="domain-connect-status domain-connected"></div>
+                    www.
+                  </span>
+                </div>
+                <input type="text" name="domain" class="form-control" [(ngModel)]="domainForm.domain" placeholder="example.in" required />
+                <!-- <div class="input-group-append">
+                  <button class="btn-primary" type="button">Disconnect</button>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="domain-select-option">
+              <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="domainForm.submit" [ladda]="domainForm.submit">
+                Connect your domain
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Buy domain Modal -->
+<ng-template #buydomainModal let-modal>
+  <div class="custom-domain-modal">
+    <div class="modal-header justify-content-center">
+      <h4 class="modal-title" id="modal-basic-title">Enter the domain you would like to buy</h4>
+      <i class="material-icons" id="closeModal" (click)="modal.dismiss('Cross click');">close</i>
+    </div>
+    <form autocomplete="off" (ngSubmit)="onBuyDomain();" ngNativeValidate>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="connect-domain-sec">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      https://
+                    </span>
+                  </div>
+                  <input type="text" name="buy_domain" class="form-control" [(ngModel)]="domainForm.buy_domain" placeholder="example.in" required />
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-md-12 mt-2 d-flex align-items-end justify-content-end mt-sm-15" align="right">
+              <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="domainForm.modal_submit" [ladda]="domainForm.modal_submit">
+                Buy
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+</ng-template>
