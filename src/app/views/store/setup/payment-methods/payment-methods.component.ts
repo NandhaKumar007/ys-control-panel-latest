@@ -5,7 +5,6 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SetupService } from '../setup.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
-import { resource } from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-payment-methods',
@@ -119,7 +118,7 @@ export class PaymentMethodsComponent implements OnInit {
     }
     else if(x.name=='Bank Payment') {
       this.payForm.field_list = x.app_config.field_list;
-      this.payForm.description = x.app_config.description;
+      this.payForm.message = x.app_config.description;
       this.payForm.pay_id_field_status = x.app_config.pay_id_field_status;
     }
     this.modalService.open(modalName, {size: 'lg'});
@@ -191,6 +190,7 @@ export class PaymentMethodsComponent implements OnInit {
     if(!this.payForm.cod_config) this.payForm.cod_config = {};
     if(x='Bank Payment') {
       if(!this.payForm.field_list || !this.payForm.field_list.length) this.payForm.field_list = [{ title: "Account Name", value: "" }, { title: "Account No", value: "" }];
+      if(!this.payForm.message) this.payForm.message = "You will receive an order confirmation email as soon as we validate the payment sent by you.";
     }
   }
 
@@ -242,7 +242,7 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.app_config = { upi_id: this.payForm.upi_id, merchant_name: this.payForm.merchant_name, merchant_code: this.payForm.merchant_code };
     }
     else if(paymentData.name=='Bank Payment') {
-      paymentData.app_config = { field_list: this.payForm.field_list, description: this.payForm.description, pay_id_field_status: this.payForm.pay_id_field_status };
+      paymentData.app_config = { field_list: this.payForm.field_list, description: this.payForm.message, pay_id_field_status: this.payForm.pay_id_field_status };
     }
     return paymentData;
   }

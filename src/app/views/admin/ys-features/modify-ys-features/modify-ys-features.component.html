@@ -13,11 +13,15 @@
 
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="row">
-      <div class="col-md-6 form-group mb-3">
+      <div class="col-md-4 form-group mb-3">
         <label>Title</label>
         <input type="text" name="name" class="form-control" [(ngModel)]="featureForm.name" #name="ngModel" required />
       </div>
-      <div class="col-md-6 form-group mb-3">
+      <div class="col-md-4 form-group mb-3">
+        <label>Keyword</label>
+        <input type="text" name="keyword" class="form-control" [(ngModel)]="featureForm.keyword" #keyword="ngModel" [disabled]="params?.feature_id" appKeyword required />
+      </div>
+      <div class="col-md-4 form-group mb-3">
         <label>Category</label>
         <select name="category" class="form-control" [(ngModel)]="featureForm.category" #category="ngModel" required>
           <option *ngFor="let x of commonService.feature_categories | orderAsc:'rank';" value="{{x.name}}">{{x.name}}</option>

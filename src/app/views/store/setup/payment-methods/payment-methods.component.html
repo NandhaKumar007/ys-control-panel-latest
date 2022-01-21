@@ -15,7 +15,7 @@
     <div class="row mb-4">
       <div class="col-md-6">
         <button type="button" class="btn btn-primary"
-          (click)="payForm = {form_type: 'add', store_name: commonService.store_details?.name, description: 'Ecommerce application'}; modalService.open(payModal, {size: 'lg'});">Add
+          (click)="payForm = {form_type: 'add', store_name: commonService.store_details?.name}; modalService.open(payModal, {size: 'lg'});">Add
           New</button>
       </div>
       <!-- search box -->
@@ -100,7 +100,7 @@
           <div *ngIf="payForm.form_type=='add'" class="col-md-6 form-group mb-3">
             <label>Payment Types</label>
             <select name="name" class="form-control" [(ngModel)]="payForm.name" (change)="changeOption(payForm.name);" #name="ngModel" required>
-              <option value="COD">COD</option>
+              <option value="COD">Cash on Delivery</option>
               <ng-container *ngIf="commonService.store_details?.country=='India'">
                 <option value="Razorpay">Razorpay</option>
                 <option value="CCAvenue">CCAvenue</option>
@@ -197,7 +197,7 @@
                 #store_name="ngModel" required />
             </div>
             <div class="col-md-6 form-group mb-3">
-              <label>Description</label>
+              <label>Business Tagline</label>
               <input type="text" name="description" class="form-control" [(ngModel)]="payForm.description"
                 #description="ngModel" required />
             </div>
@@ -350,8 +350,8 @@
               <span class="add-another x-close" (click)="payForm.field_list.push({});"><b>ADD ANOTHER FIELD</b></span>
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label>Description</label>
-              <textarea class="form-control" aria-label="With textarea" name="description" [(ngModel)]="payForm.description" #description="ngModel" required></textarea>
+              <label>Message</label>
+              <textarea class="form-control" aria-label="With textarea" name="message" [(ngModel)]="payForm.message" #message="ngModel" required></textarea>
             </div>
             <div class="form-group mb-3 col-md-12">
               <label class="checkbox checkbox-primary">

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { echartStyles } from '../../../shared/animations/echart-styles';
 import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
@@ -16,7 +17,7 @@ export class DashboardComponent implements OnInit {
   preLoader: boolean; customerLoader: boolean;
   order_details: any; customer_details: any;
 	chartPie: any; chartLine: any; filterForm: any;
-  completedPercentage: any;
+  completedPercentage: any; baseUrl: string;
   dispDeployInfo: boolean; dispDashboard: boolean;
   deployList: any = [
     {
@@ -101,73 +102,86 @@ export class DashboardComponent implements OnInit {
     }
   ];
   whats_new_list: any = {
-    step_1: [
-      {
-        title: "Quick Checkout",
-        description: "Share a link with pre-filled products to your customers on WhatsApp, Instagram and other channels."
-      },
-      {
-        title: "Our New Identity",
-        description: "A refreshing new logo and pleasing colour scheme."
-      },
-      {
-        title: "SMS Validation for CoD",
-        description: "Avoid fake orders through OTP-style validation for CoD orders."
-      },
-      {
-        title: "Sound Notifications",
-        description: "Get notified when new orders are placed."
-      },
-      {
-        title: "yourstore PWA",
-        description: "Access yourstore quickly by adding it to your home screen."
-      }
-    ],
-    step_2: [
-      {
-        title: "Colour Consistency",
-        description: "Platform-wide vivid colour usage to bring in more consistency and hierarchy of buttons and elements for easy of use."
-      },
-      {
-        title: "Language Consistency",
-        description: "UI updated with clearer text and terminology for more coherent usage of the Platform."
-      },
-      {
-        title: "More Control over yourstore",
-        description: "Manage your Store Plugins and control Store Checkout settings in just a few clicks. Find this under 'Settings' in the Plugin Management tab."
-      },
-      {
-        title: "Update Critical Information",
-        description: "Pixel code, Google Analytics code, Store email and much more can now be updated in the '<span class='info-highlight'>Store Settings</span>' tab under '<span class='info-highlight'>Settings</span>'."
-      },
-      {
-        title: "More Free Features coming your way",
-        description: "Send WhatsApp messages, email or call abandoned cart customers directly, manage announcement bar content by yourself and we've thrown in a sale countdown timer for the announcement bar to usher in the urgency to complete a purchase from your customers."
-      }
-    ],
-    step_3: [
-      {
-        title: "Mobile Responsive and Optimised Backend",
-        description: "Use all the features of the yourstore backend on your mobile. Manage orders, products, SEO & more on the fly."
-      },
-      {
-        title: "Optimised UI",
-        description: "UI Elements Design have been optimized for ease of use and understanding with clear definitions for each section."
-      },
-      {
-        title: "Dark mode",
-        description: "yourstore has just joined the dark mode party. Enjoy using yourstore even at night without straining your eyes with our enhanced dark UI."
-      },
-      {
-        title: "Dashboard",
-        description: "The new updated dashboard has all the right features for you to run and analyze your business in real-time."
-      }
-    ]
+    1: {
+      date: "28 Aug 2021",
+      steps: [
+        {
+          title: "Quick Checkout",
+          description: "Share a link with pre-filled products to your customers on WhatsApp, Instagram and other channels."
+        },
+        {
+          title: "Our New Identity",
+          description: "A refreshing new logo and pleasing colour scheme."
+        },
+        {
+          title: "SMS Validation for CoD",
+          description: "Avoid fake orders through OTP-style validation for CoD orders."
+        },
+        {
+          title: "Sound Notifications",
+          description: "Get notified when new orders are placed."
+        },
+        {
+          title: "yourstore PWA",
+          description: "Access yourstore quickly by adding it to your home screen."
+        }
+      ]
+    },
+    2: {
+      date: "16 Aug 2020",
+      steps: [
+        {
+          title: "Colour Consistency",
+          description: "Platform-wide vivid colour usage to bring in more consistency and hierarchy of buttons and elements for easy of use."
+        },
+        {
+          title: "Language Consistency",
+          description: "UI updated with clearer text and terminology for more coherent usage of the Platform."
+        },
+        {
+          title: "More Control over yourstore",
+          description: "Manage your Store Plugins and control Store Checkout settings in just a few clicks. Find this under 'Settings' in the Plugin Management tab."
+        },
+        {
+          title: "Update Critical Information",
+          description: "Pixel code, Google Analytics code, Store email and much more can now be updated in the '<span class='info-highlight'>Store Settings</span>' tab under '<span class='info-highlight'>Settings</span>'."
+        },
+        {
+          title: "More Free Features coming your way",
+          description: "Send WhatsApp messages, email or call abandoned cart customers directly, manage announcement bar content by yourself and we've thrown in a sale countdown timer for the announcement bar to usher in the urgency to complete a purchase from your customers."
+        }
+      ]
+    },
+    3: {
+      date: "16 Aug 2019",
+      steps: [
+        {
+          title: "Mobile Responsive and Optimised Backend",
+          description: "Use all the features of the yourstore backend on your mobile. Manage orders, products, SEO & more on the fly."
+        },
+        {
+          title: "Optimised UI",
+          description: "UI Elements Design have been optimized for ease of use and understanding with clear definitions for each section."
+        },
+        {
+          title: "Dark mode",
+          description: "yourstore has just joined the dark mode party. Enjoy using yourstore even at night without straining your eyes with our enhanced dark UI."
+        },
+        {
+          title: "Dashboard",
+          description: "The new updated dashboard has all the right features for you to run and analyze your business in real-time."
+        }
+      ]
+    }
   };
   whatsNewStep: number = 1;
   totalWhatsNewScreen: number = Object.keys(this.whats_new_list).length;
 
-  constructor(private api: ApiService, private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private api: ApiService,
+    private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService
+    ) {
+    config.backdrop = 'static'; config.keyboard = false;
     if(!localStorage.getItem("country_list")) {
       let countryList: any = [];
       this.api.COUNTRIES_LIST().subscribe(result => {
@@ -176,6 +190,7 @@ export class DashboardComponent implements OnInit {
         this.commonService.updateLocalData('country_list', countryList);
       });
     }
+    this.baseUrl = this.commonService.store_details.base_url.replace("https://", "");
   }
 
   ngOnInit() {
@@ -432,12 +447,22 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  shareDomain(modalName, socialShareStatus) {
+    if(this.commonService.deploy_stages.logo && this.commonService.deploy_details.theme_colors?.primary) {
+      if(socialShareStatus) this.socialShare();
+      else window.open(this.commonService.store_details.base_url, '_blank');
+    }
+    else {
+      this.modalService.open(modalName, { size: 'md', centered: true});
+    }
+  }
+
   socialShare() {
     let windowNav: any = window.navigator;
     if(windowNav && windowNav.share) {
       windowNav.share({
         title: '', text: '',
-        url: 'https://shop.yourstore.io/'+this.commonService.store_details?.sub_domain
+        url: this.commonService.store_details.base_url
       })
       .catch( (error) => { console.log(error); });
     }

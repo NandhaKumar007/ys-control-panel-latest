@@ -67,7 +67,7 @@ export class AppStoreComponent implements OnInit {
       };
       this.router.navigate(["/account/app-store/"+x._id]);
     }
-    else this.commonService.openDeployAlertModal('plan', 'Please choose the right plan for your business before use the apps');
+    else this.commonService.openDeployAlertModal('plan', 'Please select a plan first to access the app store');
   }
 
   viewAll(x) {
