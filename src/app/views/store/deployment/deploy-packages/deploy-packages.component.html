@@ -56,7 +56,10 @@
         <div class="col-md-2">
           <p class="option-name m-0">Platform Fee
             <span class="tooltip-container">
-              <span *ngIf="pricingToolTip.platform" class="tooltip">{{pricingToolTip.platform}}</span>
+              <span *ngIf="pricingToolTip.platform" class="tooltip">
+                {{pricingToolTip.platform}}
+                <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+              </span>
               <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ platform: 'A monthly fee collected based on the plan you choose' };">
                 help_outline
               </i>
@@ -76,7 +79,10 @@
         <div class="col-md-2">
           <p class="option-name m-0">Transaction Fee
             <span class="tooltip-container">
-              <span *ngIf="pricingToolTip.transaction" class="tooltip">{{pricingToolTip.transaction}}</span>
+              <span *ngIf="pricingToolTip.transaction" class="tooltip">
+                {{pricingToolTip.transaction}}
+                <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+              </span>
               <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ transaction: 'Charges applicable on the overall monthly sale' };">
                 help_outline
               </i>
@@ -96,7 +102,10 @@
         <div class="col-md-2">
           <p class="option-name m-0">Transaction Waiver
             <span class="tooltip-container">
-              <span *ngIf="pricingToolTip.waiver" class="tooltip">{{pricingToolTip.waiver}}</span>
+              <span *ngIf="pricingToolTip.waiver" class="tooltip">
+                {{pricingToolTip.waiver}}
+                <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+              </span>
               <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
                 help_outline
               </i>
@@ -116,7 +125,10 @@
         <div class="col-md-2">
           <p class="option-name m-0">Live Fee
             <span class="tooltip-container">
-              <span *ngIf="pricingToolTip.live" class="tooltip">{{pricingToolTip.live}}</span>
+              <span *ngIf="pricingToolTip.live" class="tooltip">
+                {{pricingToolTip.live}}
+                <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+              </span>
               <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ live: 'A charge collected to keep the service live, which will be rebated if there any transaction fee' };">
                 help_outline
               </i>
@@ -204,7 +216,10 @@
           <div class="col-md-2">
             <p class="option-name m-0">{{x.name}}
               <span *ngIf="x.help_content" class="tooltip-container">
-                <span *ngIf="x.toolTip" class="tooltip">{{x.toolTip}}</span>
+                <span *ngIf="x.toolTip" class="tooltip">
+                  {{x.toolTip}}
+                  <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                </span>
                 <i class="material-icons" (click)="resetFeaturesTip(); x.toolTip=x.help_content;">
                   help_outline
                 </i>
@@ -216,7 +231,10 @@
               <div *ngIf="x.free">
                 <span *ngIf="x.free!=true" class="tooltip-container">
                   <p class="m-0">
-                    <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                    <span *ngIf="x.infoTip" class="tooltip">
+                      {{x.infoTip}}
+                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                    </span>
                     <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x.free;">
                       error_outline
                     </i>
@@ -368,7 +386,10 @@
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Platform Fee
                   <span class="tooltip-container">
-                    <span *ngIf="pricingToolTip.platform" class="tooltip">{{pricingToolTip.platform}}</span>
+                    <span *ngIf="pricingToolTip.platform" class="tooltip">
+                      {{pricingToolTip.platform}}
+                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                    </span>
                     <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ platform: 'A monthly fee collected based on the plan you choose' };">
                       help_outline
                     </i>
@@ -386,7 +407,10 @@
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Transaction Fee
                   <span class="tooltip-container">
-                    <span *ngIf="pricingToolTip.transaction" class="tooltip">{{pricingToolTip.transaction}}</span>
+                    <span *ngIf="pricingToolTip.transaction" class="tooltip">
+                      {{pricingToolTip.transaction}}
+                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                    </span>
                     <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ transaction: 'Charges applicable on the overall monthly sale' };">
                       help_outline
                     </i>
@@ -404,7 +428,10 @@
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Transaction Waiver
                   <span class="tooltip-container">
-                    <span *ngIf="pricingToolTip.waiver" class="tooltip">{{pricingToolTip.waiver}}</span>
+                    <span *ngIf="pricingToolTip.waiver" class="tooltip">
+                      {{pricingToolTip.waiver}}
+                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                    </span>
                     <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
                       help_outline
                     </i>
@@ -424,7 +451,10 @@
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Live Fee
                   <span class="tooltip-container">
-                    <span *ngIf="pricingToolTip.live" class="tooltip">{{pricingToolTip.live}}</span>
+                    <span *ngIf="pricingToolTip.live" class="tooltip">
+                      {{pricingToolTip.live}}
+                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                    </span>
                     <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ live: 'A charge collected to keep the service live, which will be rebated if there any transaction fee' };">
                       help_outline
                     </i>
@@ -454,17 +484,20 @@
             <div class="col-6 p-0">
               <div *ngIf="x[packageList[selectedIndex].keyword]" class="m_pricing-col-inner m-pricing-r">
                 <p class="m-0" *ngIf="x.name=='Staff Accounts'">
-                  {{x.free}}
+                  {{x[packageList[selectedIndex].keyword]}}
                 </p>
                 <ng-container *ngIf="x.name!='Staff Accounts'">
-                  <span *ngIf="x[packageList[selectedIndex].keyword]!=true" class="tooltip-container">
-                    <p class="m-0">
-                      <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                  <p class="m-0" *ngIf="x[packageList[selectedIndex].keyword]!=true">
+                    <span class="tooltip-container">
+                      <span *ngIf="x.infoTip" class="tooltip">
+                        {{x.infoTip}}
+                        <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                      </span>
                       <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x[packageList[selectedIndex].keyword];">
                         error_outline
                       </i>
-                    </p>
-                  </span>
+                    </span>
+                  </p>
                   <p class="m-0">
                     <i *ngIf="x[packageList[selectedIndex].keyword]===true" class="material-icons-outlined checked">
                       check_circle
@@ -492,7 +525,10 @@
                 <div class="m_pricing-col-inner">
                   <p class="m_option-name">{{x.name}}
                     <span *ngIf="x.help_content" class="tooltip-container">
-                      <span *ngIf="x.toolTip" class="tooltip">{{x.toolTip}}</span>
+                      <span *ngIf="x.toolTip" class="tooltip">
+                        {{x.toolTip}}
+                        <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                      </span>
                       <i class="material-icons" (click)="resetFeaturesTip(); x.toolTip=x.help_content;">
                         help_outline
                       </i>
@@ -502,14 +538,17 @@
               </div>
               <div class="col-6 p-0">
                 <div *ngIf="x[packageList[selectedIndex].keyword]" class="m_pricing-col-inner m-pricing-r">
-                  <span *ngIf="x[packageList[selectedIndex].keyword]!=true" class="tooltip-container">
-                    <p class="m-0">
-                      <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                  <p class="m-0" *ngIf="x[packageList[selectedIndex].keyword]!=true">
+                    <span class="tooltip-container">
+                      <span *ngIf="x.infoTip" class="tooltip">
+                        {{x.infoTip}}
+                        <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                      </span>
                       <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x[packageList[selectedIndex].keyword];">
                         error_outline
                       </i>
-                    </p>
-                  </span>
+                    </span>
+                  </p>
                   <p class="m-0">
                     <i *ngIf="x[packageList[selectedIndex].keyword]===true" class="material-icons-outlined checked">
                       check_circle
