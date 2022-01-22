@@ -55,9 +55,12 @@
       <div class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Platform Fee
-            <i class="material-icons" (click)="modalInfo='A monthly fee collected based on the plan you choose'; modalService.open(infoModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
+            <span class="tooltip-container">
+              <span *ngIf="pricingToolTip.platform" class="tooltip">{{pricingToolTip.platform}}</span>
+              <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ platform: 'A monthly fee collected based on the plan you choose' };">
+                help_outline
+              </i>
+            </span>
           </p>
         </div>
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
@@ -72,9 +75,12 @@
       <div class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Transaction Fee
-            <i class="material-icons" (click)="modalInfo='Charges applicable on the overall monthly sale'; modalService.open(infoModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
+            <span class="tooltip-container">
+              <span *ngIf="pricingToolTip.transaction" class="tooltip">{{pricingToolTip.transaction}}</span>
+              <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ transaction: 'Charges applicable on the overall monthly sale' };">
+                help_outline
+              </i>
+            </span>
           </p>
         </div>
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
@@ -89,9 +95,12 @@
       <div class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Transaction Waiver
-            <i class="material-icons" (click)="modalInfo='Transaction free sale upto a respective charges based on your plan'; modalService.open(infoModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
+            <span class="tooltip-container">
+              <span *ngIf="pricingToolTip.waiver" class="tooltip">{{pricingToolTip.waiver}}</span>
+              <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
+                help_outline
+              </i>
+            </span>
           </p>
         </div>
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
@@ -106,9 +115,12 @@
       <div class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Live Fee
-            <i class="material-icons" (click)="modalInfo='A charge collected to keep the service live'; modalService.open(infoModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
+            <span class="tooltip-container">
+              <span *ngIf="pricingToolTip.live" class="tooltip">{{pricingToolTip.live}}</span>
+              <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ live: 'A charge collected to keep the service live, which will be rebated if there any transaction fee' };">
+                help_outline
+              </i>
+            </span>
           </p>
         </div>
         <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
@@ -129,28 +141,20 @@
         </div>
       </div>
     </div>
-
     <div class="card pricing-table-card-wrapper p-3">
-      <!-- Top features -->
-      <div class="row" *ngFor="let x of pricing_table.top_features">
-        <div class="col-md-2">
-          <p class="option-name m-0">{{x.name}}
-            <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-              help_outline
-            </i>
-          </p>
-        </div>
+      <div class="row" *ngFor="let x of top_features;">
+        <div class="col-md-2"></div>
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.free_plan}}</p>
+              <p class="m-0">{{x.free}}</p>
             </div>
           </div>
         </div>
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.lite_plan}}
+              <p class="m-0">{{x.lite}}
               </p>
             </div>
           </div>
@@ -158,14 +162,14 @@
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.starter_plan}}</p>
+              <p class="m-0">{{x.starter}}</p>
             </div>
           </div>
         </div>
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.growth_plan}}
+              <p class="m-0">{{x.growth}}
               </p>
             </div>
           </div>
@@ -173,7 +177,7 @@
         <div class="col-md-2 d-flex pricing-col p-0">
           <div class="pricing-col-inner w-100">
             <div class="">
-              <p class="m-0">{{x.premium_plan}}
+              <p class="m-0">{{x.premium}}
               </p>
             </div>
           </div>
@@ -181,15 +185,13 @@
       </div>
     </div>
 
+    <!-- All Features -->
     <div class="row mt-4">
       <div class="col-md-12 d-flex justify-content-center align-items-center">
         <button class="btn btn-primary" type="button" (click)="viewAll=!viewAll">{{(viewAll)? 'Hide': 'View'}} All Features</button>
       </div>
     </div>
-
-    <!-- All Features and support-->
-    <section class="" *ngIf="viewAll">
-      <!-- All Features-->
+    <section *ngIf="viewAll">
       <div class="row mt-4">
         <div class="col-md-12">
           <div class="aside-pricing-head">
@@ -198,92 +200,75 @@
         </div>
       </div>
       <div class="card pricing-table-card-wrapper p-3">
-        <div class="row" *ngFor="let x of pricing_table.all_features">
+        <div class="row" *ngFor="let x of all_features;">
           <div class="col-md-2">
             <p class="option-name m-0">{{x.name}}
-              <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                help_outline
-              </i>
+              <span *ngIf="x.help_content" class="tooltip-container">
+                <span *ngIf="x.toolTip" class="tooltip">{{x.toolTip}}</span>
+                <i class="material-icons" (click)="resetFeaturesTip(); x.toolTip=x.help_content;">
+                  help_outline
+                </i>
+              </span>
             </p>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.free_plan == 'info'">
-                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                    error_outline
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == true">
-                  <i class="material-icons-outlined checked">
+              <div *ngIf="x.free">
+                <span *ngIf="x.free!=true" class="tooltip-container">
+                  <p class="m-0">
+                    <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                    <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x.free;">
+                      error_outline
+                    </i>
+                  </p>
+                </span>
+                <p class="m-0">
+                  <i *ngIf="x.free===true" class="material-icons-outlined checked">
                     check_circle
                   </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == false">
-
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.lite_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.lite_plan == false">
-
+              <div *ngIf="x.lite">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.starter_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.starter_plan == false">
-
+              <div *ngIf="x.starter">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.growth_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.growth_plan == false">
-
+              <div *ngIf="x.growth">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.premium_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.premium_plan == false">
-
+              <div *ngIf="x.premium">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
         </div>
-
       </div>
+
       <!-- Support and services-->
       <div class="row mt-4">
         <div class="col-md-12">
@@ -293,83 +278,51 @@
         </div>
       </div>
       <div class="card pricing-table-card-wrapper p-3">
-        <div class="row" *ngFor="let x of pricing_table.support_service">
+        <div class="row" *ngFor="let x of support_service;">
           <div class="col-md-2">
-            <p class="option-name m-0">{{x.name}}
-              <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                help_outline
-              </i>
-            </p>
+            <p class="option-name m-0">{{x.name}}</p>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.free_plan == 'info'">
-                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                    error_outline
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == false">
+              <div *ngIf="x.free">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.lite_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.lite_plan == false">
+              <div *ngIf="x.lite">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.starter_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.starter_plan == false">
-
+              <div *ngIf="x.starter">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.growth_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.growth_plan == false">
-
+              <div *ngIf="x.growth">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
           </div>
           <div class="col-md-2 d-flex pricing-col p-0">
             <div class="pricing-col-inner w-100">
-              <div class="">
-                <p class="m-0" *ngIf="x.premium_plan == true">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.premium_plan == false">
-
+              <div *ngIf="x.premium">
+                <p class="m-0">
+                  <i class="material-icons-outlined checked">check_circle</i>
                 </p>
               </div>
             </div>
@@ -378,7 +331,7 @@
       </div>
 
     </section>
-
+    
   </section>
 
   <!-- mobile -->
@@ -414,9 +367,12 @@
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Platform Fee
-                  <i class="material-icons" (click)="modalInfo='A monthly fee collected based on the plan you choose'; modalService.open(infoModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
+                  <span class="tooltip-container">
+                    <span *ngIf="pricingToolTip.platform" class="tooltip">{{pricingToolTip.platform}}</span>
+                    <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ platform: 'A monthly fee collected based on the plan you choose' };">
+                      help_outline
+                    </i>
+                  </span>
                 </p>
               </div>
             </div>
@@ -429,9 +385,12 @@
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Transaction Fee
-                  <i class="material-icons" (click)="modalInfo='Charges applicable on the overall monthly sale'; modalService.open(infoModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
+                  <span class="tooltip-container">
+                    <span *ngIf="pricingToolTip.transaction" class="tooltip">{{pricingToolTip.transaction}}</span>
+                    <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ transaction: 'Charges applicable on the overall monthly sale' };">
+                      help_outline
+                    </i>
+                  </span>
                 </p>
               </div>
             </div>
@@ -444,25 +403,32 @@
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Transaction Waiver
-                  <i class="material-icons" (click)="modalInfo='Transaction free sale upto a respective charges based on your plan'; modalService.open(infoModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
+                  <span class="tooltip-container">
+                    <span *ngIf="pricingToolTip.waiver" class="tooltip">{{pricingToolTip.waiver}}</span>
+                    <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
+                      help_outline
+                    </i>
+                  </span>
                 </p>
               </div>
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_limit
-                  | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+                <p class="m-0">
+                  {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month
+                </p>
               </div>
             </div>
             <!-- Live Fee -->
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Live Fee
-                  <i class="material-icons" (click)="modalInfo='A charge collected to keep the service live'; modalService.open(infoModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
+                  <span class="tooltip-container">
+                    <span *ngIf="pricingToolTip.live" class="tooltip">{{pricingToolTip.live}}</span>
+                    <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ live: 'A charge collected to keep the service live, which will be rebated if there any transaction fee' };">
+                      help_outline
+                    </i>
+                  </span>
                 </p>
               </div>
             </div>
@@ -479,120 +445,107 @@
               <h5 class="m_pricing_sub_head">Top Features</h5>
             </div>
           </div>
-
-          <div class="row" *ngFor="let x of m_pricing_table.top_features">
+          <div class="row" *ngFor="let x of mobile_top_features;">
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
-                <p class="m_option-name">{{x.name}}
-                  <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                    help_outline
-                  </i>
-                </p>
+                <p class="m_option-name">{{x.name}}</p>
               </div>
             </div>
             <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0" *ngIf="x.name == 'Staff Accounts'">
-                  {{x.free_plan}}
+              <div *ngIf="x[packageList[selectedIndex].keyword]" class="m_pricing-col-inner m-pricing-r">
+                <p class="m-0" *ngIf="x.name=='Staff Accounts'">
+                  {{x.free}}
                 </p>
-                <p class="m-0" *ngIf="x.free_plan == 'info'">
-                  <i class="material-icons-outlined features_info" (click)="modalInfo=x.info_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                    error_outline
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
-                  <i class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-                <p class="m-0" *ngIf="x.free_plan == false">
-                </p>
+                <ng-container *ngIf="x.name!='Staff Accounts'">
+                  <span *ngIf="x[packageList[selectedIndex].keyword]!=true" class="tooltip-container">
+                    <p class="m-0">
+                      <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                      <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x[packageList[selectedIndex].keyword];">
+                        error_outline
+                      </i>
+                    </p>
+                  </span>
+                  <p class="m-0">
+                    <i *ngIf="x[packageList[selectedIndex].keyword]===true" class="material-icons-outlined checked">
+                      check_circle
+                    </i>
+                  </p>
+                </ng-container>
               </div>
             </div>
           </div>
 
+          <!-- All Features-->
           <div class="row mt-3 mb-3">
             <div class="col-md-12 d-flex justify-content-center align-items-center">
               <button class="btn btn-primary" type="button" (click)="viewAll=!viewAll">{{(viewAll)? 'Hide': 'View'}} All Features</button>
             </div>
           </div>
-
-          <!-- All Features and support-->
           <section class="" *ngIf="viewAll">
-            <!-- All Features-->
             <div class="row mt-4">
               <div class="col-12 p-0">
                 <h5 class="m_pricing_sub_head">All Features</h5>
               </div>
             </div>
-            <div class="row" *ngFor="let x of pricing_table.all_features">
+            <div class="row" *ngFor="let x of all_features;">
               <div class="col-6 p-0">
                 <div class="m_pricing-col-inner">
                   <p class="m_option-name">{{x.name}}
-                    <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                      help_outline
-                    </i>
+                    <span *ngIf="x.help_content" class="tooltip-container">
+                      <span *ngIf="x.toolTip" class="tooltip">{{x.toolTip}}</span>
+                      <i class="material-icons" (click)="resetFeaturesTip(); x.toolTip=x.help_content;">
+                        help_outline
+                      </i>
+                    </span>
                   </p>
                 </div>
               </div>
               <div class="col-6 p-0">
-                <div class="m_pricing-col-inner m-pricing-r">
-                  <p class="m-0" *ngIf="x.free_plan == true">
-                    <i class="material-icons-outlined checked">
+                <div *ngIf="x[packageList[selectedIndex].keyword]" class="m_pricing-col-inner m-pricing-r">
+                  <span *ngIf="x[packageList[selectedIndex].keyword]!=true" class="tooltip-container">
+                    <p class="m-0">
+                      <span *ngIf="x.infoTip" class="tooltip">{{x.infoTip}}</span>
+                      <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x[packageList[selectedIndex].keyword];">
+                        error_outline
+                      </i>
+                    </p>
+                  </span>
+                  <p class="m-0">
+                    <i *ngIf="x[packageList[selectedIndex].keyword]===true" class="material-icons-outlined checked">
                       check_circle
                     </i>
-                  </p>
-                  <p class="m-0" *ngIf="x.free_plan == false">
                   </p>
                 </div>
               </div>
             </div>
+
             <!-- Support and services-->
             <div class="row mt-4">
               <div class="col-12 p-0">
                 <h5 class="m_pricing_sub_head">Support and services</h5>
               </div>
             </div>
-            <div class="row" *ngFor="let x of pricing_table.support_service">
+            <div class="row" *ngFor="let x of support_service;">
               <div class="col-6 p-0">
                 <div class="m_pricing-col-inner">
-                  <p class="m_option-name">{{x.name}}
-                    <i class="material-icons" *ngIf="x.help_content !=='' " (click)="modalInfo=x.help_content; modalService.open(infoModal, { size: 'md', centered: true});">
-                      help_outline
-                    </i>
-                  </p>
+                  <p class="m_option-name">{{x.name}}</p>
                 </div>
               </div>
               <div class="col-6 p-0">
                 <div class="m_pricing-col-inner m-pricing-r">
-                  <p class="m-0" *ngIf="x.free_plan == true && x.name !== 'Staff Accounts'">
-                    <i class="material-icons-outlined checked">
-                      check_circle
-                    </i>
-                  </p>
-                  <p class="m-0" *ngIf="x.free_plan == false">
+                  <p class="m-0" *ngIf="x[packageList[selectedIndex].keyword]">
+                    <i class="material-icons-outlined checked">check_circle</i>
                   </p>
                 </div>
               </div>
             </div>
+
           </section>
         </div>
       </div>
     </div>
   </section>
 </div>
-
-<!-- INFO MODAL -->
-<ng-template #infoModal let-modal>
-  <div class="modal-body">
-    <h6>{{modalInfo}}</h6>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
-      <span class="black-outline-txt">Close</span>
-    </button>
-  </div>
-</ng-template>
 
 <!-- Subscription Modal -->
 <ng-template #subscriptionModal let-modal>
@@ -612,7 +565,7 @@
         <div class="col-md-12">
           <p>Subscription Charges {{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData?.discount>0">
-            Discount({{paymentData.disc_percent}}%) {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+            Sign Up Offer({{paymentData.disc_percent}}%) {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
           </p>
           <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>

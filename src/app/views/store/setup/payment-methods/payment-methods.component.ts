@@ -19,6 +19,7 @@ export class PaymentMethodsComponent implements OnInit {
   list: any = []; maxRank: any = 0;
 	payForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
+  eventTrigger: any;
 
 	constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,
@@ -42,6 +43,16 @@ export class PaymentMethodsComponent implements OnInit {
   }
 
   // ADD
+  onOpenAddModal(x, modalName) {
+    if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
+      this.payForm = x;
+      this.modalService.open(modalName, {size: 'lg'});
+    }
+    else {
+      this.eventTrigger = { type: 'add', value: x, modal: modalName };
+      document.getElementById("openInfoModal").click();
+    }
+  }
 	onAdd() {
     if(this.list.findIndex(obj => obj.name==this.payForm.name) == -1) {
       let formData = this.structureFormData();
@@ -68,67 +79,97 @@ export class PaymentMethodsComponent implements OnInit {
 
 	// EDIT
   onEdit(x, modalName) {
-    this.payForm = { form_type: 'update', _id: x._id, name: x.name, btn_name: x.btn_name, status: x.status, prev_rank: x.rank, rank: x.rank };
-    if(x.cod_config) this.payForm.cod_config = x.cod_config;
-    if(x.sms_config) {
-      this.payForm.sms_config = {};
-      for (let key in x.sms_config) {
-        this.payForm.sms_config[key] = x.sms_config[key];
+    if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
+      this.payForm = { form_type: 'update', _id: x._id, name: x.name, btn_name: x.btn_name, status: x.status, prev_rank: x.rank, rank: x.rank };
+      if(x.cod_config) this.payForm.cod_config = x.cod_config;
+      if(x.sms_config) {
+        this.payForm.sms_config = {};
+        for (let key in x.sms_config) {
+          this.payForm.sms_config[key] = x.sms_config[key];
+        }
       }
+      if(x.mode) this.payForm.mode = x.mode;
+      if(x.name=='Razorpay') {
+        this.payForm.store_name = x.app_config.name;
+        this.payForm.description = x.app_config.description;
+        this.payForm.key_id = x.config.key_id;
+        this.payForm.key_secret = x.config.key_secret;
+      }
+      else if(x.name=='CCAvenue') {
+        this.payForm.merchant_id = x.config.merchant_id;
+        this.payForm.working_key = x.config.working_key;
+        this.payForm.ap_access_code = x.additional_params.access_code;
+        this.payForm.ap_working_key = x.additional_params.working_key;
+        this.payForm.ac_access_code = x.app_config.access_code;
+      }
+      else if(x.name=='PayPal') {
+        this.payForm.client_id = x.config.client_id;
+        this.payForm.client_secret = x.config.client_secret;
+      }
+      else if(x.name=='Square') {
+        this.payForm.access_token = x.config.access_token;
+        this.payForm.store_name = x.app_config.name;
+        this.payForm.app_id = x.app_config.app_id;
+        this.payForm.location_id = x.app_config.location_id;
+      }
+      else if(x.name=='Fatoorah') {
+        this.payForm.token = x.config.token;
+      }
+      else if(x.name=='Telr') {
+        this.payForm.key = x.config.key;
+        this.payForm.ivp_store = x.config.ivp_store;
+      }
+      else if(x.name=='Foloosi') {
+        this.payForm.merchant_key = x.config.merchant_key;
+        this.payForm.secret_key = x.config.secret_key;
+      }
+      else if(x.name=='Gpay') {
+        this.payForm.upi_id = x.app_config.upi_id;
+        this.payForm.merchant_name = x.app_config.merchant_name;
+        this.payForm.merchant_code = x.app_config.merchant_code;
+      }
+      else if(x.name=='Bank Payment') {
+        this.payForm.field_list = x.app_config.field_list;
+        this.payForm.message = x.app_config.description;
+        this.payForm.pay_id_field_status = x.app_config.pay_id_field_status;
+      }
+      this.modalService.open(modalName, {size: 'lg'});
     }
-    if(x.mode) this.payForm.mode = x.mode;
-    if(x.name=='Razorpay') {
-      this.payForm.store_name = x.app_config.name;
-      this.payForm.description = x.app_config.description;
-      this.payForm.key_id = x.config.key_id;
-      this.payForm.key_secret = x.config.key_secret;
+    else {
+      this.eventTrigger = { type: 'edit', value: x, modal: modalName };
+      document.getElementById("openInfoModal").click();
     }
-    else if(x.name=='CCAvenue') {
-      this.payForm.merchant_id = x.config.merchant_id;
-      this.payForm.working_key = x.config.working_key;
-      this.payForm.ap_access_code = x.additional_params.access_code;
-      this.payForm.ap_working_key = x.additional_params.working_key;
-      this.payForm.ac_access_code = x.app_config.access_code;
-    }
-    else if(x.name=='PayPal') {
-      this.payForm.client_id = x.config.client_id;
-      this.payForm.client_secret = x.config.client_secret;
-    }
-    else if(x.name=='Square') {
-      this.payForm.access_token = x.config.access_token;
-      this.payForm.store_name = x.app_config.name;
-      this.payForm.app_id = x.app_config.app_id;
-      this.payForm.location_id = x.app_config.location_id;
-    }
-    else if(x.name=='Fatoorah') {
-      this.payForm.token = x.config.token;
-    }
-    else if(x.name=='Telr') {
-      this.payForm.key = x.config.key;
-      this.payForm.ivp_store = x.config.ivp_store;
-    }
-    else if(x.name=='Foloosi') {
-      this.payForm.merchant_key = x.config.merchant_key;
-      this.payForm.secret_key = x.config.secret_key;
-    }
-    else if(x.name=='Gpay') {
-      this.payForm.upi_id = x.app_config.upi_id;
-      this.payForm.merchant_name = x.app_config.merchant_name;
-      this.payForm.merchant_code = x.app_config.merchant_code;
-    }
-    else if(x.name=='Bank Payment') {
-      this.payForm.field_list = x.app_config.field_list;
-      this.payForm.message = x.app_config.description;
-      this.payForm.pay_id_field_status = x.app_config.pay_id_field_status;
-    }
-    this.modalService.open(modalName, {size: 'lg'});
+  }
+  onUpdate() {
+    let formData = this.structureFormData();
+    this.api.UPDATE_PAYMENT(formData).subscribe(result => {
+      this.updateDeployStatus();
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.list = result.list;
+        this.maxRank = this.list.length;
+        this.commonService.payment_list = this.list;
+        this.commonService.updateLocalData('payment_list', this.list);
+      }
+      else {
+        this.payForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
+  // STATUS
   onChangeStatus(x, modalName) {
-    this.payForm = x;
-    this.payForm.prev_rank = x.rank;
-    this.payForm.prev_status = x.status;
-    this.modalService.open(modalName, { centered: true });
+    if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
+      this.payForm = x;
+      this.payForm.prev_rank = x.rank;
+      this.payForm.prev_status = x.status;
+      this.modalService.open(modalName, { centered: true });
+    }
+    else {
+      this.eventTrigger = { type: 'status', value: x, modal: modalName };
+      document.getElementById("openInfoModal").click();
+    }
   }
   onUpdateStatus() {
     if(this.payForm.status=='active') this.payForm.status = 'inactive';
@@ -149,26 +190,17 @@ export class PaymentMethodsComponent implements OnInit {
 		});
   }
 
-  // UPDATE
-	onUpdate() {
-    let formData = this.structureFormData();
-    this.api.UPDATE_PAYMENT(formData).subscribe(result => {
-      this.updateDeployStatus();
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = this.list.length;
-        this.commonService.payment_list = this.list;
-        this.commonService.updateLocalData('payment_list', this.list);
-      }
-      else {
-        this.payForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
-  }
-  
   // DELETE
+  onOpenDelteModal(x, modalName) {
+    if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
+      this.deleteForm = x;
+      this.modalService.open(modalName, { centered: true });
+    }
+    else {
+      this.eventTrigger = { type: 'delete', value: x, modal: modalName };
+      document.getElementById("openInfoModal").click();
+    }
+  }
   onDelete() {
     this.api.DELETE_PAYMENT(this.deleteForm).subscribe(result => {
       this.updateDeployStatus();
@@ -256,6 +288,22 @@ export class PaymentMethodsComponent implements OnInit {
           this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
         }
       });
+    }
+  }
+
+  onAgree() {
+    sessionStorage.setItem("policy_agree", "1");
+    if(this.eventTrigger?.type=='add') {
+      this.onOpenAddModal(this.eventTrigger.value, this.eventTrigger.modal);
+    }
+    else if(this.eventTrigger?.type=='edit') {
+      this.onEdit(this.eventTrigger.value, this.eventTrigger.modal);
+    }
+    else if(this.eventTrigger?.type=='delete') {
+      this.onOpenDelteModal(this.eventTrigger.value, this.eventTrigger.modal);
+    }
+    else if(this.eventTrigger?.type=='status') {
+      this.onChangeStatus(this.eventTrigger.value, this.eventTrigger.modal);
     }
   }
 

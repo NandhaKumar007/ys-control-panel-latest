@@ -14,9 +14,9 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary"
-          (click)="payForm = {form_type: 'add', store_name: commonService.store_details?.name}; modalService.open(payModal, {size: 'lg'});">Add
-          New</button>
+        <button type="button" class="btn btn-primary" (click)="onOpenAddModal({form_type: 'add', store_name: commonService.store_details?.name}, payModal);">
+          Add New
+        </button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15" align="right">
@@ -53,8 +53,7 @@
                         {{ (x.status=='active')? 'Disable': 'Enable' }}
                       </span>
                     </button>
-                    <button class="btn orng-outline-btn w-md-100"
-                      (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                    <button class="btn orng-outline-btn w-md-100" (click)="onOpenDelteModal(x, deleteModal);">
                       <span class="orng-outline-txt">Remove</span>
                     </button>
                   </p>
@@ -509,11 +508,13 @@
       <div class="col-md-12 d-flex">
         <div class="payment-steps w-100 card p-3 mb-3">
           <h4 class="payment-steps-count">Step 8:</h4>
-          <p>In your Razorpay Dashboard go to <strong>Settings > API Keys> Create API Key
+          <p>In your Razorpay Dashboard go to <strong>Settings
             </strong></p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_8.1.png" alt="steps_img">
           </figure>
+          <p>Select <strong>API Keys
+            </strong></p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_8.2.png" alt="steps_img">
           </figure>
@@ -528,6 +529,7 @@
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_9.1.png" alt="steps_img">
           </figure>
+          <p> <strong>Copy</strong> the generated <strong>Key ID</strong> & <strong>Key Secret</strong></p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_9.2.png" alt="steps_img">
           </figure>
@@ -538,8 +540,7 @@
         <div class="payment-steps w-100 card p-3 mb-3">
           <h4 class="payment-steps-count">Step 10:</h4>
           <p>
-            <strong>Copy-paste the Key ID and Key Secret</strong>
-            from Razorpay to <strong>yourstore</strong> backend <strong>ettings> Payment Gateway > Add New > Razorpay
+            <strong>Paste the Key ID and Key Secret</strong> in <strong>yourstore</strong> backend <strong>Settings> Payment Gateway > Add New > Razorpay
             </strong>
           </p>
           <figure>
@@ -553,12 +554,14 @@
           <h4 class="payment-steps-count">Step 11:</h4>
           <p>In your
             <strong>Razorpay</strong>
-            account go to <strong>Settings > Webhooks> Add New Webhook
-            </strong>
+            account go to <strong>Settings > Webhooks</strong>
           </p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_11.1.png" alt="steps_img">
           </figure>
+          <p>Select
+            <strong>Add New Webhook</strong>
+          </p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_11.2.png" alt="steps_img">
           </figure>
@@ -570,19 +573,22 @@
           <h4 class="payment-steps-count">Step 12:</h4>
           <p>
             <strong>Copy-paste</strong>
-            the webhook <strong>URL</strong> and <strong>Secret</strong> from <strong>yourstore backend</strong> to
-            <strong>Razorpay</strong>
+            the webhook <strong>URL</strong> and <strong>Secret</strong> from <strong>yourstore backend</strong>
           </p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_12.1.png" alt="steps_img">
           </figure>
+          <p>
+            <strong>Paste</strong>
+            the webhook <strong>URL</strong> and <strong>Secret</strong> in <strong>Razorpay</strong>
+          </p>
           <figure>
             <img src="assets/images/payment-gateway/razorpay-integration/Step_12.2.png" alt="steps_img">
           </figure>
         </div>
       </div>
-       <!-- Step 13 -->
-       <div class="col-md-12 d-flex">
+      <!-- Step 13 -->
+      <div class="col-md-12 d-flex">
         <div class="payment-steps w-100 card p-3 mb-3">
           <h4 class="payment-steps-count">Step 13:</h4>
           <p>In Active Events select
@@ -597,7 +603,7 @@
       <!-- Step 14 -->
       <div class="col-md-12 d-flex">
         <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 13:</h4>
+          <h4 class="payment-steps-count">Step 14:</h4>
           <p>Click on
             <strong>Add</strong>
             in <strong>yourstore backend</strong> to complete the setup
@@ -610,8 +616,25 @@
     </div>
   </div>
   <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
+      (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Close</span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- INFO MODAL -->
+<button type="button" class="d-none" id="openInfoModal" (click)="modalService.open(infoModal, { size: 'md', centered: true});"></button>
+<ng-template #infoModal let-modal>
+  <div class="modal-body">
+    <h6>Default policies have been added to your website. Review and edit the policies under <b>Website > Policy</b></h6>
+  </div>
+  <div class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Close</span>
+    </button>
+    <button type="button" class="btn btn-wide orng-outline-btn" (click)="onAgree(); modal.dismiss('Cross click');">
+      <span class="orng-outline-txt">I Agree</span>
     </button>
   </div>
 </ng-template>

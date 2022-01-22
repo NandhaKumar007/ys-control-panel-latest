@@ -379,6 +379,17 @@ export class SettingComponent implements OnInit {
     });
   }
 
+  enableTimer() {
+    if(this.app_setting?.announcebar_config?.timer && !this.app_setting?.announcebar_config?.content.includes("TIMER"))
+      this.app_setting.announcebar_config.content = this.app_setting.announcebar_config.content.trim()+" TIMER";
+    else if(!this.app_setting?.announcebar_config?.timer) {
+      if(this.app_setting?.announcebar_config?.content.includes(" TIMER"))
+        this.app_setting.announcebar_config.content = this.app_setting.announcebar_config.content.replace(" TIMER", "");
+      else if(this.app_setting?.announcebar_config?.content.includes("TIMER "))
+        this.app_setting.announcebar_config.content = this.app_setting.announcebar_config.content.replace("TIMER ", "");
+    }
+  }
+
   fileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
