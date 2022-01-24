@@ -11,7 +11,7 @@
           <li>View and manage your customers</li>
         </ul>
       </div>
-      <div class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+      <div class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15">
         <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="exportAsXLSX();"
           class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
       </div>

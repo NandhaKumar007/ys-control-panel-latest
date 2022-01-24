@@ -5,11 +5,12 @@
 <div *ngIf="!pageLoader">
   <div class="breadcrumb with-back-btn">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
         <h1>Plans</h1>
-        <ul>
-          <li>Choose your preferred plan</li>
-        </ul>
+        <ul><li>Choose your preferred plan</li></ul>
+      </div>
+      <div *ngIf="commonService.deployInProgress" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button type="button" class="btn btn-primary" (click)="commonService.goBack();">Go Back</button>
       </div>
     </div>
   </div>

@@ -511,4 +511,10 @@ export class AddProductComponent implements OnInit {
 		});
   }
 
+  changeVariantNameSelect(x) {
+    delete x.name;
+    if(x.variant_names!='custom_name') x.name = x.variant_names;
+    this.onCreateVariantList(this.productForm.variant_types);
+  }
+
 }

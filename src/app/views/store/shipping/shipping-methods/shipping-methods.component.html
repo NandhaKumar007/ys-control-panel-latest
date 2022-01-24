@@ -11,10 +11,9 @@
           <li>Manage your couriers and delivery partners</li>
         </ul>
       </div>
-
-      <div *ngIf="commonService.ys_features.indexOf('pincode_service')!=-1"
-        class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" class="btn btn-primary" routerLink="/shipping/pincodes">Pincodes</button>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button *ngIf="commonService.ys_features.indexOf('pincode_service')!=-1" type="button" class="btn btn-primary" routerLink="/shipping/pincodes">Pincodes</button>
+        <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
       </div>
     </div>
   </div>

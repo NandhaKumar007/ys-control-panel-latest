@@ -95,6 +95,7 @@ export class CommonService {
     { name: "Store Design", rank: 7, apps: [] },
     { name: "Store management", rank: 8, apps: [] }
   ];
+  colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;
   vapidPublicKey: string = "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk";
 
@@ -133,6 +134,7 @@ export class CommonService {
   selected_customer: any;
   custom_model: any;
   alert_popup_content: any;
+  deployInProgress: boolean;
   
   scroll_y_pos: number; screen_width: number;
   cryptoSecretkey: string = "YoUr065SToRE217C0nTr0I^&$pA^eL%^&KeY";
@@ -167,6 +169,7 @@ export class CommonService {
 
     if(localStorage.getItem('master_token')) this.master_token = localStorage.getItem("master_token");
     if(localStorage.getItem('store_token')) this.store_token = localStorage.getItem("store_token");
+    if(sessionStorage.getItem("dip")) this.deployInProgress = true;
   }
 
   goBack() {
@@ -175,6 +178,7 @@ export class CommonService {
 
   updateLocalData(key: string, value: any) {
     localStorage.setItem(key, this.encryptData(value));
+    if(key=='deploy_stages') this.setDeployStatus();
   }
 
   encryptData(data) {
@@ -335,6 +339,20 @@ export class CommonService {
   hideChat() {
     let chatElem = document.getElementById("hubspot-messages-iframe-container");
     if(chatElem) chatElem.style.setProperty("display", "none", "important");
+  }
+
+  setDeployStatus() {
+    this.deployInProgress = false;
+    sessionStorage.removeItem("dip");
+    for(let key in this.deploy_stages) {
+      if(this.deploy_stages.hasOwnProperty(key)) {
+        if(!this.deploy_stages[key]) {
+          this.deployInProgress = true;
+          sessionStorage.setItem("dip", "true");
+          break;
+        }
+      }
+    }
   }
 
 }

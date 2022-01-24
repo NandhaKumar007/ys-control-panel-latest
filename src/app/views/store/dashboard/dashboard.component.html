@@ -1,13 +1,13 @@
 <div class="breadcrumb with-back-btn">
-  <div *ngIf="dispDeployInfo" class="row">
+  <div *ngIf="commonService.deployInProgress" class="row">
     <div class="col-md-12">
       <h1>Dashboard</h1>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-6" [ngClass]="(!dispDeployInfo)? 'd-flex align-items-center': ''">
-      <h1 *ngIf="!dispDeployInfo">Dashboard</h1>
-      <div *ngIf="dispDeployInfo" class="mt-3 home-progress-section-wrapper">
+    <div class="col-md-6" [ngClass]="(!commonService.deployInProgress)? 'd-flex align-items-center': ''">
+      <h1 *ngIf="!commonService.deployInProgress">Dashboard</h1>
+      <div *ngIf="commonService.deployInProgress" class="mt-3 home-progress-section-wrapper">
         <div class="progress-step-count">
           <p class="progress-step-count-inner">
             <span>{{completedPercentage}}%</span> completed
@@ -44,7 +44,7 @@
 <div class="separator-breadcrumb border-top"></div>
 
 <!-- deployment stages -->
-<div *ngIf="dispDeployInfo" class="row ml-0 mr-0 mt-4 mb-4">
+<div *ngIf="commonService.deployInProgress" class="row ml-0 mr-0 mt-4 mb-4">
   <div class="col-md-12 p-0">
     <div class="data-list-card-wrapper">
       <div class="data-list-card-inner">

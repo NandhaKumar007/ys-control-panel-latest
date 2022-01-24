@@ -11,7 +11,7 @@
           <li class="p-0">View and manage your gift card orders</li>
         </ul>
       </div>
-      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <button
           *ngIf="commonService.ys_features.indexOf('sales_report')!=-1 || commonService.ys_features.indexOf('advanced_sales_report')!=-1"
           type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader"

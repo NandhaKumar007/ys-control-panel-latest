@@ -9,7 +9,7 @@
         <h1>{{ (ys_apps_category?.name)? ys_apps_category?.name+' - ': '' }}Apps</h1>
         <ul><li style="padding: 0px;">View and manage your apps</li></ul>
       </div>
-      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <button *ngIf="!ys_apps_category" type="button" routerLink="/account/app-store/payments" class="btn btn-primary">Payments</button>
         <button *ngIf="ys_apps_category" type="button" (click)="commonService.goBack();" class="btn btn-primary">Go Back</button>
       </div>

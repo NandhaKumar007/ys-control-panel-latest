@@ -38,7 +38,7 @@
           </ul>
         </ng-container>
       </div>
-      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <ng-container *ngIf="commonService.ys_features.indexOf('sales_report')!=-1 || commonService.ys_features.indexOf('advanced_sales_report')!=-1">
           <button *ngIf="commonService.store_details?.login_type=='admin' || commonService.subuser_features.indexOf('order_export')!=-1"
           type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>

@@ -11,8 +11,9 @@
           <li>Edit your sliders, banners and tiles</li>
         </ul>
       </div>
-      <div *ngIf="commonService.store_details.login_type=='admin' && list?.length" class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
-        <button type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary">Reset Layout</button>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button *ngIf="commonService.store_details.login_type=='admin' && list?.length" type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary">Reset Layout</button>
+        <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-deploy-domain',
@@ -25,7 +26,7 @@ export class DeployDomainComponent implements OnInit {
     { name: "Others" }
   ];
 
-  constructor(private storeApi: StoreApiService, private config: NgbModalConfig, public modalService: NgbModal) {
+  constructor(public commonService: CommonService, private storeApi: StoreApiService, private config: NgbModalConfig, public modalService: NgbModal) {
     config.backdrop = 'static';
   }
 

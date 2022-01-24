@@ -10,7 +10,7 @@
         <ul><li>Manage your pincodes for delivery service</li></ul>
       </div>
 
-      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15" align="right">
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <button type="button" class="btn btn-primary" (click)="addForm={}; modalService.open(addModal);">Import</button>
         <button type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button ml-3" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
       </div>

@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   order_details: any; customer_details: any;
 	chartPie: any; chartLine: any; filterForm: any;
   completedPercentage: any; baseUrl: string;
-  dispDeployInfo: boolean; dispDashboard: boolean;
+  dispDashboard: boolean;
   deployList: any = [
     {
       keyword: "account",
@@ -198,15 +198,8 @@ export class DashboardComponent implements OnInit {
     this.commonService.pageTop(0);
     if(this.commonService.store_details.login_type=='admin' || this.commonService.subuser_features.indexOf('dashboard')!=-1) {
       // deploy stages
-      for(let key in this.commonService.deploy_stages) {
-        if(this.commonService.deploy_stages.hasOwnProperty(key)) {
-          if(!this.commonService.deploy_stages[key]) {
-            this.dispDeployInfo = true;
-            this.updateDeployInfo();
-            break;
-          }
-        }
-      }
+      this.commonService.setDeployStatus();
+      this.updateDeployInfo();
       // dashboard
       this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };
       this.dispDashboard = true;
