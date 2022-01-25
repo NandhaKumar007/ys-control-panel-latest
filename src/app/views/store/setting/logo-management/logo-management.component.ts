@@ -146,6 +146,7 @@ export class LogoManagementComponent implements OnInit {
       reader.onload = (event: ProgressEvent) => {
         this.logoForm.image = (<FileReader>event.target).result;
         this.logoForm.img_change = true;
+        this.uploadLogo();
       }
       reader.readAsDataURL(event.target.files[0]);
     }

@@ -10,7 +10,7 @@
             </ul>
           </div>
           <div class="col-md-4 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
-            <button type="button" class="btn btn-primary" (click)="domainForm={}; modalService.open(buydomainModal, { centered: true });">
+            <button type="button" class="btn btn-primary" (click)="buyForm={}; modalService.open(buydomainModal, { centered: true });">
               Buy a new domain
             </button>
             <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
@@ -140,6 +140,13 @@
               </div>
             </div>
 
+            <div *ngIf="domainForm.success" class="badge-alert success-badge-alert mb-3">
+              <div class="badge-alert-inner">
+                <i class="material-icons"></i>
+                <span>Your request for domain linking has been registered!</span>
+              </div>
+            </div>
+
             <div class="domain-select-option">
               <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="domainForm.submit" [ladda]="domainForm.submit">
                 Connect your domain
@@ -165,7 +172,6 @@
         <div class="form-group">
           <div class="row">
             <div class="col-md-12">
-
               <div class="connect-domain-sec">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
@@ -173,24 +179,25 @@
                       https://
                     </span>
                   </div>
-                  <input type="text" name="buy_domain" class="form-control" [(ngModel)]="domainForm.buy_domain" placeholder="example.in" required />
+                  <input type="text" name="buy_domain" class="form-control" [(ngModel)]="buyForm.buy_domain" placeholder="example.in" required />
                 </div>
               </div>
 
+              <div *ngIf="buyForm.success" class="badge-alert success-badge-alert mb-3">
+                <div class="badge-alert-inner">
+                  <i class="material-icons"></i>
+                  <span>Your request for buying a domain has been registered!</span>
+                </div>
+              </div>
             </div>
-
             <div class="col-md-12 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
-              <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="domainForm.modal_submit" [ladda]="domainForm.modal_submit">
+              <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buyForm.submit" [ladda]="buyForm.submit">
                 Buy
               </button>
             </div>
-
           </div>
         </div>
-
       </div>
-
     </form>
   </div>
-
 </ng-template>

@@ -17,11 +17,9 @@
     <div class="col-md-4 d-flex">
       <div class="card setting-card w-100 p-3 mt-3 mb-3 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column">
-          <ng-container *ngIf="logoForm.img_change">
-            <span (click)="logoForm={};" class="material-icons item-close float-right" aria-hidden="true">close</span>
-            <img [src]="logoForm.image" height="150px;" width="auto;">
-          </ng-container>
-          <img *ngIf="!logoForm.img_change" [src]="storeLogo" height="150px;" width="auto;">
+          <img *ngIf="!commonService.deploy_stages?.logo" src="assets/images/store.svg">
+          <img *ngIf="logoForm.img_change" [src]="logoForm.image" height="150px;" width="auto;">
+          <img *ngIf="commonService.deploy_stages?.logo && !logoForm.img_change" [src]="storeLogo" height="150px;" width="auto;">
         </div>
         <div class="h-100 d-flex align-items-end mt-3">
           <div class="custom-file mt-2">
@@ -30,8 +28,8 @@
           </div>
         </div>
         <div>
-          <button type="button" (click)="uploadLogo();" class="btn btn-wide btn-primary ladda-button mt-3 w-100"
-          [disabled]="logoForm.submit || !logoForm.image" [ladda]="logoForm.submit">Upload</button>
+          <button *ngIf="logoForm.submit" type="button" class="btn btn-wide btn-primary ladda-button mt-3 w-100"
+          disabled [ladda]="logoForm.submit">Uploading</button>
         </div>
       </div>
     </div>

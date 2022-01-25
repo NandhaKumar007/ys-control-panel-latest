@@ -11,7 +11,7 @@ import { CommonService } from '../../../../services/common.service';
 
 export class DeployDomainComponent implements OnInit {
 
-  domainForm: any;
+  domainForm: any; buyForm: any;
   providerList: any = [
     { name: "GoDaddy" },
     { name: "Namecheap" },
@@ -31,6 +31,7 @@ export class DeployDomainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.buyForm = {};
     this.domainForm = { provider: 'GoDaddy' };
   }
 
@@ -40,18 +41,20 @@ export class DeployDomainComponent implements OnInit {
     if(this.domainForm.provider=='Others') formData.provider = this.domainForm.other_provider;
     this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
       this.domainForm.submit = false;
-      if(result.status) console.log("response", result);
-      else console.log("response", result);
+      this.domainForm.success = true;
+      setTimeout(() => { delete this.domainForm.success }, 3000);
+      if(!result.status) console.log("response", result);
     });
   }
 
   onBuyDomain() {
-    this.domainForm.modal_submit = true;
-    let formData = { form_type: 'buy_domain', domain: this.domainForm.buy_domain };
+    this.buyForm.submit = true;
+    let formData = { form_type: 'buy_domain', domain: this.buyForm.buy_domain };
     this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
-      this.domainForm.modal_submit = false;
-      if(result.status) console.log("response", result);
-      else console.log("response", result);
+      this.buyForm.submit = false;
+      this.buyForm.success = true;
+      setTimeout(() => { delete this.buyForm.success }, 3000);
+      if(!result.status) console.log("response", result);
     });
   }
 

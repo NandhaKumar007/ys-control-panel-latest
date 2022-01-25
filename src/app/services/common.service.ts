@@ -205,9 +205,12 @@ export class CommonService {
   }
 
   stripHtml(html) {
-    let tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    if(html) {
+      let tmp = document.createElement("DIV");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+    else return "";
   }
 
   urlFormat(string) {
