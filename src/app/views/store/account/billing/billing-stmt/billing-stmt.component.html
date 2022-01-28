@@ -122,7 +122,7 @@
           <ng-container *ngIf="selectedBill.order_type=='purchase_plan'">
             <h5 class="mb-3">Purchase Plan</h5>
             <p>{{ packageDetails[selectedBill.package_details?._id] }}: {{ selectedBill.package_details?.price | currency: selectedBill.currency_type?.country_code }}</p>
-            <p *ngIf="selectedBill.discount">Sign Up Offer: {{ selectedBill.discount | currency: selectedBill.currency_type?.country_code }}</p>
+            <p *ngIf="selectedBill.discount">Discount - Signup Offer: {{ selectedBill.discount | currency: selectedBill.currency_type?.country_code }}</p>
           </ng-container>
           <!-- Purchase App -->
           <ng-container *ngIf="selectedBill.order_type=='purchase_app'">

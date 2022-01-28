@@ -25,7 +25,9 @@
         <div class="bdr-btm p-3">
           <div class="row">
             <div class="col-6 col-sm-6 col-md-7 d-flex align-items-center">
-              <p class="card-data-b-head single-line-text-ellipsis mb-0">{{baseUrl}}</p>
+              <a href="{{commonService.store_details?.base_url}}" target="_blank" class="card-data-b-head text-decoration-unl single-line-text-ellipsis mb-0">
+                {{baseUrl}}
+              </a>
             </div>
             <div class="col-6 col-sm-6 col-md-5 d-flex align-items-center justify-content-end">
               <a (click)="shareDomain(infoModal, false);">
@@ -465,11 +467,14 @@
 
 <ng-template #infoModal let-modal>
   <div class="modal-body">
-    <h6>Please upload logo and theme colour in step 2 to view the website</h6>
+    <h6>{{infoConfig?.content}}</h6>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Close</span>
+    </button>
+    <button type="button" class="btn btn-wide btn-primary" (click)="modal.dismiss('Cross click');" routerLink="/store-setting/logo-management">
+      {{infoConfig?.btn_txt}}
     </button>
   </div>
 </ng-template>

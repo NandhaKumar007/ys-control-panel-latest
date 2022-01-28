@@ -1,0 +1,60 @@
+<section *ngIf="params?.type=='activation'" class="you-dit-it-section">
+  <div class="you-dit-it-vector-top">
+    <img src="assets/images/others/top.png" alt="image-top">
+  </div>
+  <div class="you-dit-it-center-section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+          <div class="you-dit-it-message">
+            <h2>Hurrah!</h2>
+            <h6>You have successfully activated your store.</h6>
+            <h6 class="ready-sell">Ready to sell?</h6>
+            <h6>Redirecting in <span class="highlighted-text">{{timer}}</span> seconds</h6>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center">
+          <div class="you-dit-it-image">
+            <img src="assets/images/others/lock.png" alt="lock-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="you-dit-it-vector-bottom">
+    <img src="assets/images/others/bottom.png" alt="image-bottom">
+  </div>
+</section>
+
+<section *ngIf="params?.type=='website'" class="you-dit-it-section">
+  <div class="you-dit-it-vector-top">
+    <img src="assets/images/others/top.png" alt="image-top">
+  </div>
+  <div class="you-dit-it-confetti-top">
+    <img class="desktop-confetti-top" src="assets/images/others/confetti.png" alt="image-top">
+    <img class="mobile-confetti-top" src="assets/images/others/mobile-confetti.png" alt="image-top">
+  </div>
+  <div class="you-dit-it-center-section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+          <div class="you-dit-it-message">
+            <h2>Your website is ready!</h2>
+            <div class="">
+              <a href="{{commonService.store_details?.base_url}}" target="_blank" class="btn-primary mr-3">Preview Website</a>
+              <button class="btn-primary" routerLink="/dashboard" type="button">Continue Setup</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-center">
+          <div class="you-dit-it-image">
+            <img src="assets/images/others/layout.png" alt="layout-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="you-dit-it-vector-bottom">
+    <img src="assets/images/others/bottom.png" alt="image-bottom">
+  </div>
+</section>

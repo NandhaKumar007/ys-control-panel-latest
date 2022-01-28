@@ -605,7 +605,7 @@
         <div class="col-md-12">
           <p>Subscription Charges {{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData?.discount>0">
-            Sign Up Offer({{paymentData.disc_percent}}%) {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+            Discount - Signup Offer({{paymentData.disc_percent}}%) {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
           </p>
           <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
           <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>

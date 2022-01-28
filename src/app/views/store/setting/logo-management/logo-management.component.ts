@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { DeploymentService } from '../../deployment/deployment.service';
@@ -26,7 +27,7 @@ export class LogoManagementComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService,
-    public commonService: CommonService, private api: DeploymentService,
+    private router: Router, public commonService: CommonService, private api: DeploymentService
     ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -134,7 +135,8 @@ export class LogoManagementComponent implements OnInit {
         this.commonService.deploy_details = result.data;
         delete this.commonService.deploy_details.deploy_stages;
         this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
-        this.ngOnInit();
+        if(result.layout_created) this.router.navigate(['/welcome/website']);
+        else this.ngOnInit();
       }
       else console.log("response", result);
     });

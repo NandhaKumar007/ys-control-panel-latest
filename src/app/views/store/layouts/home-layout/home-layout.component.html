@@ -12,7 +12,10 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <button *ngIf="commonService.store_details.login_type=='admin' && list?.length" type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary">Reset Layout</button>
+        <ng-container *ngIf="list?.length">
+          <a href="{{commonService.store_details?.base_url}}" target="_blank" class="btn btn-primary">View Website</a>
+          <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary ml-3">Reset Layout</button>
+        </ng-container>
         <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
       </div>
     </div>
@@ -149,8 +152,7 @@
           </div>
           <div class="col-md-4 form-group mb-3">
             <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="2"
-              max="{{maxRank+1}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
           </div>
           <div *ngIf="addForm.type=='featured_product'" class="col-md-12 form-group mb-3">
             <label>Link to Catalog</label>
@@ -295,8 +297,7 @@
           </div>
           <div class="col-md-4 form-group mb-3">
             <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="2"
-              max="{{maxRank}}" [readonly]="editForm.type=='primary_slider'" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
           <div *ngIf="editForm.type=='featured_product'" class="col-md-12 form-group mb-3">
             <label>Link to Catalog</label>

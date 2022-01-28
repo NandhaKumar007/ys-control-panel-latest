@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   order_details: any; customer_details: any;
 	chartPie: any; chartLine: any; filterForm: any;
   completedPercentage: any; baseUrl: string;
-  dispDashboard: boolean;
+  dispDashboard: boolean; infoConfig: any;
   deployList: any = [
     {
       keyword: "account",
@@ -446,6 +446,16 @@ export class DashboardComponent implements OnInit {
       else window.open(this.commonService.store_details.base_url, '_blank');
     }
     else {
+      this.infoConfig = {
+        content: "Please upload logo and theme colour in step 2 to view the website",
+        btn_txt: "Upload Logo"
+      };
+      if(this.commonService.deploy_stages.logo) {
+        this.infoConfig = {
+          content: "Please set theme colour in step 2 to view the website",
+          btn_txt: "Set Colour"
+        };
+      }
       this.modalService.open(modalName, { size: 'md', centered: true});
     }
   }
