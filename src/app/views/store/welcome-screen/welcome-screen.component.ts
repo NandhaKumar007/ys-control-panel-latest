@@ -10,7 +10,7 @@ import { CommonService } from '../../../services/common.service';
 
 export class WelcomeScreenComponent implements OnInit {
 
-  params: any;
+  params: any; myTimeout: any;
   timer: number = 5;
 
   constructor(private router: Router, private activeRoute: ActivatedRoute, public commonService: CommonService) { }
@@ -28,10 +28,14 @@ export class WelcomeScreenComponent implements OnInit {
         }, 1000);
       }
       else if(this.params.type=='website') {
-        setTimeout(() => { this.router.navigate(['/dashboard']); }, 10000);
+        this.myTimeout = setTimeout(() => { this.router.navigate(['/dashboard']); }, 10000);
       }
       else this.router.navigate(['/dashboard']);
     });
+  }
+
+  ngOnDestroy() {
+    if(this.myTimeout) clearTimeout(this.myTimeout);
   }
 
 }

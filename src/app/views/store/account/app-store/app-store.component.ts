@@ -46,7 +46,7 @@ export class AppStoreComponent implements OnInit {
           if(result.status) {
             this.package_list = result.packages;
             this.parent_list = result.list.filter(obj => obj.linked_packages.length);
-            let trialFeatures = result.deploy_details.trial_features;
+            let trialFeatures = result.deploy_details.trial_features.filter(obj => obj.status=='active');
             this.parent_list.forEach(obj => {
               let tIndex = trialFeatures.findIndex(el => el.name==obj.keyword);
               if(tIndex!=-1) obj.deploy_data = trialFeatures[tIndex];

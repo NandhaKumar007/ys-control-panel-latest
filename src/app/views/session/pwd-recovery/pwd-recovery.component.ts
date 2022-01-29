@@ -47,7 +47,7 @@ export class PwdRecoveryComponent implements OnInit {
           if(result.status) {
             localStorage.clear();
             sessionStorage.clear();
-            this.router.navigate(['/signin']);
+            this.router.navigate(['/session/signin']);
           }
           else console.log("response", result);
         });

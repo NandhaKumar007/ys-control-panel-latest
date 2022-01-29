@@ -68,12 +68,13 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="packageInfo?.currency_types[commonService.store_currency?.country_code]?.price>0">
-                <button (click)="openModal('install', confirmModal)"
-                *ngIf="commonService.ys_features.indexOf(featureDetails.keyword)==-1 || appDetails?.status!='active'" class="btn btn-primary app-btn mt-3">
+                <button (click)="openModal('install', confirmModal)" *ngIf="commonService.ys_features.indexOf(featureDetails.keyword)==-1 && appDetails?.status!='active'" class="btn btn-primary app-btn mt-3">
                   Install App
                 </button>
                 <ng-container *ngIf="appDetails?.status=='active'">
-                  <button (click)="openModal('uninstall', confirmModal)" *ngIf="!appDetails?.uninstalled" class="btn btn-primary app-btn mt-3">Uninstall App</button>
+                  <button (click)="openModal('uninstall', confirmModal)" *ngIf="!appDetails?.uninstalled" class="btn btn-primary app-btn mt-3">
+                    Uninstall App
+                  </button>
                   <button *ngIf="!appDetails?.paid" routerLink="/account/app-store/payments" class="btn btn-primary app-btn ml-3 mt-3">
                     Make Payment
                   </button>

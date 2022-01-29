@@ -19,7 +19,7 @@ export class YsClientsComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl; buildForm: any = {};
   listType: string = 'active'; accountType: string = 'all';
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
-  verNum: any = new Date().getFullYear()+(new Date().getMonth()+1)+new Date().getDate();
+  verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;

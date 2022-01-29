@@ -67,7 +67,7 @@
                     <i class="material-icons">check_circle</i> App Installed
                   </div>
                 </div>
-                <div *ngIf="x.deploy_data?.status=='active'" class="app-indicator">
+                <div *ngIf="x.deploy_data" class="app-indicator">
                   <div *ngIf="x.deploy_data?.paid" class="app-installed">
                     <i class="material-icons">check_circle</i> App Installed
                   </div>
@@ -109,7 +109,7 @@
                   <i class="material-icons">check_circle</i> App Installed
                 </div>
               </div>
-              <div *ngIf="x.deploy_data?.status=='active'" class="app-indicator">
+              <div *ngIf="x.deploy_data" class="app-indicator">
                 <div *ngIf="x.deploy_data?.paid" class="app-installed">
                   <i class="material-icons">check_circle</i> App Installed
                 </div>
