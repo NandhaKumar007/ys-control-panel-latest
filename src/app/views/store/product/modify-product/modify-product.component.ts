@@ -157,7 +157,6 @@ export class ModifyProductComponent implements OnInit {
 
   onUpdateDetails() {
     this.btnLoader = true;
-    this.productForm.sku = this.productForm.sku.toUpperCase();
     // discount
     if(!this.productForm.disc_status) {
       this.productForm.disc_percentage = null;
@@ -185,6 +184,7 @@ export class ModifyProductComponent implements OnInit {
         object.selling_price = parseFloat(object.selling_price);
       });
     }
+    this.productForm.sku = this.productForm.sku.toUpperCase();
     // addons
     this.productForm.addon_list = [];
     if(this.productForm.addon_status) {

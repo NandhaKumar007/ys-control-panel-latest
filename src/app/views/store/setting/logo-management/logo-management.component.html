@@ -23,7 +23,7 @@
         </div>
         <div class="h-100 d-flex align-items-end mt-3">
           <div class="custom-file mt-2">
-            <input type="file" name="store_logo" class="custom-file-input" (change)="fileChangeListener($event);" accept="image/png" required>
+            <input type="file" name="store_logo" class="custom-file-input" (change)="fileChangeListener($event, colorModal);" accept="image/png" required>
             <label class="custom-file-label">Choose file</label>
           </div>
         </div>
@@ -42,7 +42,7 @@
         <h4 class="mt-3">Theme Colors</h4>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <button type="button" class="btn btn-primary" (click)="findColors();">
+        <button type="button" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader" (click)="findColors(colorModal);">
           {{ colorSections.length? 'Change': 'Set' }} Theme Colors
         </button>
       </div>
@@ -51,48 +51,6 @@
         <div *ngFor="let sec of colorSections; let i=index;" class="col-md-12 mt-3">
           <div class="card card-in-card p-3">
             <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
-          </div>
-        </div>
-      </ng-container>
-      <!-- color list -->
-      <ng-container *ngIf="colorList.length">
-        <div *ngFor="let sec of colorFields; let i=index;" class="col-md-12 mt-3">
-          <div class="card card-in-card z-i-unset p-3">
-            <h5>{{sec.name}}</h5>
-            <div class="row ml-3 mt-3">
-              <div class="form-group mb-3 col-md-12">
-                <label class="checkbox checkbox-primary">
-                  <input class="form-check-input" type="checkbox" name="manual_status{{i}}" [(ngModel)]="sec.manual_status">
-                  <span>Choose from color picker</span>
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div *ngIf="sec.manual_status" class="col-md-4 form-group mb-3">
-                <label>Color Picker</label>
-                <input name="color_code{{i}}" class="form-control" [colorPicker]="sec.color_code"
-                  (colorPickerChange)="sec.color_code=$event;" [style.background]="sec.color_code"
-                  [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]="'btn btn-primary'"
-                  [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]="'btn black-outline-btn'" />
-              </div>
-              <ng-container *ngIf="!sec.manual_status">
-                <div class="col-lg-2 col-md-3 form-group mb-3" *ngFor="let x of colorList;">
-                  <label class="radio radio-success">
-                    <input type="radio" [(ngModel)]="sec.color_code" [value]="x" name="color_code{{i}}">
-                    <span class="color-span" [ngStyle]="{'background': x}"></span>
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 mt-3">
-          <div class="pull-right">
-            <button type="button" class="btn btn-wide black-outline-btn mr-3" (click)="colorList=[];">
-              <span class="black-outline-txt">Cancel</span>
-            </button>
-            <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary ladda-button"
-            [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
           </div>
         </div>
       </ng-container>
@@ -195,4 +153,57 @@
       <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- COLOR MODAL -->
+<ng-template #colorModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Theme Colors</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <div class="row">
+        <div *ngFor="let sec of colorFields; let i=index;" class="col-md-12" [ngClass]="(i>0)? 'mt-3': ''">
+          <div class="card card-in-card z-i-unset p-3">
+            <h5>{{sec.name}}</h5>
+            <div class="row ml-3 mt-3">
+              <div class="form-group mb-3 col-md-12">
+                <label class="checkbox checkbox-primary">
+                  <input class="form-check-input" type="checkbox" name="manual_status{{i}}" [(ngModel)]="sec.manual_status">
+                  <span>Choose from color picker</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div *ngIf="sec.manual_status" class="col-md-4 form-group mb-3">
+                <label>Color Picker</label>
+                <input name="color_code{{i}}" class="form-control" [colorPicker]="sec.color_code"
+                  (colorPickerChange)="sec.color_code=$event;" [style.background]="sec.color_code"
+                  [cpOKButton]="true" [cpOKButtonText]="'Save'" [cpOKButtonClass]="'btn btn-primary'"
+                  [cpSaveClickOutside]="false" [cpCancelButton]="true" [cpCancelButtonClass]="'btn black-outline-btn'" />
+              </div>
+              <ng-container *ngIf="!sec.manual_status">
+                <div class="col-lg-3 col-md-3 form-group mb-3" *ngFor="let x of colorList;">
+                  <label class="radio radio-success">
+                    <input type="radio" [(ngModel)]="sec.color_code" [value]="x" name="color_code{{i}}">
+                    <span class="color-span" [ngStyle]="{'background': x}"></span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="errorMsg">
+      <p class="mt-4 text-danger">{{ errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button [hidden]="!commonService.deploy_details?.theme_colors?.primary" type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary ladda-button"
+    [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
+  </div>
 </ng-template>

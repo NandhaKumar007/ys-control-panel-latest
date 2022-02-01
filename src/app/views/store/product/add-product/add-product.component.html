@@ -185,12 +185,12 @@
                   </select>
                   <input *ngIf="x.variant_names=='custom_name'" type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" (focusout)="onCreateVariantList(productForm.variant_types)" required />
                 </div>
-                <div *ngIf="commonService.colorNames.indexOf(x.name)==-1" class="col-md-8 form-group mb-3">
+                <div *ngIf="commonService.ys_features.indexOf('variant_colors')==-1 || commonService.colorNames.indexOf(x.name)==-1" class="col-md-8 form-group mb-3">
                   <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
                     [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);"
                     required></tag-input>
                 </div>
-                <div *ngIf="commonService.colorNames.indexOf(x.name)!=-1" class="col-md-8 form-group mb-3">
+                <div *ngIf="commonService.ys_features.indexOf('variant_colors')!=-1 && commonService.colorNames.indexOf(x.name)!=-1" class="col-md-8 form-group mb-3">
                   <div class="custom-tag-list-wrapper">
                     <span *ngFor="let opt of x.options; let m=index;" class="custom-tag-list mr-1">
                       <span class="color-chips">
@@ -664,7 +664,7 @@
                 </ng-container>
                 <div *ngIf="!x.image_list?.length || x.image_list?.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
                   <div class="add-another-opt w-100" (click)="x.image_list.length? x.image_list.push({}): x.image_list=[{}];">
-                    <p>ADD {{ x.image_list.length? 'ANOTHER': 'NEW' }} IMAGE</p>
+                    <p>ADD {{ x.image_list?.length? 'ANOTHER': 'NEW' }} IMAGE</p>
                   </div>
                 </div>
               </div>

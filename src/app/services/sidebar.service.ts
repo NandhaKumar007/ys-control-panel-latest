@@ -104,8 +104,10 @@ export class SidebarService {
         }
         prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
         routePermissionList.push("product_taxonomy");
-        prodExtraList.push({ name: 'Variant Colors', state: '/product-extras/variant-colors', type: 'link' });
-        routePermissionList.push("variant_colors");
+        if(ysFeatures.indexOf('variant_colors')!=-1) {
+          prodExtraList.push({ name: 'Variant Colors', state: '/product-extras/variant-colors', type: 'link' });
+          routePermissionList.push("variant_colors");
+        }
         // products
         routePermissionList.push("catalogs", "products", "product_add", "product_edit");
         let prodList: IChildItem[] = [

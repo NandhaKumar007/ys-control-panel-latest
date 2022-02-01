@@ -107,7 +107,6 @@ export class AddProductComponent implements OnInit {
 
   onAdd() {
     this.btnLoader = true;
-    this.productForm.sku = this.productForm.sku.toUpperCase();
     // category list
     this.productForm.category_id = [];
     this.categoryList.forEach(element => {
@@ -140,6 +139,7 @@ export class AddProductComponent implements OnInit {
         object.selling_price = parseFloat(object.selling_price);
       });
     }
+    this.productForm.sku = this.productForm.sku.toUpperCase();
     // addons
     this.productForm.addon_list = [];
     if(this.productForm.addon_status) {

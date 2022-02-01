@@ -24,6 +24,7 @@ export class LogoManagementComponent implements OnInit {
     { name: "Choose Secondary Color", keyword: "secondary", color_code: "" }
   ];
   colorSections: any = [];
+  errorMsg: string;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService,
@@ -70,7 +71,7 @@ export class LogoManagementComponent implements OnInit {
   }
 
   // DEPLOYMENT LOGO SECTION
-  uploadLogo() {
+  uploadLogo(modalName) {
     this.logoForm.submit = true; this.colorList = [];
     this.logoForm.store_id = this.commonService.store_details._id;
     this.api.UPDATE_STORE_LOGO(this.logoForm).subscribe(result => {
@@ -80,6 +81,7 @@ export class LogoManagementComponent implements OnInit {
       if(result.status) {
         let filteredList = new Set(result.colors);
         this.colorList = Array.from(filteredList);
+        this.modalService.open(modalName, { size: 'lg'});
       }
       else {
 				this.logoForm.errorMsg = result.message;
@@ -99,9 +101,10 @@ export class LogoManagementComponent implements OnInit {
     }
   }
 
-  findColors() {
-    this.btnLoader = false;
+  findColors(modalName) {
+    this.btnLoader = true;
     this.api.LOGO_COLORS({ file_name: this.storeLogo }).subscribe(result => {
+      this.btnLoader = false;
       this.ngOnInit();
       if(result.status) {
         let filteredList = new Set(result.colors);
@@ -120,35 +123,41 @@ export class LogoManagementComponent implements OnInit {
             });
           }
         }
+        this.modalService.open(modalName, { size: 'lg'});
       }
       else console.log("response", result);
     });
   }
   updateThemeColor() {
-    let colorForm = {}; this.btnLoader = true;
+    delete this.errorMsg; let colorForm = {};
     this.colorFields.forEach(element => {
+      if(!element.color_code) this.errorMsg = "Please select color from all sections";
       colorForm[element.keyword] = element.color_code;
     });
-    this.api.UPDATE_DEPLOY_DETAILS({ store_id: this.commonService.store_details._id, theme_colors: colorForm }).subscribe(result => {
-      this.btnLoader = false;
-      if(result.status) {
-        this.commonService.deploy_details = result.data;
-        delete this.commonService.deploy_details.deploy_stages;
-        this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
-        if(result.layout_created) this.router.navigate(['/welcome/website']);
-        else this.ngOnInit();
-      }
-      else console.log("response", result);
-    });
+    if(!this.errorMsg) {
+      this.btnLoader = true;
+      this.api.UPDATE_DEPLOY_DETAILS({ store_id: this.commonService.store_details._id, theme_colors: colorForm }).subscribe(result => {
+        this.btnLoader = false;
+        if(result.status) {
+          document.getElementById("closeModal").click();
+          this.commonService.deploy_details = result.data;
+          delete this.commonService.deploy_details.deploy_stages;
+          this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
+          if(result.layout_created) this.router.navigate(['/welcome/website']);
+          else this.ngOnInit();
+        }
+        else console.log("response", result);
+      });
+    }
   }
 
-  fileChangeListener(event) {
+  fileChangeListener(event, modalName) {
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {
         this.logoForm.image = (<FileReader>event.target).result;
         this.logoForm.img_change = true;
-        this.uploadLogo();
+        this.uploadLogo(modalName);
       }
       reader.readAsDataURL(event.target.files[0]);
     }

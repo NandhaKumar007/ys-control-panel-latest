@@ -112,12 +112,20 @@ html::-webkit-scrollbar-thumb {
   .apps-cards-section {
     .apps-card {
       .app-image {
+        span{
+          font-size: 40px;
+          margin-bottom: 5px;
+        }
         img {
           width: 40px;
           margin-bottom: 5px;
         }
       }
       .app-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
         h5 {
           font-size: 1rem;
           font-weight: bold;
