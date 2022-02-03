@@ -10,7 +10,7 @@
             </ul>
           </div>
           <div class="col-md-4 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
-            <button type="button" class="btn btn-primary" (click)="buyForm={}; modalService.open(buydomainModal, { centered: true });">
+            <button type="button" class="btn btn-primary" (click)="(buyForm.success)? '': buyForm={}; modalService.open(buydomainModal, { centered: true });">
               Buy a new domain
             </button>
             <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
@@ -116,13 +116,14 @@
             <p>Make you site more professional, memorable and easy to find with your own custom domain</p>
 
             <div class="form-group">
-              <select name="provider" class="form-control" [(ngModel)]="domainForm.provider" required>
+              <select name="provider" class="form-control" [(ngModel)]="domainForm.provider" [disabled]="domainForm.success" required>
+                <option *ngIf="!domainForm.provider" value="">-- Select Provider --</option>
                 <option *ngFor="let x of providerList;" [ngValue]="x.name">{{x.name}}</option>
               </select>
             </div>
 
             <div *ngIf="domainForm.provider=='Others'" class="form-group">
-              <input type="text" name="other_provider" class="form-control" [(ngModel)]="domainForm.other_provider" placeholder="Provider Name" required />
+              <input type="text" name="other_provider" class="form-control" [(ngModel)]="domainForm.other_provider" placeholder="Provider Name" [disabled]="domainForm.success" required />
             </div>
 
             <div class="connect-domain-sec">
@@ -133,7 +134,7 @@
                     www.
                   </span>
                 </div>
-                <input type="text" name="domain" class="form-control" [(ngModel)]="domainForm.domain" placeholder="example.in" required />
+                <input type="text" name="domain" class="form-control" [(ngModel)]="domainForm.domain" placeholder="example.in" [disabled]="domainForm.success" required />
                 <!-- <div class="input-group-append">
                   <button class="btn-primary" type="button">Disconnect</button>
                 </div> -->
@@ -143,14 +144,15 @@
             <div *ngIf="domainForm.success" class="badge-alert success-badge-alert mb-3">
               <div class="badge-alert-inner">
                 <i class="material-icons"></i>
-                <span>Your request for domain linking has been registered!</span>
+                <span>Our support team will contact shortly to help you with the setup. Please give us upto 24hrs to reach out due to the high volume of requests.</span>
               </div>
             </div>
 
             <div class="domain-select-option">
               <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="domainForm.submit" [ladda]="domainForm.submit">
-                Connect your domain
+                {{ domainForm.success? 'Request Submitted': 'Connect your domain' }}
               </button>
+              <b class="pull-right mt-2">Linking Charges - INR 99</b>
             </div>
           </div>
         </form>
@@ -179,20 +181,20 @@
                       https://
                     </span>
                   </div>
-                  <input type="text" name="buy_domain" class="form-control" [(ngModel)]="buyForm.buy_domain" placeholder="example.in" required />
+                  <input type="text" name="buy_domain" class="form-control" [(ngModel)]="buyForm.buy_domain" placeholder="example.in" [disabled]="buyForm.success" required />
                 </div>
               </div>
 
               <div *ngIf="buyForm.success" class="badge-alert success-badge-alert mb-3">
                 <div class="badge-alert-inner">
                   <i class="material-icons"></i>
-                  <span>Your request for buying a domain has been registered!</span>
+                  <span>Our support team will contact shortly to help you buy the domain. Please give us upto 24hrs to reach out due to the high volume of requests.</span>
                 </div>
               </div>
             </div>
             <div class="col-md-12 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
               <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="buyForm.submit" [ladda]="buyForm.submit">
-                Buy
+                {{ buyForm.success? 'Request Submitted': 'Buy' }}
               </button>
             </div>
           </div>

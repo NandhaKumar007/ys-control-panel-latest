@@ -31,31 +31,37 @@ export class DeployDomainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.domainForm = { provider: '' };
+    if(localStorage.getItem("connect_domain")) this.domainForm = JSON.parse(localStorage.getItem("connect_domain"));
     this.buyForm = {};
-    this.domainForm = { provider: 'GoDaddy' };
+    if(localStorage.getItem("buy_domain")) this.buyForm = JSON.parse(localStorage.getItem("buy_domain"));
   }
 
   onConnectDomain() {
-    this.domainForm.submit = true;
-    let formData = { form_type: 'connect_domain', provider: this.domainForm.provider, domain: this.domainForm.domain };
-    if(this.domainForm.provider=='Others') formData.provider = this.domainForm.other_provider;
-    this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
-      this.domainForm.submit = false;
-      this.domainForm.success = true;
-      setTimeout(() => { delete this.domainForm.success }, 3000);
-      if(!result.status) console.log("response", result);
-    });
+    if(!this.domainForm.success) {
+      this.domainForm.submit = true;
+      let formData = { form_type: 'connect_domain', provider: this.domainForm.provider, domain: this.domainForm.domain };
+      if(this.domainForm.provider=='Others') formData.provider = this.domainForm.other_provider;
+      this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
+        delete this.domainForm.submit;
+        this.domainForm.success = true;
+        localStorage.setItem("connect_domain", JSON.stringify(this.domainForm));
+        if(!result.status) console.log("response", result);
+      });
+    }
   }
 
   onBuyDomain() {
-    this.buyForm.submit = true;
-    let formData = { form_type: 'buy_domain', domain: this.buyForm.buy_domain };
-    this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
-      this.buyForm.submit = false;
-      this.buyForm.success = true;
-      setTimeout(() => { delete this.buyForm.success }, 3000);
-      if(!result.status) console.log("response", result);
-    });
+    if(!this.buyForm.success) {
+      this.buyForm.submit = true;
+      let formData = { form_type: 'buy_domain', domain: this.buyForm.buy_domain };
+      this.storeApi.DOMAIN_ENQUIRY(formData).subscribe(result => {
+        delete this.buyForm.submit;
+        this.buyForm.success = true;
+        localStorage.setItem("buy_domain", JSON.stringify(this.buyForm));
+        if(!result.status) console.log("response", result);
+      });
+    }
   }
 
 }

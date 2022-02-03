@@ -210,9 +210,17 @@ export class DashboardComponent implements OnInit {
   updateDeployInfo() {
     let completedCount = 0;
     this.deployList.forEach(element => {
-      if(this.commonService.deploy_stages[element.keyword] || element.completed) {
-        element.completed = true;
-        completedCount++;
+      if(element.keyword=='logo') {
+        if(this.commonService.deploy_stages.logo && this.commonService.deploy_details?.theme_colors?.primary) {
+          element.completed = true;
+          completedCount++;
+        }
+      }
+      else {
+        if(this.commonService.deploy_stages[element.keyword] || element.completed) {
+          element.completed = true;
+          completedCount++;
+        }
       }
     });
     this.completedPercentage = ((completedCount*100)/this.deployList.length).toFixed(1);

@@ -135,4 +135,20 @@ export class YsClientsComponent implements OnInit {
     });
   }
 
+  sendWhatsapp(x) {
+    let msgContent = "Dear "+x.company_details.contact_person+",%0a%0a";
+    msgContent += "Greetings from Yourstore!%0a%0a";
+    msgContent += "Thank you for setting up your website with us.%0a%0a";
+    msgContent += "To continue setup, use chrome browser to access the website%0a%0a";
+    msgContent += "yourstore.io/login%0a";
+    msgContent += "Enter your login id and password used on signup%0a%0a";
+    msgContent += "No store logo?%0a";
+    msgContent += "Do not worry, use logomaker.net to generate free logo for your website.%0a%0a";
+    msgContent += "Please feel free to get in touch with us on this number for any queries and guidance.%0a%0a";
+    msgContent += "Cheers to more sales,%0a";
+    msgContent += "Team yourstore.io";
+    let url = "https://api.whatsapp.com/send?phone="+x.company_details.dial_code.replace("+", "")+x.company_details.mobile+"&text="+msgContent;
+    window.open(url, '_blank');
+  }
+
 }

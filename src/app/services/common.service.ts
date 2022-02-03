@@ -352,7 +352,7 @@ export class CommonService {
     sessionStorage.removeItem("dip");
     for(let key in this.deploy_stages) {
       if(this.deploy_stages.hasOwnProperty(key)) {
-        if(!this.deploy_stages[key]) {
+        if(!this.deploy_stages[key] || !this.deploy_details.theme_colors?.primary) {
           this.deployInProgress = true;
           sessionStorage.setItem("dip", "true");
           break;
