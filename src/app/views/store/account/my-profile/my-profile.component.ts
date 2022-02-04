@@ -33,6 +33,7 @@ export class MyProfileComponent implements OnInit {
     this.api.STORE_DETAILS().subscribe(result => {
       if(result.status) {
         this.storeData = result.data;
+        this.storeData.category = this.commonService.deploy_details.category;
         this.onCountryChange(this.storeData.country);
         this.modalService.open(modalName, {size: 'lg'});
       }
@@ -40,15 +41,34 @@ export class MyProfileComponent implements OnInit {
     });
   }
 
-  onUpdate() {
+  onUpdate(modalName) {
+    let formData: any = { name: this.storeData.name, gst_no: this.storeData.gst_no, company_details: this.storeData.company_details };
+    if(this.commonService.deploy_details.category == this.storeData.category) {
+      this.onUpdateCont(formData);
+    }
+    else {
+      if(this.storeData.change_category) {
+        formData.category = this.storeData.category;
+        formData.change_category = true;
+        this.onUpdateCont(formData);
+      }
+      else this.modalService.open(modalName, { size: 'md', centered: true});
+    }
+  }
+  onUpdateCont(formData) {
     this.storeData.submit = true;
-    this.api.STORE_UPDATE({ name: this.storeData.name, gst_no: this.storeData.gst_no, company_details: this.storeData.company_details }).subscribe(result => {
+    this.api.STORE_UPDATE(formData).subscribe(result => {
       this.storeData.submit = false;
       if(result.status) {
         this.commonService.store_details.name = result.data.name;
         this.commonService.store_details.gst_no = result.data.gst_no;
         this.commonService.store_details.company_details = result.data.company_details;
         this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        if(result.deploy_details) {
+          this.commonService.deploy_details = result.deploy_details;
+          delete this.commonService.deploy_details.deploy_stages;
+          this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
+        }
         this.ngOnInit();
         document.getElementById('closeModal').click();
       }

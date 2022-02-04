@@ -31,6 +31,7 @@ export class ModifyProductComponent implements OnInit {
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
+  configData: any= environment.config_data;
 
   @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
 

@@ -20,24 +20,6 @@ export class PaymentMethodsComponent implements OnInit {
 	payForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
   eventTrigger: any;
-  categoryList: any = [
-    { name: "clothing", code: "5691" },
-        { name: "jewellery", code: "8018" },
-        { name: "saree", code: "8248" },
-        { name: "perfume", code: "5977" },
-        { name: "home_furniture", code: "5712" },
-        { name: "mobile_computer", code: "5732" },
-        { name: "restaurant_cafe", code: "5812" },
-        { name: "bakery_cake_shop", code: "5311" },
-        { name: "footwear", code: "5699" },
-        { name: "beauty_cosmetics", code: "5977" },
-        { name: "health_wellness", code: "5977" },
-        { name: "art_craft_photography", code: "5399" },
-        { name: "grocery", code: "5411" },
-        { name: "fruits_vegetables", code: "5795" },
-        { name: "chicken_fish_meat", code: "4628" },
-        { name: "local_services", code: "5399" }
-  ]
 
 	constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,
@@ -246,8 +228,8 @@ export class PaymentMethodsComponent implements OnInit {
       if(!this.payForm.merchant_name) this.payForm.merchant_name = this.commonService.store_details.name;
       if(!this.payForm.btn_name) this.payForm.btn_name = "Pay With Google Pay";
       if(!this.payForm.merchant_code) {
-        let mIndex = this.categoryList.findIndex(obj => obj.name==this.commonService.deploy_details.category);
-        if(mIndex!=-1) this.payForm.merchant_code = this.categoryList[mIndex].code;
+        let mIndex = this.commonService.store_categories.findIndex(obj => obj.name==this.commonService.deploy_details.category);
+        if(mIndex!=-1) this.payForm.merchant_code = this.commonService.store_categories[mIndex].code;
       }
     }
   }

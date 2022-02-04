@@ -26,6 +26,11 @@ export const environment = {
       ]
     }
   },
+  config_data: {
+    premium_package_id: "5f4cd4c5573e9a1e68023a04",
+    dinamic_order_id: "60b52edf58954c13bf58b5a2",
+    hungover_id: "5fbcac07fd6ce3538c2cf355"
+  },
   base_url: "http://localhost:4500",
   razorpay_payment_url: "https://api.razorpay.com/v1/checkout/embedded",
   razorpay_redirect_url: "https://yourstore.io/api/others/razorpay_store_payment/5ceb9eb971f2cb809646edd2"

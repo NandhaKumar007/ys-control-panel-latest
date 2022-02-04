@@ -17,7 +17,7 @@ import { environment } from '../../../../../../environments/environment';
 export class ProductOrderDetailsComponent implements OnInit {
 
   params: any = {}; order_details: any = {}; courierForm: any;
-  customNext: boolean;
+  customNext: boolean; configData: any= environment.config_data;
   imgBaseUrl = environment.img_baseurl; updateErrorMsg: string;
   btnLoader: boolean; mailForm: any;
   errorMsg: string; pageLoader: boolean;

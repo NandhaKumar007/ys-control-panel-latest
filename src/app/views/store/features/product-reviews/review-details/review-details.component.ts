@@ -19,6 +19,7 @@ export class ReviewDetailsComponent implements OnInit {
   page = 1; pageSize = 10;
   reviewDetails: any = {}; selectedReview: any = {};
   imgBaseUrl = environment.img_baseurl;
+  configData: any= environment.config_data;
   reviewForm: any = {}; deleteForm: any = {};
   currentDate: Date = new Date();
 

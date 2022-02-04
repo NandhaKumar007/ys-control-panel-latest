@@ -31,6 +31,7 @@ export class ProductComponent implements OnInit {
   exportLoader: boolean;
   archiveForm: any; deleteForm: any;
   imgBaseUrl = environment.img_baseurl;
+  configData: any= environment.config_data;
   limitedProdCount = environment.limited_product_count;
   categoryList: any = [{_id: 'all', name: "All Catalogs"}]; vendorList: any = [];
 

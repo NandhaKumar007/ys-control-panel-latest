@@ -151,7 +151,7 @@
                       <label>HSN Code (optional)</label>
                       <input type="text" name="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
                     </div>
-                    <div class="col-md-3 form-group mb-3">
+                    <div *ngIf="commonService.store_details?.package_details?.package_id==configData.premium_package_id" class="col-md-3 form-group mb-3">
                       <label>Shipping Weight for 1 {{productForm.unit}} (in Kg)</label>
                       <input type="text" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly
                         required />
@@ -173,7 +173,7 @@
                         <option *ngFor="let x of taxRates;" [ngValue]="x._id">{{x.name}}</option>
                       </select>
                     </div>
-                    <div *ngIf="commonService.store_details?._id=='60b52edf58954c13bf58b5a2'" class="col-md-3 form-group mb-3">
+                    <div *ngIf="commonService.store_details?._id==configData.dinamic_order_id" class="col-md-3 form-group mb-3">
                       <label>External Link</label>
                       <input type="text" name="external_link" class="form-control" [(ngModel)]="productForm.external_link" #external_link="ngModel" />
                     </div>

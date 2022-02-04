@@ -96,6 +96,24 @@ export class CommonService {
     { name: "Store Design", rank: 7, apps: [] },
     { name: "Store management", rank: 8, apps: [] }
   ];
+  store_categories: any = [
+    { display: "clothing", name: "clothing", code: "5691" },
+    { display: "Jewellery & Accessories", name: "jewellery", code: "8018" },
+    { display: "Saree", name: "saree", code: "8248" },
+    { display: "Perfume", name: "perfume", code: "5977" },
+    { display: "Home decor & Furniture", name: "home_furniture", code: "5712" },
+    { display: "Mobile, Computers & Accessories", name: "mobile_computer", code: "5732" },
+    { display: "Restaurant & Cafe", name: "restaurant_cafe", code: "5812" },
+    { display: "Bakery & Cake shop", name: "bakery_cake_shop", code: "5311" },
+    { display: "Footwear & Accessories", name: "footwear", code: "5699" },
+    { display: "Beauty & Cosmetics", name: "beauty_cosmetics", code: "5977" },
+    { display: "Health & Wellness", name: "health_wellness", code: "5977" },
+    { display: "Arts, Crafts and Photography", name: "art_craft_photography", code: "5399" },
+    { display: "Grocery store", name: "grocery", code: "5411" },
+    { display: "Fruits & Vegetables", name: "fruits_vegetables", code: "5795" },
+    { display: "Fresh Chicken, Fish, Meat", name: "chicken_fish_meat", code: "4628" },
+    { display: "Local Services", name: "local_services", code: "5399" }
+  ];
   colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;
   vapidPublicKey: string = "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk";

@@ -571,8 +571,7 @@
                     </p>
                     <p *ngIf="order_details?.need_sample" class="m-b-0 mt-3">
                       <span class="txt-grdint-highlight">
-                        <b *ngIf="commonService.store_details._id!='5fbcac07fd6ce3538c2cf355'">Need sample</b>
-                        <b *ngIf="commonService.store_details._id=='5fbcac07fd6ce3538c2cf355'">TRY ON TEE Needed</b>
+                        <b>{{ (commonService.store_details._id==configData.hungover_id)? 'TRY ON TEE Needed': 'Need sample' }}</b>
                       </span>
                     </p>
                   </div>

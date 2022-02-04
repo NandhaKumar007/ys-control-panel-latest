@@ -49,6 +49,7 @@ export class SettingComponent implements OnInit {
   checkout_setting: any; productList: any = [];
   curr_date: any = new Date();
   imgBaseUrl = environment.img_baseurl;
+  configData: any= environment.config_data;
   btnLoader: boolean;
 
   constructor(

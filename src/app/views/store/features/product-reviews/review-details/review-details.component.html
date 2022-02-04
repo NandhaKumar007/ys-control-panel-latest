@@ -39,7 +39,7 @@
       <h4 class="add-another">Reviews</h4>
     </div>
     <div class="col-md-6">
-      <button *ngIf="commonService.store_details._id=='60b52edf58954c13bf58b5a2'" type="button" class="btn btn-wide btn-h-wide btn-primary pull-right mb-3"
+      <button *ngIf="commonService.store_details._id==configData.dinamic_order_id" type="button" class="btn btn-wide btn-h-wide btn-primary pull-right mb-3"
       (click)="reviewForm={ form_type: 'add', step_num: 1, rating: 5, image_list: [], social_media_links: [], created_on: currentDate }; modalService.open(reviewModal, { size: 'lg'});">
         Add New
       </button>
@@ -71,7 +71,7 @@
                   </span>
                 </p>
                 <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions">
-                  <button *ngIf="!x.order_id && commonService.store_details._id=='60b52edf58954c13bf58b5a2'" (click)="onEdit(x, reviewModal);"
+                  <button *ngIf="!x.order_id && commonService.store_details._id==configData.dinamic_order_id" (click)="onEdit(x, reviewModal);"
                     class="btn btn-wide black-outline-btn w-100 mr-3 w-100 w-lg-auto m-b-10">
                     <span class="black-outline-txt">Edit</span>
                   </button>

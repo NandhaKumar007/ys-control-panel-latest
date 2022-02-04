@@ -414,7 +414,7 @@
             <label>Cancel Order Email</label>
             <input type="email" name="cancel_order_email" class="form-control" [(ngModel)]="app_setting.cancel_order_email" #cancel_order_email="ngModel" required />
           </div>
-          <div class="col-md-6 form-group mb-3">
+          <div *ngIf="commonService.store_details?.package_details?.package_id==configData.premium_package_id" class="col-md-6 form-group mb-3">
             <label>Maximum Shipping Weight</label>
             <input type="tel" name="max_shipping_weight" class="form-control" [(ngModel)]="app_setting.max_shipping_weight" #max_shipping_weight="ngModel" appNumberOnly required />
           </div>

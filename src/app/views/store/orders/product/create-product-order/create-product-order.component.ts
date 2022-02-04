@@ -132,7 +132,7 @@ export class CreateProductOrderComponent implements OnInit {
     this.orderForm.grand_total = this.cart_total + this.orderForm.gift_wrapper + this.shipping_cost;
     this.orderForm.final_price = this.orderForm.grand_total - this.orderForm.discount_amount;
     // Hungover
-    if(this.orderForm.store_id=='5fbcac07fd6ce3538c2cf355') {
+    if(this.orderForm.store_id==environment.config_data.hungover_id) {
       this.orderForm.order_type = 'trial';
     }
     this.OrderApi.CREATE_ORDER(this.orderForm).subscribe(result => {
