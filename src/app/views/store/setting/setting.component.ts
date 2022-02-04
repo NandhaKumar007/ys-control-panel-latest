@@ -261,6 +261,18 @@ export class SettingComponent implements OnInit {
       }
     });
   }
+  onEnableAdvProdOptions() {
+    this.btnLoader = true; let optStatus = true;
+    if(this.commonService.store_details?.additional_features?.adv_product_options) optStatus = false;
+    this.api.STORE_UPDATE({ "additional_features.adv_product_options": optStatus }).subscribe(result => {
+      delete this.btnLoader;
+      if(result.status) {
+        this.commonService.store_details.additional_features = result.data.additional_features;
+        this.commonService.updateLocalData('store_details', this.commonService.store_details);
+      }
+      else console.log("response", result);
+    });
+  }
 
   onUpdateCheckout() {
     this.api.UPDATE_STORE_PROPERTY_DETAILS({ checkout_setting: this.checkout_setting }).subscribe(result => {

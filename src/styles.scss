@@ -28,6 +28,10 @@ html::-webkit-scrollbar-thumb {
   border-radius: 20px;
 }
 
+.btn-link:focus, .btn-link.focus {
+  text-decoration: none !important;
+}
+
 // ------------------------------------HOME PAGE---------------------
 .main-content-wrap {
   background: $data-list-body-bg;
@@ -3003,14 +3007,17 @@ sup.required {
   margin-bottom: 1rem;
 }
 
-.home-headlines h4 {
-  font-weight: 700;
-  display: inline-block;
-  background: $primary-theme-gradient;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-  font-size: 16px;
+.home-headlines {
+  text-align: left !important;
+    h4 {
+    font-weight: 700;
+    display: inline-block;
+    background: $primary-theme-gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
 }
 .home-headlines h6 {
   font-size: 12px;
