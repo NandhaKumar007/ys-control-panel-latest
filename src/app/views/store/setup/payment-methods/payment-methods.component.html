@@ -49,10 +49,10 @@
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, payModal);">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, payModal, false);">
                       <span class="black-outline-txt">Edit</span>
                     </button>
-                    <button (click)="onChangeStatus(x, statusModal);" class="btn btn-wide w-md-100 mr-3"
+                    <button (click)="onChangeStatus(x, statusModal, payModal);" class="btn btn-wide w-md-100 mr-3"
                       [ngClass]="(x.status=='active')? 'orng-outline-btn': 'blue-outline-btn'">
                       <span [ngClass]="(x.status=='active')? 'orng-outline-txt': 'blue-outline-txt'">
                         {{ (x.status=='active')? 'Disable': 'Enable' }}
@@ -336,7 +336,7 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>UPI ID (Only Google Pay UPI ID is valid)</label>
-              <input type="text" name="upi_id" class="form-control" [(ngModel)]="payForm.upi_id" #upi_id="ngModel" required />
+              <input type="text" name="upi_id" id="upi_id" class="form-control" [(ngModel)]="payForm.upi_id" #upi_id="ngModel" required />
             </div>
           </ng-container>
           <!-- Bank Payment -->

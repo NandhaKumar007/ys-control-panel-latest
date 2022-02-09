@@ -78,7 +78,7 @@ export class PaymentMethodsComponent implements OnInit {
   }
 
 	// EDIT
-  onEdit(x, modalName) {
+  onEdit(x, modalName, enableStatus) {
     if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
       this.payForm = { form_type: 'update', _id: x._id, name: x.name, btn_name: x.btn_name, status: x.status, prev_rank: x.rank, rank: x.rank };
       if(x.cod_config) this.payForm.cod_config = x.cod_config;
@@ -127,6 +127,7 @@ export class PaymentMethodsComponent implements OnInit {
         this.payForm.upi_id = x.app_config.upi_id;
         this.payForm.merchant_name = x.app_config.merchant_name;
         this.payForm.merchant_code = x.app_config.merchant_code;
+        if(enableStatus) this.payForm.status = 'active';
       }
       else if(x.name=='Bank Payment') {
         this.payForm.field_list = x.app_config.field_list;
@@ -134,6 +135,11 @@ export class PaymentMethodsComponent implements OnInit {
         this.payForm.pay_id_field_status = x.app_config.pay_id_field_status;
       }
       this.modalService.open(modalName, {size: 'lg'});
+      if(enableStatus) {
+        setTimeout(() => {
+          if(document.getElementById("upi_id")) document.getElementById("upi_id").focus();
+        }, 100);
+      }
     }
     else {
       this.eventTrigger = { type: 'edit', value: x, modal: modalName };
@@ -159,15 +165,20 @@ export class PaymentMethodsComponent implements OnInit {
   }
 
   // STATUS
-  onChangeStatus(x, modalName) {
+  onChangeStatus(x, modalName, editModal) {
     if(this.commonService.deploy_stages['payments'] || sessionStorage.getItem('policy_agree')) {
-      this.payForm = x;
-      this.payForm.prev_rank = x.rank;
-      this.payForm.prev_status = x.status;
-      this.modalService.open(modalName, { centered: true });
+      if(x.name=='Gpay' && x.status=='inactive' && !x.app_config?.upi_id) {
+        this.onEdit(x, editModal, true);
+      }
+      else {
+        this.payForm = x;
+        this.payForm.prev_rank = x.rank;
+        this.payForm.prev_status = x.status;
+        this.modalService.open(modalName, { centered: true });
+      }
     }
     else {
-      this.eventTrigger = { type: 'status', value: x, modal: modalName };
+      this.eventTrigger = { type: 'status', value: x, modal: modalName, modal2: editModal };
       document.getElementById("openInfoModal").click();
     }
   }
@@ -305,13 +316,13 @@ export class PaymentMethodsComponent implements OnInit {
       this.onOpenAddModal(this.eventTrigger.value, this.eventTrigger.modal);
     }
     else if(this.eventTrigger?.type=='edit') {
-      this.onEdit(this.eventTrigger.value, this.eventTrigger.modal);
+      this.onEdit(this.eventTrigger.value, this.eventTrigger.modal, false);
     }
     else if(this.eventTrigger?.type=='delete') {
       this.onOpenDelteModal(this.eventTrigger.value, this.eventTrigger.modal);
     }
     else if(this.eventTrigger?.type=='status') {
-      this.onChangeStatus(this.eventTrigger.value, this.eventTrigger.modal);
+      this.onChangeStatus(this.eventTrigger.value, this.eventTrigger.modal, this.eventTrigger.modal2);
     }
   }
 
