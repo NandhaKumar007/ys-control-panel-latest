@@ -19,10 +19,6 @@ export class YsPackagesComponent implements OnInit {
   formType: string; search_bar: string;
   currency_list: any = this.commonService.currency_types.filter(obj => obj.store_base);
   featuresList: any = this.commonService.admin_features;
-  categoryList: any = [
-    { display: 'Genie', name: 'genie' },
-    { display: 'Pro', name: 'pro' }
-  ];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;

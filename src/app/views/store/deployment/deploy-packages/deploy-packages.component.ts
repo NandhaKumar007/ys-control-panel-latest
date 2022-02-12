@@ -28,7 +28,11 @@ export class DeployPackagesComponent implements OnInit {
   upgradeData: any = {}; paymentData: any = {};
   pricingToolTip: any = {}; viewAll: boolean;
   all_features: any = []; support_service: any = [];
-  mobile_top_features: any = [];
+  mobile_top_features: any = []; top_fea_info: any = {
+    free: "All tools to run your ecommerce store",
+    essential: "Everything in Free plan, plus",
+    professional: "Everything in Essential plan, plus"
+  }
   top_features: any = [
     {
       "free": "500 Products",
@@ -169,30 +173,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Run powerfull campaingns to boost your sale"
       },
       {
-        "name": "Advanced Discount Codes",
-        "essential": true,
-        "professional": true,
-        "help_content": ""
-      },
-      {
         "name": "Subdomain",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Get a free sub domain in yourstore"
-      },
-      {
-        "name": "Custom Domain",
-        "essential": true,
-        "professional": true,
-        "help_content": "Buy your prefered domain in yourstore to boost your business"
-      },
-      {
-        "name": "Link Existing Domain",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Already have your won domian, you can link it to your account"
       },
       {
         "name": "UPI & Bank Transfer",
@@ -202,32 +187,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Receive payments directly to your account"
       },
       {
-        "name": "Payment Gateway",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Connect your store with our list of supported payment partners and start receiving payments"
-      },
-      {
-        "name": "Product Reviews and Ratings",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Display moderated product reviews from your customers"
-      },
-      {
         "name": "Desktop Access",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Access the yourstore backend from any PC/Laptop"
-      },
-      {
-        "name": "Product Information",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Add detailed information for the products"
       },
       {
         "name": "Tax Module",
@@ -272,13 +236,6 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Set shipping charges for your orders"
       },
       {
-        "name": "Order Management",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "View and manage live, completed and cancelled orders"
-      },
-      {
         "name": "Contact Form Leads",
         "free": true,
         "essential": true,
@@ -293,32 +250,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Manage your business with quick on/off controls"
       },
       {
-        "name": "New Order Notifications",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Get notified on new orders"
-      },
-      {
-        "name": "Explainer Videos",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Pre-loaded tutorial videos to help setup"
-      },
-      {
         "name": "Browser Push Notificatons",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Keep your customer updated with regular push notifications"
-      },
-      {
-        "name": "Dashboard",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "An overview to your complete sales data"
       },
       {
         "name": "Invoice Generator",
@@ -370,6 +306,24 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Change the banners and segment image to best portray your brand"
       },
       {
+        "name": "Payment Gateway",
+        "essential": true,
+        "professional": true,
+        "help_content": "Connect your store with our list of supported payment partners and start receiving payments"
+      },
+      {
+        "name": "Custom Domain",
+        "essential": true,
+        "professional": true,
+        "help_content": "Buy your prefered domain in yourstore to boost your business"
+      },
+      {
+        "name": "Product Reviews and Ratings",
+        "essential": true,
+        "professional": true,
+        "help_content": "Display moderated product reviews from your customers"
+      },
+      {
         "name": "Mega Menu",
         "essential": true,
         "professional": true,
@@ -386,6 +340,17 @@ export class DeployPackagesComponent implements OnInit {
         "essential": true,
         "professional": true,
         "help_content": "View your customer database with contact information"
+      },
+      {
+        "name": "Advanced Discount Codes",
+        "essential": true,
+        "professional": true,
+        "help_content": "Automated discount codes to boost your sale"
+      },
+      {
+        "name": "Link Existing Domain",
+        "professional": true,
+        "help_content": "Already have your won domian, you can link it to your account"
       },
       {
         "name": "Google search console",

@@ -114,6 +114,10 @@ export class CommonService {
     { display: "Fresh Chicken, Fish, Meat", name: "chicken_fish_meat", code: "4628" },
     { display: "Local Services", name: "local_services", code: "5399" }
   ];
+  package_categories: any = [
+    { display: 'Genie', name: 'genie' },
+    { display: 'Pro', name: 'pro' }
+  ];
   colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;
   vapidPublicKey: string = "BK7P3Gui8d5itafHsJ0_amZrnaM8lADhEZcQCRrDZBoBEh_33HBiLHBjS0LUk5UP3Zr2xU2tlFS9Ypnv0xJQHNk";

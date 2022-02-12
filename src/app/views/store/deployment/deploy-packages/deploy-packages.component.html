@@ -75,7 +75,12 @@
             <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
               <div class="pricing-col-inner w-100">
                 <div class="">
-                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                  <p *ngIf="x.keyword!='free'" class="m-0">
+                    {{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                  </p>
+                  <p *ngIf="x.keyword=='free'" class="m-0">
+                    {{0 | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                  </p>
                 </div>
               </div>
             </div>
@@ -102,7 +107,12 @@
             <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
               <div class="pricing-col-inner w-100">
                 <div class="">
-                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
+                  <p class="m-0">
+                    {{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%
+                    <ng-container *ngIf="x.keyword=='free'">
+                      (Min {{ commonService.store_currency?.country_code }} {{ x.currency_types[commonService.store_currency?.country_code]?.amount }})
+                    </ng-container>
+                  </p>
                 </div>
               </div>
             </div>
@@ -137,7 +147,7 @@
         </div>
       </div>
       <!-- Live Fee -->
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Live Fee
             <span class="tooltip-container">
@@ -162,7 +172,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Top features -->
@@ -333,7 +343,12 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p *ngIf="packageList[selectedIndex].keyword!='free'" class="m-0">
+                  {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                </p>
+                <p *ngIf="packageList[selectedIndex].keyword=='free'" class="m-0">
+                  {{0 | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                </p>
               </div>
             </div>
             <!-- Transaction Fee -->
@@ -354,7 +369,12 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
+                <p class="m-0">
+                  {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%
+                  <ng-container *ngIf="packageList[selectedIndex].keyword=='free'">
+                    (Min {{ commonService.store_currency?.country_code }} {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount}})
+                  </ng-container>
+                </p>
               </div>
             </div>
             <!-- Transaction Waiver -->
@@ -381,7 +401,7 @@
               </div>
             </div>
             <!-- Live Fee -->
-            <div class="col-6 p-0">
+            <!-- <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">Live Fee
                   <span class="tooltip-container">
@@ -400,16 +420,19 @@
               <div class="m_pricing-col-inner m-pricing-r">
                 <p class="m-0">{{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
-            </div>
+            </div> -->
           </div>
 
           <!-- Mobile Top Features -->
           <div class="row">
             <div class="col-12 p-0">
               <h5 class="m_pricing_sub_head">Top Features</h5>
+              <b *ngIf="top_fea_info[packageList[selectedIndex].keyword]" style="margin-bottom: 1rem;">
+                {{ top_fea_info[packageList[selectedIndex].keyword] }}
+              </b>
             </div>
           </div>
-          <div class="row" *ngFor="let x of mobile_top_features;">
+          <div class="row" [ngClass]="(top_fea_info[packageList[selectedIndex].keyword])? 'mt-2': ''" *ngFor="let x of mobile_top_features;">
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner">
                 <p class="m_option-name">{{x.name}}</p>

@@ -91,7 +91,7 @@
           <div class="col-md-6 form-group mb-3">
             <label>Category</label>
             <select name="category" class="form-control" [(ngModel)]="packageForm.category" #category="ngModel" required>
-              <option *ngFor="let x of categoryList;" value="{{x.name}}">{{x.display}}</option>
+              <option *ngFor="let x of commonService.package_categories;" value="{{x.name}}">{{x.display}}</option>
             </select>
           </div>
           <div class="col-md-6 form-group mb-3">
