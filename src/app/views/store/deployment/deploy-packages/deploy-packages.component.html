@@ -22,21 +22,24 @@
     <div class="card pricing-table-card-wrapper p-3 mt-4">
       <div class="row">
         <div class="col-md-2"></div>
-        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <h4 class="text-left">{{x.name}}</h4>
-              <p [innerHTML]="x.description"></p>
-            </div>
-            <div *ngIf="!commonService.store_details?.package_details?.billing_status && !commonService.store_details?.package_details?.expiry_date">
-              <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
-            </div>
-            <div *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
-              <button *ngIf="x.rank===packageRank" class="btn btn-primary" disabled>Current Plan</button>
-              <button *ngIf="x.rank!=packageRank" (click)="onChangePlan(x, upgradeModal);" class="btn btn-primary">
-                <!-- {{ (packageRank < x.rank)? 'Upgrade': 'Degrade' }} Plan -->
-                Select Plan
-              </button>
+        <div class="col-md-10">
+          <div class="row">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="pricing-col-inner w-100">
+                <div class="">
+                  <h4 class="text-left">{{x.name}}</h4>
+                  <p [innerHTML]="x.description"></p>
+                </div>
+                <div *ngIf="!commonService.store_details?.package_details?.billing_status && !commonService.store_details?.package_details?.expiry_date">
+                  <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
+                </div>
+                <div *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
+                  <button *ngIf="x.rank===packageRank" class="btn btn-primary" disabled>Current Plan</button>
+                  <button *ngIf="x.rank!=packageRank" (click)="onChangePlan(x, upgradeModal);" class="btn btn-primary">
+                    Select Plan
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -67,10 +70,14 @@
             </span>
           </p>
         </div>
-        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+        <div class="col-md-10">
+          <div class="row">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="pricing-col-inner w-100">
+                <div class="">
+                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -90,10 +97,14 @@
             </span>
           </p>
         </div>
-        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
+        <div class="col-md-10">
+          <div class="row">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="pricing-col-inner w-100">
+                <div class="">
+                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -113,10 +124,14 @@
             </span>
           </p>
         </div>
-        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+        <div class="col-md-10">
+          <div class="row">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="pricing-col-inner w-100">
+                <div class="">
+                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -136,10 +151,14 @@
             </span>
           </p>
         </div>
-        <div *ngFor="let x of packageList;" class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+        <div class="col-md-10">
+          <div class="row">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="pricing-col-inner w-100">
+                <div class="">
+                  <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -157,42 +176,17 @@
     <div class="card pricing-table-card-wrapper p-3">
       <div class="row" *ngFor="let x of top_features;">
         <div class="col-md-2"></div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.free}}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.lite}}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.starter}}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.growth}}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2 d-flex pricing-col p-0">
-          <div class="pricing-col-inner w-100">
-            <div class="">
-              <p class="m-0">{{x.premium}}
-              </p>
-            </div>
+        <div class="col-md-10">
+          <div class="row">
+            <ng-container *ngFor="let y of packageList;">
+              <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                <div class="pricing-col-inner w-100">
+                  <div class="">
+                    <p class="m-0">{{x[y.keyword]}}</p>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -227,62 +221,32 @@
               </span>
             </p>
           </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.free">
-                <span *ngIf="x.free!=true" class="tooltip-container">
-                  <p class="m-0">
-                    <span *ngIf="x.infoTip" class="tooltip">
-                      {{x.infoTip}}
-                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
-                    </span>
-                    <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x.free;">
-                      error_outline
-                    </i>
-                  </p>
-                </span>
-                <p class="m-0">
-                  <i *ngIf="x.free===true" class="material-icons-outlined checked">
-                    check_circle
-                  </i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.lite">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.starter">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.growth">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.premium">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
+          <div class="col-md-10">
+            <div class="row">
+              <ng-container *ngFor="let y of packageList;">
+                <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                  <div class="pricing-col-inner w-100">
+                    <div *ngIf="x[y.keyword]">
+                      <span *ngIf="x[y.keyword]!=true" class="tooltip-container">
+                        <p class="m-0">
+                          <span *ngIf="x.infoTip" class="tooltip">
+                            {{x.infoTip}}
+                            <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                          </span>
+                          <i class="material-icons-outlined features_info" (click)="resetFeaturesTip(); x.infoTip=x.free;">
+                            error_outline
+                          </i>
+                        </p>
+                      </span>
+                      <p class="m-0">
+                        <i *ngIf="x[y.keyword]===true" class="material-icons-outlined checked">
+                          check_circle
+                        </i>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -301,49 +265,19 @@
           <div class="col-md-2">
             <p class="option-name m-0">{{x.name}}</p>
           </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.free">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.lite">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.starter">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.growth">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-2 d-flex pricing-col p-0">
-            <div class="pricing-col-inner w-100">
-              <div *ngIf="x.premium">
-                <p class="m-0">
-                  <i class="material-icons-outlined checked">check_circle</i>
-                </p>
-              </div>
+          <div class="col-md-10">
+            <div class="row">
+              <ng-container *ngFor="let y of packageList;">
+                <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                  <div class="pricing-col-inner w-100">
+                    <div *ngIf="x[y.keyword]">
+                      <p class="m-0">
+                        <i class="material-icons-outlined checked">check_circle</i>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -355,9 +289,9 @@
 
   <!-- mobile -->
   <section class="pricing-section-wrapper mobile-pricing-table">
-    <ul class="nav nav-tabs sticky-pricing-nav">
-      <li *ngFor="let x of packageList; let i=index;" class="nav-item">
-        <a class="nav-link" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.name}}</a>
+    <ul class="nav nav-tabs sticky-pricing-nav d-flex justify-content-center">
+      <li *ngFor="let x of packageList; let i=index;" class="nav-item" [ngStyle]="{'width.%': (packageList.length>3)? '25' : '33.33' }">
+        <a class="nav-link text-center" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.name}}</a>
       </li>
     </ul>
     <div *ngIf="packageList[selectedIndex]" class="p-0">
@@ -370,7 +304,6 @@
         <div class="mb-2" *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
           <button *ngIf="packageList[selectedIndex].rank===packageRank" class="btn btn-primary w-100" disabled>Current Plan</button>
           <button *ngIf="packageList[selectedIndex].rank!=packageRank" (click)="onChangePlan(packageList[selectedIndex], upgradeModal);" class="btn btn-primary w-100">
-            <!-- {{ (packageRank < packageList[selectedIndex].rank)? 'Upgrade': 'Degrade' }} Plan -->
             Select Plan
           </button>
         </div>

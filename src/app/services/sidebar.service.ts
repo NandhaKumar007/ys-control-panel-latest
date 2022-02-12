@@ -686,6 +686,7 @@ export class SidebarService {
       additional_features: result.data.additional_features,
       company_details: result.data.company_details,
       package_details: result.data.package_details,
+      package_info: result.data.package_info,
       status: result.data.status
     };
     if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;

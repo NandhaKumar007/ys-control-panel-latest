@@ -97,7 +97,7 @@ export class CommonService {
     { name: "Store management", rank: 8, apps: [] }
   ];
   store_categories: any = [
-    { display: "clothing", name: "clothing", code: "5691" },
+    { display: "Clothing", name: "clothing", code: "5691" },
     { display: "Jewellery & Accessories", name: "jewellery", code: "8018" },
     { display: "Saree", name: "saree", code: "8248" },
     { display: "Perfume", name: "perfume", code: "5977" },

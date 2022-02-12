@@ -33,7 +33,7 @@
 
           <!-- SINGLE LIST ITEM -->
           <div
-            *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            *ngFor="let x of list | orderAsc: 'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="d-flex flex-row">
@@ -89,6 +89,12 @@
       <div class="form-group">
         <div class="row">
           <div class="col-md-6 form-group mb-3">
+            <label>Category</label>
+            <select name="category" class="form-control" [(ngModel)]="packageForm.category" #category="ngModel" required>
+              <option *ngFor="let x of categoryList;" value="{{x.name}}">{{x.display}}</option>
+            </select>
+          </div>
+          <div class="col-md-6 form-group mb-3">
             <label>Title</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel"
               required />
@@ -135,13 +141,13 @@
               <span class="checkmark"></span>
             </label>
           </div> -->
-          <div *ngIf="packageForm.trial_status" class="col-md-6 form-group mb-3 ml-3">
+          <!-- <div *ngIf="packageForm.trial_status" class="col-md-6 form-group mb-3 ml-3">
             <label>Trail upto in days</label>
             <input type="text" name="trial_upto_in_days" class="form-control"
               [(ngModel)]="packageForm.trial_upto_in_days" #trial_upto_in_days="ngModel" required />
-          </div>
+          </div> -->
         </div>
-        <div class="row ml-2" *ngIf="packageForm.trial_status">
+        <!-- <div class="row ml-2" *ngIf="packageForm.trial_status">
           <ng-container *ngFor="let x of packageForm.new_feature_list; let i=index;">
             <div class="col-md-4 form-group mb-3">
               <label class="checkbox checkbox-primary">
@@ -152,7 +158,7 @@
               </label>
             </div>
           </ng-container>
-        </div>
+        </div> -->
       </div>
       <div *ngIf="packageForm.errorMsg">
         <p class="text-danger">{{ packageForm.errorMsg }}</p>

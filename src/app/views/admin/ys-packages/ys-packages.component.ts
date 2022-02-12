@@ -19,6 +19,10 @@ export class YsPackagesComponent implements OnInit {
   formType: string; search_bar: string;
   currency_list: any = this.commonService.currency_types.filter(obj => obj.store_base);
   featuresList: any = this.commonService.admin_features;
+  categoryList: any = [
+    { display: 'Genie', name: 'genie' },
+    { display: 'Pro', name: 'pro' }
+  ];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -56,9 +60,10 @@ export class YsPackagesComponent implements OnInit {
         transaction_fees: parseFloat(element.transaction_fees), transaction_limit: parseFloat(element.transaction_limit)
       };
     });
+    this.packageForm.currency_types = currencyTypes;
     if(this.formType=='add') {
       // add
-      this.adminApi.ADD_PACKAGE({ name: this.packageForm.name, currency_types: currencyTypes }).subscribe(result => {
+      this.adminApi.ADD_PACKAGE(this.packageForm).subscribe(result => {
         if(result.status) {
           document.getElementById('closeModal').click();
           this.ngOnInit();
@@ -71,11 +76,6 @@ export class YsPackagesComponent implements OnInit {
     }
     else {
       // update
-      this.packageForm.trial_features = [];
-      this.packageForm.new_feature_list.forEach(obj => {
-        if(obj.selected) this.packageForm.trial_features.push(obj.keyword);
-      });
-      this.packageForm.currency_types = currencyTypes;
       this.adminApi.UPDATE_PACKAGE(this.packageForm).subscribe(result => {
         if(result.status) {
           document.getElementById('closeModal').click();
@@ -90,22 +90,16 @@ export class YsPackagesComponent implements OnInit {
   }
 
   onEdit(x, modalName) {
-    this.formType = 'edit';
-    this.packageForm = { _id: x._id, name: x.name, description: x.description, trial_status: x.trial_status, trial_upto_in_days: x.trial_upto_in_days };
+    this.formType = 'edit'; this.packageForm = {};
+    for(let key in x) {
+      if(x.hasOwnProperty(key)) this.packageForm[key] = x[key];
+    }
+    delete this.packageForm.currency_types;
     this.currency_list.forEach(element => {
       element.live = x.currency_types[element.base].live;
       element.amount = x.currency_types[element.base].amount;
       element.transaction_fees = x.currency_types[element.base].transaction_fees;
       element.transaction_limit = x.currency_types[element.base].transaction_limit;
-    });
-    this.packageForm.new_feature_list = [];
-    this.featuresList.forEach(obj => {
-      let index = obj.linked_packages.findIndex(elem => elem.package_id==x._id);
-      if(index!=-1 && obj.linked_packages[index].currency_types['INR'].price > 0) {
-        let featureSelected = false;
-        if(x.trial_features && x.trial_features.indexOf(obj.keyword)!=-1) featureSelected = true;
-        this.packageForm.new_feature_list.push({ selected: featureSelected, name: obj.name, keyword: obj.keyword });
-      }
     });
     this.modalService.open(modalName, {size: "lg"});
   }
