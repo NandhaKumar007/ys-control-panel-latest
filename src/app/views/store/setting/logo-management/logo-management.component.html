@@ -23,7 +23,7 @@
         </div>
         <div class="h-100 d-flex align-items-end mt-3">
           <div class="custom-file mt-2">
-            <input type="file" name="store_logo" class="custom-file-input" (change)="fileChangeListener($event, colorModal);" accept="image/png" required>
+            <input type="file" name="store_logo" class="custom-file-input" (change)="fileChangeListener($event, colorModal);" accept="image/jpeg, image/png" required>
             <label class="custom-file-label">Choose file</label>
           </div>
         </div>
@@ -203,7 +203,34 @@
     <button [hidden]="!commonService.deploy_details?.theme_colors?.primary" type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Cancel</span>
     </button>
-    <button type="button" (click)="updateThemeColor();" class="btn btn-wide btn-primary ladda-button"
+    <button type="button" (click)="updateThemeColor(welcomeModal);" class="btn btn-wide btn-primary ladda-button"
     [disabled]="btnLoader" [ladda]="btnLoader">Update</button>
+  </div>
+</ng-template>
+
+<ng-template #welcomeModal let-modal>
+  <div class="modal-body">
+    <section class="you-dit-it-section welcome-modal-bg">
+      <div class="you-dit-it-center-section welcome-modal-sec ">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
+              <div class="you-dit-it-message" style="display: flex; flex-direction: column; align-items: center;text-align: center;">
+                <h2>Your website is ready!</h2>
+                <div>
+                  <a href="{{commonService.store_details?.base_url}}" target="_blank" class="btn-primary mr-3">Preview Website</a>
+                  <button class="btn-primary" (click)="modal.dismiss('Cross click');" routerLink="/dashboard" type="button">Continue Setup</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center">
+              <div class="you-dit-it-image">
+                <img src="assets/images/others/layout.png" alt="layout-img" style="width: 575px;margin-bottom: 20px;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </ng-template>

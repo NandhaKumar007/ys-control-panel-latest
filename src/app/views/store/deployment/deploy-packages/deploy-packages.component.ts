@@ -46,7 +46,7 @@ export class DeployPackagesComponent implements OnInit {
     {
       "free": "Free Sub Domain",
       "essential": "Custom Domain",
-      "professional": "Link Existing Domian",
+      "professional": "Link Existing Domain",
       "lite": "Advanced SEO Editor",
       "starter": "Blog Module",
       "growth": "Product FAQ",
@@ -97,6 +97,7 @@ export class DeployPackagesComponent implements OnInit {
         this.packageList = result.list;
         this.packageList.forEach(obj => {
           obj.keyword = obj.name.toLowerCase();
+          obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />")
         });
         let pIndex = this.packageList.findIndex(obj => obj._id==this.commonService.store_details.package_details.package_id);
         if(pIndex!=-1) this.packageRank = this.packageList[pIndex].rank;
@@ -173,18 +174,18 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Run powerfull campaingns to boost your sale"
       },
       {
-        "name": "Subdomain",
+        "name": "Sub domain",
         "free": true,
         "essential": true,
         "professional": true,
-        "help_content": "Get a free sub domain in yourstore"
+        "help_content": "Start your eCommerce store without a domain"
       },
       {
         "name": "UPI & Bank Transfer",
         "free": true,
         "essential": true,
         "professional": true,
-        "help_content": "Receive payments directly to your account"
+        "help_content": "Receive payments directly to your account with 0% processing fee"
       },
       {
         "name": "Desktop Access",
@@ -342,15 +343,20 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "View your customer database with contact information"
       },
       {
-        "name": "Advanced Discount Codes",
+        "name": "Advanced discount options",
         "essential": true,
         "professional": true,
         "help_content": "Automated discount codes to boost your sale"
       },
       {
+        "name": "Automated and Scheduled Discounts",
+        "professional": true,
+        "help_content": "Option to automate and schedule the offers"
+      },
+      {
         "name": "Link Existing Domain",
         "professional": true,
-        "help_content": "Already have your won domian, you can link it to your account"
+        "help_content": "Already have your own domain, you can link it to your account"
       },
       {
         "name": "Google search console",
@@ -408,7 +414,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Advanced Discount Codes",
+        "name": "Advanced discount options",
         "lite": true,
         "starter": true,
         "growth": true,
@@ -740,7 +746,7 @@ export class DeployPackagesComponent implements OnInit {
         "professional": true
       },
       {
-        "name": "Link Existing Domian",
+        "name": "Link Existing Domain",
         "professional": true
       },
       {

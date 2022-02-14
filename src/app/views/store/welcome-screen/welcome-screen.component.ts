@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 
 @Component({
@@ -10,32 +10,23 @@ import { CommonService } from '../../../services/common.service';
 
 export class WelcomeScreenComponent implements OnInit {
 
-  params: any; myTimeout: any;
+  interval: any;
   timer: number = 5;
 
-  constructor(private router: Router, private activeRoute: ActivatedRoute, public commonService: CommonService) { }
+  constructor(private router: Router, public commonService: CommonService) { }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe((params: Params) => {
-      this.params = params;
-      if(this.params.type=='activation') {
-        let interval = setInterval(() => {
-          this.timer--;
-          if(this.timer===0) {
-            clearInterval(interval);
-            this.router.navigate(['/dashboard']);
-          }
-        }, 1000);
+    this.interval = setInterval(() => {
+      this.timer--;
+      if(this.timer===0) {
+        clearInterval(this.interval);
+        this.router.navigate(['/dashboard']);
       }
-      else if(this.params.type=='website') {
-        this.myTimeout = setTimeout(() => { this.router.navigate(['/dashboard']); }, 10000);
-      }
-      else this.router.navigate(['/dashboard']);
-    });
+    }, 1000);
   }
 
   ngOnDestroy() {
-    if(this.myTimeout) clearTimeout(this.myTimeout);
+    if(this.interval) clearTimeout(this.interval);
   }
 
 }

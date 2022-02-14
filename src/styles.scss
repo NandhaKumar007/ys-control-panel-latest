@@ -4061,6 +4061,12 @@ p svg:hover {
   /* width: 90% !important; */
 }
 
+.xxlModal > .modal-dialog { 
+  min-width: 96% !important;
+  .modal-body {
+    padding: 0!important;
+  }
+}
 /* hari */
 
 .sec-btn {
@@ -4309,6 +4315,24 @@ p svg:hover {
 }
 
 @media only screen and (max-width: 576px) {
+  .home-progress-section-wrapper {
+    .progress-step-count {
+      .progress-step-count-inner {      
+        span {
+          font-size: 0.813rem;
+        }
+      }
+    }
+  }
+  .welcome-modal-bg {
+    background:url(./assets/images/others/modal-bg-img-m.jpg) no-repeat!important;
+  }
+  .welcome-modal-sec {
+    height: calc(100vh - 1.4rem)!important; 
+  }
+  .flex-sm-row-reverse {
+    flex-direction: row-reverse !important;
+  }
   .payment-alert-section {
     .payment-center-section {
       .payment-center-section-inner {
@@ -4588,4 +4612,17 @@ p svg:hover {
     font-size: 1rem;
     margin-bottom: 5px;
   }
+}
+
+.welcome-modal-bg {
+  background:url(./assets/images/others/modal-bg-img.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.welcome-modal-sec {
+  width: 100%;
+  position: relative;height: calc(100vh - 3.8rem);
+  display: flex;
+  align-items: center;
 }

@@ -28,7 +28,7 @@
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <h4 class="text-left">{{x.name}}</h4>
-                  <p [innerHTML]="x.description"></p>
+                  <p class="text-left" [innerHTML]="x.description"></p>
                 </div>
                 <div *ngIf="!commonService.store_details?.package_details?.billing_status && !commonService.store_details?.package_details?.expiry_date">
                   <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
@@ -76,6 +76,9 @@
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <p *ngIf="x.keyword!='free'" class="m-0">
+                    <span class="complete-strike" *ngIf="x.currency_types[commonService.store_currency?.country_code]?.selling_amount != x.currency_types[commonService.store_currency?.country_code]?.amount">
+                      {{x.currency_types[commonService.store_currency?.country_code]?.selling_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                    </span>
                     {{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                   </p>
                   <p *ngIf="x.keyword=='free'" class="m-0">
@@ -120,7 +123,7 @@
         </div>
       </div>
       <!-- Transaction Waiver -->
-      <div class="row">
+      <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="row">
         <div class="col-md-2">
           <p class="option-name m-0">Transaction Waiver
             <span class="tooltip-container">
@@ -184,9 +187,20 @@
       </div>
     </div>
     <div class="card pricing-table-card-wrapper p-3">
-      <div class="row" *ngFor="let x of top_features;">
+      <div class="row" *ngFor="let x of top_features; let i=index;">
         <div class="col-md-2"></div>
         <div class="col-md-10">
+          <div class="row" *ngIf="i===0">
+            <ng-container *ngFor="let y of packageList;">
+              <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                <div class="pricing-col-inner w-100" style="border: none; padding-top: 0px;">
+                  <b *ngIf="top_fea_info[y.keyword]">
+                    {{ top_fea_info[y.keyword] }}
+                  </b>
+                </div>
+              </div>
+            </ng-container>
+          </div>
           <div class="row">
             <ng-container *ngFor="let y of packageList;">
               <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
@@ -344,6 +358,9 @@
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
                 <p *ngIf="packageList[selectedIndex].keyword!='free'" class="m-0">
+                  <span class="complete-strike mr-1" *ngIf="packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount != packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount">
+                    {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                  </span>
                   {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                 </p>
                 <p *ngIf="packageList[selectedIndex].keyword=='free'" class="m-0">
@@ -378,28 +395,30 @@
               </div>
             </div>
             <!-- Transaction Waiver -->
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner">
-                <p class="m_option-name">Transaction Waiver
-                  <span class="tooltip-container">
-                    <span *ngIf="pricingToolTip.waiver" class="tooltip">
-                      {{pricingToolTip.waiver}}
-                      <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+            <ng-container *ngIf="commonService.store_details?.package_info?.category!='genie'">
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner">
+                  <p class="m_option-name">Transaction Waiver
+                    <span class="tooltip-container">
+                      <span *ngIf="pricingToolTip.waiver" class="tooltip">
+                        {{pricingToolTip.waiver}}
+                        <span (click)="resetFeaturesTip();" class="material-icons tooltip-close">close</span>
+                      </span>
+                      <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
+                        help_outline
+                      </i>
                     </span>
-                    <i class="material-icons" (click)="resetFeaturesTip(); pricingToolTip={ waiver: 'Transaction free sale upto a respective charges based on your plan' };">
-                      help_outline
-                    </i>
-                  </span>
-                </p>
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="col-6 p-0">
-              <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">
-                  {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month
-                </p>
+              <div class="col-6 p-0">
+                <div class="m_pricing-col-inner m-pricing-r">
+                  <p class="m-0">
+                    {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month
+                  </p>
+                </div>
               </div>
-            </div>
+            </ng-container>
             <!-- Live Fee -->
             <!-- <div class="col-6 p-0">
               <div class="m_pricing-col-inner">

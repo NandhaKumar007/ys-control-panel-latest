@@ -7,13 +7,13 @@
   <div class="row">
     <div class="col-md-6" [ngClass]="(!commonService.deployInProgress)? 'd-flex align-items-center': ''">
       <h1 *ngIf="!commonService.deployInProgress">Dashboard</h1>
-      <div *ngIf="commonService.deployInProgress" class="my-3 home-progress-section-wrapper">
-        <div class="progress-step-count">
+      <div *ngIf="commonService.deployInProgress" class="my-3 home-progress-section-wrapper row mx-0 flex-sm-row-reverse">
+        <div class="progress-step-count col-md-12 px-0 col-4">
           <p class="progress-step-count-inner">
             <span>{{completedPercentage}}%</span> completed
           </p>
         </div>
-        <div class="stpe-progress-bar">
+        <div class="stpe-progress-bar col-md-12 col-8 px-0 pr-md-0 pr-3">
           <div class="progress-bar">
             <div class="progress-bar-inner" [ngStyle]="{'width.%':completedPercentage}"></div>
           </div>
@@ -24,7 +24,7 @@
       <div class="card mb-2">
         <div class="bdr-btm p-3">
           <div class="row">
-            <div class="col-6 col-sm-6 col-md-7 d-flex align-items-center">
+            <div class="col-7 col-sm-7 col-md-7 pr-md-3 pr-1 d-flex align-items-center">
               <div class="row m-0 w-100">
                 <div class="col-1 col-sm-1 px-0 d-flex align-items-center">
                   <i class="material-icons fs-md-28">language</i>
@@ -39,7 +39,7 @@
                 </div>                
               </div>
             </div>
-            <div class="col-6 col-sm-6 col-md-5 d-flex align-items-center justify-content-end">
+            <div class="col-5 col-sm-5 col-md-5 d-flex align-items-center justify-content-end">
               <a (click)="shareDomain(infoModal, false);">
                 <i class="material-icons edit-icon mr-2">visibility</i>
               </a>
@@ -50,13 +50,13 @@
           </div>
           <ng-container *ngIf="baseUrl.indexOf('shop.yourstore.io')!=-1">
             <div class="separator-breadcrumb border-top my-2"></div>
-            <div class="row">
-              <div class="col-6 col-sm-6 col-md-7 d-flex align-items-center">
-                <div class="home-headlines mt-2">
-                  <h4>Get custom domain</h4>                
+            <div class="row pt-2">
+              <div class="col-8 col-sm-8 col-md-7 d-flex align-items-center">
+                <div class="home-headlines">
+                  <h4 class="mb-0">Get custom domain</h4>                
                 </div>
               </div>
-              <div class="col-6 col-sm-6 col-md-5 d-flex align-items-center justify-content-end">
+              <div class="col-4 col-sm-4 col-md-5 d-flex align-items-center justify-content-end">
                 <a routerLink="/deployment/domain">
                   <span class="gray-icon-btn ml-3">
                     <i class="material-icons">navigate_next</i>

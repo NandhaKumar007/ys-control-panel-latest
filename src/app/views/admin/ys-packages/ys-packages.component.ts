@@ -40,9 +40,11 @@ export class YsPackagesComponent implements OnInit {
   onAddModal(modalName) {
     this.formType = 'add';
     this.packageForm = {};
-    this.modalService.open(modalName, {size: 'lg'});
+    this.modalService.open(modalName, { windowClass:'xlModal' });
     this.currency_list.forEach(element => {
+      delete element.live;
       delete element.amount;
+      delete element.selling_amount;
       delete element.transaction_fees;
       delete element.transaction_limit;
     });
@@ -52,7 +54,7 @@ export class YsPackagesComponent implements OnInit {
     let currencyTypes: any = {};
     this.currency_list.forEach(element => {
       currencyTypes[element.base] = {
-        live: parseFloat(element.live), amount: parseFloat(element.amount),
+        live: parseFloat(element.live), amount: parseFloat(element.amount), selling_amount: parseFloat(element.selling_amount),
         transaction_fees: parseFloat(element.transaction_fees), transaction_limit: parseFloat(element.transaction_limit)
       };
     });
@@ -94,10 +96,11 @@ export class YsPackagesComponent implements OnInit {
     this.currency_list.forEach(element => {
       element.live = x.currency_types[element.base].live;
       element.amount = x.currency_types[element.base].amount;
+      element.selling_amount = x.currency_types[element.base].selling_amount;
       element.transaction_fees = x.currency_types[element.base].transaction_fees;
       element.transaction_limit = x.currency_types[element.base].transaction_limit;
     });
-    this.modalService.open(modalName, {size: "lg"});
+    this.modalService.open(modalName, { windowClass:'xlModal' });
   }
 
   // DELETE

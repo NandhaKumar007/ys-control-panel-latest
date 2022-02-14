@@ -110,14 +110,17 @@
                   <div class="col-md-12">
                     <span class="primary-color"><b>{{x.base}}</b></span>
                   </div>
-                  <div class="col-md-3 form-group mb-3">
+                  <div class="col-md-2 form-group mb-3">
                     <label>Live Fees</label>
                     <input type="text" name="live{{i}}" class="form-control" [(ngModel)]="x.live" #live="ngModel" appNumberOnly required />
                   </div>
-                  <div class="col-md-3 form-group mb-3">
-                    <label>Platform Fees</label>
-                    <input type="text" name="cost{{i}}" class="form-control" [(ngModel)]="x.amount" #amount="ngModel"
-                      appNumberOnly required />
+                  <div class="col-md-2 form-group mb-3">
+                    <label>Selling Platform Fees</label>
+                    <input type="text" name="selling_cost{{i}}" class="form-control" [(ngModel)]="x.selling_amount" #selling_amount="ngModel" appNumberOnly required />
+                  </div>
+                  <div class="col-md-2 form-group mb-3">
+                    <label>Discounted Platform Fees</label>
+                    <input type="text" name="cost{{i}}" class="form-control" [(ngModel)]="x.amount" #amount="ngModel" appNumberOnly required />
                   </div>
                   <div class="col-md-3 form-group mb-3">
                     <label>Transaction rate(%)</label>

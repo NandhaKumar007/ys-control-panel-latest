@@ -27,7 +27,7 @@ const adminRoutes: Routes = [
 ];
 
 const storeRoutes: Routes = [
-  { path: 'welcome/:type', loadChildren: () => import('./views/store/welcome-screen/welcome-screen.module').then(m => m.WelcomeScreenModule) },
+  { path: 'welcome', loadChildren: () => import('./views/store/welcome-screen/welcome-screen.module').then(m => m.WelcomeScreenModule) },
   { path: 'dashboard', loadChildren: () => import('./views/store/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'vendors-dashboard', loadChildren: () => import('./views/store/dashboard/vendors-dashboard/vendors-dashboard.module').then(m => m.VendorsDashboardModule), canActivate: [PermissionGuard], data: { name: "vendor_dashboard" } },
 

@@ -128,7 +128,7 @@ export class LogoManagementComponent implements OnInit {
       else console.log("response", result);
     });
   }
-  updateThemeColor() {
+  updateThemeColor(modalName) {
     delete this.errorMsg; let colorForm = {};
     this.colorFields.forEach(element => {
       if(!element.color_code) this.errorMsg = "Please select color from all sections";
@@ -143,7 +143,7 @@ export class LogoManagementComponent implements OnInit {
           this.commonService.deploy_details = result.data;
           delete this.commonService.deploy_details.deploy_stages;
           this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
-          if(result.layout_created) this.router.navigate(['/welcome/website']);
+          if(result.layout_created) this.modalService.open(modalName, { windowClass:'xxlModal' });
           else this.ngOnInit();
         }
         else console.log("response", result);
