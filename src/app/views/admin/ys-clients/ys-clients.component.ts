@@ -47,8 +47,9 @@ export class YsClientsComponent implements OnInit {
   }
 
   changeAccType() {
-    if(this.accountType=='all') this.list = this.parent_list;
-    else this.list = this.parent_list.filter(obj => obj.account_type==this.accountType);
+    if(this.accountType=='trial') this.list = this.parent_list.filter(obj => !obj.package_details.billing_status);
+    else if(this.accountType=='subscribed') this.list = this.parent_list.filter(obj => obj.package_details.billing_status);
+    else this.list = this.parent_list;
   }
 
   onUpdatePwd() {

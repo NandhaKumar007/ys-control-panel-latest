@@ -25,8 +25,8 @@
         <select name="type" class="form-control select-arrow" [(ngModel)]="accountType"
           (change)="page=1; changeAccType();">
           <option value="all">All</option>
-          <option value="demo">Demo Accounts</option>
-          <option value="client">Live Accounts</option>
+          <option value="trial">Trial Accounts</option>
+          <option value="subscribed">Subscribed Accounts</option>
         </select>
       </div>
     </div>
@@ -59,7 +59,7 @@
                 class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                 <!-- OTHER DATA -->
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}<br>{{ x.email }}<br>{{ x._id }}</p>
-                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.package_name }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ (x.package_details?.billing_status)? x.package_name: 'Trial' }}</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{x.account_expiry | date: "dd MMM y"}}</p>
                 <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-flex align-items-center item-actions">
                   <a href={{x.base_url}} target="_blank">

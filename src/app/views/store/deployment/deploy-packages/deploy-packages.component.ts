@@ -18,7 +18,7 @@ export class DeployPackagesComponent implements OnInit {
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
   paymentTypes: any = []; packageRank: number = 0;
-  environment: any = environment;
+  environment: any = environment; defaultPlan: string;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
@@ -94,6 +94,7 @@ export class DeployPackagesComponent implements OnInit {
     this.api.PACKAGE_LIST(this.commonService.store_details?.package_info?.category).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
+        this.defaultPlan = result.default_plan;
         this.packageList = result.list;
         this.packageList.forEach(obj => {
           obj.keyword = obj.name.toLowerCase();
@@ -349,7 +350,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Automated discount codes to boost your sale"
       },
       {
-        "name": "Automated and Scheduled Discounts",
+        "name": "Automatic & Scheduled Discounts",
         "professional": true,
         "help_content": "Option to automate and schedule the offers"
       },
@@ -870,14 +871,41 @@ export class DeployPackagesComponent implements OnInit {
 
   onSelectPlan(x, modalName) {
     this.packageForm = x;
+    this.packageForm.submit = false;
+    if(this.defaultPlan==x._id) this.modalService.open(modalName, { centered: true });
+    else {
+      let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
+      this.api.PURCHASE_PLAN(formData).subscribe(result => {
+        if(result.status) {
+          this.paymentData = result.data;
+          this.paymentTypes = result.payment_types;
+          this.modalService.open(modalName);
+        }
+        else console.log("response", result);
+      });
+    }
+  }
+  onSunscribeDefaultPlan(x) {
+    this.packageForm.submit = true;
+    this.packageForm = x;
     let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
-        this.paymentData = result.data;
-        this.paymentTypes = result.payment_types;
-        this.modalService.open(modalName);
+        // store details
+        this.commonService.store_details.package_details = result.store_details.package_details;
+        this.commonService.store_details.status = result.store_details.status;
+        this.commonService.store_details.package_info = { name: x.name, category: x.category };
+        this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        // deploy stages
+        this.commonService.deploy_stages = result.deploy_details.deploy_stages;
+        this.commonService.updateLocalData('deploy_stages', this.commonService.deploy_stages);
+        document.getElementById('closeModal').click();
+        this.router.navigate(['/dashboard']);
       }
-      else console.log("response", result);
+      else {
+        console.log("response", result);
+        this.packageForm.errorMsg = result.message;
+      }
     });
   }
   onSubscribe(x) {

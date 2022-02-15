@@ -564,7 +564,7 @@
 
 <!-- Subscription Modal -->
 <ng-template #subscriptionModal let-modal>
-  <div class="modal-header">
+  <div *ngIf="defaultPlan!=packageForm._id" class="modal-header">
     <div>
       <h4 class="modal-title" id="modal-basic-title">
         {{packageForm.name}} Plan
@@ -575,7 +575,8 @@
     </div>
   </div>
   <div class="modal-body">
-    <div class="form-group">
+    <!-- for paid -->
+    <div *ngIf="defaultPlan!=packageForm._id" class="form-group">
       <div class="row">
         <div class="col-md-12">
           <p>Subscription Charges {{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
@@ -589,13 +590,26 @@
         </div>
       </div>
     </div>
+    <!-- for free -->
+    <p *ngIf="defaultPlan==packageForm._id">
+      <strong>You have selected the free plan</strong>
+    </p>
     <div *ngIf="packageForm.errorMsg">
       <p class="text-danger">{{ packageForm.errorMsg }}</p>
     </div>
   </div>
-  <div class="modal-footer">
+  <!-- for paid -->
+  <div *ngIf="defaultPlan!=packageForm._id" class="modal-footer">
     <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
     [disabled]="packageForm.submit" [ladda]="packageForm.submit">{{x.btn_name}}</button>
+  </div>
+  <!-- for free -->
+  <div *ngIf="defaultPlan==packageForm._id" class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="packageForm.submit"
+    [ladda]="packageForm.submit" (click)="onSunscribeDefaultPlan(packageForm);">Confirm</button>
   </div>
 </ng-template>
 
