@@ -19,6 +19,10 @@ export class AdminApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.post<any>(environment.ws_url+'/admin/store/generate_token_v2', x, httpOptions);
   }
+  DASHBOARD(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.post<any>(environment.ws_url+'/admin/store/dashboard', x, httpOptions);
+  }
 
   // clients
   STORE_LIST(x) {

@@ -360,7 +360,7 @@ export class CommonService {
         script.defer = true;
         script.async = true;
         document.getElementsByTagName("body")[0].appendChild(script);
-        script.src = "https://js.hs-scripts.com/7633683.js";
+        script.src = "//js.hs-scripts.com/7633683.js";
       }
     }
   }

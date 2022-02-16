@@ -168,13 +168,11 @@
             <h5>{{sec.name}}</h5>
             <div class="row ml-3 mt-3">
               <div class="form-group mb-3 col-md-12">
-                <label class="checkbox checkbox-primary">
-                  <input class="form-check-input" type="checkbox" name="manual_status{{i}}" [(ngModel)]="sec.manual_status">
-                  <span>Choose from color picker</span>
-                  <span class="checkmark"></span>
-                </label>
+                <button type="button" (click)="sec.manual_status? sec.manual_status=false: sec.manual_status=true;" class="btn btn-primary">
+                  Pick {{ (sec.manual_status)? 'from logo colors': 'custom color' }}
+                </button>
               </div>
-              <div *ngIf="sec.manual_status" class="col-md-4 form-group mb-3">
+              <div *ngIf="sec.manual_status" class="col-md-6 form-group mb-3">
                 <label>Color Picker</label>
                 <input name="color_code{{i}}" class="form-control" [colorPicker]="sec.color_code"
                   (colorPickerChange)="sec.color_code=$event;" [style.background]="sec.color_code"
@@ -218,7 +216,7 @@
               <div class="you-dit-it-message" style="display: flex; flex-direction: column; align-items: center;text-align: center;">
                 <h2>Your website is ready!</h2>
                 <div>
-                  <a href="{{commonService.store_details?.base_url}}" target="_blank" class="btn-primary mr-3">Preview Website</a>
+                  <a href="{{commonService.store_details?.base_url}}" target="_blank" (click)="modal.dismiss('Cross click');" class="btn-primary mr-3">Preview Website</a>
                   <button class="btn-primary" (click)="modal.dismiss('Cross click');" routerLink="/dashboard" type="button">Continue Setup</button>
                 </div>
               </div>
