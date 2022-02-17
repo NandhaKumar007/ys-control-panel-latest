@@ -12,6 +12,10 @@ export class CustomerApiService {
   constructor(private http: HttpClient) { }
 
   // Customers
+  ALL_CUSTOMERS() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/customer', httpOptions);
+  }
   CUSTOMER_LIST(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/customer?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);
@@ -82,6 +86,10 @@ export class CustomerApiService {
   }
 
   // guest users
+  ALL_GUEST_USERS() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/guest-user', httpOptions);
+  }
   GUEST_USERS_LIST(params) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/guest-user?skip='+params.skip+'&limit='+params.limit+'&search='+params.search, httpOptions);

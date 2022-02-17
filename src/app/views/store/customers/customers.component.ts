@@ -122,9 +122,24 @@ export class CustomersComponent implements OnInit {
   exportAsXLSX() {
     this.exportLoader = true;
     let fileName = "customers";
-    this.createList(this.list).then((exportList: any[]) => {
-      this.excelService.exportAsExcelFile(exportList, fileName);
-      setTimeout(() => { this.exportLoader = false; }, 500);
+    this.customerApi.ALL_CUSTOMERS().subscribe(result => {
+      if(result.status) {
+        let customerList = result.list;
+        customerList.forEach(element => {
+          if(!element.dial_code && !element.mobile && element.address_list.length) {
+            let filteredAddress = element.address_list.filter(obj => obj.billing_address);
+            if(filteredAddress.length) {
+              element.dial_code = filteredAddress[0].dial_code;
+              element.mobile = filteredAddress[0].mobile;
+            }
+          }
+        });
+        this.createList(customerList).then((exportList: any[]) => {
+          this.excelService.exportAsExcelFile(exportList, fileName);
+          setTimeout(() => { this.exportLoader = false; }, 500);
+        });
+      }
+      else console.log("response", result);
     });
   }
   createList(list) {

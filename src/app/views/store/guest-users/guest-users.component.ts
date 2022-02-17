@@ -120,9 +120,23 @@ export class GuestUsersComponent implements OnInit {
   exportAsXLSX() {
     this.exportLoader = true;
     let fileName = "guest-users";
-    this.createList(this.list).then((exportList: any[]) => {
-      this.excelService.exportAsExcelFile(exportList, fileName);
-      setTimeout(() => { this.exportLoader = false; }, 500);
+    this.customerApi.ALL_GUEST_USERS().subscribe(result => {
+      if(result.status) {
+        let usersList = result.list;
+        usersList.forEach(element => {
+          element.name = "NA";
+          element.mobile = "NA";
+          if(element.address_list.length) {
+            element.name = element.address_list[0].name;
+            element.mobile = element.address_list[0].dial_code+" "+element.address_list[0].mobile;
+          }
+        });
+        this.createList(usersList).then((exportList: any[]) => {
+          this.excelService.exportAsExcelFile(exportList, fileName);
+          setTimeout(() => { this.exportLoader = false; }, 500);
+        });
+      }
+      else console.log("response", result);
     });
   }
   createList(list) {
