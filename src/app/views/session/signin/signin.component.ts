@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
-import { AccountService } from '../../../views/store/account/account.service';
 import { CommonService } from '../../../services/common.service';
 import { SidebarService } from '../../../services/sidebar.service';
 
@@ -19,8 +18,7 @@ export class SigninComponent implements OnInit {
   loading: boolean; loadingText: string;
   loginForm: any = {};
   constructor(
-    public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService,
-    private commonService: CommonService, private accountApi: AccountService
+    public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService, private commonService: CommonService
   ) { }
 
   ngOnInit() {

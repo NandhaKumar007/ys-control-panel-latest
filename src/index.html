@@ -25,6 +25,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="manifest" href="manifest.webmanifest">
+    <script>
+      let deferredPrompt;
+      sessionStorage.removeItem("pwa");
+      window.addEventListener('beforeinstallprompt', (e) => {
+        deferredPrompt = e;
+        sessionStorage.setItem("pwa", "true");
+      });
+      $(document).ready(function () {
+        $(document).on('click', '.installApp', async function(e) {
+          if(deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if(outcome === 'accepted') {
+              deferredPrompt = null;
+            }
+          }
+        });
+      });
+    </script>
   </head>
   <body class="text-left">
     <app-root>

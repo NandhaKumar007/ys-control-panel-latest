@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from './services/common.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class AppComponent {
     this.commonService.screen_width = window.innerWidth;
   }
 
-  constructor(private commonService: CommonService, private deviceService: DeviceDetectorService) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private deviceService: DeviceDetectorService) {
+    config.backdrop = 'static'; config.keyboard = false;
     this.getScrollPosition();
     if(localStorage.getItem("darkSwitch")) {
       this.commonService.dark_theme = true;
@@ -28,6 +30,14 @@ export class AppComponent {
       let iosPlatforms = ["iPad", "iPhone", "iPod", "iPod touch"];
       if(iosPlatforms.indexOf(navigator.platform) != -1) this.commonService.ios = true;
     }
+  }
+
+  ngOnInit() {
+    setTimeout(() => {
+      if(sessionStorage.getItem("pwa") && !this.commonService.desktop_device) {
+        document.getElementById("openAppPrompt").click();
+      }
+    }, 1000);
   }
 
 }
