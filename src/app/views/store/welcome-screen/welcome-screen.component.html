@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6 d-flex align-items-center justify-content-center">
-          <div class="you-dit-it-message">
+          <div *ngIf="!installApp" class="you-dit-it-message">
             <h2>Hurrah!</h2>
             <h6>You have successfully activated your store.</h6>
             <h6 class="ready-sell">Ready to sell?</h6>
@@ -25,3 +25,58 @@
     <img src="assets/images/others/bottom.png" alt="image-bottom">
   </div>
 </section>
+
+<!-- App Modal -->
+<button type="button" class="d-none" id="openAppPrompt" (click)="installApp=true; modalService.open(appModal);"></button>
+<ng-template #appModal let-modal class="app-modal iosmodal">
+  <div class="modal-header">
+    <div class="row m-0 w-100 align-items-center">
+      <div class="col-1 px-0">
+        <p class="mb-0">
+          <span class="material-icons"
+            style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 10px;font-size: 20px;display: flex;align-items: center;justify-content: center;padding: 10px 20px;">browser_updated</span>
+        </p>
+      </div>
+      <div class="col-11">
+        <h5 class="mb-0">Quick Install App</h5>
+      </div>  
+      <div style="position:absolute;top: 15px;right:13px">
+        <p class="mb-0" style="background-color: #fff;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 100px; padding:7px;">
+          <span class="material-icons d-flex align-items-center justify-content-center" routerLink="/" (click)="modal.dismiss('Cross click');" style="color:#999; font-size: 20px;">close</span>
+        </p>
+      </div> 
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12 px-0">
+      <p>Install the app on your device to easily access it anytime. No app store. No download. No hassle.</p>
+      <!-- IOS -->
+      <ul *ngIf="commonService.ios" style="list-style:none;padding-left:0">
+        <li class="pb-3">1. Tap on
+          <span class="material-icons"
+            style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 4px;font-size: 14px;align-items: center;justify-content: center;padding: 5px;"><span
+              class="material-icons-outlined">
+              ios_share
+            </span>
+          </span>
+        </li>
+        <li class="pb-3">2. Select
+          <span>
+            <a style="background:#efefef;padding: 5px; border-radius: 4px; color: #000; font-weight: 500;">Add
+              to Home Screen</a>
+          </span>
+        </li>
+        <li>3. Click on the yourstore App icon in the Home screen and Login</li>
+      </ul>
+      <!-- Android -->
+      <ng-container *ngIf="!commonService.ios">
+        <p style="text-align: left;">Click on the yourstore App icon in the Home screen and Login</p>
+        <div style="text-align: center;">
+          <button type="button" class="btn btn-primary text-center px-5 installApp">
+            <span class="black-outline-txt">Install</span>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

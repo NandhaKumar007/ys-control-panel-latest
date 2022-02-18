@@ -13,6 +13,7 @@ export class CommonService {
 
   dark_theme: boolean;
   desktop_device: boolean;
+  ios: boolean;
   grid_list: any = [
     {
       type: "grid_1", name: "Grid 1", icon: "assets/images/grid/Grid-1.png", status: "enabled",
@@ -131,6 +132,7 @@ export class CommonService {
   store_list: any = [];
   ys_features: any = [];
   subuser_features: any = [];
+  vendor_features: any = [];
 
   store_details: any = {};
   store_currency: any = {};
@@ -170,6 +172,7 @@ export class CommonService {
 
     if(localStorage.getItem('ys_features')) this.ys_features = this.decryptData(localStorage.getItem("ys_features"));
     if(localStorage.getItem('subuser_features')) this.subuser_features = this.decryptData(localStorage.getItem("subuser_features"));
+    if(localStorage.getItem('vendor_features')) this.vendor_features = this.decryptData(localStorage.getItem("vendor_features"));
     if(localStorage.getItem('store_details')) this.store_details = this.decryptData(localStorage.getItem("store_details"));
     if(localStorage.getItem('store_currency')) this.store_currency = this.decryptData(localStorage.getItem("store_currency"));
     if(localStorage.getItem('route_permission_list')) this.route_permission_list = this.decryptData(localStorage.getItem("route_permission_list"));
@@ -282,6 +285,7 @@ export class CommonService {
     this.admin_features = [];
     this.ys_features = [];
     this.subuser_features = [];
+    this.vendor_features = [];
 
     delete this.master_token;
     delete this.store_token;

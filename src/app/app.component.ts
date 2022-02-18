@@ -24,6 +24,10 @@ export class AppComponent {
     }
     // device type
     if(this.deviceService.isDesktop()) this.commonService.desktop_device = true;
+    else {
+      let iosPlatforms = ["iPad", "iPhone", "iPod", "iPod touch"];
+      if(iosPlatforms.indexOf(navigator.platform) != -1) this.commonService.ios = true;
+    }
   }
 
 }

@@ -14,7 +14,8 @@
     <div class="row mb-4">
       <div class="col-md-6">
         <button *ngIf="commonService.master_token" type="button" class="btn btn-primary"
-          (click)="addForm={}; modalService.open(addModal);">Add New Vendor</button>
+          (click)="vendorForm={ form_type: 'add', company_details: {}, bank_details: {} }; modalService.open(vendorModal, { size: 'lg' });">Add
+          New Vendor</button>
       </div>
       <!-- search box -->
       <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
@@ -42,51 +43,45 @@
                 <div class="card-body">
                   <!-- OTHER DATA -->
                   <div class="row">
-                  <div class="col-md-3 d-flex align-items-center">
-                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
-                  </div>
+                    <div class="col-md-3 d-flex align-items-center">
+                      <p class="m-0 w-15 w-sm-100 m-b-0">{{x.name}}</p>
+                    </div>
 
-                  <div class="col-md-2 d-flex align-items-center">
-                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.contact_person}} - {{x.mobile}}</p>
-                  </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                      <p class="m-0 w-15 w-sm-100 m-b-0">{{x.mobile}}</p>
+                    </div>
 
-                  <div class="col-md-2 d-flex align-items-center">
-                    <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
-                  </div>
+                    <div class="col-md-2 d-flex align-items-center">
+                      <p class="m-0 w-15 w-sm-100 m-b-0">{{x.email}}</p>
+                    </div>
 
-                  <div class="col-md-5 d-flex align-items-center justify-content-end">
-                    <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-                      <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
-                        <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all"
-                          placement="left">
-                          <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
-                            <span class="black-outline-txt">Edit</span>
-                          </button>
-                          <div class="dropdown-menu" ngbDropdownMenu>
-                            <button class="dropdown-item"
-                              (click)="onEdit(x, 'details', editDetailsModal);">Details</button>
-                            <button class="dropdown-item"
-                              (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Change
-                              Password</button>
-                            <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
+                    <div class="col-md-5 d-flex align-items-center justify-content-end">
+                      <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                        <div class="product-btn-group btn-group w-md-100 ml-3 mr-3 c-m-md-0">
+                          <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all"
+                            placement="left">
+                            <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
+                              <span class="black-outline-txt">Edit</span>
+                            </button>
+                            <div class="dropdown-menu" ngbDropdownMenu>
+                              <button class="dropdown-item" (click)="onEdit(x, 'details', vendorModal);">Details</button>
+                              <button class="dropdown-item" (click)="vendorForm=x; modalService.open(bannerModal);">Banner</button>
+                              <button class="dropdown-item" (click)="pwdForm={_id: x._id, username: x.username}; modalService.open(changePwdModal);">Password</button>
+                              <!-- <button class="dropdown-item" (click)="onEdit(x, 'permissions', editPermissionModal);">Permissions</button> -->
+                            </div>
                           </div>
                         </div>
+                        <button *ngIf="x.username && x.password" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
+                        class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
+                        {{ (x.status=='active')? 'Disable': 'Enable' }}</button>
+                        <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                          <span class="orng-outline-txt">Remove</span>
+                        </button>
                       </div>
-                      <button
-                        (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
-                        class="btn btn-wide mr-3 w-md-100"
-                        [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
-                        {{ (x.status=='active')? 'Disable': 'Enable' }}
-                      </button>
-                      <button class="btn orng-outline-btn w-md-100"
-                        (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
-                        <span class="orng-outline-txt">Remove</span>
-                      </button>
                     </div>
+
                   </div>
 
-</div>
-                  
                 </div>
               </div>
             </div>
@@ -115,43 +110,128 @@
 </div>
 
 <!-- ADD MODAL -->
-<ng-template #addModal let-modal>
+<ng-template #vendorModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">New Vendor</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{(vendorForm.form_type=='add')? 'Add New Vendor': 'Update'}}</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onAdd();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-12 form-group mb-3">
-            <label>Vendor Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name"
-              (input)="addForm.errorMsg=null;" #name="ngModel" required />
+          <div class="col-md-6 mb-3">
+            <label>Contact Person Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="vendorForm.name" required />
           </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Contact Person</label>
-            <input type="text" name="contact_person" class="form-control" [(ngModel)]="addForm.contact_person"
-              (input)="addForm.errorMsg=null;" #contact_person="ngModel" required />
-          </div>
-          <div class="col-md-12 form-group mb-3">
+          <div class="col-md-6 mb-3"></div>
+          <div class="col-md-6 mb-3">
             <label>Mobile</label>
-            <input type="text" name="mobile" class="form-control" [(ngModel)]="addForm.mobile"
-              (input)="addForm.errorMsg=null;" #mobile="ngModel" required />
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="vendorForm.mobile" required />
           </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Login Email</label>
-            <input type="email" name="email" class="form-control" [(ngModel)]="addForm.email"
-              (input)="addForm.errorMsg=null;" #email="ngModel" required />
+          <div class="col-md-6 mb-3">
+            <label>Email</label>
+            <input type="text" name="email" class="form-control" [(ngModel)]="vendorForm.email" required />
           </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Password</label>
-            <input type="text" name="password" class="form-control" [(ngModel)]="addForm.password"
-              (input)="addForm.errorMsg=null;" #password="ngModel" required />
+          <div class="col-md-6 mb-3">
+            <label>Page URL - {{commonService.store_details?.base_url}}/vendor/{{vendorForm?.page_url}}</label>
+            <input type="text" name="page_url" class="form-control" [(ngModel)]="vendorForm.page_url" appNoSplChar required />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Wallet Balance</label>
+            <input type="text" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
+          </div>
+        </div>
+        <!-- login details -->
+        <ng-container *ngIf="vendorForm.form_type=='add'">
+          <div class="col-md-12">
+            <h6>LOGIN DETAILS</h6>
+          </div>
+          <div class="card">
+            <div class="row card-body">
+              <div class="col-md-6">
+                <label>Login Email</label>
+                <input type="text" name="username" class="form-control" [(ngModel)]="vendorForm.username" required />
+              </div>
+              <div class="col-md-6">
+                <label>Password</label>
+                <input type="text" name="password" class="form-control" [(ngModel)]="vendorForm.password" required />
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- store details -->
+        <div class="col-md-12" [ngClass]="(vendorForm.form_type=='add')? 'mt-3': ''">
+          <h6>STORE DETAILS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Business Name</label>
+              <input type="text" name="company_name" class="form-control" [(ngModel)]="vendorForm.company_details.name"
+                required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Registered Address</label>
+              <textarea name="company_address" [(ngModel)]="vendorForm.company_details.address" class="form-control"
+                required></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Pickup Address</label>
+              <textarea name="pickup_address" [(ngModel)]="vendorForm.company_details.pickup_address"
+                class="form-control" required></textarea>
+            </div>
+            <div class="col-md-6">
+              <label>GST No</label>
+              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no"
+                required />
+            </div>
+            <div class="col-md-6">
+              <label>Are all the products made in {{commonService.store_details?.country}}?</label>
+              <select name="made_in_home_country" class="form-control select-arrow"
+                [(ngModel)]="vendorForm.company_details.made_in_home_country">
+                <option value="undefined">-- Select --</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- bank details -->
+        <div class="col-md-12 mt-3">
+          <h6>BANK DETAILS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Beneficiary Name</label>
+              <input type="text" name="beneficiary_name" class="form-control"
+                [(ngModel)]="vendorForm.bank_details.beneficiary" required />
+            </div>
+            <div class="col-md-6 mb-3"></div>
+            <div class="col-md-6 mb-3">
+              <label>Bank Name</label>
+              <input type="text" name="bank_name" class="form-control" [(ngModel)]="vendorForm.bank_details.name"
+                required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Branch</label>
+              <input type="text" name="branch" class="form-control" [(ngModel)]="vendorForm.bank_details.branch"
+                required />
+            </div>
+            <div class="col-md-6">
+              <label>IFSC Code</label>
+              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code"
+                required />
+            </div>
+            <div class="col-md-6">
+              <label>Account No</label>
+              <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no"
+                required />
+            </div>
           </div>
         </div>
       </div>
-      <div *ngIf="addForm.errorMsg">
-        <p class="text-danger">{{ addForm.errorMsg }}</p>
+      <div *ngIf="vendorForm.errorMsg">
+        <p class="text-danger">{{ vendorForm.errorMsg }}</p>
       </div>
     </div>
     <div class="modal-footer">
@@ -159,8 +239,8 @@
         (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="btnLoader"
-        [ladda]="btnLoader">Add</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="vendorForm.submit"
+        [ladda]="vendorForm.submit">{{(vendorForm.form_type=='add')? 'Add': 'Update'}}</button>
     </div>
   </form>
 </ng-template>
@@ -168,7 +248,7 @@
 <!-- CHANGE PASSWORD -->
 <ng-template #changePwdModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{pwdForm.email}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{pwdForm.username}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdatePwd();" ngNativeValidate>
     <div class="modal-body">
@@ -201,50 +281,10 @@
   </form>
 </ng-template>
 
-<!-- EDIT DETAILS -->
-<ng-template #editDetailsModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
-  </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate('details');" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-12 form-group mb-3">
-            <label>Vendor Name</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name"
-              (input)="editForm.errorMsg=null;" #name="ngModel" required />
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Contact Person</label>
-            <input type="text" name="contact_person" class="form-control" [(ngModel)]="editForm.contact_person"
-              (input)="editForm.errorMsg=null;" #contact_person="ngModel" required />
-          </div>
-          <div class="col-md-12 form-group mb-3">
-            <label>Mobile</label>
-            <input type="text" name="mobile" class="form-control" [(ngModel)]="editForm.mobile"
-              (input)="editForm.errorMsg=null;" #mobile="ngModel" required />
-          </div>
-        </div>
-      </div>
-      <div *ngIf="editForm.errorMsg">
-        <p class="text-danger">{{ editForm.errorMsg }}</p>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-        (click)="modal.dismiss('Cross click');">
-        <span class="black-outline-txt">Cancel</span>
-      </button>
-      <button type="submit" class="btn btn-wide btn-primary">Update</button>
-    </div>
-  </form>
-</ng-template>
-
 <!-- EDIT PERMISSIONS -->
 <ng-template #editPermissionModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{editForm.email}}</h4>
+  <!-- <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.email}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdate('permissions');" ngNativeValidate>
     <div class="modal-body">
@@ -311,8 +351,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="editForm.errorMsg">
-      <p class="text-danger">{{ editForm.errorMsg }}</p>
+    <div *ngIf="vendorForm.errorMsg">
+      <p class="text-danger">{{ vendorForm.errorMsg }}</p>
     </div>
     <div class="modal-footer">
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
@@ -321,7 +361,7 @@
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
-  </form>
+  </form> -->
 </ng-template>
 
 <!-- STATUS MODAL -->
@@ -345,7 +385,7 @@
   <div class="modal-body">
     <p>
       <strong>Are you sure you want to delete
-        <span class="txt-grdint-highlight">"{{deleteForm.email}}?"</span>
+        <span class="txt-grdint-highlight">"{{deleteForm.username}}?"</span>
       </strong>
     </p>
     <div *ngIf="deleteForm.errorMsg">
@@ -361,4 +401,45 @@
       <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
+</ng-template>
+
+<!-- Banner Modal -->
+<ng-template #bannerModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Banner Image</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateBanner();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12" align="center">
+            <div *ngIf="vendorForm.image">
+              <span (click)="vendorForm.img_change=null; vendorForm.image=null" class="material-icons item-close float-right"
+                aria-hidden="true">close</span>
+              <img *ngIf="vendorForm.img_change" [src]="vendorForm.image" height="100px;" width="auto;">
+              <img *ngIf="!vendorForm.img_change" [src]="imgBaseUrl+vendorForm.image" height="100px;" width="auto;">
+            </div>
+            <div *ngIf="!vendorForm.image">
+              <label>
+                <div>
+                  <i class="material-icons add-img">add_photo_alternate</i>
+                  <p>Click to upload image</p>
+                </div>
+                <input type="file" name="image" style="display: none;" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="vendorForm.errorMsg">
+        <p class="text-danger">{{ vendorForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="vendorForm.submit" [ladda]="vendorForm.submit">Update</button>
+    </div>
+  </form>
 </ng-template>
