@@ -32,12 +32,4 @@ export class AppComponent {
     }
   }
 
-  ngOnInit() {
-    setTimeout(() => {
-      if(sessionStorage.getItem("pwa") && !this.commonService.desktop_device) {
-        document.getElementById("openAppPrompt").click();
-      }
-    }, 1000);
-  }
-
 }
