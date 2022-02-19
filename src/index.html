@@ -62,12 +62,33 @@
             <h5 style="margin-left: 10px;">Quick Install App</h5>
           </div> 
         </div>
-        <div class="col-md-12 px-0" style="text-align: center; padding-top: 15px;">
+        <!-- android -->
+        <div id="android" class="col-md-12 px-0" style="text-align: center; padding-top: 15px; display: none;">
           <p style="text-align: left; margin-right: 10%;">Install the app on your device to easily access it anytime. No app store. No download. No hassle.</p>   
           <p style="text-align: left; margin-right: 10%;">Click on the yourstore App icon in the Home screen and Login</p> 
           <button type="button" id="closeModal" class="btn btn-primary text-center px-5 installApp">
             <span class="black-outline-txt">Install</span>
           </button> 
+        </div>
+        <!-- ios -->
+        <div id="ios" class="col-md-12 px-0" style="padding-top: 15px; display: none;">
+          <ul style="list-style:none;padding-left:0">
+            <li class="pb-3">1. Tap on
+              <span class="material-icons"
+                style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 4px;font-size: 14px;align-items: center;justify-content: center;padding: 5px;"><span
+                  class="material-icons-outlined">
+                  ios_share
+                </span>
+              </span>
+            </li>
+            <li class="pb-3">2. Select
+              <span>
+                <a style="background:#efefef;padding: 5px; border-radius: 4px; color: #000; font-weight: 500;">Add
+                  to Home Screen</a>
+              </span>
+            </li>
+            <li>3. Click on the yourstore App icon in the Home screen and Login</li>
+          </ul>
         </div>
         <div class="closebtn" style="position:absolute; top: 19px; right:17px;">
           <p class="mb-0" style="background-color: #fff;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 100px; padding:7px;">
@@ -94,11 +115,19 @@
     </app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
     <script>
+      // ios
+      let iosPlatforms = ["iPad", "iPhone", "iPod", "iPod touch"];
+      if(iosPlatforms.indexOf(navigator.platform)!=-1 && window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("ios").style.display = "block";
+      }
+      // android
       let deferredPrompt;
       window.addEventListener('beforeinstallprompt', (e) => {
         deferredPrompt = e;
-        if(window.innerWidth <= 800 && document.cookie.indexOf("pwa=false")==-1) {
+        if(window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
           document.getElementById("overlay").style.display = "block";
+          document.getElementById("android").style.display = "block";
         }
       });
       $(document).ready(function () {
