@@ -220,21 +220,9 @@ export class SigninComponent implements OnInit {
             }
           });
           this.sidebar.BUILD_CATEGORY_LIST();
-          if(result.data.last_login) {
-            if(sessionStorage.getItem("redirect_url")) {
-              let redirectUrl = sessionStorage.getItem("redirect_url");
-              sessionStorage.removeItem("redirect_url");
-              this.router.navigateByUrl(redirectUrl);
-            }
-            else this.router.navigateByUrl('/dashboard');
-          }
-          else this.router.navigateByUrl('/welcome');
+          this.router.navigateByUrl('/vendor-dashboard');
         }
-        else {
-          this.commonService.route_permission_list = ["deployment", "billing"];
-          this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);
-          this.router.navigateByUrl('/account/billing');
-        }
+        else this.loginForm.errorMsg = "Account Deactivated.";
       }
       else {
         this.loginForm.errorMsg = result.message;

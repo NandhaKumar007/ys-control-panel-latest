@@ -24,132 +24,132 @@ export class VendorsDashboardComponent implements OnInit {
 	}
 
   getDashboardData() {
-    if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
-      this.preLoader = true;
-      this.order_details = {
-        products: 0, vendor_products: 0, order_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
-        dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0, vendor_items: [], item_grand_total: 0
-      };
-      // DASHBOARD
-      this.api.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.store_details.login_id }).subscribe(result => {
-        setTimeout(() => { this.preLoader = false; }, 500);
-        if(result.status) {
-          this.order_details.products = result.data.products;
-          this.order_details.vendor_products = result.data.vendor_products;
-          this.order_details.order_list = result.data.order_list.filter(obj => obj.order_status!='cancelled');
-          this.order_details.cancelled_orders = result.data.order_list.length - this.order_details.order_list.length;
-          this.order_details.order_list.forEach(element => {
-            let vendorOrderPrice = 0
-            element.item_list.filter(item => item.vendor_id==this.commonService.store_details.login_id).forEach(obj => {
-              vendorOrderPrice += (obj.final_price*obj.quantity)+parseFloat(obj.addon_price);
-              if(element.unit=="Pcs") vendorOrderPrice += obj.final_price*obj.quantity;
-              if(this.order_details.vendor_items.indexOf(obj._id) == -1) {
-                this.order_details.vendor_items.push(obj._id);
-                this.order_details.item_grand_total += obj.discounted_price;
-              }
-            });
-            this.order_details.total_sales += vendorOrderPrice;
-            let vendorIndex = element.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
-            if(element.order_status=='delivered') this.order_details.completed_orders++;
-            else {
-              if(element.vendor_list[vendorIndex].status=='pending') this.order_details.placed_orders++;
-              if(element.vendor_list[vendorIndex].status=='confirmed') this.order_details.confirmed_orders++;
-            }
-          });
-          // pie chart
-          // this.chartPie = {
-          //   ...echartStyles.defaultOptions, ...{
-          //     legend: {
-          //       show: true,
-          //       bottom: 0,
-          //     },
-          //     series: [{
-          //       type: 'pie',
-          //       ...echartStyles.pieRing,
-          //       label: echartStyles.pieLabelCenterHover,
-          //       data: [
-          //         { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
-          //         { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
-          //         { name: 'Transit', value: this.order_details.dispatched_orders, itemStyle: { color: '#4CAF50' } },
-          //         { name: 'Pending', value: this.order_details.pending_orders, itemStyle: { color: '#f56725' } },
-          //         { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
-          //         { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
-          //       ]
-          //     }]
-          //   }
-          // };
-          this.chartPie = {
-            ...echartStyles.defaultOptions, ...{
+    // if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
+    //   this.preLoader = true;
+    //   this.order_details = {
+    //     products: 0, vendor_products: 0, order_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
+    //     dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0, vendor_items: [], item_grand_total: 0
+    //   };
+    //   // DASHBOARD
+    //   this.api.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.store_details.login_id }).subscribe(result => {
+    //     setTimeout(() => { this.preLoader = false; }, 500);
+    //     if(result.status) {
+    //       this.order_details.products = result.data.products;
+    //       this.order_details.vendor_products = result.data.vendor_products;
+    //       this.order_details.order_list = result.data.order_list.filter(obj => obj.order_status!='cancelled');
+    //       this.order_details.cancelled_orders = result.data.order_list.length - this.order_details.order_list.length;
+    //       this.order_details.order_list.forEach(element => {
+    //         let vendorOrderPrice = 0
+    //         element.item_list.filter(item => item.vendor_id==this.commonService.store_details.login_id).forEach(obj => {
+    //           vendorOrderPrice += (obj.final_price*obj.quantity)+parseFloat(obj.addon_price);
+    //           if(element.unit=="Pcs") vendorOrderPrice += obj.final_price*obj.quantity;
+    //           if(this.order_details.vendor_items.indexOf(obj._id) == -1) {
+    //             this.order_details.vendor_items.push(obj._id);
+    //             this.order_details.item_grand_total += obj.discounted_price;
+    //           }
+    //         });
+    //         this.order_details.total_sales += vendorOrderPrice;
+    //         let vendorIndex = element.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+    //         if(element.order_status=='delivered') this.order_details.completed_orders++;
+    //         else {
+    //           if(element.vendor_list[vendorIndex].status=='pending') this.order_details.placed_orders++;
+    //           if(element.vendor_list[vendorIndex].status=='confirmed') this.order_details.confirmed_orders++;
+    //         }
+    //       });
+    //       // pie chart
+    //       // this.chartPie = {
+    //       //   ...echartStyles.defaultOptions, ...{
+    //       //     legend: {
+    //       //       show: true,
+    //       //       bottom: 0,
+    //       //     },
+    //       //     series: [{
+    //       //       type: 'pie',
+    //       //       ...echartStyles.pieRing,
+    //       //       label: echartStyles.pieLabelCenterHover,
+    //       //       data: [
+    //       //         { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
+    //       //         { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
+    //       //         { name: 'Transit', value: this.order_details.dispatched_orders, itemStyle: { color: '#4CAF50' } },
+    //       //         { name: 'Pending', value: this.order_details.pending_orders, itemStyle: { color: '#f56725' } },
+    //       //         { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
+    //       //         { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
+    //       //       ]
+    //       //     }]
+    //       //   }
+    //       // };
+    //       this.chartPie = {
+    //         ...echartStyles.defaultOptions, ...{
 
-              tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} ({d}%)'
-            },
+    //           tooltip: {
+    //             trigger: 'item',
+    //             formatter: '{a} <br/>{b}: {c} ({d}%)'
+    //         },
 
-              legend: {
-                show: true,
-                textStyle: {
-                  color:'#d83967'
-              },
+    //           legend: {
+    //             show: true,
+    //             textStyle: {
+    //               color:'#d83967'
+    //           },
 
-              },
-              series: [{
-                type: 'pie',
-                ...echartStyles.pieRing,
-                avoidLabelOverlap: false,
-                width:'50%',
-                label: {
-                  normal: {
-                      show: false,
-                      position: 'center'
-                  },
-                  emphasis: {
-                      show: true,
-                  }
-              },
-              labelLine: {
-                  normal: {
-                      show: false
-                  }
-              },
-                data: [
-                  { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
-                  { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
-                  { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
-                  { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
-                ]
-              }]
-            }
-          };
-          // line chart
-          this.buildLineChart(this.order_details.order_list).then((respData) => {
-            this.chartLine = {
-              ...echartStyles.lineNoAxis, ...{
-                series: [{
-                  data: respData.orders,
-                  lineStyle: {
-                    color: 'rgba(216, 57, 103, .86)',
-                    width: 3,
-                    shadowColor: 'rgba(0, 0, 0, .2)',
-                    shadowOffsetX: -1,
-                    shadowOffsetY: 8,
-                    shadowBlur: 10
-                  },
-                  label: { show: true, color: '#212121' },
-                  type: 'line',
-                  smooth: true,
-                  itemStyle: {
-                    borderColor: 'rgba(216, 57, 103, 0.86)'
-                  }
-                }]
-              }
-            };
-            this.chartLine.xAxis.data = respData.days;
-          })
-        }
-        else console.log("dashboard response", result);
-      });
-    }
+    //           },
+    //           series: [{
+    //             type: 'pie',
+    //             ...echartStyles.pieRing,
+    //             avoidLabelOverlap: false,
+    //             width:'50%',
+    //             label: {
+    //               normal: {
+    //                   show: false,
+    //                   position: 'center'
+    //               },
+    //               emphasis: {
+    //                   show: true,
+    //               }
+    //           },
+    //           labelLine: {
+    //               normal: {
+    //                   show: false
+    //               }
+    //           },
+    //             data: [
+    //               { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
+    //               { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
+    //               { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
+    //               { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
+    //             ]
+    //           }]
+    //         }
+    //       };
+    //       // line chart
+    //       this.buildLineChart(this.order_details.order_list).then((respData) => {
+    //         this.chartLine = {
+    //           ...echartStyles.lineNoAxis, ...{
+    //             series: [{
+    //               data: respData.orders,
+    //               lineStyle: {
+    //                 color: 'rgba(216, 57, 103, .86)',
+    //                 width: 3,
+    //                 shadowColor: 'rgba(0, 0, 0, .2)',
+    //                 shadowOffsetX: -1,
+    //                 shadowOffsetY: 8,
+    //                 shadowBlur: 10
+    //               },
+    //               label: { show: true, color: '#212121' },
+    //               type: 'line',
+    //               smooth: true,
+    //               itemStyle: {
+    //                 borderColor: 'rgba(216, 57, 103, 0.86)'
+    //               }
+    //             }]
+    //           }
+    //         };
+    //         this.chartLine.xAxis.data = respData.days;
+    //       })
+    //     }
+    //     else console.log("dashboard response", result);
+    //   });
+    // }
   }
 
   onFilterChange(x) {

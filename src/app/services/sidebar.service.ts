@@ -367,7 +367,7 @@ export class SidebarService {
         routePermissionList.push("deployment", "billing");
       }
     }
-    // SUB USER
+    // Sub User
     else if(this.commonService.store_details.login_type=='subuser') {
       if(ysFeatures.indexOf('custom_model_history')!=-1) routePermissionList.push("custom_model_history");
       this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/dashboard' });
@@ -663,6 +663,12 @@ export class SidebarService {
         routePermissionList.push("vendors");
       }
       if(accountList.length) this.sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });
+    }
+    // Vendor
+    else if(this.commonService.store_details.login_type=='vendor') {
+      routePermissionList.push("vendor_dashboard");
+      // dashboard
+      this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/vendor-dashboard' });
     }
     this.commonService.route_permission_list = routePermissionList;
     this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);
