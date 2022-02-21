@@ -83,7 +83,7 @@
                 </div>
         
                 <div *ngIf="!x?.sections?.length" class="col-md-12">
-                  <div class="card card-in-card mb-4 d-flex flex-row">
+                  <div class="card card-in-card mt-3 mb-4 d-flex flex-row">
                     <div class="flex-grow-1 pl-2 d-flex">
                       <div
                         class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
@@ -93,14 +93,11 @@
                   </div>
                 </div>
         
-                <div class="col-md-12 ml-2 mt-2 mb-2">
-                  <span class="add-another x-close"
-                    *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || x?.sections?.length<4 && list?.length===1"
-                    (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; addForm = { rank: x.sections.length+1 }; modalService.open(addModal);">
+                <div *ngIf="commonService.ys_features.indexOf('multi_menu')!=-1 || x?.sections?.length<4 && i===0" class="col-md-12 ml-2 mt-2 mb-2">
+                  <span class="add-another x-close" (click)="maxRank=x.sections.length; formType='section'; menuId=x._id; addForm = { rank: x.sections.length+1 }; modalService.open(addModal);">
                     <b>ADD NEW SECTION</b>
                   </span>
-                  <span *ngIf="commonService.store_details?.additional_features?.menu_image"
-                    class="add-another x-close pull-right mr-3" (click)="openMenuImgModal(x, menuImageModal);">
+                  <span *ngIf="commonService.store_details?.additional_features?.menu_image" class="add-another x-close pull-right mr-3" (click)="openMenuImgModal(x, menuImageModal);">
                     <b>{{(x.menu_images?.length)? 'UPDATE': 'ADD'}} IMAGES</b>
                   </span>
                 </div>

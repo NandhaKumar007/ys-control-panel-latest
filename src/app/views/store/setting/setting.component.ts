@@ -143,18 +143,48 @@ export class SettingComponent implements OnInit {
     });
   }
   onUpdateMailConfig() {
-    let index = this.mailTypes.findIndex(obj => obj.value==this.settingForm.host_type);
-    if(index!=-1) {
-      this.settingForm.submit = true;
-      this.settingForm.transporter = this.mailTypes[index].transporter;
-      this.settingForm.transporter.auth = { user: this.settingForm.username, pass: this.settingForm.password };
-      this.settingForm.send_from = this.settingForm.from_name+" <"+this.settingForm.username+">";
-      if(this.settingForm.host_type=='roundcube') {
-        this.settingForm.transporter.name = this.settingForm.mail_domain;
-        this.settingForm.transporter.host = this.settingForm.mail_host;
+    if(this.commonService.store_details?.package_info?.category!='genie') {
+      let index = this.mailTypes.findIndex(obj => obj.value==this.settingForm.host_type);
+      if(index!=-1) {
+        this.settingForm.submit = true;
+        this.settingForm.transporter = this.mailTypes[index].transporter;
+        this.settingForm.transporter.auth = { user: this.settingForm.username, pass: this.settingForm.password };
+        this.settingForm.send_from = this.settingForm.from_name+" <"+this.settingForm.username+">";
+        if(this.settingForm.host_type=='roundcube') {
+          this.settingForm.transporter.name = this.settingForm.mail_domain;
+          this.settingForm.transporter.host = this.settingForm.mail_host;
+        }
+        // cc mail
+        delete this.settingForm.cc_mail;
+        if(this.settingForm.cc_mail_list.length) {
+          let mailList = [];
+          this.settingForm.cc_mail_list.forEach(obj => {
+            mailList.push(obj.value.trim());
+          });
+          this.settingForm.cc_mail = mailList.join(',');
+        }
+        // billing mail
+        delete this.settingForm.billing_mail;
+        if(this.settingForm.billing_mail_list.length) {
+          let mailList = [];
+          this.settingForm.billing_mail_list.forEach(obj => {
+            mailList.push(obj.value.trim());
+          });
+          this.settingForm.billing_mail = mailList.join(',');
+        }
+        this.api.STORE_UPDATE({ mail_config: this.settingForm }).subscribe(result => {
+          if(result.status) document.getElementById('closeModal').click();
+          else {
+            this.settingForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
       }
+      else this.settingForm.errorMsg = "Invalid Host";
+    }
+    else {
       // cc mail
-      delete this.settingForm.cc_mail;
+      this.settingForm.cc_mail = "";
       if(this.settingForm.cc_mail_list.length) {
         let mailList = [];
         this.settingForm.cc_mail_list.forEach(obj => {
@@ -163,7 +193,7 @@ export class SettingComponent implements OnInit {
         this.settingForm.cc_mail = mailList.join(',');
       }
       // billing mail
-      delete this.settingForm.billing_mail;
+      this.settingForm.billing_mail = "";
       if(this.settingForm.billing_mail_list.length) {
         let mailList = [];
         this.settingForm.billing_mail_list.forEach(obj => {
@@ -171,16 +201,13 @@ export class SettingComponent implements OnInit {
         });
         this.settingForm.billing_mail = mailList.join(',');
       }
-      this.api.STORE_UPDATE({ mail_config: this.settingForm }).subscribe(result => {
+      this.api.STORE_UPDATE({ "mail_config.cc_mail": this.settingForm.cc_mail, "mail_config.billing_mail": this.settingForm.billing_mail }).subscribe(result => {
         if(result.status) document.getElementById('closeModal').click();
         else {
           this.settingForm.errorMsg = result.message;
           console.log("response", result);
         }
       });
-    }
-    else {
-      this.settingForm.errorMsg = "Invalid Host";
     }
   }
 

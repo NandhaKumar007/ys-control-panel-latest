@@ -387,4 +387,10 @@ export class CommonService {
     }
   }
 
+  getCoustomDomain() {
+    if(this.store_details?.package_details?.package_id==environment.config_data.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
+    else this.router.navigate(['/deployment/domain']);
+  }
+
 }

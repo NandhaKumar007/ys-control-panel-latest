@@ -6,6 +6,7 @@ import { CustomerApiService } from '../../../services/customer-api.service';
 import { ApiService } from '../../../services/api.service';
 import { ExcelService } from '../../../services/excel.service';
 import { CommonService } from '../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-guest-users',
@@ -21,6 +22,7 @@ export class GuestUsersComponent implements OnInit {
   pageLoader: boolean; exportLoader: boolean;
   list: any = []; selected_customer: any; addressForm: any;
   country_details: any; address_fields: any = [];
+  configData: any = environment.config_data;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private excelService: ExcelService,
@@ -30,16 +32,20 @@ export class GuestUsersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.page = 1;
-    if(this.commonService.page_attr && this.commonService.page_attr.type=='guest_user') {
-      let pageAttr = this.commonService.page_attr;
-      this.page = pageAttr.page;
-      this.filterForm.search = pageAttr.search;
-      delete this.commonService.page_attr;
+    if(this.commonService.store_details?.package_details?.package_id==this.configData.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
+    else {
+      this.page = 1;
+      if(this.commonService.page_attr && this.commonService.page_attr.type=='guest_user') {
+        let pageAttr = this.commonService.page_attr;
+        this.page = pageAttr.page;
+        this.filterForm.search = pageAttr.search;
+        delete this.commonService.page_attr;
+      }
+      this.pageLoader = true;
+      this.commonService.pageTop(0);
+      this.onLoadData();
     }
-    this.pageLoader = true;
-    this.commonService.pageTop(0);
-    this.onLoadData();
   }
 
   onLoadData() {

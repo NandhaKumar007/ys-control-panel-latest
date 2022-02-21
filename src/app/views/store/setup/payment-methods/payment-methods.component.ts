@@ -5,6 +5,7 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SetupService } from '../setup.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-payment-methods',
@@ -20,6 +21,7 @@ export class PaymentMethodsComponent implements OnInit {
 	payForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
   eventTrigger: any;
+  basic_payments: any = ["COD", "Gpay", "Bank Payment"];
 
 	constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,
@@ -54,26 +56,32 @@ export class PaymentMethodsComponent implements OnInit {
     }
   }
 	onAdd() {
-    if(this.list.findIndex(obj => obj.name==this.payForm.name) == -1) {
-      let formData = this.structureFormData();
-      formData.rank = this.maxRank+1;
-      this.api.ADD_PAYMENT(formData).subscribe(result => {
-        this.updateDeployStatus();
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.list = result.list;
-          this.maxRank = this.list.length;
-          this.commonService.payment_list = this.list;
-          this.commonService.updateLocalData('payment_list', this.list);
-        }
-        else {
-          this.payForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
+    if(this.basic_payments.indexOf(this.payForm.name)==-1 && this.commonService.store_details?.package_details?.package_id==environment.config_data.free_package_id) {
+      document.getElementById('closeModal').click();
+      document.getElementById("openCommonUpgradeModal").click();
     }
     else {
-      this.payForm.errorMsg = "Payment already exist.";
+      if(this.list.findIndex(obj => obj.name==this.payForm.name) == -1) {
+        let formData = this.structureFormData();
+        formData.rank = this.maxRank+1;
+        this.api.ADD_PAYMENT(formData).subscribe(result => {
+          this.updateDeployStatus();
+          if(result.status) {
+            document.getElementById('closeModal').click();
+            this.list = result.list;
+            this.maxRank = this.list.length;
+            this.commonService.payment_list = this.list;
+            this.commonService.updateLocalData('payment_list', this.list);
+          }
+          else {
+            this.payForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
+      }
+      else {
+        this.payForm.errorMsg = "Payment already exist.";
+      }
     }
   }
 

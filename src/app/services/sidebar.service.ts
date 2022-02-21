@@ -102,8 +102,10 @@ export class SidebarService {
           prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
           routePermissionList.push("faq");
         }
-        prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
-        routePermissionList.push("product_taxonomy");
+        if(this.commonService.store_details?.package_info?.category!='genie') {
+          prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
+          routePermissionList.push("product_taxonomy");
+        }
         if(ysFeatures.indexOf('variant_colors')!=-1) {
           prodExtraList.push({ name: 'Variant Colors', state: '/product-extras/variant-colors', type: 'link' });
           routePermissionList.push("variant_colors");
@@ -235,16 +237,17 @@ export class SidebarService {
             routePermissionList.push("extra_page_seo");
           }
         }
-        routePermissionList.push("home_layout", "catalog_layout", "product_layout", "policies", "contact_page", "footer_content");
+        routePermissionList.push("home_layout", "policies", "contact_page", "footer_content");
+        let wdList: IChildItem[] = [{ name: 'Home Page', state: '/layouts/home', type: 'link' }];
+        if(this.commonService.store_details?.package_info?.category!='genie') {
+          wdList.push(
+            { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
+            { name: 'Product Page', state: '/layouts/product', type: 'link' }
+          );
+          routePermissionList.push("catalog_layout", "product_layout");
+        }
         let webList: IChildItem[] = [
-          {
-            name: 'Website Design', type: 'dropDown', icon: 'format_paint',
-            sub: [
-              { name: 'Home Page', state: '/layouts/home', type: 'link' },
-              { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
-              { name: 'Product Page', state: '/layouts/product', type: 'link' }
-            ]
-          }
+          { name: 'Website Design', type: 'dropDown', icon: 'format_paint', sub: wdList }
         ];
         if(ysFeatures.indexOf('single_menu')!=-1 || ysFeatures.indexOf('multi_menu')!=-1) {
           webList.push({ icon: 'menu_book', name: 'Menu', state: '/features/menus', type: 'link' });
@@ -398,7 +401,7 @@ export class SidebarService {
         prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
         routePermissionList.push("faq");
       }
-      if(subuserFeatures.indexOf('product_taxonomy')!=-1) {
+      if(this.commonService.store_details?.package_info?.category!='genie' && subuserFeatures.indexOf('product_taxonomy')!=-1) {
         prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
         routePermissionList.push("product_taxonomy");
       }

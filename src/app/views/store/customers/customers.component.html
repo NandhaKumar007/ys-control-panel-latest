@@ -13,7 +13,7 @@
       </div>
       <div class="col-md-3 d-flex align-items-center justify-content-end mt-sm-15">
         <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="exportAsXLSX();"
-          class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+          class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader || commonService.store_details?.package_details?.package_id==configData.free_package_id" [ladda]="exportLoader">Export</button>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" (click)="addCustomerModal(customerModal);" class="btn btn-primary ladda-button mr-2">Add New Customer</button>
+        <button type="button" [disabled]="commonService.store_details?.package_details?.package_id==configData.free_package_id" (click)="addCustomerModal(customerModal);" class="btn btn-primary ladda-button mr-2">Add New Customer</button>
       </div>
       <!-- search box -->
       <div class="col-md-6 mt-sm-15">

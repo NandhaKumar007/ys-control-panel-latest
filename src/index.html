@@ -67,7 +67,7 @@
         <div id="android" class="col-md-12 px-0" style="text-align: center; padding-top: 15px; display: none;">
           <p style="text-align: left; margin-right: 10%;">Install the app on your device to easily access it anytime. No app store. No download. No hassle.</p>   
           <p style="text-align: left; margin-right: 10%;">Click on the yourstore App icon in the Home screen and Login</p> 
-          <button type="button" id="closeModal" class="btn btn-primary text-center px-5 installApp">
+          <button type="button" class="btn btn-primary text-center px-5 installApp">
             <span class="black-outline-txt">Install</span>
           </button> 
         </div>
@@ -140,6 +140,9 @@
             if(outcome === 'accepted') {
               deferredPrompt = null;
             }
+          }
+          else {
+            document.cookie = "pwa=false";
           }
         });
         $(document).on('click', '.closebtn', async function(e) {

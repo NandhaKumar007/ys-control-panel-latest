@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-deploy-domain',
@@ -25,6 +26,7 @@ export class DeployDomainComponent implements OnInit {
     { name: "Enom" },
     { name: "Others" }
   ];
+  configData: any = environment.config_data;
 
   constructor(public commonService: CommonService, private storeApi: StoreApiService, private config: NgbModalConfig, public modalService: NgbModal) {
     config.backdrop = 'static';
@@ -35,6 +37,8 @@ export class DeployDomainComponent implements OnInit {
     if(localStorage.getItem("connect_domain")) this.domainForm = JSON.parse(localStorage.getItem("connect_domain"));
     this.buyForm = {};
     if(localStorage.getItem("buy_domain")) this.buyForm = JSON.parse(localStorage.getItem("buy_domain"));
+    if(this.commonService.store_details?.package_details?.package_id==this.configData.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
   }
 
   onConnectDomain() {

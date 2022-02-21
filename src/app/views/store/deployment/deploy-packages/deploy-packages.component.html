@@ -579,14 +579,54 @@
     <div *ngIf="defaultPlan!=packageForm._id" class="form-group">
       <div class="row">
         <div class="col-md-12">
-          <p>Subscription Charges {{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData?.discount>0">
-            Discount - Signup Offer({{paymentData.disc_percent}}%) {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
-          </p>
-          <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Payable amount: {{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <div class="card apps-card w-100 py-3 mb-4">
+            <div class="row m-0">
+              <div class="col-9">
+                <p class="mb-0">Subscription Charges</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <div *ngIf="paymentData?.discount>0" class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Discount - Signup Offer({{paymentData.disc_percent}}%)</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- CGST & SGST -->
+            <div class="row m-0" *ngIf="paymentData.cgst && paymentData.sgst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%) {{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- IGST -->
+            <div class="row m-0" *ngIf="paymentData.igst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0" >GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>  
+            <div class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Payable amount</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0 font-weight-bold">{{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -617,50 +657,124 @@
 <ng-template #upgradeModal let-modal>
   <div class="modal-header">
     <div>
-      <h4 class="modal-title" id="modal-basic-title">
-        {{upgradeData.package_details?.name}} Plan
-      </h4>
+      <h4 class="modal-title" id="modal-basic-title">{{upgradeData.package_details?.name}} Plan</h4>
     </div>
     <div class="d-flex">
       <i class="material-icons" id="closeModal" (click)="modal.dismiss('Cross click');">close</i>
     </div>
   </div>
-  <div class="modal-body">
-    <div class="form-group">
+  <div class="modal-body pb-0">
+    <div class="form-group mb-0">
       <div class="row">
-        <div *ngIf="upgradeData.upgrade_apps?.length" class="col-md-12">
-          <p>Paid Apps</p>
+        <div class="col-md-12">
+          <div class="card apps-card w-100 py-3 mb-4">
+            <div class="row m-0">
+              <div class="col-9">
+                <p class="mb-0">Subscription Charges</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{upgradeData.subscription_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>  
+            <div class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <ng-container *ngIf="upgradeData.app_charges>0">
+                <div class="col-9">
+                  <p class="mb-0">App Charges</p>
+                </div>
+                <div class="col-3 d-flex justify-content-end">
+                  <p class="mb-0">{{upgradeData.app_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                </div>
+                <div class="col-md-12"><hr class="my-2"></div>
+              </ng-container>
+              <ng-container *ngIf="upgradeData.transaction_charges>0">
+                <div class="col-9">
+                  <p class="mb-0">Transaction Charges</p>
+                </div>
+                <div class="col-3 d-flex justify-content-end">
+                  <p class="mb-0">{{upgradeData.transaction_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                </div>
+                <div class="col-md-12"><hr class="my-2"></div>
+              </ng-container>
+              <div class="col-9">
+                <p class="mb-0">Total</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{upgradeData.total | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>  
+            <div *ngIf="upgradeData.discount>0" class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Discount</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{upgradeData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>  
+            <div class="row m-0" *ngIf="upgradeData.credit>0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Credit</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{upgradeData.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- CGST & SGST -->
+            <div class="row m-0" *ngIf="paymentData.cgst && paymentData.sgst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%) {{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- IGST -->
+            <div class="row m-0" *ngIf="paymentData.igst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0" >GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>  
+            <div class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Payable amount</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0 font-weight-bold">{{upgradeData.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>              
+          </div>        
         </div>
-        <div *ngFor="let x of upgradeData.upgrade_apps; let i=index;" class="col-md-12 d-flex">
+        <div *ngIf="upgradeData.upgrade_apps?.length" class="col-md-12">
+          <!-- <p><b>Unsupported Apps</b></p> -->
+          <p><b>Paid Apps</b></p>
+        </div>
+        <div *ngFor="let x of upgradeData.upgrade_apps; let i=index;" class="col-md-6 d-flex">
           <div class="card apps-card w-100 p-3 mb-4">
             <span (click)="upgradeData.upgrade_apps.splice(i, 1); calcAppCharges();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
             <div class="app-image">
               <span *ngIf="!x.image_list.length" class="material-icons-outlined">widgets</span>
-              <img *ngIf="x.image_list.length" [src]="imgBaseUrl+x.image_list[0].image" alt="app-icons">
+              <img *ngIf="x.image_list.length" [src]="imgBaseUrl+x.image_list[0].image" alt="app-icons" style="width:32px;height:auto;padding:2px">
             </div>
             <div class="app-content">
-              <h5>{{x.name}}</h5>
+              <h5 class="mb-0">{{x.name}}</h5>
               <div class="app-description">
                 <p class="two-line-txt-ellipsis" [innerHTML]="x.description"></p>
               </div>
-              <p>{{x.price | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <p class="mb-0">{{x.price | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              <!-- <p class="mb-0 d-flex align-items-center">
+                <span class="material-icons-outlined pr-2" style="color:red">highlight_off</span>Not compatible with this plan
+              </p> -->
             </div>
           </div>
-        </div>
-        <div class="col-md-12">
-          <p>Subscription Charges {{upgradeData.subscription_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <ng-container *ngIf="upgradeData.app_charges>0 || upgradeData.transaction_charges>0">
-            <p>App Charges: {{upgradeData.app_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-            <p>Transaction Charges: {{upgradeData.transaction_charges | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-            <p>Total: {{upgradeData.total | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          </ng-container>
-          <p>Discount: {{upgradeData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="upgradeData.credit>0">Credit {{upgradeData.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Payable amount: {{upgradeData.payable_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-        </div>
+        </div>      
       </div>
     </div>
     <div *ngIf="upgradeData.errorMsg">

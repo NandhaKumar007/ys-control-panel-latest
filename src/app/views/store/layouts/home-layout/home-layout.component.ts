@@ -4,6 +4,7 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home-layout',
@@ -67,6 +68,8 @@ export class HomeLayoutComponent implements OnInit {
       this.commonService.openDeployAlertModal('logo', 'Please add logo for your business before adding a new segment');
     else if(!this.themeColorExists)
       this.commonService.openDeployAlertModal('color', 'Please set colors for your website before adding a new segment');
+    else if(this.commonService.store_details?.package_details?.package_id==environment.config_data.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
     else {
       this.addForm = { layout_list: [{}], rank: this.maxRank+1 };
       this.modalService.open(modalName, {size: 'lg'});

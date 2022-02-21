@@ -123,7 +123,7 @@
     </div>
 
     <div class="col-md-6 col-lg-4 d-flex">
-      <div routerLink="/deployment/domain" class="card setting-card w-100 p-3 mb-4 cursor">
+      <div (click)="commonService.getCoustomDomain();" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
           <label class="text-title cursor">Domain Setup</label>
         </div>
@@ -223,7 +223,7 @@
   <form autocomplete="off" (ngSubmit)="onUpdateMailConfig();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
-        <div class="row">
+        <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="row">
           <div class="col-md-12 form-group" [ngClass]="settingForm.host_type=='gmail'? 'mb-0': 'mb-3'">
             <label>Host Type</label>
             <select name="host_type" class="form-control select-arrow" [(ngModel)]="settingForm.host_type" required>
@@ -268,6 +268,8 @@
             <label>Contact No</label>
             <input type="text" name="contact_no" class="form-control" [(ngModel)]="settingForm.contact_no" />
           </div>
+        </div>
+        <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>CC Mails</label>
             <tag-input class="w-100" name="cc_mail_list"[(ngModel)]="settingForm.cc_mail_list" #cc_mail_list="ngModel" placeholder=""
@@ -278,6 +280,8 @@
             <tag-input class="w-100" name="billing_mail_list"[(ngModel)]="settingForm.billing_mail_list" #billing_mail_list="ngModel" placeholder=""
             [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]"></tag-input>
           </div>
+        </div>
+        <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="row">
           <div class="col-md-12 border-top"></div>
           <div class="mb-3 mt-3 col-md-12">
             <span class="access-inner-head">Template Settings</span>
