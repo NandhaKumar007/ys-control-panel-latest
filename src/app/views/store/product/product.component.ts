@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { HttpClient } from "@angular/common/http";
 import { StoreApiService } from '../../../services/store-api.service';
 import { ProductExtrasApiService } from '../product-extras/product-extras-api.service';
 import { CommonService } from '../../../services/common.service';
@@ -33,7 +32,7 @@ export class ProductComponent implements OnInit {
   imgBaseUrl = environment.img_baseurl;
   configData: any= environment.config_data;
   limitedProdCount = environment.limited_product_count;
-  categoryList: any = [{_id: 'all', name: "All Catalogs"}]; vendorList: any = [];
+  categoryList: any = [{_id: 'all', name: "All Products"}, {_id: 'unlink', name: "Unlinked Products"}]; vendorList: any = [];
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
@@ -42,7 +41,7 @@ export class ProductComponent implements OnInit {
     config.backdrop = 'static'; config.keyboard = false;
     // vendors
     if(this.commonService.vendor_list.length) {
-      this.vendorList = [{_id: 'all', name: "All Vendors"}];
+      this.vendorList = [{_id: 'all', company_details: { name: "All Vendors" }}];
       this.commonService.vendor_list.forEach(obj => { this.vendorList.push(obj) });
     }
     // catalogs
@@ -55,6 +54,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true; this.page = 1; this.list = [];
+    if(this.commonService.store_details.vendor_id) this.filterForm.vendor_id = this.commonService.store_details.vendor_id;
     if(this.commonService.product_page_attr) {
       let pageInfo = this.commonService.product_page_attr;
       this.page = pageInfo.page;

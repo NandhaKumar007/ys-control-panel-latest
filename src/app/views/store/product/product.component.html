@@ -94,6 +94,8 @@
       <!-- add btn -->
       <div class="col-6" [ngClass]="vendorList.length? 'col-md-3': 'col-md-6'">
         <ng-container *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || globalCount<limitedProdCount">
+          <!-- <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
+          routerLink="/products/add/{{globalCount+1}}">Add New Product</button> -->
           <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
           routerLink="/products/add/{{globalCount+1}}">Add New Product</button>
         </ng-container>
@@ -103,7 +105,7 @@
         <div class="form-group">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
             (change)="ngOnInit();">
-            <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.name}}</option>
+            <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.company_details?.name}}</option>
           </select>
         </div>
       </div>

@@ -661,7 +661,7 @@ export class SidebarService {
         accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
         routePermissionList.push("branches");
       }
-      if(ysFeatures.indexOf('vendors')!=-1 && subuserFeatures.indexOf('branches')!=-1) {
+      if(ysFeatures.indexOf('vendors')!=-1 && subuserFeatures.indexOf('vendors')!=-1) {
         accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
         routePermissionList.push("vendors");
       }

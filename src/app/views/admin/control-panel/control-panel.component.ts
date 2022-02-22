@@ -22,7 +22,7 @@ export class ControlPanelComponent implements OnInit {
 
   constructor(
     public router: Router, private adminApi: AdminApiService, private storeApi: StoreApiService, private sidebar: SidebarService,
-    public commonService: CommonService, private api: ApiService, private accountApi: AccountService
+    public commonService: CommonService, private api: ApiService, private accApi: AccountService
   ) { }
 
   ngOnInit() {
@@ -97,20 +97,26 @@ export class ControlPanelComponent implements OnInit {
             });
           }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+          // vendor list
+          this.commonService.vendor_list = [];
+          if(this.commonService.ys_features.indexOf('vendors')!=-1) {
+            this.accApi.VENDOR_LIST().subscribe(result => {
+              if(result.status) this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
+              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+            });
+          }
+          else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           // store features
-          this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
+          this.commonService.user_list = []; this.commonService.courier_partners = [];
           this.commonService.updateLocalData('user_list', this.commonService.user_list);
-          this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
           this.storeApi.STORE_FEATURES().subscribe(result => {
             if(result.status) {
               result.data.sub_users.forEach(obj => {
                 this.commonService.user_list.push({ _id: obj._id, name: obj.name });
               });
-              this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
               this.commonService.courier_partners = result.data.courier_partners;
               this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
               this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
             }
           });

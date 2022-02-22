@@ -5,6 +5,7 @@ import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
 import { SidebarService } from '../../../services/sidebar.service';
+import { AccountService } from '../../store/account/account.service';
 
 @Component({
     selector: 'app-signin',
@@ -18,7 +19,8 @@ export class SigninComponent implements OnInit {
   loading: boolean; loadingText: string;
   loginForm: any = {};
   constructor(
-    public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService, private commonService: CommonService
+    public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService,
+    private commonService: CommonService, private accApi: AccountService
   ) { }
 
   ngOnInit() {
@@ -89,28 +91,33 @@ export class SigninComponent implements OnInit {
             });
           }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+          // vendor list
+          this.commonService.vendor_list = [];
+          if(this.commonService.ys_features.indexOf('vendors')!=-1) {
+            this.accApi.VENDOR_LIST().subscribe(result => {
+              if(result.status) this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
+              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+            });
+          }
+          else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           // sub-user features
           if(!result.subuser_features) result.subuser_features = [];
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
           // vendor features
-          if(!result.vendor_features) result.vendor_features = [];
-          this.commonService.vendor_features = result.vendor_features;
+          this.commonService.vendor_features = [];
           this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
           // store features
-          this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
+          this.commonService.user_list = []; this.commonService.courier_partners = [];
           this.commonService.updateLocalData('user_list', this.commonService.user_list);
-          this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
           this.storeApi.STORE_FEATURES().subscribe(result => {
             if(result.status) {
               result.data.sub_users.forEach(obj => {
                 this.commonService.user_list.push({ _id: obj._id, name: obj.name });
               });
-              this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
               this.commonService.courier_partners = result.data.courier_partners;
               this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
               this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
             }
           });
@@ -165,6 +172,7 @@ export class SigninComponent implements OnInit {
         };
         if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
         if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
+        if(result.vendor_details?._id) this.commonService.store_details.vendor_id = result.vendor_details._id;
         let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
@@ -199,8 +207,8 @@ export class SigninComponent implements OnInit {
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
           // vendor features
-          if(!result.vendor_features) result.vendor_features = [];
-          this.commonService.vendor_features = result.vendor_features;
+          if(!result.vendor_details?.permission_list) result.vendor_details.permission_list = [];
+          this.commonService.vendor_features = result.vendor_details.permission_list;
           this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
           // store features
           this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
@@ -212,10 +220,8 @@ export class SigninComponent implements OnInit {
               result.data.sub_users.forEach(obj => {
                 this.commonService.user_list.push({ _id: obj._id, name: obj.name });
               });
-              this.commonService.vendor_list = result.data.vendors.filter(obj => obj.status=='active');
               this.commonService.courier_partners = result.data.courier_partners;
               this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
               this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
             }
           });

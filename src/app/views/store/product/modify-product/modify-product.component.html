@@ -140,7 +140,7 @@
                     <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-3 form-group mb-3">
                       <label>Vendor (optional)</label>
                       <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel">
-                        <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.name}}</option>
+                        <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.name}}</option>
                       </select>
                     </div>
                     <div class="col-md-3 form-group mb-3">
