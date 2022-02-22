@@ -141,9 +141,7 @@
               deferredPrompt = null;
             }
           }
-          else {
-            document.cookie = "pwa=false";
-          }
+          else { document.cookie = "pwa=false"; }
         });
         $(document).on('click', '.closebtn', async function(e) {
           document.getElementById("overlay").style.display = "none";

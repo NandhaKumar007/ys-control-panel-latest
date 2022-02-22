@@ -29,7 +29,7 @@ export const environment = {
   config_data: {
     free_package_id: "5f4cd131573e9a1e680239f1",
     premium_package_id: "5f4cd4c5573e9a1e68023a04",
-    dinamic_order_id: "60b52edf58954c13bf58b5a2",
+    dinamic_order_id: ["60b52edf58954c13bf58b5a2", "61dd3dda459e175b4e42736f"],
     hungover_id: "5fbcac07fd6ce3538c2cf355"
   },
   base_url: "http://localhost:4500",

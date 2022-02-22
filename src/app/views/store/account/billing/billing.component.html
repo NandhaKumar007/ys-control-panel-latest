@@ -139,13 +139,8 @@
               </p>
             </div>
             <div class="">
-              <ul class="check-highlighted-points">
-                <li>Lower Transaction Fee at 0.75%</li>
-                <li>10 Staff Accounts</li>
-                <li>Product FAQ</li>
-                <li>Gift Cards</li>
-                <li>Order Instructions/Comments</li>
-                <li>Manual Order Creation</li>
+              <ul *ngIf="billDetails?.next_package_details?.features_info?.length" class="check-highlighted-points">
+                <li *ngFor="let x of billDetails?.next_package_details?.features_info">{{x}}</li>
               </ul>
             </div>
           </div>
@@ -224,13 +219,63 @@
     <div class="form-group">
       <div class="row">
         <div class="col-md-12">
-          <p>Total: {{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Discount: - {{paymentData?.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Credit: - {{paymentData?.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.cgst">CGST({{paymentData.cgst.percentage}}%) {{paymentData.cgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.sgst">SGST({{paymentData.sgst.percentage}}%) {{paymentData.sgst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p *ngIf="paymentData.igst">IGST({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
-          <p>Payable amount {{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+          <div class="card apps-card w-100 py-3 mb-4">
+            <div class="row m-0">
+              <div class="col-9">
+                <p class="mb-0">Total</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">{{(billDetails?.subscription_charge + billDetails?.addon_price + billDetails?.transaction_charges) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <div *ngIf="paymentData?.discount>0" class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Discount</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">- {{paymentData.discount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <div class="row m-0" *ngIf="paymentData.credit>0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Credit</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">- {{paymentData.credit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- CGST & SGST -->
+            <div class="row m-0" *ngIf="paymentData.cgst && paymentData.sgst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%) {{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <!-- IGST -->
+            <div class="row m-0" *ngIf="paymentData.igst">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0" >GST</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0">({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+            <div class="row m-0">
+              <div class="col-md-12"><hr class="my-2"></div>
+              <div class="col-9">
+                <p class="mb-0">Payable amount</p>
+              </div>
+              <div class="col-3 d-flex justify-content-end">
+                <p class="mb-0 font-weight-bold">{{paymentData.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
