@@ -669,9 +669,26 @@ export class SidebarService {
     }
     // Vendor
     else if(this.commonService.store_details.login_type=='vendor') {
-      routePermissionList.push("vendor_dashboard");
       // dashboard
+      routePermissionList.push("vendor_dashboard");
       this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/vendor-dashboard' });
+      // products
+      routePermissionList.push("products", "product_add", "product_edit");
+      this.sidePanelList.push({ name: 'Products', type: 'link', icon: 'category', state: '/products' });
+      // orders
+      let orderList: IChildItem[] = [
+        { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
+        { icon: 'check_circle_outline', name: 'Completed Orders', state: '/orders/product/delivered/all', type: 'link' },
+        { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' }
+      ];
+      routePermissionList.push("orders");
+      this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
+      // ad management
+      routePermissionList.push("ad_management");
+      this.sidePanelList.push({ name: 'Ad Management', type: 'link', icon: 'public', state: '/features/ad-management' });
+      // profile
+      routePermissionList.push("vendor_profile");
+      this.sidePanelList.push({ name: 'Profile', type: 'link', icon: 'account_circle', state: '/account/vendor-profile' });
     }
     this.commonService.route_permission_list = routePermissionList;
     this.commonService.updateLocalData('route_permission_list', this.commonService.route_permission_list);

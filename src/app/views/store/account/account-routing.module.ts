@@ -4,6 +4,7 @@ import { PermissionGuard } from '../../../guards/permission.guard';
 
 const routes: Routes = [
   { path: 'profile', loadChildren: () => import('./my-profile/my-profile.module').then(m => m.MyProfileModule), canActivate: [PermissionGuard], data: { name: "profile" } },
+  { path: 'vendor-profile', loadChildren: () => import('./vendor-profile/vendor-profile.module').then(m => m.VendorProfileModule), canActivate: [PermissionGuard], data: { name: "vendor_profile" } },
   { path: 'users', loadChildren: () => import('./sub-users/sub-users.module').then(m => m.SubUsersModule), canActivate: [PermissionGuard], data: { name: "sub_users" } },
   { path: 'vendors', loadChildren: () => import('./vendors/vendors.module').then(m => m.VendorsModule), canActivate: [PermissionGuard], data: { name: "vendors" } },
   { path: 'branches', loadChildren: () => import('./branches/branches.module').then(m => m.BranchesModule), canActivate: [PermissionGuard], data: { name: "branches" } },

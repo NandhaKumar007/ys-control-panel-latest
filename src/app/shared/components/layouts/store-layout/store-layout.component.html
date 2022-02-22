@@ -105,11 +105,10 @@
             <div class="profile-inner">
               <div class="footer d-flex justify-content-center align-items-center">
                 <button *ngIf="!commonService.master_token" class="signout-btn"
-                  (click)="commonService.signOut('/session/signin');">Sign Out</button>
+                (click)="(this.commonService.store_details?.login_type=='vendor')? commonService.signOut('/session/signin/vendor'): commonService.signOut('/session/signin');">Sign Out</button>
                 <ng-container *ngIf="commonService.master_token">
                   <button class="signout-btn mr-2" routerLink="/control-panel">Control Panel</button>
-                  <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign
-                    Out</button>
+                  <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign Out</button>
                 </ng-container>
               </div>
             </div>

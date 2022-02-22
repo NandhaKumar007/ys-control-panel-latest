@@ -127,7 +127,18 @@ export class VendorsComponent implements OnInit {
   }
 
   onUpdateBanner() {
-    
+    this.vendorForm.submit = true;
+    this.api.UPDATE_VENDOR(this.vendorForm).subscribe(result => {
+      this.vendorForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.vendorForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   fileChangeListener(event) {

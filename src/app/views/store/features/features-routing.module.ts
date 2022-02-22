@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'selected-product-reviews', loadChildren: () => import('./product-reviews/product-reviews.module').then(m => m.ProductReviewsModule), canActivate: [PermissionGuard], data: { name: "product_reviews" } },
   { path: 'dinamic-offers', loadChildren: () => import('./dinamic-offers/dinamic-offers.module').then(m => m.DinamicOffersModule), canActivate: [PermissionGuard], data: { name: "dinamic_offers" } },
   { path: 'quick-orders', loadChildren: () => import('./quick-orders/quick-orders.module').then(m => m.QuickOrdersModule), canActivate: [PermissionGuard], data: { name: "quick_order" } },
+  { path: 'ad-management', loadChildren: () => import('./ad-management/ad-management.module').then(m => m.AdManagementModule), canActivate: [PermissionGuard], data: { name: "ad_management" } }
 ];
 
 @NgModule({
