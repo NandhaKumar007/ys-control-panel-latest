@@ -857,7 +857,7 @@ export class DeployPackagesComponent implements OnInit {
         "premium": true
       }
     ];
-    if(this.commonService.store_details?.package_info.category=='genie') {
+    if(this.commonService.store_details?.package_info?.category=='genie') {
       this.support_service = genieSupportService;
       this.all_features = genieAllFeatures;
       this.mobile_top_features = genieMobileTopFeatures;
