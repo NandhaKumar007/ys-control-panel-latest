@@ -94,9 +94,7 @@
       <!-- add btn -->
       <div class="col-6" [ngClass]="vendorList.length? 'col-md-3': 'col-md-6'">
         <ng-container *ngIf="commonService.ys_features.indexOf('limited_products')==-1 || globalCount<limitedProdCount">
-          <!-- <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
-          routerLink="/products/add/{{globalCount+1}}">Add New Product</button> -->
-          <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
+          <button *ngIf="commonService.store_details?.login_type!='vendor' || commonService.vendor_features.indexOf('add_product')!=-1" type="button" class="btn btn-primary"
           routerLink="/products/add/{{globalCount+1}}">Add New Product</button>
         </ng-container>
       </div>
@@ -158,28 +156,41 @@
                 <div class="col-2 col-sm-2 col-md-3 only-product-btn-sec">
                   <!-- desktop -->
                   <div *ngIf="commonService?.screen_width>=768" class="m-0 text-muted text-small w-sm-100 d-lg-block item-actions">
-                    <div class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                    <!-- normal user -->
+                    <div *ngIf="commonService.store_details?.login_type!='vendor'" class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
                       <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                         <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
                           <span class="black-outline-txt">Edit</span>
                         </button>
                         <div class="dropdown-menu" ngbDropdownMenu>
                           <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
-                          <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
-                            <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
-                            <button class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
-                            <button *ngIf="configData.dinamic_order_id.indexOf(commonService.store_details._id)!=-1 && commonService.ys_features.indexOf('product_reviews')!=-1"
-                            class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
-                          </ng-container>
+                          <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
+                          <button class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
+                          <button *ngIf="configData.dinamic_order_id.indexOf(commonService.store_details._id)!=-1 && commonService.ys_features.indexOf('product_reviews')!=-1" class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
                         </div>
                       </div>
                     </div>
+                    <!-- vendor -->
+                    <ng-container *ngIf="commonService.store_details?.login_type=='vendor'">
+                      <div *ngIf="commonService.vendor_features.indexOf('update_product')!=-1 || commonService.vendor_features.indexOf('link_product')!=-1" class="product-btn-group btn-group w-md-100 mr-3 c-m-md-0">
+                        <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
+                          <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
+                            <span class="black-outline-txt">Edit</span>
+                          </button>
+                          <div class="dropdown-menu" ngbDropdownMenu>
+                            <button *ngIf="commonService.vendor_features.indexOf('update_product')!=-1" class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
+                            <button *ngIf="commonService.vendor_features.indexOf('update_product_overall')!=-1" class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
+                            <button *ngIf="commonService.vendor_features.indexOf('link_product')!=-1" class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
                     <button *ngIf="commonService.archive_list.length && commonService.store_details?.login_type=='admin'"
                       (click)="archiveForm={ _id: x._id, rank: x.rank, archive_id: commonService.archive_list[0]._id }; modalService.open(archiveModal, { centered: true });"
                       class="btn btn-wide blue-outline-btn w-md-100 mr-3">
                       <span class="blue-outline-txt">Move to Archive</span>
                     </button>
-                    <button *ngIf="commonService.store_details?.login_type!='vendor'"
+                    <button *ngIf="commonService.store_details?.login_type!='vendor' || commonService.vendor_features.indexOf('remove_product')!=-1"
                       (click)="btnLoader=false; deleteForm=x; modalService.open(deleteModal, { centered: true });"
                       class="btn btn-wide orng-outline-btn w-md-100">
                       <span class="orng-outline-txt">Remove</span>
@@ -193,24 +204,26 @@
                           <i class="material-icons">more_vert</i>
                         </button>
                         <div class="dropdown-menu" ngbDropdownMenu>
-                          <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
+                          <!-- normal user -->
                           <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
+                            <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
                             <button class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
-                            <button *ngIf="commonService.store_details?.login_type!='vendor'" class="dropdown-item"
-                              (click)="goModifyPage(x, 3);">Catalogs</button>
-                            <button *ngIf="configData.dinamic_order_id.indexOf(commonService.store_details._id)!=-1 && commonService.ys_features.indexOf('product_reviews')!=-1"
-                              class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
+                            <button class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
+                            <button *ngIf="configData.dinamic_order_id.indexOf(commonService.store_details._id)!=-1 && commonService.ys_features.indexOf('product_reviews')!=-1" class="dropdown-item" (click)="goReviewPage(x);">Reviews</button>
+                          </ng-container>
+                          <!-- vendor -->
+                          <ng-container *ngIf="commonService.store_details?.login_type=='vendor'">
+                            <ng-container *ngIf="commonService.vendor_features.indexOf('update_product')!=-1">
+                              <button class="dropdown-item" (click)="goModifyPage(x, 1);">Details</button>
+                              <button *ngIf="commonService.vendor_features.indexOf('update_product_overall')!=-1" class="dropdown-item" (click)="goModifyPage(x, 2);">Images</button>
+                            </ng-container>
+                            <button *ngIf="commonService.vendor_features.indexOf('link_product')!=-1" class="dropdown-item" (click)="goModifyPage(x, 3);">Catalogs</button>
                           </ng-container>
                           <button *ngIf="commonService.archive_list.length && commonService.store_details?.login_type=='admin'"
-                            (click)="archiveForm={ _id: x._id, rank: x.rank, archive_id: commonService.archive_list[0]._id }; modalService.open(archiveModal, { centered: true });"
-                            class="dropdown-item">Move to Archive
-                          </button>
-                          <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
-                            <button
-                              (click)="btnLoader=false; deleteForm=x; modalService.open(deleteModal, { centered: true });"
-                              class="dropdown-item danger-text">Remove
-                            </button>
-                          </ng-container>
+                          (click)="archiveForm={ _id: x._id, rank: x.rank, archive_id: commonService.archive_list[0]._id }; modalService.open(archiveModal, { centered: true });"
+                          class="dropdown-item">Move to Archive</button>
+                          <button *ngIf="commonService.store_details?.login_type!='vendor' || commonService.vendor_features.indexOf('remove_product')!=-1"
+                          (click)="btnLoader=false; deleteForm=x; modalService.open(deleteModal, { centered: true });" class="dropdown-item danger-text">Remove</button>
                         </div>
                       </div>
                     </div>

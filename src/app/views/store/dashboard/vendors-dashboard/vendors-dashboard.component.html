@@ -124,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!commonService.vendor_permissions?.products?.add" class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">cloud_upload</i>
@@ -136,7 +136,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="commonService.vendor_permissions?.products?.add" class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">cloud_upload</i>
@@ -144,6 +144,31 @@
             <p class="line-height-1 text-title text-18 mt-2 mb-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
               <span *ngIf="!preLoader">{{order_details?.products}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+        <div class="card card-icon w-100 mb-4">
+          <div class="card-body text-center">
+            <i class="material-icons">cloud_upload</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Amount Banked</p>
+            <p class="line-height-1 text-title text-18 mt-2 mb-0">
+              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+              <span *ngIf="!preLoader">50,000</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+        <div class="card card-icon w-100 mb-4">
+          <div class="card-body text-center">
+            <i class="material-icons">paid</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Next Settlement</p>
+            <p class="text-muted mt-2">28 Feb 2022</p>
+            <p class="line-height-1 text-title text-18 mt-2 mb-0">
+              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+              <span *ngIf="!preLoader">2,700</span>
             </p>
           </div>
         </div>
@@ -166,7 +191,7 @@
     </div>
   </div>
 
-  <div class="col-lg-6 col-md-12 d-flex">
+  <!-- <div class="col-lg-6 col-md-12 d-flex">
     <div class="card w-100 mb-4">
       <div class="card-body">
         <div class="card-title">Orders</div>
@@ -220,6 +245,6 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 </div>

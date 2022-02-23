@@ -22,7 +22,7 @@
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
-  <ng-container *ngIf="commonService.store_details?.login_type!='vendor' || commonService.vendor_permissions?.products?.add">
+  <ng-container *ngIf="commonService.store_details?.login_type!='vendor' || commonService.vendor_features.indexOf('add_product')!=-1">
     <!-- STEP 1 -->
     <form *ngIf="step_num==1" autocomplete="off" (ngSubmit)="step_num=2;" ngNativeValidate>
 
@@ -100,8 +100,8 @@
                     <input type="text" name="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
                   </div>
                   <div *ngIf="commonService.store_details?.package_details?.package_id==configData.premium_package_id" class="col-md-3 form-group mb-3">
-                    <label>Shipping Weight for 1 {{productForm.unit}} (in Kg)</label>
-                    <input type="text" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly required />
+                    <label>Shipping Weight for 1 {{productForm.unit}} (in Kg optional)</label>
+                    <input type="text" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly />
                   </div>
                   <div class="col-md-3 form-group mb-3">
                     <label>Rank</label>
@@ -585,7 +585,7 @@
     <!-- #STEP 1 -->
 
     <!-- STEP 2 -->
-    <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="step_num=3;" ngNativeValidate>
+    <form *ngIf="step_num==2" autocomplete="off" (ngSubmit)="(commonService.store_details?.login_type!='vendor' || commonService.vendor_features.indexOf('link_product')!=-1)? step_num=3: onAdd();" ngNativeValidate>
       <!-- Cropper -->
       <div class="row">
         <div align="center" class="col-md-12">
@@ -745,7 +745,7 @@
         <div class="form-group mb-3 col-md-12">
           <label class="checkbox checkbox-primary">
             <input class="form-check-input" type="checkbox" name="selected" [(ngModel)]="x.selected" [checked]="x.selected" [ngModelOptions]="{standalone: true}"
-            #selected="ngModel" [disabled]="commonService.store_details?.login_type=='vendor' && !commonService.vendor_permissions?.products?.section_tag">
+            #selected="ngModel" [disabled]="commonService.store_details?.login_type=='vendor' && commonService.vendor_features.indexOf('link_product')==-1">
             <span>{{x.name}}</span>
             <span class="checkmark"></span>
           </label>

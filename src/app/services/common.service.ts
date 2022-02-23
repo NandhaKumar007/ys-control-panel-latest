@@ -137,7 +137,7 @@ export class CommonService {
   store_details: any = {};
   store_currency: any = {};
   subuser_permissions: any = {};
-  vendor_permissions: any = {};
+  vendor_details: any = {};
 
   user_list: any = [];
   vendor_list: any = [];
@@ -174,6 +174,7 @@ export class CommonService {
     if(localStorage.getItem('subuser_features')) this.subuser_features = this.decryptData(localStorage.getItem("subuser_features"));
     if(localStorage.getItem('vendor_features')) this.vendor_features = this.decryptData(localStorage.getItem("vendor_features"));
     if(localStorage.getItem('store_details')) this.store_details = this.decryptData(localStorage.getItem("store_details"));
+    if(localStorage.getItem('vendor_details')) this.vendor_details = this.decryptData(localStorage.getItem("vendor_details"));
     if(localStorage.getItem('store_currency')) this.store_currency = this.decryptData(localStorage.getItem("store_currency"));
     if(localStorage.getItem('route_permission_list')) this.route_permission_list = this.decryptData(localStorage.getItem("route_permission_list"));
     
@@ -190,8 +191,6 @@ export class CommonService {
     if(localStorage.getItem('branch_list')) this.branch_list = this.decryptData(localStorage.getItem("branch_list"));
     if(localStorage.getItem('deploy_details')) this.deploy_details = this.decryptData(localStorage.getItem("deploy_details"));
     if(localStorage.getItem('deploy_stages')) this.deploy_stages = this.decryptData(localStorage.getItem("deploy_stages"));
-
-    if(localStorage.getItem('vendor_permissions')) this.vendor_permissions = this.decryptData(localStorage.getItem("vendor_permissions"));
 
     if(localStorage.getItem('master_token')) this.master_token = localStorage.getItem("master_token");
     if(localStorage.getItem('store_token')) this.store_token = localStorage.getItem("store_token");
@@ -293,7 +292,7 @@ export class CommonService {
 
     this.store_details = {};
     this.store_currency = {};
-    this.vendor_permissions = {};
+    this.vendor_details = {};
     this.subuser_permissions = {};
     this.deploy_stages = {};
     this.deploy_details = {};

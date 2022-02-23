@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EChartOption } from 'echarts';
 import { DatePipe } from '@angular/common';
-import { echartStyles } from '../../../../shared/animations/echart-styles';
-import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
@@ -13,10 +10,13 @@ import { CommonService } from '../../../../services/common.service';
 
 export class VendorsDashboardComponent implements OnInit {
 
-  preLoader: boolean; order_details: any;
+  preLoader: boolean; order_details: any = {
+    total_sales: 0, order_list: [], vendor_items: [], item_grand_total: 0,
+    vendor_products: 0, products: 0
+  };
 	chartPie: any; chartLine: any; filterForm: any;
 
-  constructor(private api: StoreApiService, public datepipe: DatePipe, public commonService: CommonService) { }
+  constructor(public datepipe: DatePipe, public commonService: CommonService) { }
 
   ngOnInit() {
     this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };

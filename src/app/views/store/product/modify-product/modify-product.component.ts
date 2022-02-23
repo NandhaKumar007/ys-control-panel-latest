@@ -253,7 +253,7 @@ export class ModifyProductComponent implements OnInit {
     delete this.productForm.image_list;
     delete this.productForm.video_details;
     let formData = this.productForm;
-    if(this.commonService.store_details.login_type=='vendor' && this.commonService.vendor_permissions.products.update && this.commonService.vendor_permissions.products.update_type=='stock_only') {
+    if(this.commonService.store_details.login_type=='vendor' && this.commonService.vendor_features.indexOf('update_product_stock_only')!=-1) {
       formData = {
         _id: this.productForm._id, sku: this.productForm.sku, rank: this.productForm.rank, prev_rank: this.productForm.prev_rank, stock: this.productForm.stock,
         variant_status: this.productForm.variant_status, variant_types: this.productForm.variant_types, variant_list: this.productForm.variant_list

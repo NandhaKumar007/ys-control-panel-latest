@@ -172,11 +172,16 @@ export class SigninComponent implements OnInit {
         };
         if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
         if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
-        if(result.vendor_details?._id) this.commonService.store_details.vendor_id = result.vendor_details._id;
         let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
         this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        // vendor details
+        this.commonService.vendor_details = result.vendor_details;
+        this.commonService.updateLocalData('vendor_details', this.commonService.vendor_details);
+        // vendor features
+        this.commonService.vendor_features = result.vendor_details.permission_list;
+        this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
         // payment list
         this.commonService.payment_list = result.data.payment_types;
         this.commonService.updateLocalData('payment_list', this.commonService.payment_list);
@@ -206,10 +211,6 @@ export class SigninComponent implements OnInit {
           if(!result.subuser_features) result.subuser_features = [];
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
-          // vendor features
-          if(!result.vendor_details?.permission_list) result.vendor_details.permission_list = [];
-          this.commonService.vendor_features = result.vendor_details.permission_list;
-          this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
           // store features
           this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
           this.commonService.updateLocalData('user_list', this.commonService.user_list);

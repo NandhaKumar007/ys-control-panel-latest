@@ -81,7 +81,7 @@ export class VendorsComponent implements OnInit {
       });
     }
     if(this.vendorForm.form_type=='edit_permissions') {
-      let sendData = { _id: this.vendorForm._id, permission_list: [] };
+      let sendData = { _id: this.vendorForm._id, permission_list: [], session_key: new Date().valueOf() };
       this.permissionList.forEach(obj => {
         obj.sub_list.forEach(el => {
           if(el.selected) {
