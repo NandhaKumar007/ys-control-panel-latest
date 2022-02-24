@@ -10,6 +10,7 @@
         <ul><li>View and manage your profile information</li></ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button type="button" (click)="imgForm={ image: vendorDetails.image }; modalService.open(bannerModal);" class="btn btn-primary mr-3">Change Banner</button>
         <button type="button" (click)="pwdForm={}; modalService.open(changePwdModal);" class="btn btn-primary">Change Password</button>
       </div>
     </div>
@@ -19,36 +20,36 @@
   <div class="row">
     <div class="col-md-6 col-lg-6 d-flex">
       <div class="card setting-card w-100 p-3">
-        <div class="row mb-2 mt-3">
-          <div class="col-8">
-            <h5>CONTACT INFORMATION</h5>
+        <div class="card card-in-card p-3 mb-3">
+          <h5 class="mb-3">CONTACT INFORMATION</h5>
+          <div class="ml-3">
+            <p>{{vendorDetails?.contact_person}}</p>
+            <p>{{vendorDetails?.mobile}}</p>
+            <p>{{vendorDetails?.email}}</p>
           </div>
-          <div class="col-4 d-flex justify-content-end align-items-center">
-            <i (click)="imgForm={ image: vendorDetails.image }; modalService.open(bannerModal);" class="material-icons edit-icon">add_photo_alternate</i>
+        </div>
+        <div class="card card-in-card p-3 mb-3">
+          <h5 class="mb-3">STORE INFORMATION</h5>
+          <div class="ml-3">
+            <p>{{vendorDetails?.company_details?.name}}</p>
+            <p>{{vendorDetails?.company_details?.gst_no}}</p>
+            <p>{{vendorDetails?.company_details?.address}}</p>
           </div>
         </div>
-        <!-- <h5 class="mt-3 mb-3">CONTACT INFORMATION</h5> -->
-        <div class="ml-3">
-          <p>{{vendorDetails?.contact_person}}</p>
-          <p>{{vendorDetails?.mobile}}</p>
-          <p>{{vendorDetails?.email}}</p>
+        <div class="card card-in-card p-3 mb-3">
+          <h5 class="mb-3">PICKUP ADDRESS</h5>
+          <div class="ml-3">
+            <p>{{vendorDetails?.company_details?.pickup_address}}</p>
+          </div>
         </div>
-        <h5 class="mt-3 mb-3">STORE INFORMATION</h5>
-        <div class="ml-3">
-          <p>{{vendorDetails?.company_details?.name}}</p>
-          <p>{{vendorDetails?.company_details?.gst_no}}</p>
-          <p>{{vendorDetails?.company_details?.address}}</p>
-        </div>
-        <h5 class="mt-3 mb-3">PICKUP ADDRESS</h5>
-        <div class="ml-3">
-          <p>{{vendorDetails?.company_details?.pickup_address}}</p>
-        </div>
-        <h5 class="mt-3 mb-3">BANK INFORMATION</h5>
-        <div class="ml-3">
-          <p>{{vendorDetails?.bank_details?.beneficiary}}</p>
-          <p>{{vendorDetails?.bank_details?.name}}</p>
-          <p>{{vendorDetails?.bank_details?.acc_no}}</p>
-          <p>{{vendorDetails?.bank_details?.branch}} ({{vendorDetails?.bank_details?.ifsc_code}})</p>
+        <div class="card card-in-card p-3 mb-3">
+          <h5 class="mb-3">BANK INFORMATION</h5>
+          <div class="ml-3">
+            <p>{{vendorDetails?.bank_details?.beneficiary}}</p>
+            <p>{{vendorDetails?.bank_details?.name}}</p>
+            <p>{{vendorDetails?.bank_details?.acc_no}}</p>
+            <p>{{vendorDetails?.bank_details?.branch}} ({{vendorDetails?.bank_details?.ifsc_code}})</p>
+          </div>
         </div>
       </div>
     </div>
