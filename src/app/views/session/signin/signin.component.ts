@@ -24,7 +24,7 @@ export class SigninComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    localStorage.clear();
+    // localStorage.clear();
     this.loading = false; this.loadingText = "";
   }
 

@@ -101,9 +101,9 @@ export class AdminApiService {
   }
 
   // payments
-  INACTIVE_PAYMENTS(x) {
+  PAYMENTS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
-    return this.http.post<any>(environment.ws_url+'/admin/inactive_payments', x, httpOptions);
+    return this.http.post<any>(environment.ws_url+'/admin/payment_list', x, httpOptions);
   }
 
 }

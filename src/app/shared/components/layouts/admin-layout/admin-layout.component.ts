@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
@@ -85,8 +84,8 @@ export class AdminLayoutComponent implements OnInit {
       { name: 'Clients', type: 'link', icon: 'supervised_user_circle', state: '/admin/clients' },
       { name: 'Dealers', type: 'link', icon: 'group', state: '/admin/dealers' },
       { name: 'Payments', type: 'dropDown', icon: 'receipt_long', sub: [
-        { icon: 'receipt_long', name: 'Payments', state: '/admin/payments', type: 'link' },
-        { icon: 'receipt_long', name: 'Inactive Payments', state: '/admin/inactive-payments', type: 'link' }
+        { icon: 'receipt_long', name: 'Payments', state: '/admin/payments/active', type: 'link' },
+        { icon: 'receipt_long', name: 'Inactive Payments', state: '/admin/payments/inactive', type: 'link' }
       ] },
       { name: 'Subscribers', type: 'link', icon: 'mail', state: '/admin/subscribers' }
     ];

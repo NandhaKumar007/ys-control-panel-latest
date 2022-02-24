@@ -1,6 +1,7 @@
 <div [@animate]="{value:'*',params:{y:'120px',opacity:'0',delay:'100ms', duration: '400ms'}}">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
       <div class="auth-card">
         <div class="auth-logo text-center mb-4">
           <img src="assets/images/yourstore_logo.svg" alt="">
@@ -37,7 +38,12 @@
           </div> -->
           <!-- <br> -->
           <div class="row">
-            <div *ngIf="router?.url=='/session/signin'" class="col-md-12 d-flex align-items-center">
+            <div class="col-sm-6">
+              <span class="login-text forgot-link d-inline-block mt-3">New here?
+                <a routerLink="/session/signup" class="s-btn"><strong> Signup</strong></a>
+              </span>
+            </div>
+            <div *ngIf="router?.url=='/session/signin'" class="col-sm-6 d-flex align-items-center justify-content-end">
               <div class="forgot-password-link mt-3 mb-3">
                 <a href="" class="text-muted" routerLink="/session/forgot-password">Forgot Password</a>
               </div>

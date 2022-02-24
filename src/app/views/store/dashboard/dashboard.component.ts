@@ -183,11 +183,10 @@ export class DashboardComponent implements OnInit {
     ) {
     config.backdrop = 'static'; config.keyboard = false;
     if(!localStorage.getItem("country_list")) {
-      let countryList: any = [];
       this.api.COUNTRIES_LIST().subscribe(result => {
-        if(result.status) countryList = result.list;
-        this.commonService.country_list = countryList;
-        this.commonService.updateLocalData('country_list', countryList);
+        this.commonService.country_list = [];
+        if(result.status) this.commonService.country_list = result.list;
+        this.commonService.updateLocalData('country_list', this.commonService.country_list);
       });
     }
     this.baseUrl = this.commonService.store_details.base_url.replace("https://", "");

@@ -279,6 +279,7 @@ export class CommonService {
   clearData() {
     localStorage.clear();
     sessionStorage.clear();
+    if(this.country_list?.length) this.updateLocalData('country_list', this.country_list);
 
     this.admin_packages = [];
     this.admin_features = [];
@@ -299,7 +300,6 @@ export class CommonService {
 
     this.vendor_list = [];
     this.archive_list = [];
-    this.country_list = [];
     this.aistyle_list = [];
     this.catalog_list = [];
     this.payment_list = [];

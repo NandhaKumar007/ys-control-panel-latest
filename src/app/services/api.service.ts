@@ -12,6 +12,8 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   // AUTH
+  VALIDATE_EMAIL(x) { return this.http.post<any>(environment.ws_url+'/others/check_email', x); }
+  SIGNUP(x) { return this.http.post<any>(environment.ws_url+'/others/create_store', x); }
   LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/store/login_v2', x); }
   VENDOR_LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/store/vendor_login', x); }
   MASTER_LOGIN(x) { return this.http.post<any>(environment.ws_url+'/auth/admin/login', x); }

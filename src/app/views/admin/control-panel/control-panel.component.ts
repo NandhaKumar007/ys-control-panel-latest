@@ -139,11 +139,13 @@ export class ControlPanelComponent implements OnInit {
       this.commonService.updateLocalData('currency_types', this.commonService.currency_types);
     });
     // country list
-    this.api.COUNTRIES_LIST().subscribe(result => {
-      this.commonService.country_list = [];
-      if(result.status) this.commonService.country_list = result.list;
-      this.commonService.updateLocalData('country_list', this.commonService.country_list);
-    });
+    if(!localStorage.getItem("country_list")) {
+      this.api.COUNTRIES_LIST().subscribe(result => {
+        this.commonService.country_list = [];
+        if(result.status) this.commonService.country_list = result.list;
+        this.commonService.updateLocalData('country_list', this.commonService.country_list);
+      });
+    }
     // packages
     this.adminApi.PACKAGE_LIST().subscribe(result => {
       this.commonService.admin_packages = [];
