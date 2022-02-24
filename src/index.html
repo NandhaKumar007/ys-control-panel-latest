@@ -26,78 +26,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="manifest" href="manifest.webmanifest">
-    <style>
-      #overlay {
-        position: fixed;
-        display: none;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,0.5);
-        z-index: 2;
-        cursor: pointer;
-      }
-      .overlay_modal {
-        padding: 20px; 
-        background-color:#eee; 
-        margin:10px; 
-        border-radius: 14px; 
-        position:absolute; 
-        bottom: 0px;
-      }
-    </style>
   </head>
   <body class="text-left">
-    <div id="overlay" class="container px-0">
-      <div class="row overlay_modal" style="margin: 10px;">
-        <div class="row align-items-center mx-0" style="border-bottom: 1px solid rgba(0,0,0,0.5); width:100%">
-          <div class="col-1 px-0">
-            <p>
-              <span class="material-icons" style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 10px;font-size: 20px;display: flex;align-items: center;justify-content: center;padding: 10px 20px;">browser_updated</span>       
-            </p> 
-          </div>
-          <div class="col-11">
-            <h5 style="margin-left: 10px;">Quick Install App</h5>
-          </div> 
-        </div>
-        <!-- android -->
-        <div id="android" class="col-md-12 px-0" style="text-align: center; padding-top: 15px; display: none;">
-          <p style="text-align: left; margin-right: 10%;">Install the app on your device to easily access it anytime. No app store. No download. No hassle.</p>   
-          <p style="text-align: left; margin-right: 10%;">Click on the yourstore App icon in the Home screen and Login</p> 
-          <button type="button" class="btn btn-primary text-center px-5 installApp">
-            <span class="black-outline-txt">Install</span>
-          </button> 
-        </div>
-        <!-- ios -->
-        <div id="ios" class="col-md-12 px-0" style="padding-top: 15px; display: none;">
-          <ul style="list-style:none;padding-left:0">
-            <li class="pb-3">1. Tap on
-              <span class="material-icons"
-                style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 4px;font-size: 14px;align-items: center;justify-content: center;padding: 5px;"><span
-                  class="material-icons-outlined">
-                  ios_share
-                </span>
-              </span>
-            </li>
-            <li class="pb-3">2. Select
-              <span>
-                <a style="background:#efefef;padding: 5px; border-radius: 4px; color: #000; font-weight: 500;">Add
-                  to Home Screen</a>
-              </span>
-            </li>
-            <li>3. Click on the yourstore App icon in the Home screen and Login</li>
-          </ul>
-        </div>
-        <div class="closebtn" style="position:absolute; top: 19px; right:17px;">
-          <p class="mb-0" style="background-color: #fff;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 100px; padding:7px;">
-            <span class="material-icons d-flex align-items-center justify-content-center" style="color:#999; font-size: 20px;">close</span>
-          </p>
-        </div>
-      </div>
-    </div>
     <app-root>
       <div class="loader-bg">
         <div class="loadscreen flex">
@@ -115,39 +45,5 @@
       </div>
     </app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
-    <script>
-      // ios
-      let iosPlatforms = ["iPad", "iPhone", "iPod", "iPod touch"];
-      if(iosPlatforms.indexOf(navigator.platform)!=-1 && window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
-        document.getElementById("overlay").style.display = "block";
-        document.getElementById("ios").style.display = "block";
-      }
-      // android
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        deferredPrompt = e;
-        if(window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
-          document.getElementById("overlay").style.display = "block";
-          document.getElementById("android").style.display = "block";
-        }
-      });
-      $(document).ready(function () {
-        $(document).on('click', '.installApp', async function(e) {
-          document.getElementById("overlay").style.display = "none";
-          if(deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if(outcome === 'accepted') {
-              deferredPrompt = null;
-            }
-          }
-          else { document.cookie = "pwa=false"; }
-        });
-        $(document).on('click', '.closebtn', async function(e) {
-          document.getElementById("overlay").style.display = "none";
-          document.cookie = "pwa=false";
-        });
-      });
-    </script>
   </body>
 </html>

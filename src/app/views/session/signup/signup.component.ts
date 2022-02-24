@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
 import { CommonService } from '../../../services/common.service';
@@ -21,7 +22,7 @@ export class SignupComponent implements OnInit {
     { "country_code": "AED", "html_code": "AED" }
   ];
   
-  constructor(private api: ApiService, public commonService: CommonService) {
+  constructor(private router: Router, private api: ApiService, public commonService: CommonService) {
     this.signupForm = {
       country: "India", currency_types: this.currencyList[0],
       company_details: { dial_code: "+91", state: "" }, user_info: "no", user_exp: "no", category: ""
@@ -44,7 +45,7 @@ export class SignupComponent implements OnInit {
     this.signupForm.submit = true;
     this.signupForm.company_details.name = this.signupForm.name;
     this.api.SIGNUP(this.signupForm).subscribe(result => {
-      if(result.status == true) this.nextStep();
+      if(result.status == true) this.router.navigate(['/welcome/created']);
       else {
         console.log("response", result);
         this.signupForm.errorMsg = result.message;

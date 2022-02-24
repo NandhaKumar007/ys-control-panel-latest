@@ -38,16 +38,18 @@
           </div> -->
           <!-- <br> -->
           <div class="row">
-            <div class="col-sm-6">
-              <span class="login-text forgot-link d-inline-block mt-3">New here?
-                <a routerLink="/session/signup" class="s-btn"><strong> Signup</strong></a>
-              </span>
-            </div>
-            <div *ngIf="router?.url=='/session/signin'" class="col-sm-6 d-flex align-items-center justify-content-end">
-              <div class="forgot-password-link mt-3 mb-3">
-                <a href="" class="text-muted" routerLink="/session/forgot-password">Forgot Password</a>
+            <ng-container *ngIf="router?.url=='/session/signin'">
+              <div class="col-sm-6">
+                <span class="login-text forgot-link d-inline-block mt-3">New here?
+                  <a routerLink="/session/signup" class="s-btn"><strong> Signup</strong></a>
+                </span>
               </div>
-            </div>
+              <div class="col-sm-6 d-flex align-items-center justify-content-end">
+                <div class="forgot-password-link mt-3 mb-3">
+                  <a href="" class="text-muted" routerLink="/session/forgot-password">Forgot Password</a>
+                </div>
+              </div>
+            </ng-container>
             <div class="col-md-12">
               <btn-loading btnClass="btn-primary btn-rounded btn-block w-100" [loadingText]="loadingText" [loading]="loading">
                 Sign In

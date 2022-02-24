@@ -13,16 +13,18 @@ export class WelcomeScreenComponent implements OnInit {
   interval: any;
   timer: number = 5;
 
-  constructor(private router: Router, public commonService: CommonService) { }
+  constructor(public router: Router, public commonService: CommonService) { }
 
   ngOnInit(): void {
-    this.interval = setInterval(() => {
-      this.timer--;
-      if(this.timer===0) {
-        clearInterval(this.interval);
-        this.router.navigate(['/dashboard']);
-      }
-    }, 1000);
+    if(this.router.url.indexOf("activated") != -1) {
+      this.interval = setInterval(() => {
+        this.timer--;
+        if(this.timer===0) {
+          clearInterval(this.interval);
+          this.router.navigate(['/dashboard']);
+        }
+      }, 1000);
+    }
   }
 
   ngOnDestroy() {

@@ -130,7 +130,7 @@ export class SigninComponent implements OnInit {
             }
             else this.router.navigateByUrl('/dashboard');
           }
-          else this.router.navigateByUrl('/welcome');
+          else this.router.navigateByUrl('/welcome/activated');
         }
         else {
           this.commonService.route_permission_list = ["deployment", "billing"];
