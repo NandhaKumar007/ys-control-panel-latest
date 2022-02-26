@@ -33,6 +33,7 @@ export class YsPaymentsComponent implements OnInit {
             this.list = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
             this.list.forEach(obj => {
               if(obj.storeDetails && obj.storeDetails.length) {
+                obj.store_id = obj.storeDetails[0]._id;
                 obj.store_name = obj.storeDetails[0].name;
                 obj.store_email = obj.storeDetails[0].email;
               }

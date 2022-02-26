@@ -64,19 +64,16 @@
 
             <div class="d-flex flex-row">
               <div class="flex-grow-1 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="c-w-15 w-md-100 m-b-0">#{{x.order_number}}</p>
                   <p class="w-20 w-md-100 m-b-0">{{ x.store_name }}</p>
                   <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-                  <p class="c-w-15 w-md-100 m-b-0">{{x.payment_type}}
-                    <span *ngIf="x.payment_status"><br>({{x.payment_status}})</span>
-                  </p>
                   <p class="c-w-15 w-md-100 m-b-0">{{x.amount | currency: x.currency_type?.country_code}}</p>
-                  <!-- <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
-                    <button (click)="checkOrderStatus(x);" class="btn btn-wide btn-primary ladda-button w-100"
-                      [disabled]="x.loader" [ladda]="x.loader">Check Status</button>
-                  </div> -->
+                  <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
+                    <a href="https://yourstore.io/api/uploads/{{x.store_id}}/invoices/{{x._id}}.pdf" target="_blank" class="btn orng-outline-btn w-md-100">
+                      <span class="orng-outline-txt">Invoice</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
