@@ -77,7 +77,7 @@ export class ProductOrderDetailsComponent implements OnInit {
             });
             // vendor login
             if(this.commonService.store_details.login_type=='vendor') {
-              let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+              let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
               if(vendorIndex!=-1) this.order_vendor_details = this.order_details.vendor_list[vendorIndex];
             }
           }
@@ -164,7 +164,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   onVendorOrderConfirm() {
     this.btnLoader = true;
     let vendorId = this.selected_vendor.vendor_id;
-    if(this.commonService.store_details.login_type=='vendor') vendorId = this.commonService.store_details.login_id;
+    if(this.commonService.store_details.login_type=='vendor') vendorId = this.commonService.vendor_details?._id;
     this.api.VENDOR_ORDER_CONFIRM({ _id: this.order_details._id, vendor_id: vendorId }).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

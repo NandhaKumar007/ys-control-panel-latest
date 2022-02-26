@@ -45,7 +45,7 @@ export class ProductOrdersComponent implements OnInit {
       if(this.params.type=='live') this.filterForm.type = 'all';
       if(this.commonService.store_details.login_type=='vendor') {
         // this.filterForm.type = 'placed';
-        this.filterForm.vendor_id = this.commonService.store_details.login_id;
+        this.filterForm.vendor_id = this.commonService.vendor_details?._id;
       }
       this.filterForm.customer_id = this.params.customer_id;
       if(sessionStorage.getItem("order_page")) {
@@ -87,7 +87,7 @@ export class ProductOrdersComponent implements OnInit {
               }
               // vendor
               if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
-                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.vendor_order_status = obj.vendor_list[venIndex].status;
                   obj.vendor_order_amount = obj.vendor_list[venIndex].total;
@@ -131,13 +131,13 @@ export class ProductOrdersComponent implements OnInit {
               }
               // vendor
               if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
-                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.vendor_order_status = obj.vendor_list[venIndex].status;
                   obj.vendor_order_amount = obj.vendor_list[venIndex].total;
                 }
               }
-              if(this.filterForm.vendor_id!='all') {
+              if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
                 if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
               }
               else this.list.push(obj);

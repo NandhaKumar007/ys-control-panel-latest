@@ -31,7 +31,7 @@ export class VendorsDashboardComponent implements OnInit {
     //     dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0, vendor_items: [], item_grand_total: 0
     //   };
     //   // DASHBOARD
-    //   this.api.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.store_details.login_id }).subscribe(result => {
+    //   this.api.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.vendor_details?._id }).subscribe(result => {
     //     setTimeout(() => { this.preLoader = false; }, 500);
     //     if(result.status) {
     //       this.order_details.products = result.data.products;
@@ -40,7 +40,7 @@ export class VendorsDashboardComponent implements OnInit {
     //       this.order_details.cancelled_orders = result.data.order_list.length - this.order_details.order_list.length;
     //       this.order_details.order_list.forEach(element => {
     //         let vendorOrderPrice = 0
-    //         element.item_list.filter(item => item.vendor_id==this.commonService.store_details.login_id).forEach(obj => {
+    //         element.item_list.filter(item => item.vendor_id==this.commonService.vendor_details?._id).forEach(obj => {
     //           vendorOrderPrice += (obj.final_price*obj.quantity)+parseFloat(obj.addon_price);
     //           if(element.unit=="Pcs") vendorOrderPrice += obj.final_price*obj.quantity;
     //           if(this.order_details.vendor_items.indexOf(obj._id) == -1) {
@@ -49,7 +49,7 @@ export class VendorsDashboardComponent implements OnInit {
     //           }
     //         });
     //         this.order_details.total_sales += vendorOrderPrice;
-    //         let vendorIndex = element.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.store_details.login_id);
+    //         let vendorIndex = element.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
     //         if(element.order_status=='delivered') this.order_details.completed_orders++;
     //         else {
     //           if(element.vendor_list[vendorIndex].status=='pending') this.order_details.placed_orders++;
