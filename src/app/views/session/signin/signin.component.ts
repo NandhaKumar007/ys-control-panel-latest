@@ -216,16 +216,6 @@ export class SigninComponent implements OnInit {
           this.commonService.updateLocalData('user_list', this.commonService.user_list);
           this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-          this.storeApi.STORE_FEATURES().subscribe(result => {
-            if(result.status) {
-              result.data.sub_users.forEach(obj => {
-                this.commonService.user_list.push({ _id: obj._id, name: obj.name });
-              });
-              this.commonService.courier_partners = result.data.courier_partners;
-              this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-            }
-          });
           this.sidebar.BUILD_CATEGORY_LIST();
           this.router.navigateByUrl('/vendor-dashboard');
         }

@@ -44,7 +44,6 @@ export class ProductOrdersComponent implements OnInit {
       this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: this.params.type, vendor_id: 'all' };
       if(this.params.type=='live') this.filterForm.type = 'all';
       if(this.commonService.store_details.login_type=='vendor') {
-        // this.filterForm.type = 'placed';
         this.filterForm.vendor_id = this.commonService.vendor_details?._id;
       }
       this.filterForm.customer_id = this.params.customer_id;
@@ -55,7 +54,7 @@ export class ProductOrdersComponent implements OnInit {
         this.page = pageInfo.page_no;
         this.search_bar = pageInfo.search;
         this.filterForm.type = pageInfo.filter_form.type;
-        this.filterForm.vendor_id = pageInfo.filter_form.vendor_id;
+        if(pageInfo.filter_form.vendor_id) this.filterForm.vendor_id = pageInfo.filter_form.vendor_id;
         if(pageInfo.filter_form.from_date) this.filterForm.from_date = new Date(pageInfo.filter_form.from_date);
         if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
       }
@@ -89,12 +88,18 @@ export class ProductOrdersComponent implements OnInit {
               if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
                 let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
-                  obj.vendor_order_status = obj.vendor_list[venIndex].status;
-                  obj.vendor_order_amount = obj.vendor_list[venIndex].total;
+                  obj.order_number = obj.vendor_list[venIndex].order_number;
+                  obj.order_status = obj.vendor_list[venIndex].status;
+                  obj.final_price = obj.vendor_list[venIndex].total;
                 }
               }
-              if(this.filterForm.vendor_id!='all') {
-                if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
+              if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
+                if(this.params.type=='live') {
+                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status!='delivered' && obj.status!='cancelled') != -1) this.list.push(obj);
+                }
+                else {
+                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status==this.params.type) != -1) this.list.push(obj);
+                }
               }
               else this.list.push(obj);
             });
@@ -133,12 +138,18 @@ export class ProductOrdersComponent implements OnInit {
               if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
                 let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
-                  obj.vendor_order_status = obj.vendor_list[venIndex].status;
-                  obj.vendor_order_amount = obj.vendor_list[venIndex].total;
+                  obj.order_number = obj.vendor_list[venIndex].order_number;
+                  obj.order_status = obj.vendor_list[venIndex].status;
+                  obj.final_price = obj.vendor_list[venIndex].total;
                 }
               }
               if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
-                if(obj.item_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id) != -1) this.list.push(obj);
+                if(this.params.type=='live') {
+                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status!='delivered' && obj.status!='cancelled') != -1) this.list.push(obj);
+                }
+                else {
+                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status==this.params.type) != -1) this.list.push(obj);
+                }
               }
               else this.list.push(obj);
             });

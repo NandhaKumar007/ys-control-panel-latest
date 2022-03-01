@@ -63,7 +63,7 @@
       </div>
     </div>
     <div class="row mb-4">
-      <div *ngIf="params?.type=='live' && commonService.store_details?.login_type!='vendor'" class="col-md-3 col-6">
+      <div *ngIf="params?.type=='live' && commonService.store_details?.login_type!='vendor' && !commonService.vendor_list?.length" class="col-md-3 col-6">
         <div class="form-group">
           <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type"
             (change)="getOrderList();">
@@ -79,13 +79,13 @@
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
             (change)="getOrderList();">
             <option value="all">All Vendors</option>
-            <option [ngValue]="x._id" *ngFor="let x of commonService.vendor_list">{{x.name}}</option>
+            <option [ngValue]="x._id" *ngFor="let x of commonService.vendor_list">{{x.contact_person}}</option>
           </select>
         </div>
       </div>
       <!-- search box -->
-      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live'"
-        [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
+      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live' || commonService.vendor_list?.length"
+      [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -134,10 +134,10 @@
           <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
           <p class="w-30 w-sm-100 m-b-0">{{x.customer_name}}</p>
           <p class="w-30 w-sm-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
-          <ng-container *ngIf="commonService.store_details?.login_type!='vendor'">
-            <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}
-            </p>
-            <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
+          <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}
+          </p>
+          <ng-container *ngIf="params?.type=='live'">
+            <p *ngIf="commonService.store_details?.login_type!='vendor'" class="w-30 w-sm-100 m-b-0">
               <span *ngIf="x.payment_success" class="badge badge-success badge-green-outline">
                 <span class="badge-green-outline-txt">Paid</span>
               </span>
@@ -145,24 +145,12 @@
                 <span class="badge-red-outline-txt">Pending</span>
               </span>
             </p>
-            <p *ngIf="params?.type=='live'" class="w-30 w-sm-100 m-b-0">
+            <p *ngIf="!x.vendor_list?.length || commonService.store_details?.login_type=='vendor'" class="w-30 w-sm-100 m-b-0">
               <span class="badge" [ngClass]="{
                 'badge-primary badge-red': x.order_status === 'placed',
                 'badge-info badge-blue': x.order_status === 'confirmed',
                 'badge-warning badge-green': x.order_status === 'dispatched'
               }">{{x.order_status}}</span>
-            </p>
-          </ng-container>
-          <ng-container *ngIf="commonService.store_details?.login_type=='vendor'">
-            <p class="w-30 w-sm-100 m-b-0">{{x.vendor_order_amount | currency:
-              commonService.store_currency?.country_code}}</p>
-            <p class="w-30 w-sm-100 m-b-0">
-              <span class="badge"
-                [ngClass]="x.vendor_order_status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
-                <span
-                  [ngClass]="x.vendor_order_status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'"
-                  style="text-transform: capitalize;">{{x.vendor_order_status}}</span>
-              </span>
             </p>
           </ng-container>
           <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">

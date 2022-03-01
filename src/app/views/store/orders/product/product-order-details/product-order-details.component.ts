@@ -53,13 +53,12 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(result.status) {
           this.order_details = result.data;
           if(!this.order_details.billing_address) this.order_details.billing_address = this.order_details.shipping_address;
-          if(this.commonService.store_details._id=='60805f647ee34b5a03e4ca0d') {
+          if(this.commonService.store_details._id==environment.config_data.uru_id) {
             this.processItemListExcludeTax(this.order_details.item_list).then((respData) => {
               this.itemList = respData;
             });
           }
           else this.itemList = this.order_details.item_list;
-          this.order_details.vendors_confirmed = true;
           this.order_details.existing_status = this.order_details.order_status;
           if(this.order_details.existing_status=='placed') this.order_details.order_status='confirmed';
           if(this.order_details.existing_status=='confirmed') {
@@ -70,15 +69,20 @@ export class ProductOrderDetailsComponent implements OnInit {
           // vendor orders
           if(this.order_details.vendor_list && this.order_details.vendor_list.length) {
             this.order_details.vendor_list.forEach(element => {
-              if(element.status!='confirmed') this.order_details.vendors_confirmed = false;
               element.vendor_name = "NA";
               let vendorIndex = this.commonService.vendor_list.findIndex(obj => obj._id==element.vendor_id);
-              if(vendorIndex!=-1) element.vendor_name = this.commonService.vendor_list[vendorIndex].name;
+              if(vendorIndex!=-1) element.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.name;
             });
             // vendor login
             if(this.commonService.store_details.login_type=='vendor') {
               let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
-              if(vendorIndex!=-1) this.order_vendor_details = this.order_details.vendor_list[vendorIndex];
+              if(vendorIndex!=-1) {
+                this.order_vendor_details = this.order_details.vendor_list[vendorIndex];
+                this.order_vendor_details.existing_status = this.order_vendor_details.status;
+                if(this.order_vendor_details.existing_status=='placed') this.order_vendor_details.order_status='confirmed';
+                if(this.order_vendor_details.existing_status=='confirmed') this.order_vendor_details.order_status='dispatched';
+                if(this.order_vendor_details.existing_status=='dispatched') this.order_vendor_details.order_status='delivered';
+              }
             }
           }
           else if(this.order_details.order_type=='delivery' && this.commonService.ys_features.indexOf('partial_fulfillment')!=-1) {
@@ -97,7 +101,7 @@ export class ProductOrderDetailsComponent implements OnInit {
                 this.remaining_items.push(elem);
               }
             });
-            if(this.commonService.store_details._id=='60805f647ee34b5a03e4ca0d') {
+            if(this.commonService.store_details._id==environment.config_data.uru_id) {
               this.processItemListExcludeTax(this.remaining_items).then((respData) => {
                 this.itemList = respData;
               });
@@ -158,23 +162,6 @@ export class ProductOrderDetailsComponent implements OnInit {
         newItemList.push(itemData);
       }
       resolve(newItemList);
-    });
-  }
-
-  onVendorOrderConfirm() {
-    this.btnLoader = true;
-    let vendorId = this.selected_vendor.vendor_id;
-    if(this.commonService.store_details.login_type=='vendor') vendorId = this.commonService.vendor_details?._id;
-    this.api.VENDOR_ORDER_CONFIRM({ _id: this.order_details._id, vendor_id: vendorId }).subscribe(result => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        if(this.commonService.store_details.login_type=='vendor') this.commonService.goBack();
-        else this.ngOnInit();
-      }
-      else {
-        this.errorMsg = result.message;
-        console.log("response", result);
-      }
     });
   }
 
@@ -342,7 +329,6 @@ export class ProductOrderDetailsComponent implements OnInit {
   checkDunzoStatus(taskId) {
     this.courierData.submit = true;
     this.api.DUNZO_ORDER_STATUS(this.order_details._id, taskId).subscribe(result => {
-      console.log("-------", result)
       this.courierData.submit = false;
       if(result.status) this.courierData = result.data;
       else {
@@ -405,46 +391,72 @@ export class ProductOrderDetailsComponent implements OnInit {
   // Update order status
   updateOrderStatus() {
     this.btnLoader = true;
-    let sendData = {
-      _id: this.order_details._id,
-      shipping_method: this.order_details.shipping_method,
-      order_status: this.order_details.order_status
-    }
-    this.api.UPDATE_ORDER_STATUS(sendData).subscribe(result => {
-      this.btnLoader = false;
-      if(result.status) {
-        if(this.order_details.order_status=='delivered') {
-          if(this.commonService.ys_features.indexOf('product_reviews')!=-1) {
-            this.btnLoader = true; let customerEmail = "";
-            if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
-            else customerEmail = this.order_details.customerDetails[0].email;
-            this.api.RESEND_ORDER_MAIL({ _id: this.order_details._id, type: 'review', email: customerEmail }).subscribe(result => {
-              this.btnLoader = false;
-              if(result.status) {
-                document.getElementById('closeModal').click();
-                this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
-              }
-              else {
-                this.errorMsg = result.message;
-                console.log("response", result);
-              }
-            });
-          }
-          else {
+    if(this.commonService.store_details.login_type=='vendor') {
+      let sendData = {
+        _id: this.order_details._id,
+        vendor_id: this.order_vendor_details.vendor_id,
+        order_status: this.order_vendor_details.order_status
+      }
+      this.api.UPDATE_VENDOR_ORDER_STATUS(sendData).subscribe(result => {
+        this.btnLoader = false;
+        if(result.status) {
+          if(this.order_details.order_status=='delivered') {
             document.getElementById('closeModal').click();
             this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
           }
+          else {
+            document.getElementById('closeModal').click();
+            this.commonService.goBack();
+          }
         }
         else {
-          document.getElementById('closeModal').click();
-          this.commonService.goBack();
+          this.errorMsg = result.message;
+          console.log("response", result);
         }
+      });
+    }
+    else {
+      let sendData = {
+        _id: this.order_details._id,
+        shipping_method: this.order_details.shipping_method,
+        order_status: this.order_details.order_status
       }
-      else {
-        this.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
+      this.api.UPDATE_ORDER_STATUS(sendData).subscribe(result => {
+        this.btnLoader = false;
+        if(result.status) {
+          if(this.order_details.order_status=='delivered') {
+            if(this.commonService.ys_features.indexOf('product_reviews')!=-1) {
+              this.btnLoader = true; let customerEmail = "";
+              if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
+              else customerEmail = this.order_details.customerDetails[0].email;
+              this.api.RESEND_ORDER_MAIL({ _id: this.order_details._id, type: 'review', email: customerEmail }).subscribe(result => {
+                this.btnLoader = false;
+                if(result.status) {
+                  document.getElementById('closeModal').click();
+                  this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
+                }
+                else {
+                  this.errorMsg = result.message;
+                  console.log("response", result);
+                }
+              });
+            }
+            else {
+              document.getElementById('closeModal').click();
+              this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
+            }
+          }
+          else {
+            document.getElementById('closeModal').click();
+            this.commonService.goBack();
+          }
+        }
+        else {
+          this.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
   }
 
   // mark as paid

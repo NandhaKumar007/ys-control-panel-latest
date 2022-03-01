@@ -28,6 +28,10 @@ export class OrderService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/order_status', x, httpOptions);
   }
+  UPDATE_VENDOR_ORDER_STATUS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/vendor_order_status', x, httpOptions);
+  }
   CANCEL_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/orders', x, httpOptions);
@@ -49,11 +53,6 @@ export class OrderService {
   ORDER_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/order_details?order_id='+x, httpOptions);
-  }
-
-  VENDOR_ORDER_CONFIRM(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/vendor_order_confirm', x, httpOptions);
   }
   
   RESEND_ORDER_MAIL(x) {

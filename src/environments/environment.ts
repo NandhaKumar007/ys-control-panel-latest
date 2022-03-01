@@ -30,7 +30,8 @@ export const environment = {
     free_package_id: "5f4cd131573e9a1e680239f1",
     premium_package_id: "5f4cd4c5573e9a1e68023a04",
     dinamic_order_id: ["60b52edf58954c13bf58b5a2", "61dd3dda459e175b4e42736f"],
-    hungover_id: "5fbcac07fd6ce3538c2cf355"
+    hungover_id: "5fbcac07fd6ce3538c2cf355",
+    uru_id: "60805f647ee34b5a03e4ca0d"
   },
   base_url: "http://localhost:4500",
   razorpay_payment_url: "https://api.razorpay.com/v1/checkout/embedded",

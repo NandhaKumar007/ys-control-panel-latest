@@ -7,7 +7,7 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-8">
-        <h1>#{{ order_details.order_number }}</h1>
+        <h1>#{{ (order_vendor_details?.order_number)? order_vendor_details.order_number: order_details.order_number }}</h1>
         <ul>
           <li>View and manage your order</li>
         </ul>
@@ -300,21 +300,25 @@
           <ng-container *ngFor="let vendor of order_details.vendor_list;">
             <div class="card p-3 mb-3">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <p class="sec-desc add-another">{{vendor.vendor_name}}</p>
+                  <p>#{{vendor.order_number}}</p>
+                </div>
+                <div class="col-md-6">
                   <p class="pull-right mb-0">
-                    <span class="badge"
-                      [ngClass]="vendor.status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
-                      <span [ngClass]="vendor.status=='confirmed'? 'badge-green-outline-txt': 'badge-red-outline-txt'"
-                        style="text-transform: capitalize;">
+                    <span class="badge" [ngClass]="vendor.status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
+                      <span [ngClass]="{
+                        'badge-red-outline-txt': vendor.status === 'placed',
+                        'badge-blue-outline-txt': vendor.status === 'confirmed',
+                        'badge-green-outline-txt': vendor.status === 'dispatched' || vendor.status === 'delivered'
+                      }" style="text-transform: capitalize;">
                         {{vendor.status}}
-                        <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on:
-                          {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
+                        <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on: {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
+                        <ng-container *ngIf="vendor.status=='dispatched' && vendor.dispatched_on"> on: {{vendor.dispatched_on | date: "dd MMM y hh:mm a"}}</ng-container>
+                        <ng-container *ngIf="vendor.status=='delivered' && vendor.delivered_on"> on: {{vendor.delivered_on | date: "dd MMM y hh:mm a"}}</ng-container>
+                        <ng-container *ngIf="vendor.status=='cancelled' && vendor.cancelled_on"> on: {{vendor.cancelled_on | date: "dd MMM y hh:mm a"}}</ng-container>
                       </span>
                     </span>
-                    <button *ngIf="vendor.status!='confirmed'" type="button"
-                      (click)="selected_vendor=vendor; modalService.open(vendorConfirmModal, { centered: true });"
-                      class="btn btn-wide btn-primary ml-3">Confirm</button>
                   </p>
                 </div>
               </div>
@@ -829,8 +833,8 @@
               </div>
               <div class="col-6">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{order_details.sub_total | currency:
-                    commonService.store_currency?.country_code}}
+                  <p class="pull-right text-right">
+                    {{order_details.sub_total | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -920,9 +924,8 @@
         </div>
 
         <!-- courier partner -->
-        <form
-          *ngIf="order_details.order_type=='delivery' && order_details.vendors_confirmed && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
-          (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
+        <form *ngIf="order_details.order_type=='delivery' && !order_details.vendor_list?.length && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
+        (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
           <div class="order-summary-header">
             <p class="sec-desc">Delivery Partner</p>
           </div>
@@ -981,13 +984,11 @@
         <!-- # courier partner -->
 
         <!-- order status -->
-        <ng-container *ngIf="order_details.vendors_confirmed">
+        <ng-container *ngIf="!order_details.vendor_list?.length">
           <div *ngIf="params?.type!='inactive'" class="order-summary-header">
             <p class="sec-desc">Order Status</p>
           </div>
-          <form autocomplete="off"
-            (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });"
-            ngNativeValidate>
+          <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });" ngNativeValidate>
             <div class="card order-summary-details mtb-10">
               <div class="row mtb-10">
                 <!-- tracking details -->
@@ -1152,13 +1153,26 @@
       </div>
       <!-- vendor login -->
       <div class="col-lg-3" *ngIf="commonService.store_details?.login_type=='vendor'">
-        <div class="summary-section mtb-10">
-          <div class="order-summary-header">
-            <p class="sec-desc">Order Summary</p>
-          </div>
-          <div *ngIf="order_vendor_details?.confirmed_on" class="card order-summary-details mtb-10">
+        <div class="order-summary-header">
+          <p class="sec-desc">Order Status</p>
+        </div>
+        <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });" ngNativeValidate>
+          <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
+              <!-- existing order status -->
               <ng-container *ngIf="order_details?.created_on">
+                <div class="col-5">
+                  <div class="box-card card-head">
+                    <p>Placed on</p>
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="box-card">
+                    <p class="pull-right text-right">{{ order_details.created_on | date: "dd MMM y hh:mm a"}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="order_vendor_details?.confirmed_on">
                 <div class="col-5">
                   <div class="box-card card-head">
                     <p>Confirmed on</p>
@@ -1166,17 +1180,81 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.confirmed_on | date: "dd MMM y hh:mm a"}}
-                    </p>
+                    <p class="pull-right text-right">{{ order_vendor_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
                   </div>
                 </div>
               </ng-container>
+              <ng-container *ngIf="order_vendor_details?.dispatched_on">
+                <div class="col-5">
+                  <div class="box-card card-head">
+                    <p>Dispatched on</p>
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="box-card">
+                    <p class="pull-right text-right">{{ order_vendor_details.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="order_vendor_details?.delivered_on">
+                <div class="col-5">
+                  <div class="box-card card-head">
+                    <p>Delivered on</p>
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="box-card">
+                    <p class="pull-right text-right">{{ order_vendor_details.delivered_on | date: "dd MMM y hh:mm a"}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="order_vendor_details?.cancelled_on">
+                <div class="col-5">
+                  <div class="box-card card-head">
+                    <p>Cancelled on</p>
+                  </div>
+                </div>
+                <div class="col-7">
+                  <div class="box-card">
+                    <p class="pull-right text-right">{{ order_vendor_details.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <!-- update order status -->
+              <ng-container *ngIf="params?.type=='live'">
+                <div *ngIf="order_vendor_details?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
+                  <label class="radio radio-primary">
+                    <input type="radio" name="order_status" value="confirmed" [(ngModel)]="order_vendor_details.order_status">
+                    <span>Order Confirmed</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <ng-container *ngIf="order_vendor_details?.existing_status=='placed' || order_vendor_details?.existing_status=='confirmed'">
+                  <div class="col-md-12 mb-1 summary-section">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_vendor_details.order_status">
+                      <span>Order Dispatched</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="order_vendor_details?.existing_status=='placed' || order_vendor_details?.existing_status=='confirmed' || order_vendor_details?.existing_status=='dispatched'">
+                  <div class="col-md-12 mb-1 summary-section">
+                    <label class="radio radio-primary">
+                      <input type="radio" name="order_status" value="delivered" [(ngModel)]="order_vendor_details.order_status">
+                      <span>Order Delivered</span>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="col-md-12">
+                    <button [disabled]="order_vendor_details.order_status=='delivered' && !order_vendor_details?.dispatched_on"
+                    type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
+                  </div>
+                </ng-container>
+              </ng-container>
             </div>
           </div>
-        </div>
-        <button *ngIf="!order_vendor_details?.confirmed_on" type="button"
-          (click)="modalService.open(vendorConfirmModal, { centered: true });"
-          class="btn btn-primary w-100 mtb-10">Confirm Order</button>
+        </form>
       </div>
     </div>
   </div>
@@ -1666,28 +1744,6 @@
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="updateOrderStatus();" class="btn btn-wide btn-primary ladda-button"
-      [disabled]="btnLoader" [ladda]="btnLoader">Yes</button>
-  </div>
-</ng-template>
-
-<!-- vendor confirm status -->
-<ng-template #vendorConfirmModal let-modal>
-  <div class="modal-body">
-    <p>
-      <strong *ngIf="commonService.store_details.login_type=='vendor'">Do you want to confirm the order <span
-          class="text-danger">"#{{order_details.order_number}}"</span>?</strong>
-      <strong *ngIf="commonService.store_details.login_type!='vendor'">Do you want to confirm the <span
-          class="text-danger">"{{selected_vendor.vendor_name}}"</span>order?</strong>
-    </p>
-    <div *ngIf="errorMsg">
-      <p class="text-danger">{{ errorMsg }}</p>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
-      <span class="black-outline-txt">No</span>
-    </button>
-    <button type="button" (click)="onVendorOrderConfirm();" class="btn btn-wide btn-primary ladda-button"
       [disabled]="btnLoader" [ladda]="btnLoader">Yes</button>
   </div>
 </ng-template>
