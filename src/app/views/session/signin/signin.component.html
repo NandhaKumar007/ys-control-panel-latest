@@ -1,6 +1,7 @@
 <div [@animate]="{value:'*',params:{y:'120px',opacity:'0',delay:'100ms', duration: '400ms'}}">
   <div class="row">
-    <div class="col-md-12">
+    <app-spinner *ngIf="pageLoader"></app-spinner>
+    <div *ngIf="!pageLoader" class="col-md-12">
       <div class="auth-card">
         <div class="auth-logo text-center mb-4">
           <img src="assets/images/yourstore_logo.svg" alt="">

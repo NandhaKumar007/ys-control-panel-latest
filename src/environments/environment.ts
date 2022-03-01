@@ -33,6 +33,7 @@ export const environment = {
     hungover_id: "5fbcac07fd6ce3538c2cf355",
     uru_id: "60805f647ee34b5a03e4ca0d"
   },
+  keep_login: false,
   base_url: "http://localhost:4500",
   razorpay_payment_url: "https://api.razorpay.com/v1/checkout/embedded",
   razorpay_redirect_url: "https://yourstore.io/api/others/razorpay_store_payment/5ceb9eb971f2cb809646edd2"

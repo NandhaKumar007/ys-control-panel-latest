@@ -43,7 +43,7 @@
           <button *ngIf="commonService.store_details?.login_type=='admin' || commonService.subuser_features.indexOf('order_export')!=-1"
           type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
         </ng-container>
-        <ng-container *ngIf="params?.type=='live' && params?.customer_id=='all'">
+        <ng-container *ngIf="params?.type=='live' && params?.customer_id=='all' && commonService.store_details?.login_type!='vendor'">
           <button *ngIf="commonService.ys_features.indexOf('manual_order')!=-1 || commonService.subuser_features.indexOf('manual_order')!=-1"
           type="button" class="btn btn-primary" routerLink="/orders/create-order">Create New Order</button>
         </ng-container>

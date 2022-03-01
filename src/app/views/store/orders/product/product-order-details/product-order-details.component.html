@@ -306,13 +306,18 @@
                 </div>
                 <div class="col-md-6">
                   <p class="pull-right mb-0">
-                    <span class="badge" [ngClass]="vendor.status=='confirmed'? 'badge-success badge-green-outline': 'badge-warning badge-red-outline'">
+                    <span class="badge" [ngClass]="{
+                      'badge-warning badge-red-outline': vendor.status === 'placed',
+                      'badge-info badge-blue-outline': vendor.status === 'confirmed',
+                      'badge-success badge-green-outline': vendor.status === 'dispatched' || vendor.status === 'delivered'
+                    }">
                       <span [ngClass]="{
                         'badge-red-outline-txt': vendor.status === 'placed',
                         'badge-blue-outline-txt': vendor.status === 'confirmed',
                         'badge-green-outline-txt': vendor.status === 'dispatched' || vendor.status === 'delivered'
                       }" style="text-transform: capitalize;">
                         {{vendor.status}}
+                        <ng-container *ngIf="vendor.status=='placed'"> on: {{order_details?.created_on | date: "dd MMM y hh:mm a"}}</ng-container>
                         <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on: {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
                         <ng-container *ngIf="vendor.status=='dispatched' && vendor.dispatched_on"> on: {{vendor.dispatched_on | date: "dd MMM y hh:mm a"}}</ng-container>
                         <ng-container *ngIf="vendor.status=='delivered' && vendor.delivered_on"> on: {{vendor.delivered_on | date: "dd MMM y hh:mm a"}}</ng-container>
@@ -556,220 +561,93 @@
               </div>
             </ng-container>
           </ng-container>
-          <!-- order note -->
-          <div class="order-section">
-            <div class="pb-2">
-              <p class="sec-desc" style="display: inline-block;">Order Note</p>
-              <i *ngIf="!params?.coupon_id && params?.type!='inactive' && commonService.ys_features.indexOf('order_note')!=-1"
-                style="float:right;" (click)="onEdit('note', orderNoteModal);" class="material-icons edit-icon">edit</i>
-            </div>
-            <div class="col-md-12 list-item p-0">
-              <div class="card mb-4 d-flex flex-row">
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div class="card-body">
-                    <p *ngIf="order_details?.order_note" class="m-b-0"
-                      [innerHTML]="transformHtml(order_details.order_note)"></p>
-                    <p *ngIf="!order_details?.order_note" class="m-b-0">NA</p>
-                    <p *ngIf="order_details?.gift_status" class="m-b-0 mt-3">
-                      <span class="txt-grdint-highlight"><b>This is a gift</b></span>
-                    </p>
-                    <p *ngIf="order_details?.need_sample" class="m-b-0 mt-3">
-                      <span class="txt-grdint-highlight">
-                        <b>{{ (commonService.store_details._id==configData.hungover_id)? 'TRY ON TEE Needed': 'Need sample' }}</b>
-                      </span>
-                    </p>
-                  </div>
+        </ng-container>
+        <!-- order note -->
+        <div class="order-section">
+          <div class="pb-2">
+            <p class="sec-desc" style="display: inline-block;">Order Note</p>
+            <i *ngIf="!params?.coupon_id && params?.type!='inactive' && commonService.ys_features.indexOf('order_note')!=-1 && commonService.store_details?.login_type!='vendor'"
+              style="float:right;" (click)="onEdit('note', orderNoteModal);" class="material-icons edit-icon">edit</i>
+          </div>
+          <div class="col-md-12 list-item p-0">
+            <div class="card mb-4 d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div class="card-body">
+                  <p *ngIf="order_details?.order_note" class="m-b-0"
+                    [innerHTML]="transformHtml(order_details.order_note)"></p>
+                  <p *ngIf="!order_details?.order_note" class="m-b-0">NA</p>
+                  <p *ngIf="order_details?.gift_status" class="m-b-0 mt-3">
+                    <span class="txt-grdint-highlight"><b>This is a gift</b></span>
+                  </p>
+                  <p *ngIf="order_details?.need_sample" class="m-b-0 mt-3">
+                    <span class="txt-grdint-highlight">
+                      <b>{{ (commonService.store_details._id==configData.hungover_id)? 'TRY ON TEE Needed': 'Need sample' }}</b>
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <!-- shipping & billing & pickup address -->
-          <div class="order-section">
-            <div class="row">
-              <!-- shipping || pickup address -->
-              <div class="col-md-6 d-flex">
-                <div class="summary-section mtb-10">
-                  <!-- shipping -->
-                  <div *ngIf="order_details.order_type!='pickup'" class="order-summary-header pb-2">
-                    <p class="sec-desc" style="display: inline-block;">Shipping Address</p>
-                    <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-                      (click)="addressType='shipping'; onEdit('address', addressModal);"
-                      class="material-icons edit-icon">edit</i>
-                  </div>
-                  <!-- pickup -->
-                  <div *ngIf="order_details.order_type=='pickup'" class="order-summary-header pb-2">
-                    <p class="sec-desc" style="display: inline-block;">Pickup Address</p>
-                    <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-                      (click)="addressType='pickup'; onEdit('address', addressModal);" class="material-icons edit-icon">edit</i>
-                  </div>
-                  <div class="card order-summary-details h-100">
-                    <div class="row mtb-20">
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Name</p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.shipping_address?.name}}</p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Mobile No</p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p *ngIf="order_details.order_type!='pickup'" class="pull-right text-right">
-                            {{order_details.shipping_address?.dial_code}} {{order_details.shipping_address?.mobile}}
-                          </p>
-                          <p *ngIf="order_details.order_type=='pickup'" class="pull-right text-right">
-                            {{order_details.shipping_address?.mobile}}
-                          </p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Country</p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.shipping_address?.country}}</p>
-                        </div>
-                      </div>
-                      <!-- shipping -->
-                      <ng-container *ngIf="order_details.order_type!='pickup'">
-                        <ng-container *ngFor="let x of order_details?.shipping_address?.address_fields;">
-                          <div class="col-6">
-                            <div class="box-card card-head">
-                              <p>{{x.label}}</p>
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="box-card">
-                              <p class="pull-right text-right">{{x.value}}</p>
-                            </div>
-                          </div>
-                        </ng-container>
-                      </ng-container>
-                      <!-- pickup -->
-                      <ng-container *ngIf="order_details.order_type=='pickup'">
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>State</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.shipping_address?.state}}</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>City</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.shipping_address?.city}}</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>Pincode</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.shipping_address?.pincode}}</p>
-                          </div>
-                        </div>
-                      </ng-container>
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Address</p>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right" align="end">{{order_details.shipping_address?.address}}</p>
-                        </div>
-                      </div>
-                      <ng-container *ngIf="order_details?.shipping_address?.landmark">
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>Landmark</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.shipping_address.landmark}}</p>
-                          </div>
-                        </div>
-                      </ng-container>
-                      <ng-container *ngIf="order_details?.shipping_address?.location_url">
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>Location URL</p>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <a [href]="order_details.shipping_address.location_url" target="_blank" class="pull-right text-right">
-                              {{order_details.shipping_address.location_url}}
-                            </a>
-                          </div>
-                        </div>
-                      </ng-container>
-                    </div>
-                  </div>
+        </div>
+        <!-- shipping & billing & pickup address -->
+        <div class="order-section">
+          <div class="row">
+            <!-- shipping || pickup address -->
+            <div class="col-md-6 d-flex">
+              <div class="summary-section mtb-10">
+                <!-- shipping -->
+                <div *ngIf="order_details.order_type!='pickup'" class="order-summary-header pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Shipping Address</p>
+                  <i *ngIf="!params?.coupon_id && params?.type!='inactive' && commonService.store_details?.login_type!='vendor'" style="float:right;"
+                    (click)="addressType='shipping'; onEdit('address', addressModal);"
+                    class="material-icons edit-icon">edit</i>
                 </div>
-              </div>
-              <!-- billing address -->
-              <div class="col-md-6 d-flex">
-                <div class="summary-section mtb-10">
-                  <div class="order-summary-header pb-2">
-                    <p class="sec-desc" style="display: inline-block;">Billing Address</p>
-                    <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;"
-                      (click)="addressType='billing'; onEdit('address', addressModal);"
-                      class="material-icons edit-icon">edit</i>
-                  </div>
-                  <div class="card order-summary-details h-100">
-                    <div class="row mtb-20">
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Name</p>
-                        </div>
+                <!-- pickup -->
+                <div *ngIf="order_details.order_type=='pickup'" class="order-summary-header pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Pickup Address</p>
+                  <i *ngIf="!params?.coupon_id && params?.type!='inactive' && commonService.store_details?.login_type!='vendor'" style="float:right;"
+                    (click)="addressType='pickup'; onEdit('address', addressModal);" class="material-icons edit-icon">edit</i>
+                </div>
+                <div class="card order-summary-details h-100">
+                  <div class="row mtb-20">
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Name</p>
                       </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.billing_address?.name}}</p>
-                        </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right">{{order_details.shipping_address?.name}}</p>
                       </div>
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Mobile No</p>
-                        </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Mobile No</p>
                       </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.billing_address?.dial_code}}
-                            {{order_details.billing_address?.mobile}}</p>
-                        </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p *ngIf="order_details.order_type!='pickup'" class="pull-right text-right">
+                          {{order_details.shipping_address?.dial_code}} {{order_details.shipping_address?.mobile}}
+                        </p>
+                        <p *ngIf="order_details.order_type=='pickup'" class="pull-right text-right">
+                          {{order_details.shipping_address?.mobile}}
+                        </p>
                       </div>
-                      <div class="col-6">
-                        <div class="box-card card-head">
-                          <p>Country</p>
-                        </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Country</p>
                       </div>
-                      <div class="col-6">
-                        <div class="box-card">
-                          <p class="pull-right text-right">{{order_details.billing_address?.country}}</p>
-                        </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right">{{order_details.shipping_address?.country}}</p>
                       </div>
-                      <ng-container *ngFor="let x of order_details?.billing_address?.address_fields;">
+                    </div>
+                    <!-- shipping -->
+                    <ng-container *ngIf="order_details.order_type!='pickup'">
+                      <ng-container *ngFor="let x of order_details?.shipping_address?.address_fields;">
                         <div class="col-6">
                           <div class="box-card card-head">
                             <p>{{x.label}}</p>
@@ -781,35 +659,162 @@
                           </div>
                         </div>
                       </ng-container>
+                    </ng-container>
+                    <!-- pickup -->
+                    <ng-container *ngIf="order_details.order_type=='pickup'">
                       <div class="col-6">
                         <div class="box-card card-head">
-                          <p>Address</p>
+                          <p>State</p>
                         </div>
                       </div>
                       <div class="col-6">
                         <div class="box-card">
-                          <p class="pull-right text-right" align="end">{{order_details.billing_address?.address}}</p>
+                          <p class="pull-right text-right">{{order_details.shipping_address?.state}}</p>
                         </div>
                       </div>
-                      <ng-container *ngIf="order_details?.billing_address?.landmark">
-                        <div class="col-6">
-                          <div class="box-card card-head">
-                            <p>Landmark</p>
-                          </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>City</p>
                         </div>
-                        <div class="col-6">
-                          <div class="box-card">
-                            <p class="pull-right text-right">{{order_details.billing_address.landmark}}</p>
-                          </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.city}}</p>
                         </div>
-                      </ng-container>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Pincode</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address?.pincode}}</p>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Address</p>
+                      </div>
                     </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right" align="end">{{order_details.shipping_address?.address}}</p>
+                      </div>
+                    </div>
+                    <ng-container *ngIf="order_details?.shipping_address?.landmark">
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Landmark</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.shipping_address.landmark}}</p>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="order_details?.shipping_address?.location_url">
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Location URL</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <a [href]="order_details.shipping_address.location_url" target="_blank" class="pull-right text-right">
+                            {{order_details.shipping_address.location_url}}
+                          </a>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- billing address -->
+            <div class="col-md-6 d-flex">
+              <div class="summary-section mtb-10">
+                <div class="order-summary-header pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Billing Address</p>
+                  <i *ngIf="!params?.coupon_id && params?.type!='inactive' && commonService.store_details?.login_type!='vendor'" style="float:right;"
+                    (click)="addressType='billing'; onEdit('address', addressModal);"
+                    class="material-icons edit-icon">edit</i>
+                </div>
+                <div class="card order-summary-details h-100">
+                  <div class="row mtb-20">
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Name</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right">{{order_details.billing_address?.name}}</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Mobile No</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right">{{order_details.billing_address?.dial_code}}
+                          {{order_details.billing_address?.mobile}}</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Country</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right">{{order_details.billing_address?.country}}</p>
+                      </div>
+                    </div>
+                    <ng-container *ngFor="let x of order_details?.billing_address?.address_fields;">
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>{{x.label}}</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{x.value}}</p>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <div class="col-6">
+                      <div class="box-card card-head">
+                        <p>Address</p>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="box-card">
+                        <p class="pull-right text-right" align="end">{{order_details.billing_address?.address}}</p>
+                      </div>
+                    </div>
+                    <ng-container *ngIf="order_details?.billing_address?.landmark">
+                      <div class="col-6">
+                        <div class="box-card card-head">
+                          <p>Landmark</p>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="box-card">
+                          <p class="pull-right text-right">{{order_details.billing_address.landmark}}</p>
+                        </div>
+                      </div>
+                    </ng-container>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </ng-container>
+        </div>
       </div>
       <!-- not vendor login -->
       <div class="col-lg-3" *ngIf="commonService.store_details?.login_type!='vendor'">
