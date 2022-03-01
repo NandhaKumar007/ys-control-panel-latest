@@ -2403,8 +2403,13 @@ button:focus {
   background: $primary-theme-clr !important;
 }
 .auth-layout-wrap .auth-content {
-  // max-width: 450px;
-  // min-width: 450px;
+  /* max-width: 666px;
+  min-width: 666px; */
+  max-width: 400px;
+  min-width: 400px;
+}
+
+.auth-layout-wrap .signup-card {
   max-width: 100%;
   min-width: 100%;
 }
@@ -3903,8 +3908,8 @@ p svg:hover {
 
 @media only screen and (max-width: 1200px) {
   .auth-layout-wrap .auth-content {
-    // min-width: 400px;
-    // max-width: 400px;
+    min-width: 400px;
+    max-width: 400px;
   }
 }
 
@@ -3968,8 +3973,8 @@ p svg:hover {
   }
 
   .auth-layout-wrap .auth-content {
-    // min-width: 400px;
-    // max-width: 400px;
+    min-width: 400px;
+    max-width: 400px;
   }
   .invoice-no {
     justify-content: flex-start;
