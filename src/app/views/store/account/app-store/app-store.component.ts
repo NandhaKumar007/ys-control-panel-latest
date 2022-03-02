@@ -44,7 +44,7 @@ export class AppStoreComponent implements OnInit {
         this.api.YS_FEATURES_LIST().subscribe(result => {
           setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos); }, 500);
           if(result.status) {
-            this.package_list = result.packages;
+            this.package_list = result.packages.filter(obj => obj.category==this.commonService.store_details.package_info.category);
             this.parent_list = result.list.filter(obj => obj.linked_packages.length);
             let trialFeatures = result.deploy_details.trial_features.filter(obj => obj.status=='active');
             this.parent_list.forEach(obj => {
@@ -84,7 +84,11 @@ export class AppStoreComponent implements OnInit {
     if(x!='all') {
       list = this.parent_list.filter(obj => obj.linked_packages.findIndex(el => el.package_id==x)!=-1);
     }
-    else list = this.parent_list;
+    else {
+      let filteredPackageList = [];
+      this.package_list.forEach(obj => { filteredPackageList.push(obj._id); });
+      list = this.parent_list.filter(obj => obj.linked_packages.findIndex(el => filteredPackageList.indexOf(el.package_id)!=-1)!=-1);
+    }
     this.notFound = true;
     this.commonService.feature_categories.forEach(obj => {
       obj.apps = list.filter(el => el.category==obj.name);

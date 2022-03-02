@@ -42,6 +42,7 @@ export class SigninComponent implements OnInit {
   }
 
   storeLogin() {
+    if(sessionStorage.getItem("app_token")) this.loginForm.app_token = sessionStorage.getItem("app_token");
     this.api.LOGIN(this.loginForm).subscribe(result => {
       this.loading = false; this.loadingText = "";
       if(result.status) {

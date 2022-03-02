@@ -16,7 +16,8 @@
             <div class="signup-form">
               <form autocomplete="off" (ngSubmit)="validateEmail(signupForm.email);" ngNativeValidate>
                 <div class="row">
-                  <div class="col-lg-5">
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-10">
                     <div class="form-group">
                       <input type="text" name="contact_person" class="theme-input-style" placeholder="Your full name" [(ngModel)]="signupForm.company_details.contact_person" required>
                     </div>
@@ -64,7 +65,7 @@
                       <a routerLink="/session/signin" class="s-btn"><strong> Signin</strong></a>
                     </span>
                   </div>
-                  <div class="col-lg-2">
+                  <!-- <div class="col-lg-2">
                     <div class="signup-or-divider">
                       <span>OR</span>
                     </div>
@@ -82,7 +83,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </form>
             </div>
