@@ -25,7 +25,7 @@ export class SignupComponent implements OnInit {
   constructor(private router: Router, private api: ApiService, public commonService: CommonService) {
     this.signupForm = {
       country: "India", currency_types: this.currencyList[0],
-      company_details: { dial_code: "+91", state: "" }, user_info: "no", user_exp: "no", category: ""
+      company_details: { dial_code: "+91", state: "" }, category: ""
     };
     if(!localStorage.getItem("country_list")) {
       this.api.COUNTRIES_LIST().subscribe(result => {

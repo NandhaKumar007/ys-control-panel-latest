@@ -3,11 +3,23 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Clients</h1>
-    <ul>
-      <li>View and manage your clients</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-12 p-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-end align-items-start flex-column">
+            <h1>Clients</h1>
+            <ul>
+              <li>View and manage your clients</li>
+            </ul>
+          </div>
+          <div class="col-md-4 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
+            <button type="button" (click)="pwdForm={}; modalService.open(notifyModal);" class="btn btn-primary mr-3">Send Notification</button>
+            <button type="button" class="btn btn-primary">Add Client</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
@@ -154,6 +166,55 @@
       </button>
       <button type="submit" [disabled]="pwdForm.new_pwd!=pwdForm.confirm_new_pwd"
         class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Send Notification -->
+<ng-template #notifyModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Send Notification</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onSendNotification();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Title</label>
+            <input type="text" name="title" class="form-control" [(ngModel)]="pwdForm.title" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Body</label>
+            <textarea name="body" [(ngModel)]="pwdForm.body" class="form-control" required></textarea>
+          </div>
+          <div class="col-md-12">
+            <div *ngIf="pwdForm.image" align="center">
+              <span (click)="pwdForm.img_change=null; pwdForm.image=null" class="material-icons item-close float-right" aria-hidden="true">close</span>
+              <img [src]="pwdForm.image" height="100px;" width="auto;">
+            </div>
+            <div *ngIf="!pwdForm.image" align="center">
+              <label>
+                <div>
+                  <i class="material-icons add-img">add_photo_alternate</i>
+                  <p>Click to upload image</p>
+                </div>
+                <input type="file" name="image" style="display: none;" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="pwdForm.errorMsg">
+        <p class="text-danger">{{ pwdForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="pwdForm.submit" [ladda]="pwdForm.submit">
+        Send
+      </button>
     </div>
   </form>
 </ng-template>

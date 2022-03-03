@@ -37,6 +37,10 @@ export class AdminApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.patch<any>(environment.ws_url+'/admin/store', x, httpOptions); 
   }
+  SEND_NOTIFICATION(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.post<any>(environment.ws_url+'/admin/store/send_notification', x, httpOptions);
+  }
   STORE_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
     return this.http.post<any>(environment.ws_url+'/admin/store/details', x, httpOptions);

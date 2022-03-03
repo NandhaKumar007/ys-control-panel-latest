@@ -93,7 +93,7 @@ export class GiftcardComponent implements OnInit {
 		});
   }
   
-  fileChangeListener(type, event) {
+  fileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {

@@ -104,7 +104,7 @@
             </div>
             <div class="step-form-inner">
               <h3>Complete registration</h3>
-              <p>Step 1 of 4</p>
+              <p>Step 1 of 3</p>
               <div class="step-progress-wrapper">
                 <div class="step-progress-inner step-one"></div>
               </div>
@@ -164,7 +164,7 @@
             </div>
             <div class="step-form-inner">
               <h3>Complete registration</h3>
-              <p>Step 2 of 4</p>
+              <p>Step 2 of 3</p>
               <div class="step-progress-wrapper">
                 <div class="step-progress-inner step-two"></div>
               </div>
@@ -214,64 +214,7 @@
   </div>
 
   <!-- SIGNUP STEP 4 -->
-  <div *ngIf="step===4" class="personalize-store-sec">
-    <div class="container d-flex justify-content-center">
-      <div class="ys-create-store-section">
-        <div class="row no-gutters">
-          <div class="step-form-left">
-            <div (click)="prevStep();" class="step-back-wrapper personalize-store-sec-back">
-              <i class="material-icons">arrow_back</i>
-            </div>
-            <div class="step-form-inner">
-              <h3>Complete registration</h3>
-              <p>Step 3 of 4</p>
-              <div class="step-progress-wrapper">
-                <div class="step-progress-inner step-three"></div>
-              </div>
-            </div>
-          </div>
-          <div class="step-form-right">
-            <div class="signup-form-wrap">
-              <div class="signup-form">
-                <div class="signup-form-title">
-                  <h3 class="black">Tell us about yourself</h3>
-                  <p>Let's do this</p>
-                </div>
-                <form autocomplete="off" (ngSubmit)="nextStep();" ngNativeValidate>
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="mb-3">
-                        <label class="black mb-1"><strong>Are you setting up a store for someone else?</strong></label>
-                        <select name="user_info" [(ngModel)]="signupForm.user_info" class="selectbox-state" required>
-                          <option value="yes">Yes, I am developing the store for a client</option>
-                          <option value="no">No, for my business</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div *ngIf="signupForm.user_info=='no'" class="col-lg-12">
-                      <div class="mb-3">
-                        <label class="black mb-1"><strong>Do you have experience setting up online store?</strong></label>
-                        <select name="user_exp" [(ngModel)]="signupForm.user_exp" class="selectbox-state" required>
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-6 text-center mt-3">
-                      <button type="submit" class="btn btn-primary w-100">Next</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SIGNUP STEP 5 -->
-  <div *ngIf="step===5" class="project-category-select">
+  <div *ngIf="step===4" class="project-category-select">
     <div class="container d-flex justify-content-center">
       <div class="ys-create-store-section">
         <div class="row no-gutters">
@@ -285,9 +228,9 @@
             <!--## back btn ##-->
             <div class="step-form-inner">
               <h3>Complete registration</h3>
-              <p>Step 4 of 4</p>
+              <p>Step 3 of 3</p>
               <div class="step-progress-wrapper">
-                <div class="step-progress-inner step-four"></div>
+                <div class="step-progress-inner step-three"></div>
               </div>
             </div>
           </div>

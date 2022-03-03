@@ -4,10 +4,15 @@
 
 <div *ngIf="!pageLoader">
   <div class="breadcrumb">
-    <h1>{{clientForm.name}}
+    <h1>
+      {{ (clientForm.formType=='add')? 'Add Client': clientForm.name }}
       <span class="breadcrumb-steps">(Step {{step_num}} of 2)</span>
     </h1>
-    <ul>
+    <ul *ngIf="clientForm.formType=='add'">
+      <li *ngIf="step_num==1">Add client details</li>
+      <li *ngIf="step_num==2">Choose rental package</li>
+    </ul>
+    <ul *ngIf="clientForm.formType=='update'">
       <li *ngIf="step_num==1">Update client details</li>
       <li *ngIf="step_num==2">Update rental package</li>
     </ul>

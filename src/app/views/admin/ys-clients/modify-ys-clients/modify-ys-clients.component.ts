@@ -24,23 +24,28 @@ export class ModifyYsClientsComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      this.pageLoader = true; this.step_num = 1;
-      this.adminApi.STORE_DETAILS({ _id: params.client_id }).subscribe(result => {
-        setTimeout(() => { this.pageLoader = false; }, 500);
-        if(result.status) {
-          this.clientForm = result.data;
-          this.clientForm.currency_types = this.clientForm.currency_types[0];
-          this.onCountryChange(this.clientForm.country);
-          if(this.clientForm.package_details.billing_status) {
-            this.clientForm.package_details.expiry_date = new Date(this.clientForm.package_details.expiry_date);
-            this.clientForm.package_details.transaction_range.from = new Date(this.clientForm.package_details.transaction_range.from);
-            this.clientForm.package_details.transaction_range.to = new Date(this.clientForm.package_details.transaction_range.to);
+      this.step_num = 1;
+      if(params.client_id) {
+        this.pageLoader = true;
+        this.adminApi.STORE_DETAILS({ _id: params.client_id }).subscribe(result => {
+          setTimeout(() => { this.pageLoader = false; }, 500);
+          if(result.status) {
+            this.clientForm = result.data;
+            this.clientForm.formType = 'update';
+            this.clientForm.currency_types = this.clientForm.currency_types[0];
+            this.onCountryChange(this.clientForm.country);
+            if(this.clientForm.package_details.billing_status) {
+              this.clientForm.package_details.expiry_date = new Date(this.clientForm.package_details.expiry_date);
+              this.clientForm.package_details.transaction_range.from = new Date(this.clientForm.package_details.transaction_range.from);
+              this.clientForm.package_details.transaction_range.to = new Date(this.clientForm.package_details.transaction_range.to);
+            }
+            if(this.clientForm.package_details.trial_expiry)
+              this.clientForm.package_details.trial_expiry = new Date(this.clientForm.package_details.trial_expiry);
           }
-          if(this.clientForm.package_details.trial_expiry)
-            this.clientForm.package_details.trial_expiry = new Date(this.clientForm.package_details.trial_expiry);
-        }
-        else console.log("response", result);
-      });
+          else console.log("response", result);
+        });
+      }
+      else this.clientForm = { formType: 'add', company_details: {}, currency_types: {} };
     });
   }
 

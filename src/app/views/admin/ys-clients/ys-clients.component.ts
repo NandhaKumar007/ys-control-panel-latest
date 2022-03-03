@@ -46,6 +46,18 @@ export class YsClientsComponent implements OnInit {
     });
   }
 
+  onSendNotification() {
+    this.pwdForm.submit = true;
+    this.adminApi.SEND_NOTIFICATION(this.pwdForm).subscribe(result => {
+      this.pwdForm.submit = false;
+      if(result.status) document.getElementById("closeModal").click();
+      else {
+        console.log("response", result);
+        this.pwdForm.errorMsg = result.message;
+      }
+    });
+  }
+
   changeAccType() {
     if(this.accountType=='trial') this.list = this.parent_list.filter(obj => !obj.package_details.billing_status);
     else if(this.accountType=='subscribed') this.list = this.parent_list.filter(obj => obj.package_details.billing_status);
@@ -134,6 +146,17 @@ export class YsClientsComponent implements OnInit {
         this.buildForm.errorMsg = result.message;
       }
     });
+  }
+
+  fileChangeListener(event) {
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.pwdForm.image = (<FileReader>event.target).result;
+        this.pwdForm.img_change = true;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
   }
 
   sendWhatsapp(x) {
