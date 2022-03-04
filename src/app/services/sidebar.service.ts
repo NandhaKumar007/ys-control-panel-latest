@@ -161,7 +161,7 @@ export class SidebarService {
           // gift card
           if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
             orderList.push({ icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' });
-            inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
+            // inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
             routePermissionList.push("inactive_gift_orders");
           }
           // quick order
@@ -182,8 +182,8 @@ export class SidebarService {
           }
           if(this.commonService.store_details.type!='quot_with_order_based') {
             // inactive orders
-            if(inactiveOrders.length>1) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
-            else orderList.push({ icon: 'error_outline', name: 'Inactive Orders', state: '/orders/inactive-orders', type: 'link' });
+            if(inactiveOrders.length>1) orderList.push({ name: 'Failed Payments', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
+            else orderList.push({ icon: 'error_outline', name: 'Failed Payments', state: '/orders/inactive-orders', type: 'link' });
             // abandoned
             if(ysFeatures.indexOf('abandoned_cart')!=-1) {
               orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
@@ -242,7 +242,7 @@ export class SidebarService {
         if(this.commonService.store_details?.package_info?.category!='genie') {
           wdList.push(
             { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
-            { name: 'Product Page', state: '/layouts/product', type: 'link' }
+            // { name: 'Product Page', state: '/layouts/product', type: 'link' }
           );
           routePermissionList.push("catalog_layout", "product_layout");
         }
@@ -456,10 +456,10 @@ export class SidebarService {
         // gift card
         if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
           if(subuserFeatures.indexOf('giftcard_orders')!=-1) orderList.push({ icon: 'redeem', name: 'Gift Card Orders', state: '/orders/gift-coupon', type: 'link' });
-          if(subuserFeatures.indexOf('inactive_giftcard_orders')!=-1) {
-            inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
-            routePermissionList.push("inactive_gift_orders");
-          }
+          // if(subuserFeatures.indexOf('inactive_giftcard_orders')!=-1) {
+          //   inactiveOrders.push({ name: 'Gift Card', state: '/orders/inactive-gift-coupons', type: 'link' })
+          //   routePermissionList.push("inactive_gift_orders");
+          // }
         }
         // quick order
         if(ysFeatures.indexOf('quick_order')!=-1 && subuserFeatures.indexOf('quick_order')!=-1) {
@@ -478,7 +478,8 @@ export class SidebarService {
           routePermissionList.push("appointments");
         }
         // inactive orders
-        if(inactiveOrders.length) orderList.push({ name: 'Inactive Orders', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
+        if(inactiveOrders.length>1) orderList.push({ name: 'Failed Payments', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
+        else orderList.push({ icon: 'error_outline', name: 'Failed Payments', state: '/orders/inactive-orders', type: 'link' });
         // abandoned
         if(ysFeatures.indexOf('abandoned_cart')!=-1 && subuserFeatures.indexOf('abandoned_cart')!=-1) {
           orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
@@ -544,7 +545,7 @@ export class SidebarService {
           sub: [
             { name: 'Home Page', state: '/layouts/home', type: 'link' },
             { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
-            { name: 'Product Page', state: '/layouts/product', type: 'link' }
+            // { name: 'Product Page', state: '/layouts/product', type: 'link' }
           ]
         });
         routePermissionList.push("home_layout", "catalog_layout", "product_layout");

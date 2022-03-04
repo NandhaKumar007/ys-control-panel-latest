@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { Share } from '@capacitor/share';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { echartStyles } from '../../../shared/animations/echart-styles';
 import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-dashboard',
@@ -468,15 +470,23 @@ export class DashboardComponent implements OnInit {
   }
 
   socialShare() {
-    let windowNav: any = window.navigator;
-    if(windowNav && windowNav.share) {
-      windowNav.share({
-        title: '', text: '',
+    if(environment.keep_login) {
+      Share.share({
+        title: '', text: '', dialogTitle: '',
         url: this.commonService.store_details.base_url
-      })
-      .catch( (error) => { console.log(error); });
+      });
     }
-    else console.log("share not supported")
+    else {
+      let windowNav: any = window.navigator;
+      if(windowNav && windowNav.share) {
+        windowNav.share({
+          title: '', text: '',
+          url: this.commonService.store_details.base_url
+        })
+        .catch( (error) => { console.log(error); });
+      }
+      else console.log("share not supported")
+    }
   }
 
   ngOnDestroy() {

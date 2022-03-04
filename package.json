@@ -26,6 +26,7 @@
     "@angular/service-worker": "^10.1.0",
     "@capacitor/core": "^3.4.1",
     "@capacitor/push-notifications": "^1.0.9",
+    "@capacitor/share": "^1.1.1",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "@progress/kendo-angular-common": "^1.2.3",
     "@progress/kendo-angular-pdf-export": "^2.1.0",

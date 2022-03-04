@@ -162,8 +162,8 @@ export class SubUsersComponent implements OnInit {
     if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) {
       orderList.push({ keyword: "giftcard_orders", name: "Giftcard Orders" });
     }
-    orderList.push({ keyword: "inactive_orders", name: "Inactive Product Orders" });
-    if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) orderList.push({ keyword: "inactive_giftcard_orders", name: "Inactive Giftcard Orders" });
+    orderList.push({ keyword: "inactive_orders", name: "Failed Product Payments" });
+    if(ysFeatures.indexOf('manual_giftcard')!=-1 || ysFeatures.indexOf('giftcard')!=-1) orderList.push({ keyword: "inactive_giftcard_orders", name: "Failed Giftcard Payments" });
     if(ysFeatures.indexOf('abandoned_cart')!=-1 && this.commonService.store_details.type!='restaurant_based')
       orderList.push({ keyword: "abandoned_cart", name: "Abandoned Cart" });
     orderList.push({ keyword: "customers", name: "Customers" });
