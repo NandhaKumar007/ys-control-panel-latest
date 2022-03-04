@@ -18,7 +18,10 @@ export class YsPaymentsComponent implements OnInit {
   filterForm: any = { type: 'all', from_date: new Date(), to_date: new Date() };
   list: any = []; params: any = {};
 
-  constructor(private activeRoute: ActivatedRoute, private api: AdminApiService, public commonService: CommonService) { }
+  constructor(private activeRoute: ActivatedRoute, private api: AdminApiService, public commonService: CommonService) {
+    let startDate = new Date(new Date().setHours(0,0,0,0));
+    this.filterForm.from_date = new Date(startDate.setDate(startDate.getDate() - 30));
+  }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
