@@ -37,7 +37,7 @@ export class ProductOrdersComponent implements OnInit {
     // this.cookieService.set('blockSub', 'true');
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.page = 1; this.pageSize = 10;
-      if(!this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
+      if(!this.commonService.ios && !this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
         if(Notification.permission=='default') document.getElementById('openSubModal').click();
         else if(Notification.permission=='granted' && !sessionStorage.getItem("sw_sub")) this.reqSub();
       }

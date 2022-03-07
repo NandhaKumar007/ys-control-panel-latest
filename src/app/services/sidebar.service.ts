@@ -136,14 +136,14 @@ export class SidebarService {
           // abandoned
           if(ysFeatures.indexOf('abandoned_cart')!=-1) {
             quotList.push({ name: 'Abandoned Quote', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
-              { name: 'Customers', state: '/abandoned-quote/customer', type: 'link' },
+              { name: 'Signed Up Users', state: '/abandoned-quote/customer', type: 'link' },
               { name: 'Guest Users', state: '/abandoned-quote/guest-user', type: 'link' }
             ] });
             routePermissionList.push("abandoned_quotes");
           }
           // customer
           quotList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
-            { name: 'Customers', state: '/customers', type: 'link' },
+            { name: 'Signed Up Users', state: '/customers', type: 'link' },
             { name: 'Guest Users', state: '/guest-users', type: 'link' }
           ] });
           this.sidePanelList.push({ name: 'Quotations', type: 'dropDown', icon: 'description', sub: quotList });
@@ -187,14 +187,14 @@ export class SidebarService {
             // abandoned
             if(ysFeatures.indexOf('abandoned_cart')!=-1) {
               orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
-                { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
+                { name: 'Signed Up Users', state: '/abandoned-cart/customer', type: 'link' },
                 { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }
               ] });
               routePermissionList.push("abandoned_cart");
             }
             // customer
             orderList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
-              { name: 'Customers', state: '/customers', type: 'link' },
+              { name: 'Signed Up Users', state: '/customers', type: 'link' },
               { name: 'Guest Users', state: '/guest-users', type: 'link' }
             ] });
           }
@@ -483,7 +483,7 @@ export class SidebarService {
         // abandoned
         if(ysFeatures.indexOf('abandoned_cart')!=-1 && subuserFeatures.indexOf('abandoned_cart')!=-1) {
           orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
-            { name: 'Customers', state: '/abandoned-cart/customer', type: 'link' },
+            { name: 'Signed Up Users', state: '/abandoned-cart/customer', type: 'link' },
             { name: 'Guest Users', state: '/abandoned-cart/guest-user', type: 'link' }
           ] });
           routePermissionList.push("abandoned_cart");
@@ -492,7 +492,7 @@ export class SidebarService {
         if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'restaurant_based') {
           if(subuserFeatures.indexOf('customers')!=-1) {
             orderList.push({ name: 'Customers', type: 'dropDown', icon: 'supervisor_account', sub: [
-              { name: 'Customers', state: '/customers', type: 'link' },
+              { name: 'Signed Up Users', state: '/customers', type: 'link' },
               { name: 'Guest Users', state: '/guest-users', type: 'link' }
             ] });
             routePermissionList.push("customers");
