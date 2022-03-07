@@ -110,7 +110,6 @@ export class VendorsComponent implements OnInit {
     this.api.VENDOR_DETAILS(x._id).subscribe(result => {
       if(result.status) {
         this.vendorForm = result.data;
-        delete this.vendorForm.username;
         delete this.vendorForm.password;
         this.vendorForm.form_type = type;
         this.permissionList.forEach(obj => {
