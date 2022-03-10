@@ -18,18 +18,23 @@ export class ProductReviewsComponent implements OnInit {
   page = 1; pageSize = 10; list: any = [];
   filterForm: any = {};
   imgBaseUrl = environment.img_baseurl;
+  configData: any = environment.config_data;
 
   constructor(private api: FeaturesApiService, public commonService: CommonService, private router: Router) { }
 
   ngOnInit(): void {
-    if(localStorage.getItem("review_filter")) {
-      this.filterForm = JSON.parse(localStorage.getItem("review_filter"));
-      this.filterForm.from_date = new Date(this.filterForm.from_date);
-      this.filterForm.to_date = new Date(this.filterForm.to_date);
-      localStorage.removeItem("review_filter");
+    if(this.commonService.store_details?.package_details?.package_id==this.configData.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
+    else {
+      if(localStorage.getItem("review_filter")) {
+        this.filterForm = JSON.parse(localStorage.getItem("review_filter"));
+        this.filterForm.from_date = new Date(this.filterForm.from_date);
+        this.filterForm.to_date = new Date(this.filterForm.to_date);
+        localStorage.removeItem("review_filter");
+      }
+      else this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all', search_bar: "" };
+      this.getReviewProducts();
     }
-    else this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all', search_bar: "" };
-    this.getReviewProducts();
   }
 
   getReviewProducts() {

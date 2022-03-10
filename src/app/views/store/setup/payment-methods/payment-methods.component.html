@@ -218,7 +218,7 @@
             <div class="col-md-12 border-top"></div>
             <div class="col-md-12">
               <b class="add-another mt-2 mb-3">WEBHOOK SETUP</b>
-              <p><strong>Webhook URL:</strong>
+              <p style="word-break: break-all;"><strong>Webhook URL:</strong>
                 https://yourstore.io/api/store_details/razorpay_webhook/{{commonService.store_details._id}}</p>
               <p><strong>Secret:</strong> {{commonService.store_details._id}}</p>
               <p><strong>Active Events:</strong> order.paid</p>
@@ -384,7 +384,7 @@
       <div *ngIf="payForm.name=='Razorpay'" class="whats-new-acc card">
         <div id="accordionTwo">
           <div class="acc-card">
-            <div class="card-header p-3" id="headingTwo">
+            <div class="card-header mb-3" style="border-bottom:1px solid #dee2e6;" id="headingTwo">
               <h5 class="mb-0">
                 <button type="button" class="btn btn-link collapsed w-100 p-0 m-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                   <div class="breadcrumb home-breadcrumb mb-0">
@@ -400,7 +400,7 @@
               </h5>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionTwo">
-              <div class="card-body" style="border-top:1px solid #dee2e6">
+              <div class="card-body pt-0" style="border: none;">
                 <div class="row">
                   <div class="col-md-12 p-0">
                     <div class="col-md-12">
@@ -564,7 +564,7 @@
                         </div>
                         <!-- Step 13 -->
                         <div class="col-md-12 d-flex">
-                          <div class="payment-steps w-100 card p-3 mb-3">
+                          <div class="payment-steps w-100 card p-3">
                             <h4 class="payment-steps-count">Step 13:</h4>
                             <p>Click on
                               <strong>Add</strong>
@@ -575,17 +575,16 @@
                             </figure>
                           </div>
                         </div>
-
-                        <div class="col-md-12">
-                          <a class="btn btn-outline-primary pull-right" href="https://dashboard.razorpay.com/#/access/signup?coupon_code=YOURSTORE" target="blank">
-                            <span class="outline-primary-txt">Create Razorpay Account</span>
-                          </a>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>  
               </div>
+            </div>
+            <div class="col-md-12 ml-2 mb-3">
+              <a class="btn btn-outline-primary" href="https://dashboard.razorpay.com/#/access/signup?coupon_code=YOURSTORE" target="blank">
+                <span class="outline-primary-txt">Create Razorpay Account</span>
+              </a>
             </div>
           </div>
         </div>

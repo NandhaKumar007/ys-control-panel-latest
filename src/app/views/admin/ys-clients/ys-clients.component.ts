@@ -17,7 +17,7 @@ export class YsClientsComponent implements OnInit {
   page = 1; pageSize = 10; search_bar: string;
   pageLoader: boolean; parent_list: any = []; list: any = [];
   imgBaseUrl = environment.img_baseurl; buildForm: any = {};
-  listType: string = 'all'; expiryDay: string = "15";
+  filterForm = { list_type: 'all', expiry_day: '15', day_type: 'eq', inactive_day: '3' };
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();
   configData: any = environment.config_data;
@@ -28,11 +28,18 @@ export class YsClientsComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true; this.page = 1;
-    let filterType = "type="+this.listType;
-    if(this.listType=='trial_expires_in') {
-      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.expiryDay));
+    let filterType = "type="+this.filterForm.list_type;
+    if(this.filterForm.list_type=='trial_expires_in') {
+      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.filterForm.expiry_day));
       filterType += "&from="+new Date(trialDate).setHours(0,0,0,0);
       filterType += "&to="+new Date(trialDate).setHours(23,59,59,999);
+      filterType += "&day_type="+this.filterForm.day_type;
+    }
+    if(this.filterForm.list_type=='inactive') {
+      let inactiveDay = new Date().setDate(new Date().getDate() - parseInt(this.filterForm.inactive_day));
+      filterType += "&from="+new Date(inactiveDay).setHours(0,0,0,0);
+      filterType += "&to="+new Date(inactiveDay).setHours(23,59,59,999);
+      filterType += "&day_type="+this.filterForm.day_type;
     }
     this.adminApi.STORE_LIST(filterType).subscribe(result => {
       if(result.status) {
@@ -53,9 +60,9 @@ export class YsClientsComponent implements OnInit {
 
   onSendNotification() {
     this.pwdForm.submit = true;
-    this.pwdForm.type = this.listType;
-    if(this.listType=='trial_expires_in') {
-      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.expiryDay));
+    this.pwdForm.type = this.filterForm.list_type;
+    if(this.filterForm.list_type=='trial_expires_in') {
+      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.filterForm.expiry_day));
       this.pwdForm.from = new Date(trialDate).setHours(0,0,0,0);
       this.pwdForm.to = new Date(trialDate).setHours(23,59,59,999);
     }

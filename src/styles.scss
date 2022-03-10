@@ -2520,6 +2520,25 @@ ul.check-highlighted-points {
   }
 }
 
+ul.check-highlighted-points2 {
+  list-style-type: none;
+  padding-left: 0;
+  li {
+    display: flex;
+    align-items: center;
+    &:before {
+      content: "add";
+      font-family: "Material Icons";
+      color: $primary-theme-clr;
+      margin-right: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    a{color:#f1ad90!important}
+    a:focus{border: 0;outline: 0;}
+  }
+}
+
 .absolute-item-close {
   position: absolute;
   top: -5px;

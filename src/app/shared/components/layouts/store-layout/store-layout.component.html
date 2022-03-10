@@ -233,11 +233,11 @@
 <!-- Upgrade Modal -->
 <div id="openCommonUpgradeModal" (click)="modalService.open(commonUpgradeModal, { centered: true });"></div>
 <ng-template #commonUpgradeModal let-modal>
-  <div class="modal-body">
+  <div class="modal-body pb-0">
     <div class="row mt-3">
       <div class="col-md-12">
         <div>
-          <p><b>Upgrade to Essential plan to use this feature</b></p>
+          <p><b>Upgrade to Essential plan to use this feature</b><br>Essential plan includes</p>
         </div>
         <div>
           <ul class="check-highlighted-points">
@@ -247,6 +247,9 @@
             <li>Product Reviews</li>
             <li>Online Payments with Payment Gateway</li>
             <li>Customer Portal</li>
+          </ul>
+          <ul class="check-highlighted-points2">
+            <li>and more<a (click)="modal.dismiss('Cross click');" routerLink="/deployment/plans">&nbsp;View All</a></li>
           </ul>
         </div>
       </div>

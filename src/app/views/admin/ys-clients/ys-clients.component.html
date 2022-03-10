@@ -26,7 +26,7 @@
   <div class="row mb-4">
     <div class="col-md-3 col-6">
       <div class="form-group">
-        <select name="type" class="form-control select-arrow" [(ngModel)]="listType" (change)="ngOnInit();">
+        <select name="list_type" class="form-control select-arrow" [(ngModel)]="filterForm.list_type" (change)="ngOnInit();">
           <option value="all">All Users</option>
           <option value="trial">Trial Users</option>
           <option value="trial_expired">Trial Expired Users</option>
@@ -35,11 +35,10 @@
           <option value="subscription_expired">Subscription Expired Users</option>
           <option value="free_plan">Free Plan Users</option>
           <option value="paid_plan">Paid Plan Users</option>
-          <!-- packages list -->
           <ng-container *ngFor="let x of commonService.admin_packages | orderAsc: 'rank';">
             <option *ngIf="x._id!=configData.free_package_id" [value]="'pid_'+x._id">{{x.name}} Plan</option>
           </ng-container>
-          <!-- deploy steps -->
+          <option value="inactive">Inactive Users</option>
           <option value="logo">Logo Pending</option>
           <option value="products">Product Pending</option>
           <option value="payments">Payment Pending</option>
@@ -47,9 +46,19 @@
         </select>
       </div>
     </div>
+    <div *ngIf="filterForm.list_type=='trial_expires_in' || filterForm.list_type=='inactive'" class="col-md-3 col-6">
+      <div class="form-group">
+        <select name="day_type" class="form-control select-arrow" [(ngModel)]="filterForm.day_type" (change)="ngOnInit();">
+          <option value="eq">Equal to</option>
+          <option value="lt">{{ (filterForm.list_type=='trial_expires_in')? 'Lesser': 'More' }} than</option>
+          <option value="lte">{{ (filterForm.list_type=='trial_expires_in')? 'Lesser': 'More' }} than equal to</option>
+        </select>
+      </div>
+    </div>
     <div class="col-md-3 col-6">
-      <div *ngIf="listType=='trial_expires_in'" class="form-group">
-        <select name="type" class="form-control select-arrow" [(ngModel)]="expiryDay" (change)="ngOnInit();">
+      <!-- Trial Expires In -->
+      <div *ngIf="filterForm.list_type=='trial_expires_in'" class="form-group">
+        <select name="expiry_day" class="form-control select-arrow" [(ngModel)]="filterForm.expiry_day" (change)="ngOnInit();">
           <option value="15">15 Days</option>
           <option value="14">14 Days</option>
           <option value="13">13 Days</option>
@@ -64,12 +73,26 @@
           <option value="4">4 Days</option>
           <option value="3">3 Days</option>
           <option value="2">2 Days</option>
-          <option value="1">1 Days</option>
+          <option value="1">1 Day</option>
+          <option value="0">Today</option>
+        </select>
+      </div>
+      <!-- Inactive Users -->
+      <div *ngIf="filterForm.list_type=='inactive'" class="form-group">
+        <select name="inactive_day" class="form-control select-arrow" [(ngModel)]="filterForm.inactive_day" (change)="ngOnInit();">
+          <option value="3">3 Days</option>
+          <option value="4">4 Days</option>
+          <option value="5">5 Days</option>
+          <option value="6">6 Days</option>
+          <option value="7">7 Days</option>
+          <option value="8">8 Days</option>
+          <option value="9">9 Days</option>
+          <option value="10">10 Days</option>
         </select>
       </div>
     </div>
     <!-- search box -->
-    <div class="col-md-6 col-6">
+    <div class="col-6" [ngClass]="(filterForm.list_type=='trial_expires_in' || filterForm.list_type=='inactive')? 'col-md-3': 'col-md-6'">
       <div class="form-group">
         <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
       </div>

@@ -235,7 +235,9 @@ export class DashboardComponent implements OnInit {
         dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0
       };
       // DASHBOARD
-      this.storeApi.DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date }).subscribe(result => {
+      let formData: any = { from_date: this.filterForm.from_date, to_date: this.filterForm.to_date };
+      if(localStorage.getItem("master_token")) formData.master_login = true;
+      this.storeApi.DASHBOARD(formData).subscribe(result => {
         setTimeout(() => { this.preLoader = false; }, 500);
         if(result.status) {
           this.order_details.products = result.data.products;
