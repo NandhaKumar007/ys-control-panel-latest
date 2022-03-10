@@ -98,7 +98,7 @@
     <h4 class="modal-title">{{ (payForm.form_type=='add')? 'Add Payment Gateway': payForm.name }}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="(payForm.form_type=='add')? onAdd(): onUpdate();" ngNativeValidate>
-    <div class="modal-body">
+    <div class="modal-body payment-steps-modal-body slim-scroll">
       <div class="form-group">
         <div class="row">
           <div *ngIf="payForm.form_type=='add'" class="col-md-6 form-group mb-3">
@@ -380,11 +380,217 @@
       <div *ngIf="payForm.errorMsg">
         <p class="text-danger">{{ payForm.errorMsg }}</p>
       </div>
-      <div *ngIf="payForm.name=='Razorpay'" class="row">
-        <div class="col-md-12 d-flex align-items-center justify-content-end">
-          <button type="button" class="btn btn-wide btn-primary" (click)="modalService.open(paystepsModal, {size: 'lg'});">View Steps</button>
+      <!-- Razorpay Steps -->
+      <div *ngIf="payForm.name=='Razorpay'" class="whats-new-acc card">
+        <div id="accordionTwo">
+          <div class="acc-card">
+            <div class="card-header p-3" id="headingTwo">
+              <h5 class="mb-0">
+                <button type="button" class="btn btn-link collapsed w-100 p-0 m-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <div class="breadcrumb home-breadcrumb mb-0">
+                    <img src="assets/images/razorpay_logo.png" style="width:120px;height:auto">
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span class="learn-more-text">View Steps</span>
+                    <span class="gray-icon-btn ml-3">
+                      <i class="material-icons">expand_more</i>
+                    </span>
+                  </div>
+                </button>
+              </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionTwo">
+              <div class="card-body" style="border-top:1px solid #dee2e6">
+                <div class="row">
+                  <div class="col-md-12 p-0">
+                    <div class="col-md-12">
+                      <h4 class="modal-title mb-3">Payment Steps</h4>
+                      <div class="row">
+                        <!-- Step 1 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 1:</h4>
+                            <p class="mb-0">
+                              <a href="https://dashboard.razorpay.com/#/access/signup?coupon_code=YOURSTORE" target="blank">
+                                Click here to Create Account
+                              </a>
+                            </p>
+                          </div>
+                        </div>
+                        <!-- Step 2 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 2:</h4>
+                            <p class="mb-0">Submit details based on your business type.</p>
+                          </div>
+                        </div>
+                        <!-- Step 3 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 3:</h4>
+                            <p>Click on <strong>Activate your account</strong> and fill in the details requested</p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_4.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 4 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 4:</h4>
+                            <p>Please fillup the requested details and click on <strong>Submit and Verify</strong></p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_5.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 5 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 5:</h4>
+                            <p>Now Click on <strong>Complete KYC
+                              </strong></p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_6.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 6 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 6:</h4>
+                            <p>Complete KYC by uploading the requested documents and <strong>Submit Form
+                              </strong></p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_7.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 7 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 7:</h4>
+                            <p>In your Razorpay Dashboard go to <strong>Settings
+                              </strong></p>
+                            <figure>
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_8.1.png" alt="steps_img">
+                            </figure>
+                            <p>Select <strong>API Keys
+                              </strong></p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_8.2.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 8 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 8:</h4>
+                            <p>Click on <strong>Generate Live Key
+                              </strong></p>
+                            <figure>
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_9.1.png" alt="steps_img">
+                            </figure>
+                            <p> <strong>Copy</strong> the generated <strong>Key ID</strong> & <strong>Key Secret</strong></p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_9.2.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 9 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 9:</h4>
+                            <p>
+                              <strong>Paste the Key ID and Key Secret</strong> in <strong>yourstore</strong> backend <strong>Settings> Payment Gateway > Add New > Razorpay
+                              </strong>
+                            </p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_10.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 10 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 10:</h4>
+                            <p>In your
+                              <strong>Razorpay</strong>
+                              account go to <strong>Settings > Webhooks</strong>
+                            </p>
+                            <figure>
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_11.1.png" alt="steps_img">
+                            </figure>
+                            <p>Select
+                              <strong>Add New Webhook</strong>
+                            </p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_11.2.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 11 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 11:</h4>
+                            <p>
+                              <strong>Copy-paste</strong>
+                              the webhook <strong>URL</strong> and <strong>Secret</strong> from <strong>yourstore backend</strong>
+                            </p>
+                            <figure>
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_12.1.png" alt="steps_img">
+                            </figure>
+                            <p>
+                              <strong>Paste</strong>
+                              the webhook <strong>URL</strong> and <strong>Secret</strong> in <strong>Razorpay</strong>
+                            </p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_12.2.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 12 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 12:</h4>
+                            <p>In Active Events select
+                              <strong>"order.paid"</strong>
+                              and click <strong>create Webhook</strong>
+                            </p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_13.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+                        <!-- Step 13 -->
+                        <div class="col-md-12 d-flex">
+                          <div class="payment-steps w-100 card p-3 mb-3">
+                            <h4 class="payment-steps-count">Step 13:</h4>
+                            <p>Click on
+                              <strong>Add</strong>
+                              in <strong>yourstore backend</strong> to complete the setup
+                            </p>
+                            <figure class="mb-0">
+                              <img src="assets/images/payment-gateway/razorpay-integration/Step_14.png" alt="steps_img">
+                            </figure>
+                          </div>
+                        </div>
+
+                        <div class="col-md-12">
+                          <a class="btn btn-outline-primary pull-right" href="https://dashboard.razorpay.com/#/access/signup?coupon_code=YOURSTORE" target="blank">
+                            <span class="outline-primary-txt">Create Razorpay Account</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- ## Razorpay Steps ## -->
     </div>
     <div class="modal-footer">
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
@@ -433,198 +639,6 @@
       <span class="black-outline-txt">No</span>
     </button>
     <button type="button" (click)="onUpdateStatus();" class="btn btn-wide btn-primary">Yes</button>
-  </div>
-</ng-template>
-
-<!-- PAY STEP MODAL -->
-<ng-template #paystepsModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Payment Steps</h4>
-  </div>
-  <div class="modal-body payment-steps-modal-body slim-scroll">
-    <div class="row">
-      <!-- Step 1 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 1:</h4>
-          <p>Visit <a href=" https://dashboard.razorpay.com/signup"
-              target="blank">https://dashboard.razorpay.com/signup</a>
-          </p>
-        </div>
-      </div>
-      <!-- Step 2 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 2:</h4>
-          <p>Create an Account</p>
-        </div>
-      </div>
-      <!-- Step 3 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 3:</h4>
-          <p>Submit details based on your business type.
-          </p>
-        </div>
-      </div>
-      <!-- Step 4 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 4:</h4>
-          <p>Click on <strong>Activate your account</strong> and fill in the details requested</p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_4.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 5 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 5:</h4>
-          <p>Please fillup the requested details and click on <strong>Submit and Verify</strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_5.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 6 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 6:</h4>
-          <p>Now Click on <strong>Complete KYC
-            </strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_6.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 7 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 7:</h4>
-          <p>Complete KYC by uploading the requested documents and <strong>Submit Form
-            </strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_7.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 8 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 8:</h4>
-          <p>In your Razorpay Dashboard go to <strong>Settings
-            </strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_8.1.png" alt="steps_img">
-          </figure>
-          <p>Select <strong>API Keys
-            </strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_8.2.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 9 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 9:</h4>
-          <p>Click on <strong>Generate Live Key
-            </strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_9.1.png" alt="steps_img">
-          </figure>
-          <p> <strong>Copy</strong> the generated <strong>Key ID</strong> & <strong>Key Secret</strong></p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_9.2.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 10 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 10:</h4>
-          <p>
-            <strong>Paste the Key ID and Key Secret</strong> in <strong>yourstore</strong> backend <strong>Settings> Payment Gateway > Add New > Razorpay
-            </strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_10.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 11 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 11:</h4>
-          <p>In your
-            <strong>Razorpay</strong>
-            account go to <strong>Settings > Webhooks</strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_11.1.png" alt="steps_img">
-          </figure>
-          <p>Select
-            <strong>Add New Webhook</strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_11.2.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 12 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 12:</h4>
-          <p>
-            <strong>Copy-paste</strong>
-            the webhook <strong>URL</strong> and <strong>Secret</strong> from <strong>yourstore backend</strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_12.1.png" alt="steps_img">
-          </figure>
-          <p>
-            <strong>Paste</strong>
-            the webhook <strong>URL</strong> and <strong>Secret</strong> in <strong>Razorpay</strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_12.2.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 13 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 13:</h4>
-          <p>In Active Events select
-            <strong>"order.paid"</strong>
-            and click <strong>create Webhook</strong>
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_13.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-      <!-- Step 14 -->
-      <div class="col-md-12 d-flex">
-        <div class="payment-steps w-100 card p-3 mb-3">
-          <h4 class="payment-steps-count">Step 14:</h4>
-          <p>Click on
-            <strong>Add</strong>
-            in <strong>yourstore backend</strong> to complete the setup
-          </p>
-          <figure>
-            <img src="assets/images/payment-gateway/razorpay-integration/Step_14.png" alt="steps_img">
-          </figure>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-      (click)="modal.dismiss('Cross click');">
-      <span class="black-outline-txt">Close</span>
-    </button>
   </div>
 </ng-template>
 

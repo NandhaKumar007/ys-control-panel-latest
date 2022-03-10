@@ -2,7 +2,7 @@
   <app-spinner></app-spinner>
 </div>
 
-<div *ngIf="!pageLoader">
+<div *ngIf="!pageLoader && commonService.ys_features.indexOf('multi_menu')!=-1">
   <div class="breadcrumb">
     <h1><a routerLink="/features/menus">{{ selectedMenu.name }}</a> > <a
         routerLink="/features/menus/{{selectedSection._id}}">{{ selectedSection.name }}</a> >

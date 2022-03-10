@@ -45,6 +45,29 @@ export class MenusComponent implements OnInit {
 	}
 
   // ADD
+  openAddMenuModal(modalName) {
+    if(this.commonService.ys_features.indexOf('multi_menu')!=-1 || this.list.length<2) {
+      this.maxRank = this.list.length;
+      this.formType = 'menu';
+      this.addForm = { rank: this.list.length+1 };
+      this.modalService.open(modalName);
+    }
+    else {
+      document.getElementById("openCommonUpgradeModal").click();
+    }
+  }
+  openAddSectionModal(modalName, x) {
+    if(this.commonService.ys_features.indexOf('multi_menu')!=-1 || x.sections?.length<4) {
+      this.maxRank = x.sections.length;
+      this.formType = 'section';
+      this.menuId = x._id;
+      this.addForm = { rank: x.sections.length+1 };
+      this.modalService.open(modalName);
+    }
+    else {
+      document.getElementById("openCommonUpgradeModal").click();
+    }
+  }
 	onAdd() {
 		if(this.formType=='menu') {
 			this.api.ADD_MENU(this.addForm).subscribe(result => {

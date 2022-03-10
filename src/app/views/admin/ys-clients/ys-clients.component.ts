@@ -17,9 +17,10 @@ export class YsClientsComponent implements OnInit {
   page = 1; pageSize = 10; search_bar: string;
   pageLoader: boolean; parent_list: any = []; list: any = [];
   imgBaseUrl = environment.img_baseurl; buildForm: any = {};
-  listType: string = 'active'; accountType: string = 'all';
+  listType: string = 'all'; expiryDay: string = "15";
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();
+  configData: any = environment.config_data;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -27,10 +28,16 @@ export class YsClientsComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true; this.page = 1;
-    this.adminApi.STORE_LIST(this.listType).subscribe(result => {
+    let filterType = "type="+this.listType;
+    if(this.listType=='trial_expires_in') {
+      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.expiryDay));
+      filterType += "&from="+new Date(trialDate).setHours(0,0,0,0);
+      filterType += "&to="+new Date(trialDate).setHours(23,59,59,999);
+    }
+    this.adminApi.STORE_LIST(filterType).subscribe(result => {
       if(result.status) {
-        this.parent_list = result.list;
-        this.parent_list.forEach(obj => {
+        this.list = result.list;
+        this.list.forEach(obj => {
           obj.account_expiry = obj.package_details.trial_expiry;
           if(obj.package_details.billing_status && obj.package_details.expiry_date)
             obj.account_expiry = obj.package_details.expiry_date;
@@ -38,8 +45,6 @@ export class YsClientsComponent implements OnInit {
           let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
           if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
         });
-        if(this.listType=='active') this.commonService.store_list = result.list;
-        this.changeAccType();
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
@@ -48,6 +53,12 @@ export class YsClientsComponent implements OnInit {
 
   onSendNotification() {
     this.pwdForm.submit = true;
+    this.pwdForm.type = this.listType;
+    if(this.listType=='trial_expires_in') {
+      let trialDate = new Date().setDate(new Date().getDate() + parseInt(this.expiryDay));
+      this.pwdForm.from = new Date(trialDate).setHours(0,0,0,0);
+      this.pwdForm.to = new Date(trialDate).setHours(23,59,59,999);
+    }
     this.adminApi.SEND_NOTIFICATION(this.pwdForm).subscribe(result => {
       this.pwdForm.submit = false;
       if(result.status) document.getElementById("closeModal").click();
@@ -56,12 +67,6 @@ export class YsClientsComponent implements OnInit {
         this.pwdForm.errorMsg = result.message;
       }
     });
-  }
-
-  changeAccType() {
-    if(this.accountType=='trial') this.list = this.parent_list.filter(obj => !obj.package_details.billing_status);
-    else if(this.accountType=='subscribed') this.list = this.parent_list.filter(obj => obj.package_details.billing_status);
-    else this.list = this.parent_list;
   }
 
   onUpdatePwd() {

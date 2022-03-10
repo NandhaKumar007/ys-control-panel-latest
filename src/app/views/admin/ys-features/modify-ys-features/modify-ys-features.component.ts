@@ -30,7 +30,7 @@ export class ModifyYsFeaturesComponent implements OnInit {
           this.currencyList.forEach(element => {
             currencies.push({ base: element.base })
           });
-          this.packageList.push({ _id: obj._id, name: obj.name, currency_list: currencies });
+          this.packageList.push({ _id: obj._id, name: obj.name, rank: obj.rank, currency_list: currencies });
         });
         // discount
         this.currencyList.forEach(element => {

@@ -29,7 +29,7 @@ export class ControlPanelComponent implements OnInit {
     this.loading = false; this.loadingText = "";
     if(this.commonService.store_details._id) this.store_id = this.commonService.store_details._id;
     if(!this.commonService.store_list.length) {
-      this.adminApi.STORE_LIST('active').subscribe(result => {
+      this.adminApi.STORE_LIST("type=active").subscribe(result => {
         if(result.status) this.commonService.store_list = result.list;
         else console.log("response", result);
       });
