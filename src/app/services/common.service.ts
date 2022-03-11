@@ -125,6 +125,7 @@ export class CommonService {
 
   master_token: string;
   store_token: string;
+  notification_url: string;
 
   admin_packages: any = [];
   admin_features: any = [];

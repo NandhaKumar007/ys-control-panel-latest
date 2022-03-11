@@ -21,7 +21,7 @@ export class StoreLayoutComponent implements OnInit {
   selectedItem: IMenuItem;
   currentYear: any = (new Date()).getFullYear();
   imgBaseUrl = environment.img_baseurl;
-  audio: any;
+  audio: any; keepLogin: boolean = environment.keep_login;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private swPush: SwPush, private router: Router,

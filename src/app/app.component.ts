@@ -2,8 +2,10 @@ import { Component, HostListener } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from './services/common.service';
+import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
 import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +21,7 @@ export class AppComponent {
     this.commonService.screen_width = window.innerWidth;
   }
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private deviceService: DeviceDetectorService) {
+  constructor(private router: Router, config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private deviceService: DeviceDetectorService) {
     config.backdrop = 'static'; config.keyboard = false;
     this.getScrollPosition();
     if(localStorage.getItem("darkSwitch")) {
@@ -34,9 +36,10 @@ export class AppComponent {
 
   ngOnInit() {
     if(environment.keep_login) {
-      // Request permission to use push notifications
-      // iOS will prompt user and return if they granted permission or not
-      // Android will just grant without prompting
+      LocalNotifications.requestPermissions().then(result => {
+        console.log('local', result);
+      });
+
       PushNotifications.requestPermissions().then(result => {
         if(result.receive === 'granted') {
           // Register with Apple / Google to receive push via APNS/FCM
@@ -46,24 +49,59 @@ export class AppComponent {
 
       // On success, we should be able to receive notifications
       PushNotifications.addListener('registration', (token: Token) => {
+        console.log('valllllllllll', token.value);
         sessionStorage.setItem("app_token", token.value);
       });
 
       // Some issue with our setup and push will not work
       PushNotifications.addListener('registrationError', (error: any) => {
-        // alert('Error on registration: ' + JSON.stringify(error));
+        console.log('Error on registration: ' + JSON.stringify(error));
       });
 
       // Show us the notification payload if the app is open on our device
       PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-        // alert('Push received: ' + JSON.stringify(notification));
+        console.log('Push received: ' + JSON.stringify(notification));        
+        this.schedule(notification);
       });
 
       // Method called when tapping on a notification
       PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
-        // alert('click: ' + JSON.stringify(notification));
+        this.commonService.notification_url = notification.notification.data.url;
+          document.getElementById("mybtn").click();
       });
     }
+  }
+
+  schedule(notification) {
+    this.commonService.notification_url = notification.data.url;
+    const randomId = Math.floor(Math.random() * 10000) + 1;
+    LocalNotifications.schedule({
+      notifications: [
+        {
+          title: "local"+notification.title,
+          body: "local"+notification.body,
+          id: randomId,
+          smallIcon: 'res://icon.png', 
+          largeIcon : 'ic_stat_ys_icon',     
+          attachments: [
+            { id: 'face', url: 'https://khanoo.com/wp-content/uploads/estate_images/house/77-1576179614/230174.jpg' ,options:{}}
+          ],
+          // schedule: {
+          //   at: new Date(new Date().getTime()+60*10000),
+          //   repeats: false
+          // }
+        }
+      ]
+    });
+
+    LocalNotifications.addListener('localNotificationActionPerformed', (payload) => {
+      console.log('payloaddddd', payload);
+      document.getElementById("mybtn").click();  
+    });
+  }
+
+  testNotify() {
+    this.router.navigate([this.commonService.notification_url]);
   }
 
 }

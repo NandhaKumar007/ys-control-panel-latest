@@ -25,6 +25,7 @@
     "@angular/router": "10.1.0",
     "@angular/service-worker": "^10.1.0",
     "@capacitor/core": "^3.4.1",
+    "@capacitor/local-notifications": "^1.1.0",
     "@capacitor/push-notifications": "^1.0.9",
     "@capacitor/share": "^1.1.1",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
