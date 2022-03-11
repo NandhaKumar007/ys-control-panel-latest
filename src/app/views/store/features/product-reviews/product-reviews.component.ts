@@ -23,33 +23,33 @@ export class ProductReviewsComponent implements OnInit {
   constructor(private api: FeaturesApiService, public commonService: CommonService, private router: Router) { }
 
   ngOnInit(): void {
-    if(this.commonService.store_details?.package_details?.package_id==this.configData.free_package_id)
-      document.getElementById("openCommonUpgradeModal").click();
-    else {
-      if(localStorage.getItem("review_filter")) {
-        this.filterForm = JSON.parse(localStorage.getItem("review_filter"));
-        this.filterForm.from_date = new Date(this.filterForm.from_date);
-        this.filterForm.to_date = new Date(this.filterForm.to_date);
-        localStorage.removeItem("review_filter");
-      }
-      else this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all', search_bar: "" };
-      this.getReviewProducts();
+    if(localStorage.getItem("review_filter")) {
+      this.filterForm = JSON.parse(localStorage.getItem("review_filter"));
+      this.filterForm.from_date = new Date(this.filterForm.from_date);
+      this.filterForm.to_date = new Date(this.filterForm.to_date);
+      localStorage.removeItem("review_filter");
     }
+    else this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), type: 'all', search_bar: "" };
+    this.getReviewProducts();
   }
 
   getReviewProducts() {
-    this.pageLoader = true;
-    this.api.REVIEWED_PRODUCT_LIST(this.filterForm).subscribe(result => {
-      setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) {
-        this.list = result.list;
-        this.list.forEach(obj => {
-          obj.product_sku = obj.productDetails[0].sku;
-          obj.product_name = obj.productDetails[0].name;
-        });
-      }
-      else console.log("response", result);
-		});
+    if(this.commonService.store_details?.package_details?.package_id==this.configData.free_package_id)
+      document.getElementById("openCommonUpgradeModal").click();
+    else {
+      this.pageLoader = true;
+      this.api.REVIEWED_PRODUCT_LIST(this.filterForm).subscribe(result => {
+        setTimeout(() => { this.pageLoader = false; }, 500);
+        if(result.status) {
+          this.list = result.list;
+          this.list.forEach(obj => {
+            obj.product_sku = obj.productDetails[0].sku;
+            obj.product_name = obj.productDetails[0].name;
+          });
+        }
+        else console.log("response", result);
+      });
+    }
   }
 
   onSelect(x) {
