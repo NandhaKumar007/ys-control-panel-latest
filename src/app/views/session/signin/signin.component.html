@@ -1,7 +1,22 @@
-<div [@animate]="{value:'*',params:{y:'120px',opacity:'0',delay:'100ms', duration: '400ms'}}">
+<!-- loader -->
+<div *ngIf="pageLoader" class="loader-bg">
+  <div class="loadscreen flex">
+    <div class="loader-center">
+      <img src="assets/images/main-loading_logo.svg" class="logo mb-3" style="display: none" alt="">
+      <div class="loader_container">
+        <div class="item-1"></div>
+        <div class="item-2"></div>
+        <div class="item-3"></div>
+        <div class="item-4"></div>
+        <div class="item-5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- card -->
+<div *ngIf="!pageLoader" [@animate]="{value:'*',params:{y:'120px',opacity:'0',delay:'100ms', duration: '400ms'}}">
   <div class="row">
-    <app-spinner *ngIf="pageLoader"></app-spinner>
-    <div *ngIf="!pageLoader" class="col-md-12">
+    <div class="col-md-12">
       <div class="auth-card">
         <div class="auth-logo text-center mb-4">
           <img src="assets/images/yourstore_logo.svg" alt="">

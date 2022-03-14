@@ -4,7 +4,8 @@ import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
 import { AdminApiService } from '../../../services/admin-api.service';
 import { StoreApiService } from '../../../services/store-api.service';
-import { AccountService } from '../../../views/store/account/account.service';
+import { AccountService } from '../../store/account/account.service';
+import { ShippingService } from '../../store/shipping/shipping.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { CommonService } from '../../../services/common.service';
 
@@ -22,7 +23,7 @@ export class ControlPanelComponent implements OnInit {
 
   constructor(
     public router: Router, private adminApi: AdminApiService, private storeApi: StoreApiService, private sidebar: SidebarService,
-    public commonService: CommonService, private api: ApiService, private accApi: AccountService
+    public commonService: CommonService, private api: ApiService, private accApi: AccountService, private shipService: ShippingService
   ) { }
 
   ngOnInit() {
@@ -97,6 +98,12 @@ export class ControlPanelComponent implements OnInit {
             });
           }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+          // shipping methods
+          this.commonService.shipping_list = [];
+          this.shipService.SHIPPING_LIST().subscribe(result => {
+            if(result.status) this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
+            this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
+          });
           // vendor list
           this.commonService.vendor_list = [];
           if(this.commonService.ys_features.indexOf('vendors')!=-1) {
@@ -106,20 +113,6 @@ export class ControlPanelComponent implements OnInit {
             });
           }
           else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
-          // store features
-          this.commonService.user_list = []; this.commonService.courier_partners = [];
-          this.commonService.updateLocalData('user_list', this.commonService.user_list);
-          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-          this.storeApi.STORE_FEATURES().subscribe(result => {
-            if(result.status) {
-              result.data.sub_users.forEach(obj => {
-                this.commonService.user_list.push({ _id: obj._id, name: obj.name });
-              });
-              this.commonService.courier_partners = result.data.courier_partners;
-              this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-            }
-          });
           this.sidebar.BUILD_CATEGORY_LIST();
           this.router.navigateByUrl('/dashboard');
         }

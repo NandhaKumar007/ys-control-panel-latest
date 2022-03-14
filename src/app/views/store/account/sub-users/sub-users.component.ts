@@ -201,7 +201,6 @@ export class SubUsersComponent implements OnInit {
     // setting
     let settingList = [];
     if(ysFeatures.indexOf('tax_rates')!=-1) settingList.push({ keyword: "tax_rates", name: "Tax Rates" });
-    if(ysFeatures.indexOf('courier_partners')!=-1) settingList.push({ keyword: "courier_partners", name: "Courier Partners" });
     if(ysFeatures.indexOf('time_based_delivery')!=-1) settingList.push({ keyword: "delivery_methods", name: "Delivery Methods" });
     else settingList.push({ keyword: "shipping_methods", name: "Shipping Methods" });
     if(ysFeatures.indexOf('pincode_service')!=-1) settingList.push({ keyword: "pincodes", name: "Pincode Service" });

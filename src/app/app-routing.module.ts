@@ -49,7 +49,6 @@ const storeRoutes: Routes = [
 
   { path: 'feedback', loadChildren: () => import('./views/store/properties/feedback/feedback.module').then(m => m.FeedbackModule), canActivate: [PermissionGuard], data: { name: "feedback" } },
   { path: 'newsletter', loadChildren: () => import('./views/store/properties/newsletter/newsletter.module').then(m => m.NewsletterModule), canActivate: [PermissionGuard], data: { name: "newsletter" } },
-  { path: 'courier-partners', loadChildren: () => import('./views/store/courier-partners/courier-partners.module').then(m => m.CourierPartnersModule), canActivate: [PermissionGuard], data: { name: "courier_partners" } },
   { path: 'donations', loadChildren: () => import('./views/store/donations/donations.module').then(m => m.DonationsModule), canActivate: [PermissionGuard], data: { name: "donations" } },
 
   { path: 'store-setting', loadChildren: () => import('./views/store/setting/setting.module').then(m => m.SettingModule), canActivate: [PermissionGuard], data: { name: "store_setting" } },

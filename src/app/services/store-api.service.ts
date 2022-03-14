@@ -123,28 +123,6 @@ export class StoreApiService {
     return this.http.patch<any>(environment.ws_url+'/store/catalog', x, httpOptions);
   }
 
-  // courier partners
-  COURIER_PARTNER_LIST() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partner', httpOptions);
-  }
-  COURIER_PARTNER_DETAILS(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partner?id='+x, httpOptions);
-  }
-  ADD_COURIER_PARTNER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
-  }
-  UPDATE_COURIER_PARTNER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/courier_partner', x, httpOptions); 
-  }
-  DELETE_COURIER_PARTNER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.patch<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
-  }
-
   // layouts
   LAYOUT_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

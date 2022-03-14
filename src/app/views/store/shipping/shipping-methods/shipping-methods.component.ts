@@ -16,7 +16,7 @@ export class ShippingMethodsComponent implements OnInit {
 
   search_bar: string;
   page = 1; pageSize = 10;
-  addForm: any; editForm: any; deleteForm: any;
+  shippingForm: any; deleteForm: any;
   list: any = [];
   pageLoader: boolean;
 
@@ -33,40 +33,60 @@ export class ShippingMethodsComponent implements OnInit {
     });
   }
 
-  // Add
-  onAdd() {
-    this.api.ADD_SHIPPING(this.addForm).subscribe(result => {
-      this.updateDeployStatus();
-      if(result.status) {
-        document.getElementById('closeAddModal').click();
-        this.ngOnInit();
-      }
-      else {
-        this.addForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
+  onSubmit() {
+    if(this.shippingForm.formType=='add') {
+      this.api.ADD_SHIPPING(this.shippingForm).subscribe(result => {
+        this.updateDeployStatus();
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.shippingForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+    else {
+      this.api.UPDATE_SHIPPING(this.shippingForm).subscribe(result => {
+        this.updateDeployStatus();
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
+        }
+        else {
+          this.shippingForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
   }
 
   // Edit
-  onEdit(x, modal) {
+  onEdit(x, modalName) {
     this.api.SHIPPING_DETAILS(x).subscribe(result => {
       if(result.status) {
-        this.editForm = result.data;
-        this.modalService.open(modal);
+        this.shippingForm = result.data;
+        this.shippingForm.formType = 'update';
+        if(!this.shippingForm.dp_metadata) this.shippingForm.dp_metadata = {};
+        if(!this.shippingForm.dp_name) this.shippingForm.dp_name = "";
+        this.modalService.open(modalName, {size: 'lg'});
       }
+      else console.log("response", result);
     });
   }
-  onUpdate() {
-    this.api.UPDATE_SHIPPING(this.editForm).subscribe(result => {
-      this.updateDeployStatus();
+
+  onUpdateStatus() {
+    if(this.deleteForm.exist_status=='active') this.deleteForm.status='inactive';
+    else this.deleteForm.status='active';
+    this.api.UPDATE_SHIPPING({ _id: this.deleteForm._id, status: this.deleteForm.status }).subscribe(result => {
       if(result.status) {
-        document.getElementById('closeEditModal').click();
+        document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {
-        this.editForm.errorMsg = result.message;
         console.log("response", result);
+        this.deleteForm.error_msg = result.message;
       }
     });
   }
@@ -76,7 +96,7 @@ export class ShippingMethodsComponent implements OnInit {
     this.api.DELETE_SHIPPING(this.deleteForm).subscribe(result => {
       this.updateDeployStatus();
       if(result.status) {
-        document.getElementById('closeDeleteModal').click();
+        document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {

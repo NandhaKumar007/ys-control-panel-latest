@@ -78,14 +78,14 @@ export class AppComponent {
     LocalNotifications.schedule({
       notifications: [
         {
-          title: "local"+notification.title,
-          body: "local"+notification.body,
+          title: notification.title,
+          body: notification.body,
           id: randomId,
           smallIcon: 'res://icon.png', 
           largeIcon : 'ic_stat_ys_icon',     
-          attachments: [
-            { id: 'face', url: 'https://khanoo.com/wp-content/uploads/estate_images/house/77-1576179614/230174.jpg' ,options:{}}
-          ],
+          // attachments: [
+          //   { id: 'face', url: 'https://khanoo.com/wp-content/uploads/estate_images/house/77-1576179614/230174.jpg' ,options:{}}
+          // ],
           // schedule: {
           //   at: new Date(new Date().getTime()+60*10000),
           //   repeats: false

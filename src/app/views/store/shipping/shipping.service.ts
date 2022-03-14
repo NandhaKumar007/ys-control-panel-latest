@@ -16,9 +16,13 @@ export class ShippingService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/shipping', httpOptions);
   }
+  VENDOR_SHIPPING_LIST(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/shipping?vendor_id='+x, httpOptions);
+  }
   SHIPPING_DETAILS(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/shipping_details?id='+x, httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/shipping?id='+x, httpOptions);
   }
   ADD_SHIPPING(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

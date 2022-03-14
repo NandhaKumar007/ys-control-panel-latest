@@ -6,6 +6,7 @@ import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AccountService } from '../../store/account/account.service';
+import { ShippingService } from '../../store/shipping/shipping.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -21,7 +22,7 @@ export class SigninComponent implements OnInit {
   loginForm: any = {}; pageLoader: boolean;
   constructor(
     public router: Router, private storeApi: StoreApiService, private api: ApiService, private sidebar: SidebarService,
-    private commonService: CommonService, private accApi: AccountService
+    private commonService: CommonService, private accApi: AccountService, private shipService: ShippingService
   ) { }
 
   ngOnInit() {
@@ -98,6 +99,12 @@ export class SigninComponent implements OnInit {
             });
           }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+          // shipping methods
+          this.commonService.shipping_list = [];
+          this.shipService.SHIPPING_LIST().subscribe(result => {
+            if(result.status) this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
+            this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
+          });
           // vendor list
           this.commonService.vendor_list = [];
           if(this.commonService.ys_features.indexOf('vendors')!=-1) {
@@ -114,20 +121,6 @@ export class SigninComponent implements OnInit {
           // vendor features
           this.commonService.vendor_features = [];
           this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
-          // store features
-          this.commonService.user_list = []; this.commonService.courier_partners = [];
-          this.commonService.updateLocalData('user_list', this.commonService.user_list);
-          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-          this.storeApi.STORE_FEATURES().subscribe(result => {
-            if(result.status) {
-              result.data.sub_users.forEach(obj => {
-                this.commonService.user_list.push({ _id: obj._id, name: obj.name });
-              });
-              this.commonService.courier_partners = result.data.courier_partners;
-              this.commonService.updateLocalData('user_list', this.commonService.user_list);
-              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-            }
-          });
           this.sidebar.BUILD_CATEGORY_LIST();
           if(result.data.last_login) {
             if(sessionStorage.getItem("redirect_url")) {
@@ -218,11 +211,14 @@ export class SigninComponent implements OnInit {
           if(!result.subuser_features) result.subuser_features = [];
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
-          // store features
-          this.commonService.user_list = []; this.commonService.vendor_list = []; this.commonService.courier_partners = [];
-          this.commonService.updateLocalData('user_list', this.commonService.user_list);
+          // shipping methods
+          this.commonService.shipping_list = [];
+          this.shipService.VENDOR_SHIPPING_LIST(this.commonService.vendor_details._id).subscribe(result => {
+            if(result.status) this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
+            this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
+          });
+          this.commonService.vendor_list = [];
           this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
-          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
           this.sidebar.BUILD_CATEGORY_LIST();
           this.router.navigateByUrl('/vendor-dashboard');
         }
@@ -306,6 +302,12 @@ export class SigninComponent implements OnInit {
           });
         }
         this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
+        // shipping methods
+        this.commonService.shipping_list = [];
+        this.shipService.SHIPPING_LIST().subscribe(result => {
+          if(result.status) this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
+          this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
+        });
         // vendor list
         this.commonService.vendor_list = [];
         if(this.commonService.ys_features.indexOf('vendors')!=-1) {
@@ -322,20 +324,6 @@ export class SigninComponent implements OnInit {
         // vendor features
         this.commonService.vendor_features = [];
         this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
-        // store features
-        this.commonService.user_list = []; this.commonService.courier_partners = [];
-        this.commonService.updateLocalData('user_list', this.commonService.user_list);
-        this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-        this.storeApi.STORE_FEATURES().subscribe(result => {
-          if(result.status) {
-            result.data.sub_users.forEach(obj => {
-              this.commonService.user_list.push({ _id: obj._id, name: obj.name });
-            });
-            this.commonService.courier_partners = result.data.courier_partners;
-            this.commonService.updateLocalData('user_list', this.commonService.user_list);
-            this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
-          }
-        });
         this.sidebar.BUILD_CATEGORY_LIST();
         this.router.navigateByUrl('/dashboard');
       }

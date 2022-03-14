@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrderService } from '../../order.service';
@@ -28,16 +27,15 @@ export class ProductOrderDetailsComponent implements OnInit {
   custom_list: any = []; customIndex: number;
   existing_custom_list = []; selected_custom_list = [];
   invoice_details: any; invoice_order_list: any;
-  courier_partners: any; hsncode_exist: boolean;
+  hsncode_exist: boolean;
   country_details: any; address_fields: any = [];
   order_vendor_details: any; selected_vendor: any;
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
-  addedCourier: any = { name: 'Others' };
   courierData: any = {};
 
   constructor(
-    private http: HttpClient, config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
+    config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
     private router: Router, private api: OrderService, public commonService: CommonService, private extrasApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -46,8 +44,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
-      this.courier_partners = this.commonService.courier_partners; this.remaining_items = [];
-      this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
+      this.remaining_items = []; this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
       // order details
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
@@ -108,6 +105,9 @@ export class ProductOrderDetailsComponent implements OnInit {
             }
             else this.itemList = this.remaining_items;
           }
+          // delivery partner info
+          let scpIndex = this.commonService.shipping_list.findIndex(obj => obj._id==this.order_details.shipping_method._id);
+          if(scpIndex!=-1) this.order_details.selected_cp = this.commonService.shipping_list[scpIndex];
           // address
           if(this.order_details.shipping_address) {
             this.onGetAddrDetails(this.order_details.shipping_address);
@@ -178,9 +178,13 @@ export class ProductOrderDetailsComponent implements OnInit {
   // courier partner
   setCourierPartner(x) {
     this.courierForm.btnLoader = true;
-    let cpIndex = this.courier_partners.findIndex(obj => obj.name==x.name);
-    if(x.name=='Delhivery') {
-      let delhiveryMetadata = this.courier_partners[cpIndex].metadata;
+    let dpIndex = this.commonService.shipping_list.findIndex(obj => obj.dp_name==x.name);
+    if(x.dp_name=='Delhivery') {
+      let delhiveryMetadata: any = {};
+      let dpmetaData = this.commonService.shipping_list[dpIndex].dp_metadata;
+      for(let key in dpmetaData) {
+        if(dpmetaData.hasOwnProperty(key)) delhiveryMetadata[key] = dpmetaData[key];
+      }
       let orderedItems = this.order_details.item_list.map(function (obj) { return obj.name; }).join(', ');
       orderedItems = orderedItems.replace(/[^a-zA-Z0-9, ]/g, "");
       orderedItems = orderedItems.replace(/ +(?= )/g, "");
@@ -212,7 +216,7 @@ export class ProductOrderDetailsComponent implements OnInit {
         }
       });
     }
-    else if(x.name=='Dunzo') {
+    else if(x.dp_name=='Dunzo') {
       if(!this.commonService.branch_list.length) {
         this.accApi.BRANCH_LIST().subscribe(result => {
           if(result.status) {
@@ -225,20 +229,20 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
       else this.createDunzoTask();
     }
-    else if(x.name=='Others') {
-      let sendData = {
-        _id: this.order_details._id, cp_status: true, "shipping_method.name": this.courierForm.name,
-        "shipping_method.tracking_number": this.courierForm.tracking_number, "shipping_method.tracking_link": this.courierForm.tracking_link
-      };
-      this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
-        if(result.status) this.ngOnInit();
-        else {
-          this.courierForm.btnLoader = false;
-          this.courierForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
+    // else if(x.name=='Others') {
+    //   let sendData = {
+    //     _id: this.order_details._id, cp_status: true, "shipping_method.name": this.courierForm.name,
+    //     "shipping_method.tracking_number": this.courierForm.tracking_number, "shipping_method.tracking_link": this.courierForm.tracking_link
+    //   };
+    //   this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
+    //     if(result.status) this.ngOnInit();
+    //     else {
+    //       this.courierForm.btnLoader = false;
+    //       this.courierForm.errorMsg = result.message;
+    //       console.log("response", result);
+    //     }
+    //   });
+    // }
   }
 
   createDunzoTask() {

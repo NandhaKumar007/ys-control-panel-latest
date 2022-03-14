@@ -141,13 +141,13 @@ export class CommonService {
   vendor_details: any = {};
 
   user_list: any = [];
+  shipping_list: any = [];
   vendor_list: any = [];
   currency_types: any = [];
   route_permission_list: any = [];
   archive_list: any = [];
   country_list: any = [];
   aistyle_list: any = [];
-  courier_partners: any = [];
   catalog_list: any = [];
   payment_list: any = [];
   ys_payment_list: any = [];
@@ -184,8 +184,8 @@ export class CommonService {
 
     if(localStorage.getItem('archive_list')) this.archive_list = this.decryptData(localStorage.getItem("archive_list"));
     if(localStorage.getItem('aistyle_list')) this.aistyle_list = this.decryptData(localStorage.getItem("aistyle_list"));
-    if(localStorage.getItem('courier_partners')) this.courier_partners = this.decryptData(localStorage.getItem("courier_partners"));
     if(localStorage.getItem('vendor_list')) this.vendor_list = this.decryptData(localStorage.getItem("vendor_list"));
+    if(localStorage.getItem('shipping_list')) this.shipping_list = this.decryptData(localStorage.getItem("shipping_list"));
     if(localStorage.getItem('catalog_list')) this.catalog_list = this.decryptData(localStorage.getItem("catalog_list"));
     if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));
     if(localStorage.getItem('ys_payment_list')) this.ys_payment_list = this.decryptData(localStorage.getItem("ys_payment_list"));
@@ -300,12 +300,12 @@ export class CommonService {
     this.deploy_details = {};
 
     this.vendor_list = [];
+    this.shipping_list = [];
     this.archive_list = [];
     this.aistyle_list = [];
     this.catalog_list = [];
     this.payment_list = [];
     this.currency_types = [];
-    this.courier_partners = [];
     
     delete this.page_attr;
     delete this.scroll_y_pos;

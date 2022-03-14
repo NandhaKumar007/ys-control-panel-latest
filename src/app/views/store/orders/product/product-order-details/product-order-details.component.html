@@ -928,23 +928,14 @@
         </div>
 
         <!-- courier partner -->
-        <form *ngIf="order_details.order_type=='delivery' && !order_details.vendor_list?.length && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
+        <form *ngIf="order_details.selected_cp && order_details.order_type=='delivery' && !order_details.vendor_list?.length && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && !order_details?.cp_status && order_details.order_status=='dispatched'"
         (ngSubmit)="setCourierPartner(order_details.selected_cp);" autocomplete="off" ngNativeValidate>
           <div class="order-summary-header">
             <p class="sec-desc">Delivery Partner</p>
           </div>
           <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
-              <div class="col-md-12 form-group mb-3 summary-section">
-                <label>Delivery Partners</label>
-                <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="order_details.selected_cp"
-                  (change)="courierForm.errorMsg='';" #selected_cp="ngModel" required>
-                  <option [ngValue]="x" *ngFor="let x of courier_partners">{{x.name}}</option>
-                  <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier">
-                    {{addedCourier?.name}}</option>
-                </select>
-              </div>
-              <ng-container *ngIf="order_details?.selected_cp?.name=='Dunzo'">
+              <ng-container *ngIf="order_details?.selected_cp?.dp_name=='Dunzo'">
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Special Instructions</label>
                   <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
@@ -957,30 +948,12 @@
                   </label>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_details?.selected_cp?.name=='Others'">
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Courier Name</label>
-                  <input type="text" name="tracker_name" class="form-control" [(ngModel)]="courierForm.name" required />
-                </div>
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Tracking Number</label>
-                  <input type="text" name="tracking_number" class="form-control"
-                    [(ngModel)]="courierForm.tracking_number" required />
-                </div>
-                <div class="col-md-12 form-group mb-3 summary-section">
-                  <label>Tracking Link</label>
-                  <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link"
-                    required />
-                </div>
-              </ng-container>
               <div class="col-md-12">
                 <div *ngIf="courierForm?.errorMsg">
                   <p class="text-danger mb-3">{{ courierForm.errorMsg }}</p>
                 </div>
                 <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
-                  [ladda]="courierForm.btnLoader">
-                  {{ order_details?.selected_cp?.name=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
-                </button>
+                [ladda]="courierForm.btnLoader">Check and Set Delivery Partner</button>
               </div>
             </div>
           </div>
