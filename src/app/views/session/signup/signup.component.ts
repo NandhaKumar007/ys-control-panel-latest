@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { CommonService } from '../../../services/common.service';
 
@@ -27,6 +28,7 @@ export class SignupComponent implements OnInit {
       country: "India", currency_types: this.currencyList[0],
       company_details: { dial_code: "+91", state: "" }, category: ""
     };
+    if(environment.keep_login) this.signupForm.signup_from = "app";
     if(!localStorage.getItem("country_list")) {
       this.api.COUNTRIES_LIST().subscribe(result => {
         this.commonService.country_list = [];
@@ -39,6 +41,7 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(environment.keep_login) this.commonService.loadChat();
   }
 
   onSubmit() {
@@ -82,6 +85,10 @@ export class SignupComponent implements OnInit {
     this.stateList = [];
     let index = this.commonService.country_list.findIndex(object => object.name==x);
     if(index!=-1) this.stateList = this.commonService.country_list[index].states;
+  }
+
+  ngOnDestroy() {
+    if(environment.keep_login) this.commonService.hideChat();
   }
 
 }

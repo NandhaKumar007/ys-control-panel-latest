@@ -60,7 +60,7 @@ export class AppComponent {
 
       // Show us the notification payload if the app is open on our device
       PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-        console.log('Push received: ' + JSON.stringify(notification));        
+        console.log('Push received: ' +notification); 
         this.schedule(notification);
       });
 
@@ -73,16 +73,17 @@ export class AppComponent {
   }
 
   schedule(notification) {
-    this.commonService.notification_url = notification.data.url;
     const randomId = Math.floor(Math.random() * 10000) + 1;
     LocalNotifications.schedule({
       notifications: [
         {
           title: notification.title,
           body: notification.body,
+          largeBody : notification.body,
           id: randomId,
-          smallIcon: 'res://icon.png', 
-          largeIcon : 'ic_stat_ys_icon',     
+          smallIcon: 'ic_stat_ys_icon', 
+          largeIcon : 'ic_stat_ys_icon_large', 
+          extra:{url : notification.data.url}    
           // attachments: [
           //   { id: 'face', url: 'https://khanoo.com/wp-content/uploads/estate_images/house/77-1576179614/230174.jpg' ,options:{}}
           // ],
@@ -95,8 +96,9 @@ export class AppComponent {
     });
 
     LocalNotifications.addListener('localNotificationActionPerformed', (payload) => {
-      console.log('payloaddddd', payload);
-      document.getElementById("mybtn").click();  
+        console.log('payloaddddd', payload.notification.extra.url);
+        this.commonService.notification_url = payload.notification.extra.url; 
+        document.getElementById("mybtn").click();  
     });
   }
 

@@ -33,6 +33,7 @@ export class SigninComponent implements OnInit {
       this.restoreStoreLogin();
     }
     else localStorage.clear();
+    if(environment.keep_login) this.commonService.loadChat();
   }
 
   signin() {
@@ -332,6 +333,10 @@ export class SigninComponent implements OnInit {
         localStorage.clear();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if(environment.keep_login) this.commonService.hideChat();
   }
 
 }

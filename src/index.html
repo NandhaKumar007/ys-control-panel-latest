@@ -48,6 +48,17 @@
         position:absolute; 
         bottom: 0px;
       }
+      .copy-link {
+        border: 1px solid #ec848b;
+        border-radius: 6px;
+        background: #ec848b;
+        color: #fff !important;
+        font-size: 10px;
+        padding-left: 3px;
+        padding-right: 3px;
+        position: relative;
+        top: -2px;
+      }
     </style>
   </head>
   <body class="text-left">
@@ -65,16 +76,15 @@
         </div>
         <div class="col-md-12 px-0" style="padding-top: 15px;">
           <ul style="list-style:none;padding-left:0">
-            <li class="pb-2">1. Open <a style="color: #ec848b;">yourstore.io/login</a> in Safari browser</li>
+            <li class="pb-2">1. Open <a style="color: #ec848b;">yourstore.io/login</a> in Safari browser <a onclick="copyText()" id="iosText" class="copy-link">Copy Link</a></li>
             <li class="pb-3">2. Tap on
               <span class="material-icons" style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 4px;font-size: 14px;align-items: center;justify-content: center;padding: 5px;">
                 <span style="font-size: 18px;" class="material-icons-outlined">ios_share</span>
               </span> in the address bar
             </li>
-            <li class="pb-3">3. Select
-              <span>
-                <a style="background:#efefef;padding: 5px; border-radius: 4px; color: #000; font-weight: 500;">Add
-                  to Home Screen</a>
+            <li class="pb-3">3. Scroll and select <b>Add to Home Screen</b>
+              <span class="material-icons" style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);border-radius: 4px;font-size: 14px;align-items: center;justify-content: center;padding: 5px;">
+                <span style="font-size: 18px;" class="material-icons-outlined">add_box</span>
               </span>
             </li>
             <li>4. Click on the yourstore App icon in the Home screen and Login</li>
@@ -106,7 +116,7 @@
     <noscript>Please enable JavaScript to continue using this application.</noscript>
     <script>
       let iosPlatforms = ["iPad", "iPhone", "iPod", "iPod touch"];
-      if(iosPlatforms.indexOf(navigator.platform)==-1 && window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
+      if(iosPlatforms.indexOf(navigator.platform)!=-1 && window.innerWidth<=800 && document.cookie.indexOf("pwa=false")==-1) {
         document.getElementById("overlay").style.display = "block";
       }
       $(document).ready(function () {
@@ -115,6 +125,22 @@
           document.cookie = "pwa=false";
         });
       });
+
+      function copyText() {
+        let val = "https://yourstore.io/login";
+        let selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+        document.getElementById("iosText").innerHTML = "Copied";
+      }
     </script>
   </body>
 </html>

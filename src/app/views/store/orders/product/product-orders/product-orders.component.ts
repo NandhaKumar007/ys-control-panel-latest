@@ -90,7 +90,7 @@ export class ProductOrdersComponent implements OnInit {
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
                   obj.order_status = obj.vendor_list[venIndex].status;
-                  obj.final_price = obj.vendor_list[venIndex].total;
+                  obj.final_price = obj.vendor_list[venIndex].final_price;
                 }
               }
               if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
@@ -140,7 +140,7 @@ export class ProductOrdersComponent implements OnInit {
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
                   obj.order_status = obj.vendor_list[venIndex].status;
-                  obj.final_price = obj.vendor_list[venIndex].total;
+                  obj.final_price = obj.vendor_list[venIndex].final_price;
                 }
               }
               if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {

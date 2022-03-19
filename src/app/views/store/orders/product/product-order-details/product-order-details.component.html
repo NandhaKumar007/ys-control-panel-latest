@@ -7,7 +7,7 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-8">
-        <h1>#{{ (order_vendor_details?.order_number)? order_vendor_details.order_number: order_details.order_number }}</h1>
+        <h1>#{{ (vendorInfo?.order_number)? vendorInfo.order_number: order_details.order_number }}</h1>
         <ul>
           <li>View and manage your order</li>
         </ul>
@@ -55,8 +55,7 @@
           </div>
         </div>
         <!-- product list (with group) -->
-        <div *ngIf="order_details.item_groups?.length && commonService.store_details?.login_type!='vendor'"
-          class="list-item col-md-12 p-0 mb-4">
+        <div *ngIf="order_details.item_groups?.length && commonService.store_details?.login_type!='vendor'" class="list-item col-md-12 p-0 mb-4">
           <p class="sec-desc">Product Groups</p>
           <ng-container *ngFor="let group of order_details.item_groups;">
             <div class="card p-3 mb-3">
@@ -226,106 +225,18 @@
         </ng-container>
         <!-- product list (with vendor) -->
         <div *ngIf="order_details.vendor_list?.length && commonService.store_details?.login_type!='vendor'" class="list-item col-md-12 p-0 mb-4">
-          <p class="sec-desc">Product Details</p>
-          <!-- vendor_id not exist -->
-          <ng-container *ngFor="let x of itemList; let i=index;">
-            <div *ngIf="!x.vendor_id" class="card m-10 d-flex flex-row pl-3 pr-3">
-              <div class="list-thumb d-flex mtb-20">
-                <img [src]="imgBaseUrl+x.image" alt="">
+          <ng-container *ngFor="let vendor of order_details.vendor_list; let v=index;">
+            <div class="row mb-1">
+              <div class="col-md-6">
+                <p class="sec-desc add-another">{{vendor.vendor_name}}</p>
               </div>
-              <div class="flex-grow-1 pl-2 d-flex mtb-20">
-                <div class="card-body row">
-                  <div class="col-md-5 d-flex justify-content-center flex-column">
-                    <span>
-                      {{x.name}}
-                    </span>
-                    <ng-container *ngIf="x.variant_status">
-                      <ng-container *ngFor="let y of x.variant_types;">
-                        <span class="w-100">
-                          <b>{{y.name}}: </b>{{y.value}}</span>
-                      </ng-container>
-                    </ng-container>
-                    <span *ngIf="x.slot_details" class="w-100">
-                      <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
-                    </span>
-                    <div *ngIf="x.addon_status && x.selected_addon">
-                      <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
-                      <ng-container *ngIf="x.customization_status">
-                        <br>
-                        <b *ngIf="x.customized_model?.sizing_list?.length>1">
-                          {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-2].value[0].unique_name }} - 
-                          {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-1].value[0].unique_name }}
-                          <br>
-                        </b>
-                        <b class="w-100 text-primary"
-                          (click)="commonService.custom_model=x.customized_model; modalService.open(customizationModal, { size: 'lg'});"
-                          style="cursor:pointer;">{{x.customized_model?.name}}</b>
-                      </ng-container>
-                    </div>
-                  </div>
-
-                  <div class="col-md-2 flex-center"> {{x.sku}} </div>
-                  <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
-                  <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
-                    {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
-                  <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                    {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
-                    commonService.store_currency?.country_code}}</div>
-                  <!-- if customization exist -->
-                  <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
-                    <div class="btn-group">
-                      <div class="btn-group" ngbDropdown role="group" aria-label="Select all" placement="left">
-                        <button class="btn btn-wide black-outline-btn mr-3" ngbDropdownToggle>
-                          <span class="black-outline-txt">Edit</span>
-                        </button>
-                        <div class="dropdown-menu" ngbDropdownMenu>
-                          <button *ngIf="x.customized_model?.custom_list?.length"
-                            (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
-                            class="dropdown-item">Customization</button>
-                          <button *ngIf="x.customized_model?.mm_sets?.length"
-                            (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
-                            class="dropdown-item">Measurement</button>
-                          <button *ngIf="x.customized_model?.notes_list?.length"
-                            (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="col-md-6">
+                <p class="pull-right mb-0"><b>#{{vendor.order_number}}</b></p>
               </div>
             </div>
-          </ng-container>
-          <!-- vendors with product -->
-          <ng-container *ngFor="let vendor of order_details.vendor_list;">
             <div class="card p-3 mb-3">
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="sec-desc add-another">{{vendor.vendor_name}}</p>
-                  <p><b>#{{vendor.order_number}}</b></p>
-                </div>
-                <div class="col-md-6">
-                  <p class="pull-right mb-0">
-                    <span class="badge" [ngClass]="{
-                      'badge-warning badge-red-outline': vendor.status === 'placed',
-                      'badge-info badge-blue-outline': vendor.status === 'confirmed',
-                      'badge-success badge-green-outline': vendor.status === 'dispatched' || vendor.status === 'delivered'
-                    }">
-                      <span [ngClass]="{
-                        'badge-red-outline-txt': vendor.status === 'placed',
-                        'badge-blue-outline-txt': vendor.status === 'confirmed',
-                        'badge-green-outline-txt': vendor.status === 'dispatched' || vendor.status === 'delivered'
-                      }" style="text-transform: capitalize;">
-                        {{vendor.status}}
-                        <ng-container *ngIf="vendor.status=='placed'"> on: {{order_details?.created_on | date: "dd MMM y hh:mm a"}}</ng-container>
-                        <ng-container *ngIf="vendor.status=='confirmed' && vendor.confirmed_on"> on: {{vendor.confirmed_on | date: "dd MMM y hh:mm a"}}</ng-container>
-                        <ng-container *ngIf="vendor.status=='dispatched' && vendor.dispatched_on"> on: {{vendor.dispatched_on | date: "dd MMM y hh:mm a"}}</ng-container>
-                        <ng-container *ngIf="vendor.status=='delivered' && vendor.delivered_on"> on: {{vendor.delivered_on | date: "dd MMM y hh:mm a"}}</ng-container>
-                        <ng-container *ngIf="vendor.status=='cancelled' && vendor.cancelled_on"> on: {{vendor.cancelled_on | date: "dd MMM y hh:mm a"}}</ng-container>
-                      </span>
-                    </span>
-                  </p>
-                </div>
-              </div>
+              <p class="sec-desc">Product Details</p>
+              <!-- Item List -->
               <ng-container *ngFor="let x of itemList; let i=index;">
                 <div *ngIf="x.vendor_id==vendor.vendor_id" class="card card-in-card m-10 d-flex flex-row">
                   <div class="list-thumb d-flex mtb-20">
@@ -393,6 +304,246 @@
                   </div>
                 </div>
               </ng-container>
+              <!-- shipping details -->
+              <div class="order-section">
+                <div class="pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Shipping Details</p>
+                  <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEditVendorShipping(vendor, shippingModal);" class="material-icons edit-icon">edit</i>
+                </div>
+                <div class="col-md-12 list-item p-0">
+                  <div class="card mb-4 d-flex flex-column">
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p class="w-30 w-sm-100 m-b-0">
+                          {{vendor.shipping_method?.name? vendor.shipping_method?.name: 'NA'}}
+                        </p>
+                        <p class="w-30 w-sm-100 m-b-0">
+                          <span *ngIf="vendor?.shipping_method?.shipping_price>0">
+                            {{vendor.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}
+                          </span>
+                          <span *ngIf="vendor?.shipping_method?.shipping_price==0">FREE</span>
+                        </p>
+                        <p class="w-30 w-sm-100 m-b-0">{{vendor.shipping_method?.delivery_time}}</p>
+                      </div>
+                    </div>
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div
+                        class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p *ngIf="vendor?.shipping_method?.tracking_number" style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
+                          <a href="{{vendor.shipping_method?.tracking_link}}" target="_blank">{{vendor.shipping_method.tracking_number}}</a>
+                        </p>
+                        <p class="w-70 w-sm-100 m-b-0">{{vendor.shipping_method?.tracking_link}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- order information -->
+              <div class="order-section">
+                <div class="pb-2">
+                  <p class="sec-desc" style="display: inline-block;">Order Summary</p>
+                </div>
+                <div class="col-md-12 card">
+                  <div class="row card-body">
+                    <div class="col-md-5">
+                      <div class="row">
+                        <ng-container *ngIf="vendor?.confirmed_on">
+                          <div class="col-5">
+                            <div class="box-card card-head">
+                              <p>Confirmed on</p>
+                            </div>
+                          </div>
+                          <div class="col-7">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{ vendor.confirmed_on | date: "dd MMM y hh:mm a"}}
+                              </p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="vendor?.dispatched_on">
+                          <div class="col-5">
+                            <div class="box-card card-head">
+                              <p>Dispatched on</p>
+                            </div>
+                          </div>
+                          <div class="col-7">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{ vendor.dispatched_on | date: "dd MMM y hh:mm a"}}
+                              </p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="vendor?.delivered_on">
+                          <div class="col-5">
+                            <div class="box-card card-head">
+                              <p>Delivered on</p>
+                            </div>
+                          </div>
+                          <div class="col-7">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{ vendor.delivered_on | date: "dd MMM y hh:mm a"}}
+                              </p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="vendor?.cancelled_on">
+                          <div class="col-5">
+                            <div class="box-card card-head">
+                              <p>Cancelled on</p>
+                            </div>
+                          </div>
+                          <div class="col-7">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{ vendor.cancelled_on | date: "dd MMM y hh:mm a"}}
+                              </p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <!-- update order status -->
+                        <form autocomplete="off" *ngIf="params?.type=='live'" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
+                          <div *ngIf="vendor?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
+                            <label class="radio radio-primary">
+                              <input type="radio" name="order_status{{v+1}}" value="confirmed" [(ngModel)]="vendor.order_status">
+                              <span>Order Confirmed</span>
+                              <span class="checkmark"></span>
+                            </label>
+                          </div>
+                          <ng-container *ngIf="vendor?.existing_status=='placed' || vendor?.existing_status=='confirmed'">
+                            <div class="col-md-12 mb-1 summary-section">
+                              <label class="radio radio-primary">
+                                <input type="radio" name="order_status{{v+1}}" value="dispatched" [(ngModel)]="vendor.order_status">
+                                <span>Order Dispatched</span>
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="vendor?.existing_status=='placed' || vendor?.existing_status=='confirmed' || vendor?.existing_status=='dispatched'">
+                            <div class="col-md-12 mb-1 summary-section">
+                              <label class="radio radio-primary">
+                                <input type="radio" name="order_status{{v+1}}" value="delivered" [(ngModel)]="vendor.order_status">
+                                <span>Order Delivered</span>
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                            <div class="col-md-12">
+                              <button [disabled]="vendor.order_status=='delivered' && !vendor?.dispatched_on"
+                              type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
+                            </div>
+                          </ng-container>
+                        </form>
+                        <!-- cancel order -->
+                        <button *ngIf="!params?.coupon_id && params?.type!='inactive' && vendor?.order_status!='cancelled' && params?.type!='cancelled' && params?.type!='view'" type="button"
+                        (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
+                          <span class="orng-outline-txt">Cancel Order</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="box-card card-head">
+                            <p>Item Total</p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="box-card">
+                            <p class="pull-right text-right">
+                              {{vendor.sub_total | currency: commonService.store_currency?.country_code}}
+                            </p>
+                          </div>
+                        </div>
+                        <ng-container *ngIf="vendor?.gift_wrapper > 0">
+                          <div class="col-6">
+                            <div class="box-card card-head">
+                              <p>Gift Wrapping</p>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{vendor.gift_wrapper | currency: commonService.store_currency?.country_code}}</p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="vendor?.packaging_charges > 0">
+                          <div class="col-6">
+                            <div class="box-card card-head">
+                              <p>Packaging Charges</p>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{vendor.packaging_charges | currency: commonService.store_currency?.country_code}}</p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <div class="col-6">
+                          <div class="box-card card-head">
+                            <p>Shipping</p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="box-card">
+                            <p class="pull-right text-right">
+                              {{vendor.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+                          </div>
+                        </div>
+                        <ng-container *ngIf="vendor?.cod_charges > 0">
+                          <div class="col-6">
+                            <div class="box-card card-head">
+                              <p>COD Charges</p>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                {{vendor.cod_charges | currency: commonService.store_currency?.country_code}}</p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="vendor?.discount_amount > 0">
+                          <div class="col-6">
+                            <div class="box-card card-head">
+                              <p>Discount</p>
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="box-card">
+                              <p class="pull-right text-right">
+                                -{{vendor.discount_amount | currency: commonService.store_currency?.country_code}}</p>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <div class="col-6">
+                          <div class="box-card card-head">
+                            <p>Grand Total</p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="box-card">
+                            <p class="pull-right text-right">
+                              {{vendor.final_price | currency: commonService.store_currency?.country_code}}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <button type="button" class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
+                          <!-- Resend mail -->
+                          <button type="button" (click)="vendorInfo=vendor; onResendVendorMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
+                            <span class="blue-outline-txt">Resend Email</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </ng-container>
         </div>
@@ -466,98 +617,100 @@
               </div>
             </div>
           </div>
-          <!-- shipping & delivery details -->
-          <div class="order-section">
-            <div class="pb-2">
-              <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
-                {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
-              </p>
-              <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
-                Pickup Details
-              </p>
-              <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
-            </div>
-            <div class="col-md-12 list-item p-0">
-              <!-- shipping details -->
-              <div *ngIf="!order_details.shipping_method?.delivery_method"
-                class="card mb-4 d-flex flex-column">
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p class="w-30 w-sm-100 m-b-0">
-                      {{order_details.shipping_method?.name? order_details.shipping_method?.name: 'NA'}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">
-                      <span
-                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
-                        | currency:commonService.store_currency?.country_code }}</span>
-                      <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
-                    </p>
-                    <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
-                  </div>
-                </div>
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p *ngIf="order_details?.shipping_method?.tracking_number" style="width: 37% !important;"
-                      class="w-30 w-sm-100 m-b-0">
-                      <a href="{{order_details.shipping_method?.tracking_link}}"
-                        target="_blank">{{order_details.shipping_method.tracking_number}}</a>
-                    </p>
-                    <p class="w-70 w-sm-100 m-b-0">{{order_details.shipping_method?.tracking_link}}</p>
-                  </div>
-                </div>
+          <ng-container *ngIf="!order_details.vendor_list?.length">
+            <!-- shipping & delivery details -->
+            <div class="order-section">
+              <div class="pb-2">
+                <p *ngIf="order_details.order_type!='pickup'" class="sec-desc" style="display: inline-block;">
+                  {{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Details
+                </p>
+                <p *ngIf="order_details.order_type=='pickup'" class="sec-desc" style="display: inline-block;">
+                  Pickup Details
+                </p>
+                <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEdit('shipping', shippingModal);" class="material-icons edit-icon">edit</i>
               </div>
-              <!-- delivery details -->
-              <div *ngIf="order_details.shipping_method?.delivery_method" class="card mb-4 d-flex flex-column">
-                <div class="flex-grow-1 pl-2 d-flex">
-                  <div
-                    class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                    <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
-                    <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
-                      <span
-                        *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
-                        | currency:commonService.store_currency?.country_code }}</span>
-                      <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
-                    </p>
+              <div class="col-md-12 list-item p-0">
+                <!-- shipping details -->
+                <div *ngIf="!order_details.shipping_method?.delivery_method"
+                  class="card mb-4 d-flex flex-column">
+                  <div class="flex-grow-1 pl-2 d-flex">
+                    <div
+                      class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p class="w-30 w-sm-100 m-b-0">
+                        {{order_details.shipping_method?.name? order_details.shipping_method?.name: 'NA'}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">
+                        <span
+                          *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
+                          | currency:commonService.store_currency?.country_code }}</span>
+                        <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
+                      </p>
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 pl-2 d-flex">
+                    <div
+                      class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p *ngIf="order_details?.shipping_method?.tracking_number" style="width: 37% !important;"
+                        class="w-30 w-sm-100 m-b-0">
+                        <a href="{{order_details.shipping_method?.tracking_link}}"
+                          target="_blank">{{order_details.shipping_method.tracking_number}}</a>
+                      </p>
+                      <p class="w-70 w-sm-100 m-b-0">{{order_details.shipping_method?.tracking_link}}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- courier partner - order details -->
-          <ng-container *ngFor="let x of order_details.cp_orders;">
-            <!-- DUNZO -->
-            <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
-              <div class="order-section">
-                <div class="pb-2">
-                  <p class="sec-desc" style="display: inline-block;">Dunzo Order Details</p>
-                </div>
-                <div class="card p-3 mb-3">
-                  <div class="d-flex flex-column justify-content-between flex-lg-row">
-                    <p class="w-40 w-sm-100 m-b-0">{{x?.order_id}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">{{x?.cp_status}}</p>
-                    <p class="w-30 w-sm-100 m-b-0">
-                      <button type="button" (click)="checkDunzoStatus(x.order_id);" [disabled]="courierData?.submit" [ladda]="courierData?.submit"
-                      class="badge ladda-badge badge-warning badge-green pull-right mr-3" style="border: none;">Get More Info</button>
-                    </p>
-                  </div>
-                  <div *ngIf="courierData?.state" class="mt-3">
-                    <div class="card card-in-card p-3">
-                      <span (click)="courierData={};" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
-                      <div class="d-flex flex-column justify-content-between flex-lg-row">
-                        <ng-container *ngIf="courierData?.eta">
-                          <p class="w-30 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
-                          <p class="w-30 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
-                          <p *ngIf="courierData?.runner" class="w-40 w-sm-100 m-b-0">
-                            Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong>
-                          </p>
-                        </ng-container>
-                      </div>
+                <!-- delivery details -->
+                <div *ngIf="order_details.shipping_method?.delivery_method" class="card mb-4 d-flex flex-column">
+                  <div class="flex-grow-1 pl-2 d-flex">
+                    <div
+                      class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
+                      <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
+                        <span
+                          *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
+                          | currency:commonService.store_currency?.country_code }}</span>
+                        <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <!-- courier partner - order details -->
+            <ng-container *ngFor="let x of order_details.cp_orders;">
+              <!-- DUNZO -->
+              <ng-container *ngIf="order_details.cp_status && x.name=='Dunzo' && x.status=='active'">
+                <div class="order-section">
+                  <div class="pb-2">
+                    <p class="sec-desc" style="display: inline-block;">Dunzo Order Details</p>
+                  </div>
+                  <div class="card p-3 mb-3">
+                    <div class="d-flex flex-column justify-content-between flex-lg-row">
+                      <p class="w-40 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">{{x?.cp_status}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">
+                        <button type="button" (click)="checkDunzoStatus(x.order_id);" [disabled]="courierData?.submit" [ladda]="courierData?.submit"
+                        class="badge ladda-badge badge-warning badge-green pull-right mr-3" style="border: none;">Get More Info</button>
+                      </p>
+                    </div>
+                    <div *ngIf="courierData?.state" class="mt-3">
+                      <div class="card card-in-card p-3">
+                        <span (click)="courierData={};" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                        <div class="d-flex flex-column justify-content-between flex-lg-row">
+                          <ng-container *ngIf="courierData?.eta">
+                            <p class="w-30 w-sm-100 m-b-0">Estimated pickup time: <strong>{{courierData?.eta?.pickup}} (mins)</strong></p>
+                            <p class="w-30 w-sm-100 m-b-0">Estimated drop time: <strong>{{courierData?.eta?.dropoff}} (mins)</strong></p>
+                            <p *ngIf="courierData?.runner" class="w-40 w-sm-100 m-b-0">
+                              Runner Details: <strong>{{courierData?.runner?.name}} ({{courierData?.runner?.phone_number}})</strong>
+                            </p>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </ng-container>
           </ng-container>
         </ng-container>
@@ -920,7 +1073,7 @@
                 </div>
               </div>
               <div class="col-12">
-                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewInvoice(invoiceModal);"
+                <button *ngIf="params?.type!='inactive' && !order_details.vendor_list?.length" type="button" (click)="onViewInvoice(invoiceModal);"
                   class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
               </div>
             </div>
@@ -1105,7 +1258,7 @@
         <!-- # Create new item group -->
 
         <!-- cancel order -->
-        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive'" type="button"
+        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive' && !order_details.vendor_list?.length" type="button"
           (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
           class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
@@ -1130,10 +1283,112 @@
       </div>
       <!-- vendor login -->
       <div class="col-lg-3" *ngIf="commonService.store_details?.login_type=='vendor'">
+        <!-- order summary -->
+        <div class="summary-section mtb-10">
+          <div class="order-summary-header">
+            <p class="sec-desc">Order Summary</p>
+          </div>
+          <div class="card order-summary-details mtb-10">
+            <div class="row mtb-10">
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Item Total</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    {{vendorInfo.sub_total | currency: commonService.store_currency?.country_code}}
+                  </p>
+                </div>
+              </div>
+              <ng-container *ngIf="vendorInfo?.gift_wrapper > 0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Gift Wrapping</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      {{vendorInfo.gift_wrapper | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="vendorInfo?.packaging_charges > 0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Packaging Charges</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      {{vendorInfo.packaging_charges | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Shipping</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    {{vendorInfo.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+                </div>
+              </div>
+              <ng-container *ngIf="vendorInfo?.cod_charges > 0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>COD Charges</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      {{vendorInfo.cod_charges | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="vendorInfo?.discount_amount > 0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Discount</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      -{{vendorInfo.discount_amount | currency: commonService.store_currency?.country_code}}</p>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Grand Total</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    {{vendorInfo.final_price | currency: commonService.store_currency?.country_code}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-12">
+                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewInvoice(invoiceModal);"
+                  class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- order status -->
         <div class="order-summary-header">
           <p class="sec-desc">Order Status</p>
         </div>
-        <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateStatusModal, { centered: true });" ngNativeValidate>
+        <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
           <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
               <!-- existing order status -->
@@ -1149,7 +1404,7 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_vendor_details?.confirmed_on">
+              <ng-container *ngIf="vendorInfo?.confirmed_on">
                 <div class="col-5">
                   <div class="box-card card-head">
                     <p>Confirmed on</p>
@@ -1157,11 +1412,11 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
+                    <p class="pull-right text-right">{{ vendorInfo.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_vendor_details?.dispatched_on">
+              <ng-container *ngIf="vendorInfo?.dispatched_on">
                 <div class="col-5">
                   <div class="box-card card-head">
                     <p>Dispatched on</p>
@@ -1169,11 +1424,11 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
+                    <p class="pull-right text-right">{{ vendorInfo.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_vendor_details?.delivered_on">
+              <ng-container *ngIf="vendorInfo?.delivered_on">
                 <div class="col-5">
                   <div class="box-card card-head">
                     <p>Delivered on</p>
@@ -1181,11 +1436,11 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.delivered_on | date: "dd MMM y hh:mm a"}}</p>
+                    <p class="pull-right text-right">{{ vendorInfo.delivered_on | date: "dd MMM y hh:mm a"}}</p>
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="order_vendor_details?.cancelled_on">
+              <ng-container *ngIf="vendorInfo?.cancelled_on">
                 <div class="col-5">
                   <div class="box-card card-head">
                     <p>Cancelled on</p>
@@ -1193,38 +1448,38 @@
                 </div>
                 <div class="col-7">
                   <div class="box-card">
-                    <p class="pull-right text-right">{{ order_vendor_details.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
+                    <p class="pull-right text-right">{{ vendorInfo.cancelled_on | date: "dd MMM y hh:mm a"}}</p>
                   </div>
                 </div>
               </ng-container>
               <!-- update order status -->
               <ng-container *ngIf="params?.type=='live'">
-                <div *ngIf="order_vendor_details?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
+                <div *ngIf="vendorInfo?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
                   <label class="radio radio-primary">
-                    <input type="radio" name="order_status" value="confirmed" [(ngModel)]="order_vendor_details.order_status">
+                    <input type="radio" name="order_status" value="confirmed" [(ngModel)]="vendorInfo.order_status">
                     <span>Order Confirmed</span>
                     <span class="checkmark"></span>
                   </label>
                 </div>
-                <ng-container *ngIf="order_vendor_details?.existing_status=='placed' || order_vendor_details?.existing_status=='confirmed'">
+                <ng-container *ngIf="vendorInfo?.existing_status=='placed' || vendorInfo?.existing_status=='confirmed'">
                   <div class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="dispatched" [(ngModel)]="order_vendor_details.order_status">
+                      <input type="radio" name="order_status" value="dispatched" [(ngModel)]="vendorInfo.order_status">
                       <span>Order Dispatched</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="order_vendor_details?.existing_status=='placed' || order_vendor_details?.existing_status=='confirmed' || order_vendor_details?.existing_status=='dispatched'">
+                <ng-container *ngIf="vendorInfo?.existing_status=='placed' || vendorInfo?.existing_status=='confirmed' || vendorInfo?.existing_status=='dispatched'">
                   <div class="col-md-12 mb-1 summary-section">
                     <label class="radio radio-primary">
-                      <input type="radio" name="order_status" value="delivered" [(ngModel)]="order_vendor_details.order_status">
+                      <input type="radio" name="order_status" value="delivered" [(ngModel)]="vendorInfo.order_status">
                       <span>Order Delivered</span>
                       <span class="checkmark"></span>
                     </label>
                   </div>
                   <div class="col-md-12">
-                    <button [disabled]="order_vendor_details.order_status=='delivered' && !order_vendor_details?.dispatched_on"
+                    <button [disabled]="vendorInfo.order_status=='delivered' && !vendorInfo?.dispatched_on"
                     type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
                   </div>
                 </ng-container>
@@ -1232,6 +1487,20 @@
             </div>
           </div>
         </form>
+
+        <!-- cancel order -->
+        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive'" type="button"
+          (click)="errorMsg=null; btnLoader=false; modalService.open(cancelVendorModal, { centered: true });"
+          class="btn orng-outline-btn w-100 mtb-10">
+          <span class="orng-outline-txt">Cancel Order</span>
+        </button>
+        <!-- # cancel order -->
+
+        <!-- Resend mail -->
+        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button"
+          (click)="onResendVendorMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
+         <span class="blue-outline-txt">Resend Email</span> </button>
+        <!-- # Resend mail -->
       </div>
     </div>
   </div>
@@ -1725,6 +1994,27 @@
   </div>
 </ng-template>
 
+<!-- Update vendor status -->
+<ng-template #updateVendorStatusModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Do you want to update the order
+        <span class="text-danger">"{{ (commonService.store_details?.login_type!='vendor')? vendorInfo.vendor_name+' - ': '' }}#{{vendorInfo.order_number}}"</span> status to {{vendorInfo.order_status}}?
+      </strong>
+    </p>
+    <div *ngIf="errorMsg">
+      <p class="text-danger">{{ errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="updateOrderStatus();" class="btn btn-wide btn-primary ladda-button"
+      [disabled]="btnLoader" [ladda]="btnLoader">Yes</button>
+  </div>
+</ng-template>
+
 <!-- Mark as Paid -->
 <ng-template #markPaidModal let-modal>
   <div class="modal-body">
@@ -1784,6 +2074,43 @@
   </div>
 </ng-template>
 
+<!-- Cancel Vendor Order -->
+<ng-template #cancelVendorModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to cancel the
+        <span class="text-danger">"{{ (commonService.store_details?.login_type!='vendor')? vendorInfo.vendor_name+' - ': '' }}#{{vendorInfo.order_number}}"</span> order?</strong>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" class="btn btn-wide btn-primary" (click)="modal.dismiss('cancel'); modalService.open(confirmCancelVendorModal, { centered: true });">Yes</button>
+  </div>
+</ng-template>
+
+<!-- Confirm Cancel Vendor Order -->
+<ng-template #confirmCancelVendorModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>If you cancel the order
+        <span class="text-danger">"{{ (commonService.store_details?.login_type!='vendor')? vendorInfo.vendor_name+' - ': '' }}#{{vendorInfo.order_number}}"</span>, the products will revert back to stock.
+      </strong>
+    </p>
+    <div *ngIf="errorMsg">
+      <p class="text-danger">{{ errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" (click)="onCancelVendorOrder();" class="btn btn-wide btn-primary ladda-button"
+      [disabled]="btnLoader" [ladda]="btnLoader">Ok</button>
+  </div>
+</ng-template>
+
 <!-- Confirm Courier Cancel -->
 <ng-template #confirmCourierCancelModal let-modal>
   <form autocomplete="off" (ngSubmit)="confirmCancelCourierPartner();" ngNativeValidate>
@@ -1816,7 +2143,12 @@
 <!-- Resend mail -->
 <ng-template #resendMailModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Resend email to customer</h4>
+    <h4 *ngIf="!mailForm.vendor_id || commonService.store_details?.login_type=='vendor'" class="modal-title" id="modal-basic-title">
+      Resend email to customer
+    </h4>
+    <h5 *ngIf="mailForm.vendor_id && commonService.store_details?.login_type!='vendor'" class="modal-title" id="modal-basic-title">
+      {{vendorInfo.vendor_name}} - {{vendorInfo.order_number}}
+    </h5>
   </div>
   <form autocomplete="off" (ngSubmit)="sendMail();" ngNativeValidate>
     <div class="modal-body">
@@ -1827,22 +2159,35 @@
             <input type="text" name="email" class="form-control" [(ngModel)]="mailForm.email" #email="ngModel"
               required />
           </div>
-          <div class="col-md-12 form-group mb-3">
+          <!-- store order -->
+          <div *ngIf="!mailForm.vendor_id" class="col-md-12 form-group mb-3">
             <label>Email Type</label>
             <select name="type" class="form-control select-arrow" [(ngModel)]="mailForm.type" required>
               <ng-container *ngIf="params?.type!='cancelled'">
                 <option value="placed">Order Placed</option>
-                <option *ngIf="order_details.confirmed_on" value="confirmed">Order Confirmed</option>
-                <option *ngIf="mailForm.custom_status" value="customization">Customization Confirmation</option>
-                <option *ngIf="order_details.dispatched_on" value="dispatched">Order Dispatched</option>
-                <ng-container *ngFor="let x of order_details.item_groups;">
-                  <option *ngIf="x.dispatched_on" [ngValue]="x._id">Order Dispatched - {{x.name}}</option>
+                <ng-container *ngIf="!order_details.vendor_list?.length">
+                  <option *ngIf="order_details.confirmed_on" value="confirmed">Order Confirmed</option>
+                  <option *ngIf="mailForm.custom_status" value="customization">Customization Confirmation</option>
+                  <option *ngIf="order_details.dispatched_on" value="dispatched">Order Dispatched</option>
+                  <ng-container *ngFor="let x of order_details.item_groups;">
+                    <option *ngIf="x.dispatched_on" [ngValue]="x._id">Order Dispatched - {{x.name}}</option>
+                  </ng-container>
+                  <option *ngIf="order_details.delivered_on" value="delivered">Order Delivered</option>
+                  <option *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" value="review">Order Review</option>
                 </ng-container>
-                <option *ngIf="order_details.delivered_on" value="delivered">Order Delivered</option>
-                <option *ngIf="commonService.ys_features.indexOf('product_reviews')!=-1" value="review">Order Review
-                </option>
               </ng-container>
-              <option *ngIf="params?.type=='cancelled'" value="cancelled">Order Cancelled</option>
+              <option *ngIf="params?.type=='cancelled' && !order_details.vendor_list?.length" value="cancelled">Order Cancelled</option>
+            </select>
+          </div>
+          <!-- vendor order -->
+          <div *ngIf="mailForm.vendor_id" class="col-md-12 form-group mb-3">
+            <label>Email Type</label>
+            <select name="type" class="form-control select-arrow" [(ngModel)]="mailForm.type" required>
+              <option *ngIf="vendorInfo.confirmed_on" value="confirmed">Order Confirmed</option>
+              <option *ngIf="mailForm.custom_status" value="customization">Customization Confirmation</option>
+              <option *ngIf="vendorInfo.dispatched_on" value="dispatched">Order Dispatched</option>
+              <option *ngIf="vendorInfo.delivered_on" value="delivered">Order Delivered</option>
+              <option *ngIf="vendorInfo.cancelled_on" value="cancelled">Order Cancelled</option>
             </select>
           </div>
         </div>
@@ -1853,9 +2198,9 @@
     </div>
     <div class="modal-footer">
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
-        <span class="black-outline-txt">Cancel</span></button>
-      <button type="submit" [disabled]="btnLoader" [ladda]="btnLoader"
-        class="btn btn-wide btn-primary ladda-button">Confirm</button>
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" [disabled]="btnLoader" [ladda]="btnLoader" class="btn btn-wide btn-primary ladda-button">Confirm</button>
     </div>
   </form>
 </ng-template>

@@ -19,6 +19,9 @@ export class ShippingMethodsComponent implements OnInit {
   shippingForm: any; deleteForm: any;
   list: any = [];
   pageLoader: boolean;
+  deliveryPartners: any = [
+    { name: "Delhivery", base_url: "https://staging-express.delhivery.com", tracking_link: "https://www.delhivery.com/track/package/" }
+  ];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, public commonService: CommonService, private deployApi: DeploymentService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -27,7 +30,12 @@ export class ShippingMethodsComponent implements OnInit {
   ngOnInit() {
     this.pageLoader = true;
     this.api.SHIPPING_LIST().subscribe(result => {
-      if(result.status) this.list = result.list;
+      if(result.status) {
+        this.list = result.list.filter(obj => !obj.vendor_id);
+        this.commonService.vendor_list.forEach(el => {
+          el.shipping_list = result.list.filter(obj => obj.vendor_id==el._id);
+        });
+      }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
@@ -115,6 +123,16 @@ export class ShippingMethodsComponent implements OnInit {
           this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
         }
       });
+    }
+  }
+
+  onChangeCP() {
+    if(this.shippingForm.dp_name) {
+      let dIndex = this.deliveryPartners.findIndex(obj => obj.name==this.shippingForm.dp_name);
+      if(dIndex!=-1) {
+        this.shippingForm.tracking_link = this.deliveryPartners[dIndex].tracking_link;
+        this.shippingForm.dp_base_url = this.deliveryPartners[dIndex].base_url;
+      }
     }
   }
 

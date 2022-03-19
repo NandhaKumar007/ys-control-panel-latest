@@ -29,7 +29,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   invoice_details: any; invoice_order_list: any;
   hsncode_exist: boolean;
   country_details: any; address_fields: any = [];
-  order_vendor_details: any; selected_vendor: any;
+  vendorInfo: any = {}; selected_vendor: any;
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
   courierData: any = {};
@@ -65,20 +65,26 @@ export class ProductOrderDetailsComponent implements OnInit {
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
           // vendor orders
           if(this.order_details.vendor_list && this.order_details.vendor_list.length) {
-            this.order_details.vendor_list.forEach(element => {
-              element.vendor_name = "NA";
-              let vendorIndex = this.commonService.vendor_list.findIndex(obj => obj._id==element.vendor_id);
-              if(vendorIndex!=-1) element.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.name;
-            });
+            if(this.commonService.store_details.login_type!='vendor') {
+              this.order_details.vendor_list.forEach(element => {
+                element.existing_status = element.order_status;
+                if(element.existing_status=='placed') element.order_status='confirmed';
+                if(element.existing_status=='confirmed') element.order_status='dispatched';
+                if(element.existing_status=='dispatched') element.order_status='delivered';
+                element.vendor_name = "NA";
+                let vendorIndex = this.commonService.vendor_list.findIndex(obj => obj._id==element.vendor_id);
+                if(vendorIndex!=-1) element.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.name;
+              });
+            }
             // vendor login
             if(this.commonService.store_details.login_type=='vendor') {
               let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
               if(vendorIndex!=-1) {
-                this.order_vendor_details = this.order_details.vendor_list[vendorIndex];
-                this.order_vendor_details.existing_status = this.order_vendor_details.status;
-                if(this.order_vendor_details.existing_status=='placed') this.order_vendor_details.order_status='confirmed';
-                if(this.order_vendor_details.existing_status=='confirmed') this.order_vendor_details.order_status='dispatched';
-                if(this.order_vendor_details.existing_status=='dispatched') this.order_vendor_details.order_status='delivered';
+                this.vendorInfo = this.order_details.vendor_list[vendorIndex];
+                this.vendorInfo.existing_status = this.vendorInfo.order_status;
+                if(this.vendorInfo.existing_status=='placed') this.vendorInfo.order_status='confirmed';
+                if(this.vendorInfo.existing_status=='confirmed') this.vendorInfo.order_status='dispatched';
+                if(this.vendorInfo.existing_status=='dispatched') this.vendorInfo.order_status='delivered';
               }
             }
           }
@@ -398,37 +404,25 @@ export class ProductOrderDetailsComponent implements OnInit {
     if(this.commonService.store_details.login_type=='vendor') {
       let sendData = {
         _id: this.order_details._id,
-        vendor_id: this.order_vendor_details.vendor_id,
-        order_status: this.order_vendor_details.order_status
+        vendor_id: this.vendorInfo.vendor_id,
+        order_status: this.vendorInfo.order_status
       }
-      this.api.UPDATE_VENDOR_ORDER_STATUS(sendData).subscribe(result => {
-        this.btnLoader = false;
-        if(result.status) {
-          if(this.order_details.order_status=='delivered') {
-            document.getElementById('closeModal').click();
-            this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
-          }
-          else {
-            document.getElementById('closeModal').click();
-            this.commonService.goBack();
-          }
-        }
-        else {
-          this.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
+      this.updateVendorOrderStatus(sendData);
     }
     else {
-      let sendData = {
+      let sendData: any = {
         _id: this.order_details._id,
-        shipping_method: this.order_details.shipping_method,
+        // shipping_method: this.order_details.shipping_method,
         order_status: this.order_details.order_status
+      };
+      if(this.vendorInfo?.vendor_id) {
+        sendData.vendor_id = this.vendorInfo.vendor_id;
+        sendData.order_status = this.vendorInfo.order_status;
       }
       this.api.UPDATE_ORDER_STATUS(sendData).subscribe(result => {
         this.btnLoader = false;
         if(result.status) {
-          if(this.order_details.order_status=='delivered') {
+          if(result.order_completed) {
             if(this.commonService.ys_features.indexOf('product_reviews')!=-1) {
               this.btnLoader = true; let customerEmail = "";
               if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
@@ -461,6 +455,26 @@ export class ProductOrderDetailsComponent implements OnInit {
         }
       });
     }
+  }
+  // for vendor login
+  updateVendorOrderStatus(formData) {
+    this.api.UPDATE_ORDER_STATUS(formData).subscribe(result => {
+      this.btnLoader = false;
+      if(result.status) {
+        if(formData.order_status=='delivered') {
+          document.getElementById('closeModal').click();
+          this.router.navigate(["/orders/product/delivered/"+this.params.customer_id]);
+        }
+        else {
+          document.getElementById('closeModal').click();
+          this.commonService.goBack();
+        }
+      }
+      else {
+        this.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // mark as paid
@@ -504,6 +518,38 @@ export class ProductOrderDetailsComponent implements OnInit {
         else {
           document.getElementById('closeModal').click();
           this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
+        }
+      }
+      else {
+        this.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+  onCancelVendorOrder() {
+    this.btnLoader = true;
+    this.api.CANCEL_ORDER({ _id: this.order_details._id, vendor_id: this.vendorInfo.vendor_id }).subscribe(result => {
+      this.btnLoader = false;
+      if(result.status) {
+        // cancel courier partner
+        let cpIndex = this.vendorInfo.cp_orders.findIndex(obj => obj.status=='active');
+        if(this.vendorInfo.existing_status=='confirmed' && cpIndex!=-1) {
+          if(this.vendorInfo.cp_orders[cpIndex].name=='Delhivery') {
+            this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, vendor_id: this.vendorInfo.vendor_id, cancellation: true }).subscribe(result => {
+              document.getElementById('closeModal').click();
+              this.ngOnInit();
+            });
+          }
+          else if(this.vendorInfo.cp_orders[cpIndex].name=='Dunzo') {
+            this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, vendor_id: this.vendorInfo.vendor_id, form_data: { cancellation_reason: 'Order cancelled' } }).subscribe(result => {
+              document.getElementById('closeModal').click();
+              this.ngOnInit();
+            });
+          }
+        }
+        else {
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
         }
       }
       else {
@@ -582,18 +628,35 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
     });
   }
+  onEditVendorShipping(x, modalName) {
+    this.editForm = { formType: 'vendor', shipping_method: {} };
+    for(let key in x) {
+      if(x.hasOwnProperty(key) && key!='shipping_method') this.editForm[key] = x[key];
+    }
+    let shippingMethod = x.shipping_method;
+    for(let key in shippingMethod) {
+      if(shippingMethod.hasOwnProperty(key)) this.editForm.shipping_method[key] = shippingMethod[key];
+    }
+    this.modalService.open(modalName);
+  }
 
   onUpdateShippingDetails() {
-    this.editForm.shipping_cost = this.editForm.shipping_method.shipping_price;
-    this.editForm.grand_total = parseFloat(this.editForm.sub_total)+parseFloat(this.editForm.shipping_cost);
-    if(this.editForm.grand_total > this.editForm.discount_amount)
-      this.editForm.final_price = parseFloat(this.editForm.grand_total)-parseFloat(this.editForm.discount_amount);
-    else this.editForm.final_price = 0;
-    let sendData = {
-      _id: this.order_details._id, shipping_method: this.editForm.shipping_method, shipping_cost: this.editForm.shipping_cost,
-      grand_total: this.editForm.grand_total, final_price: this.editForm.final_price
+    if(this.editForm.formType=='vendor') {
+      this.editForm._id = this.order_details._id;
+      this.onUpdate(this.editForm);
     }
-    this.onUpdate(sendData);
+    else {
+      this.editForm.shipping_cost = this.editForm.shipping_method.shipping_price;
+      this.editForm.grand_total = parseFloat(this.editForm.sub_total)+parseFloat(this.editForm.shipping_cost);
+      if(this.editForm.grand_total > this.editForm.discount_amount)
+        this.editForm.final_price = parseFloat(this.editForm.grand_total)-parseFloat(this.editForm.discount_amount);
+      else this.editForm.final_price = 0;
+      let sendData = {
+        _id: this.order_details._id, shipping_method: this.editForm.shipping_method, shipping_cost: this.editForm.shipping_cost,
+        grand_total: this.editForm.grand_total, final_price: this.editForm.final_price
+      }
+      this.onUpdate(sendData);
+    }
   }
   onUpdateAddress() {
     if(this.addressType!='pickup') {
@@ -725,6 +788,18 @@ export class ProductOrderDetailsComponent implements OnInit {
     else customerEmail = this.order_details.customerDetails[0].email;
     // this.mailForm = { email: customerEmail, custom_status: customStatus };
     this.mailForm = { email: customerEmail };
+    this.modalService.open(modalName);
+  }
+  onResendVendorMail(modalName) {
+    this.errorMsg=null; this.btnLoader=false;
+    // let customStatus = false;
+    // let index = this.vendorInfo.item_list.findIndex(object => object.customization_status);
+    // if(index!=-1) customStatus = true;
+    let customerEmail = "";
+    if(this.order_details.order_by=='guest') customerEmail = this.order_details.guest_email;
+    else customerEmail = this.order_details.customerDetails[0].email;
+    // this.mailForm = { email: customerEmail, custom_status: customStatus };
+    this.mailForm = { email: customerEmail, vendor_id: this.vendorInfo.vendor_id };
     this.modalService.open(modalName);
   }
 
