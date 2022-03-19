@@ -120,7 +120,7 @@ export class PaymentMethodsComponent implements OnInit {
         this.payForm.app_id = x.app_config.app_id;
         this.payForm.location_id = x.app_config.location_id;
       }
-      else if(x.name=='Fatoorah') {
+      else if(x.name=='Fatoorah' || x.name=='Flutterwave') {
         this.payForm.token = x.config.token;
       }
       else if(x.name=='Telr') {
@@ -239,17 +239,20 @@ export class PaymentMethodsComponent implements OnInit {
 
   changeOption(x) {
     if(!this.payForm.cod_config) this.payForm.cod_config = {};
-    if(x='Bank Payment') {
+    if(x=='Bank Payment') {
       if(!this.payForm.field_list || !this.payForm.field_list.length) this.payForm.field_list = [{ title: "Account Name", value: "" }, { title: "Account No", value: "" }];
       if(!this.payForm.message) this.payForm.message = "You will receive an order confirmation email as soon as we validate the payment sent by you.";
     }
-    if(x='Gpay') {
+    else if(x=='Gpay') {
       if(!this.payForm.merchant_name) this.payForm.merchant_name = this.commonService.store_details.name;
       if(!this.payForm.btn_name) this.payForm.btn_name = "Pay With Google Pay";
       if(!this.payForm.merchant_code) {
         let mIndex = this.commonService.store_categories.findIndex(obj => obj.name==this.commonService.deploy_details.category);
         if(mIndex!=-1) this.payForm.merchant_code = this.commonService.store_categories[mIndex].code;
       }
+    }
+    else {
+      if(this.payForm.btn_name=="Pay With Google Pay") this.payForm.btn_name = '';
     }
   }
 
@@ -285,7 +288,7 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.config = { access_token: this.payForm.access_token };
       paymentData.app_config = { name: this.payForm.store_name, app_id: this.payForm.app_id, location_id: this.payForm.location_id };
     }
-    else if(paymentData.name=='Fatoorah') {
+    else if(paymentData.name=='Fatoorah' || paymentData.name=='Flutterwave') {
       paymentData.mode = this.payForm.mode;
       paymentData.config = { token: this.payForm.token };
     }

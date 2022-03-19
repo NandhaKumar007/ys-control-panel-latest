@@ -34,7 +34,7 @@
         <div class="row m-0">
 
           <!-- SINGLE LIST ITEM -->
-          <div *ngFor="let x of list | fieldSearch:'username':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          <div *ngFor="let x of list | fieldSearch:'email':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
             class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="d-flex flex-row">
@@ -45,7 +45,7 @@
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">{{x.company_details?.name}}</p>
-                  <p class="w-30 w-sm-100 m-0">{{x.username}}</p>
+                  <p class="w-30 w-sm-100 m-0">{{x.email}}</p>
                   <!-- <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions"> -->
                     <div class="col-md-5 d-flex align-items-center justify-content-end">
                       <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
@@ -57,13 +57,13 @@
                             </button>
                             <div class="dropdown-menu" ngbDropdownMenu>
                               <button class="dropdown-item" (click)="onEdit(x, 'edit_details', vendorModal);">Details</button>
-                              <button class="dropdown-item" (click)="vendorForm={ _id: x._id, company_details: x.company_details, image: x.image }; modalService.open(bannerModal);">Banner</button>
-                              <button class="dropdown-item" (click)="pwdForm={_id: x._id, username: x.username}; modalService.open(changePwdModal);">Password</button>
+                              <button class="dropdown-item" (click)="vendorForm={ _id: x._id, email: x.email, image: x.image }; modalService.open(bannerModal);">Banner</button>
+                              <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Password</button>
                               <button class="dropdown-item" (click)="onEdit(x, 'edit_permissions', permissionModal);">Permissions</button>
                             </div>
                           </div>
                         </div>
-                        <button *ngIf="x.username && x.password" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
+                        <button *ngIf="x.email && x.password" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
                         class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
                         {{ (x.status=='active')? 'Disable': 'Enable' }}</button>
                         <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
@@ -101,7 +101,7 @@
 <!-- VENDOR MODAL -->
 <ng-template #vendorModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{(vendorForm.form_type=='add')? 'Add New Vendor': 'Update'}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{(vendorForm.form_type=='add')? 'Add New Vendor': vendorForm.email}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="modal-body">
@@ -112,18 +112,8 @@
             <input type="text" name="contact_person" class="form-control" [(ngModel)]="vendorForm.contact_person" required />
           </div>
           <div class="col-md-6 mb-3">
-            <ng-container *ngIf="vendorForm.form_type!='add'">
-              <label>Login Email</label>
-              <input type="text" name="username" class="form-control" [(ngModel)]="vendorForm.username" required />
-            </ng-container>
-          </div>
-          <div class="col-md-6 mb-3">
             <label>Mobile</label>
             <input type="text" name="mobile" class="form-control" [(ngModel)]="vendorForm.mobile" required />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>Email</label>
-            <input type="text" name="email" class="form-control" [(ngModel)]="vendorForm.email" required />
           </div>
           <div class="col-md-6 mb-3">
             <label>Page URL - {{commonService.store_details?.base_url}}/vendor/{{vendorForm?.page_url}}</label>
@@ -143,7 +133,7 @@
             <div class="row card-body">
               <div class="col-md-6">
                 <label>Login Email</label>
-                <input type="text" name="username" class="form-control" [(ngModel)]="vendorForm.username" required />
+                <input type="text" name="email" class="form-control" [(ngModel)]="vendorForm.email" required />
               </div>
               <div class="col-md-6">
                 <label>Password</label>
@@ -242,7 +232,7 @@
 <!-- CHANGE PASSWORD -->
 <ng-template #changePwdModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{pwdForm.username}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{pwdForm.email}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdatePwd();" ngNativeValidate>
     <div class="modal-body">
@@ -278,7 +268,7 @@
 <!-- EDIT PERMISSIONS -->
 <ng-template #permissionModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.company_details?.name}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.email}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="modal-body">
@@ -330,7 +320,7 @@
 <ng-template #statusModal let-modal>
   <div class="modal-body">
     <p><strong>Are you sure you want to {{ (deleteForm.exist_status=='active')? 'disable': 'enable' }} the <span
-          class="text-danger">"{{deleteForm.name}}"</span>?</strong></p>
+          class="text-danger">"{{deleteForm.email}}"</span>?</strong></p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
     </div>
@@ -347,7 +337,7 @@
   <div class="modal-body">
     <p>
       <strong>Are you sure you want to permanently delete
-        <span class="txt-grdint-highlight">"{{deleteForm.username}}?"</span>
+        <span class="txt-grdint-highlight">"{{deleteForm.email}}?"</span>
       </strong>
     </p>
     <div *ngIf="deleteForm.errorMsg">
@@ -368,7 +358,7 @@
 <!-- Banner Modal -->
 <ng-template #bannerModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.company_details?.name}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.email}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdateBanner();" ngNativeValidate>
     <div class="modal-body">

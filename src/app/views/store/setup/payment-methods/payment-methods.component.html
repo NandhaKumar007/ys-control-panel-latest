@@ -111,8 +111,8 @@
               </ng-container>
               <option value="PayPal">PayPal</option>
               <option value="Gpay">Gpay</option>
-              <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square
-              </option>
+              <option *ngIf="commonService.store_details?.country=='Ghana'" value="Flutterwave">Flutter Wave</option>
+              <option *ngIf="commonService.store_details?.country=='United States of America'" value="Square">Square</option>
               <ng-container *ngIf="commonService.store_details?.country=='United Arab Emirates'">
                 <option value="Fatoorah">Fatoorah</option>
                 <option value="Telr">Telr</option>
@@ -293,6 +293,11 @@
             <label>Token</label>
             <textarea class="form-control" aria-label="With textarea" name="token" [(ngModel)]="payForm.token"
               #token="ngModel" required></textarea>
+          </div>
+          <!-- flutter wave -->
+          <div *ngIf="payForm.name=='Flutterwave'" class="col-md-12 form-group mb-3">
+            <label>Token</label>
+            <input type="text" name="token" class="form-control" [(ngModel)]="payForm.token" required />
           </div>
           <!-- telr -->
           <ng-container *ngIf="payForm.name=='Telr'">

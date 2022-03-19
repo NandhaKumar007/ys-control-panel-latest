@@ -27,10 +27,13 @@
     <div class="col-md-3 col-6">
       <div class="form-group">
         <select name="list_type" class="form-control select-arrow" [(ngModel)]="filterForm.list_type" (change)="ngOnInit();">
+          <option value="active">Active Users</option>
+          <option value="inactive">Deactivated Users</option>
           <option value="all">All Users</option>
+          <option value="unused">Unused Users</option>
           <option value="trial">Trial Users</option>
-          <option value="trial_expired">Trial Expired Users</option>
           <option value="trial_expires_in">Trial Expires in</option>
+          <option value="trial_expired">Trial Expired Users</option>
           <option value="subscribed">Subscribed Users</option>
           <option value="subscription_expired">Subscription Expired Users</option>
           <option value="free_plan">Free Plan Users</option>
@@ -38,7 +41,6 @@
           <ng-container *ngFor="let x of commonService.admin_packages | orderAsc: 'rank';">
             <option *ngIf="x._id!=configData.free_package_id" [value]="'pid_'+x._id">{{x.name}} Plan</option>
           </ng-container>
-          <option value="inactive">Inactive Users</option>
           <option value="logo">Logo Pending</option>
           <option value="products">Product Pending</option>
           <option value="payments">Payment Pending</option>
@@ -108,10 +110,10 @@
 
           <div
           *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
-          class="list-item data-list-card col-md-12 p-0" [ngClass]="x.account_type=='demo' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          class="list-item data-list-card col-md-12 p-0" [ngClass]="x.signup_from=='app' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
     
           <div class="d-flex flex-row">
-            <div [ngClass]="x.account_type=='demo'? 'find-band': ''"></div>
+            <div [ngClass]="x.signup_from=='app'? 'find-band': ''"></div>
             <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
               <img class="client-logo" [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" alt="">
             </div>

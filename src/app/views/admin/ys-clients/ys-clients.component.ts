@@ -17,7 +17,7 @@ export class YsClientsComponent implements OnInit {
   page = 1; pageSize = 10; search_bar: string;
   pageLoader: boolean; parent_list: any = []; list: any = [];
   imgBaseUrl = environment.img_baseurl; buildForm: any = {};
-  filterForm = { list_type: 'all', expiry_day: '15', day_type: 'eq', inactive_day: '3' };
+  filterForm = { list_type: 'active', expiry_day: '15', day_type: 'eq', inactive_day: '3' };
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();
   configData: any = environment.config_data;
@@ -35,7 +35,7 @@ export class YsClientsComponent implements OnInit {
       filterType += "&to="+new Date(trialDate).setHours(23,59,59,999);
       filterType += "&day_type="+this.filterForm.day_type;
     }
-    if(this.filterForm.list_type=='inactive') {
+    if(this.filterForm.list_type=='unused') {
       let inactiveDay = new Date().setDate(new Date().getDate() - parseInt(this.filterForm.inactive_day));
       filterType += "&from="+new Date(inactiveDay).setHours(0,0,0,0);
       filterType += "&to="+new Date(inactiveDay).setHours(23,59,59,999);
