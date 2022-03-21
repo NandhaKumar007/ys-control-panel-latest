@@ -74,8 +74,9 @@
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 768px) {  
   .you-dit-it-section {
+    position:relative;
     .row {
       flex-direction: column-reverse;
     }

@@ -48,6 +48,7 @@ export class SignupComponent implements OnInit {
     this.signupForm.submit = true;
     this.signupForm.company_details.name = this.signupForm.name;
     if(sessionStorage.getItem("app_token")) this.signupForm.app_token = sessionStorage.getItem("app_token");
+    sessionStorage.setItem('formData', JSON.stringify(this.signupForm));
     this.api.SIGNUP(this.signupForm).subscribe(result => {
       if(result.status == true) this.router.navigate(['/welcome/created']);
       else {

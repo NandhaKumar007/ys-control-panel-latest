@@ -26,6 +26,7 @@ export class SigninComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("formData");
     this.loading = false; this.loadingText = "";
     if(this.router.url=='/session/signin' && environment.keep_login && localStorage.getItem("store_token")) {
       this.pageLoader = true;

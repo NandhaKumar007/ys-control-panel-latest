@@ -197,7 +197,7 @@
                         {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
                         commonService.store_currency?.country_code}}</div>
                       <!-- if customization exist -->
-                      <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
+                      <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status && commonService.store_details?.login_type!='vendor'">
                         <div class="btn-group">
                           <div class="btn-group" ngbDropdown role="group" aria-label="Select all" placement="right">
                             <button class="btn btn-wide black-outline-btn mr-3" ngbDropdownToggle>

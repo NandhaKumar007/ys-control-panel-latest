@@ -12,6 +12,7 @@ export class WelcomeScreenComponent implements OnInit {
 
   interval: any;
   timer: number = 5;
+  formData: any;
 
   constructor(public router: Router, public commonService: CommonService) { }
 
@@ -24,6 +25,12 @@ export class WelcomeScreenComponent implements OnInit {
           this.router.navigate(['/dashboard']);
         }
       }, 1000);
+    }
+    else if(this.router.url.indexOf("created") != -1) {
+      if(sessionStorage.getItem("formData")) {
+        this.formData = JSON.parse(sessionStorage.getItem("formData"));
+      }
+      else this.router.navigate(['/']);
     }
   }
 

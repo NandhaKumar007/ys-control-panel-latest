@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdminApiService } from '../../../services/admin-api.service';
 import { CommonService } from '../../../services/common.service';
+import { ExcelService } from '../../../services/excel.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -21,8 +23,9 @@ export class YsClientsComponent implements OnInit {
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();
   configData: any = environment.config_data;
+  exportLoader: boolean;
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
+  constructor(private datepipe: DatePipe, config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService, private excelService: ExcelService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -187,6 +190,29 @@ export class YsClientsComponent implements OnInit {
     msgContent += "Team yourstore.io";
     let url = "https://api.whatsapp.com/send?phone="+x.company_details.dial_code.replace("+", "")+x.company_details.mobile+"&text="+msgContent;
     window.open(url, '_blank');
+  }
+
+  exportAsXLSX() {
+    let fileName = "store-list";
+    this.exportLoader = true; let exportList = [];
+    this.list.forEach(obj => {
+      let sendData = {};
+      sendData['Store Name'] = obj.name;
+      sendData['Name'] = obj.company_details.contact_person;
+      sendData['Phone Number'] = obj.company_details.dial_code+' '+obj.company_details.mobile;
+      sendData['Email ID'] = obj.email;
+      sendData['Plan'] = "Trial";
+      sendData['Created On'] = this.datepipe.transform(new Date(obj.activated_on), 'dd MMM y');
+      sendData['City'] = obj.company_details.city;
+      sendData['State'] = obj.company_details.state;
+      sendData['Country'] = obj.country;
+      sendData['Category'] = "";
+      sendData['URL '] = obj.base_url;
+      if(obj.package_details.billing_status) sendData['Plan'] = obj.package_name;
+      exportList.push(sendData);
+    });
+    this.excelService.exportAsExcelFile(exportList, fileName);
+    setTimeout(() => { this.exportLoader = false; }, 500);
   }
 
 }
