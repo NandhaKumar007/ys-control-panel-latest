@@ -145,7 +145,7 @@
                 <span class="badge-red-outline-txt">Pending</span>
               </span>
             </p>
-            <p *ngIf="!x.vendor_list?.length || commonService.store_details?.login_type=='vendor'" class="w-30 w-sm-100 m-b-0">
+            <p class="w-30 w-sm-100 m-b-0">
               <span class="badge" [ngClass]="{
                 'badge-primary badge-red': x.order_status === 'placed',
                 'badge-info badge-blue': x.order_status === 'confirmed',

@@ -347,6 +347,18 @@
                   <div class="row card-body">
                     <div class="col-md-5">
                       <div class="row">
+                        <div class="col-5">
+                          <div class="box-card card-head">
+                            <p>Placed on</p>
+                          </div>
+                        </div>
+                        <div class="col-7">
+                          <div class="box-card">
+                            <p class="pull-right text-right">
+                              {{ order_details.created_on | date: "dd MMM y hh:mm a"}}
+                            </p>
+                          </div>
+                        </div>
                         <ng-container *ngIf="vendor?.confirmed_on">
                           <div class="col-5">
                             <div class="box-card card-head">
@@ -436,10 +448,12 @@
                           </ng-container>
                         </form>
                         <!-- cancel order -->
-                        <button *ngIf="!params?.coupon_id && params?.type!='inactive' && vendor?.order_status!='cancelled' && params?.type!='cancelled' && params?.type!='view'" type="button"
-                        (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
-                          <span class="orng-outline-txt">Cancel Order</span>
-                        </button>
+                        <ng-container *ngIf="vendor?.order_status!='cancelled'">
+                          <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
+                          (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
+                            <span class="orng-outline-txt">Cancel Order</span>
+                          </button>
+                        </ng-container>
                       </div>
                     </div>
                     <div class="col-md-2"></div>

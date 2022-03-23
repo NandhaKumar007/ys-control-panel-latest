@@ -65,6 +65,12 @@ export class ProductOrderDetailsComponent implements OnInit {
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
           // vendor orders
           if(this.order_details.vendor_list && this.order_details.vendor_list.length) {
+            if(this.params.type=='live') {
+              this.order_details.vendor_list = this.order_details.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
+            }
+            else if(this.params.type=='delivered' || this.params.type=='cancelled') {
+              this.order_details.vendor_list = this.order_details.vendor_list.filter(el => el.order_status==this.params.type);
+            }
             if(this.commonService.store_details.login_type!='vendor') {
               this.order_details.vendor_list.forEach(element => {
                 element.existing_status = element.order_status;

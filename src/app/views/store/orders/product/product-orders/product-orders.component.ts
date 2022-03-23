@@ -89,19 +89,11 @@ export class ProductOrdersComponent implements OnInit {
                 let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
-                  obj.order_status = obj.vendor_list[venIndex].status;
+                  obj.order_status = obj.vendor_list[venIndex].order_status;
                   obj.final_price = obj.vendor_list[venIndex].final_price;
                 }
               }
-              if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
-                if(this.params.type=='live') {
-                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status!='delivered' && obj.status!='cancelled') != -1) this.list.push(obj);
-                }
-                else {
-                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status==this.params.type) != -1) this.list.push(obj);
-                }
-              }
-              else this.list.push(obj);
+              this.list.push(obj);
             });
           }
           else console.log("response", result);
@@ -139,19 +131,11 @@ export class ProductOrdersComponent implements OnInit {
                 let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
-                  obj.order_status = obj.vendor_list[venIndex].status;
+                  obj.order_status = obj.vendor_list[venIndex].order_status;
                   obj.final_price = obj.vendor_list[venIndex].final_price;
                 }
               }
-              if(this.filterForm.vendor_id && this.filterForm.vendor_id!='all') {
-                if(this.params.type=='live') {
-                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status!='delivered' && obj.status!='cancelled') != -1) this.list.push(obj);
-                }
-                else {
-                  if(obj.vendor_list.findIndex(obj => obj.vendor_id==this.filterForm.vendor_id && obj.status==this.params.type) != -1) this.list.push(obj);
-                }
-              }
-              else this.list.push(obj);
+              this.list.push(obj);
             });
           }
           else console.log("response", result);
