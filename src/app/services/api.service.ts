@@ -23,5 +23,6 @@ export class ApiService {
 
   // common
   COUNTRIES_LIST() { return this.http.get<any>(environment.ws_url+'/store_details/country_list'); }
+  DOMAIN_INFO(x) { return this.http.get<any>(environment.ws_url+'/store_details/domain_details?domain='+x); }
 
 }

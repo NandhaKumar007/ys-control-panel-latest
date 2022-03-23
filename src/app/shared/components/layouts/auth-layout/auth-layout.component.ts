@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-auth-layout',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 
 export class AuthLayoutComponent implements OnInit {
 
-  constructor(public router: Router) { }
+  constructor(public router: Router, public commonService: CommonService) { }
 
   ngOnInit() {
   }

@@ -12,6 +12,7 @@ declare const $: any;
 export class CommonService {
 
   dark_theme: boolean;
+  vendorLoginBg: string = '#ec848b';
   desktop_device: boolean;
   ios: boolean;
   grid_list: any = [
