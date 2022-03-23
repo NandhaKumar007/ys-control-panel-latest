@@ -184,10 +184,19 @@ export class ProductComponent implements OnInit {
 
   exportAsXLSX() {
     this.exportLoader = true;
-    this.createList(this.commonService.catalog_list, this.list).then((exportList: any[]) => {
-      this.excelService.exportAsExcelFile(exportList, 'product'+' export '+new Date().getTime());
-      setTimeout(() => { this.exportLoader = false; }, 500);
-    })
+    delete this.filterForm.skip; delete this.filterForm.limit;
+    this.storeApi.PRODUCT_LIST(this.filterForm).subscribe(result => {
+      if(result.status) {
+        this.createList(this.commonService.catalog_list, result.list).then((exportList: any[]) => {
+          this.excelService.exportAsExcelFile(exportList, 'product'+' export '+new Date().getTime());
+          setTimeout(() => { this.exportLoader = false; }, 500);
+        });
+      }
+      else {
+        console.log("response", result);
+        setTimeout(() => { this.exportLoader = false; }, 500);
+      }
+    });
   }
   async createList(overallCategoryList, productList) {
     let updatedList = [];

@@ -265,10 +265,6 @@ export class PaymentMethodsComponent implements OnInit {
       paymentData.rank = this.payForm.rank;
       paymentData.prev_rank = this.payForm.prev_rank;
     }
-    if(paymentData.name!='COD' && paymentData.name!='Square') {
-      paymentData.return_url = this.commonService.store_details.base_url+'/checkout/order-summary';
-      paymentData.cancel_url = this.commonService.store_details.base_url+'/checkout/payment-failure';
-    }
     if(paymentData.name=='Razorpay') {
       paymentData.config = { key_id: this.payForm.key_id, key_secret: this.payForm.key_secret };
       paymentData.app_config = { name: this.payForm.store_name, description: this.payForm.description, key: this.payForm.key_id };

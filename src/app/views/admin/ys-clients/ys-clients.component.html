@@ -139,6 +139,7 @@
                         <button (click)="pwdForm=x; modalService.open(pwdModal);" class="dropdown-item">Change
                           Password</button>
                         <button (click)="sendWhatsapp(x);" class="dropdown-item">Whatsapp</button>
+                        <button *ngIf="x.app_token" (click)="pwdForm={ store_email: x.email, store_id: x._id }; modalService.open(notifyModal);" class="dropdown-item">Send Notification</button>
                       </div>
                     </div>
                   </div>
@@ -225,7 +226,7 @@
 <!-- Send Notification -->
 <ng-template #notifyModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Send Notification</h4>
+    <h4 class="modal-title" id="modal-basic-title">Send Notification{{(pwdForm.store_email)? ' - '+pwdForm.store_email: ''}}</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSendNotification();" ngNativeValidate>
     <div class="modal-body">
