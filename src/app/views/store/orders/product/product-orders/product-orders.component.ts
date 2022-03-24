@@ -64,14 +64,13 @@ export class ProductOrdersComponent implements OnInit {
 
   getOrderList() {
     if(this.filterForm.from_date && this.filterForm.to_date) {
-      this.pageLoader = true;
+      this.pageLoader = true; this.list = [];
       this.filterForm.date_type = 'created_on';
       if(this.filterForm.customer_id.indexOf('@')!=-1) {
         this.filterForm.guest_email = this.filterForm.customer_id;
         this.api.GUEST_ORDER_LIST(this.filterForm).subscribe(result => {
           if(result.status) {
             let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-            this.list = [];
             orderList.forEach(obj => {
               if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
               if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
@@ -85,12 +84,31 @@ export class ProductOrdersComponent implements OnInit {
                 obj.delivery_time = new Date(delDate+" "+delTime);
               }
               // vendor
-              if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
-                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
+              if(this.commonService.store_details.login_type=='vendor') {
+                let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
                   obj.order_status = obj.vendor_list[venIndex].order_status;
                   obj.final_price = obj.vendor_list[venIndex].final_price;
+                }
+              }
+              else if(this.params.type=='live' && obj.vendor_list?.length) {
+                let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
+                let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
+                if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
+                  if(confirmedCount>0) {
+                    obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
+                  }
+                }
+                else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
+                  obj.order_status = 'confirmed';
+                  let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
+                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
+                }
+                else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
+                  obj.order_status = 'dispatched';
+                  let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
+                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
                 }
               }
               this.list.push(obj);
@@ -104,7 +122,6 @@ export class ProductOrdersComponent implements OnInit {
         this.api.ORDER_LIST(this.filterForm).subscribe(result => {
           if(result.status) {
             let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-            this.list = [];
             orderList.forEach(obj => {
               if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
               if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
@@ -127,12 +144,31 @@ export class ProductOrdersComponent implements OnInit {
                 obj.delivery_time = new Date(delDate+" "+delTime);
               }
               // vendor
-              if(this.commonService.store_details.login_type=='vendor' && obj.vendor_list) {
-                let venIndex = obj.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
+              if(this.commonService.store_details.login_type=='vendor') {
+                let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
                 if(venIndex!=-1) {
                   obj.order_number = obj.vendor_list[venIndex].order_number;
                   obj.order_status = obj.vendor_list[venIndex].order_status;
                   obj.final_price = obj.vendor_list[venIndex].final_price;
+                }
+              }
+              else if(this.params.type=='live' && obj.vendor_list?.length) {
+                let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
+                let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
+                if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
+                  if(confirmedCount>0) {
+                    obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
+                  }
+                }
+                else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
+                  obj.order_status = 'confirmed';
+                  let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
+                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
+                }
+                else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
+                  obj.order_status = 'dispatched';
+                  let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
+                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
                 }
               }
               this.list.push(obj);

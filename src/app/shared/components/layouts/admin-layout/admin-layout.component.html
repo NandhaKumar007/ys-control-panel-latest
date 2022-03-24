@@ -163,9 +163,9 @@
       <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
         <span class="flex-grow-1"></span>
         <div class="footer-logo d-flex align-items-center">
-          <img *ngIf="!commonService.dark_theme" src="assets/images/yourstore_logo.svg" alt="yourstore-logo">
-          <img *ngIf="commonService.dark_theme" src="assets/images/yourstore_logo_white.svg" alt="yourstore-logo">
-          <div class="ml-3">
+          <img class="mb-3 mb-md-0" style="width: 100px;" alt="yourstore-logo"
+          src="{{(commonService.dark_theme)? 'assets/images/yourstore_logo_white.svg': 'assets/images/yourstore_logo.svg'}}">
+          <div class="ml-md-3">
             <p class="m-0">&copy; {{currentYear}} All Rights Reserved. Estore Mastery Systems Pvt. Ltd.</p>
           </div>
         </div>

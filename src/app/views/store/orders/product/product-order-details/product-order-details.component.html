@@ -450,8 +450,8 @@
                         <!-- cancel order -->
                         <div *ngIf="vendor?.order_status!='cancelled'" class="col-md-12">
                           <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
-                          (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
-                            <span class="orng-outline-txt">Cancel Order</span>
+                          (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn gray-btn w-100 mtb-10">
+                            <span class="gray-btn-txt">Cancel Order</span>
                           </button>
                         </div>
                       </div>
