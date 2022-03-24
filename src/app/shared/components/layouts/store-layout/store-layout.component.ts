@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { SwPush } from '@angular/service-worker';
+import { CookieService } from 'ngx-cookie-service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../../environments/environment';
 import { SidebarService, IMenuItem } from '../../../../services/sidebar.service';
@@ -25,7 +25,7 @@ export class StoreLayoutComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private swPush: SwPush, private router: Router,
-    public navService: SidebarService, public commonService: CommonService
+    public navService: SidebarService, public commonService: CommonService, private cookieService: CookieService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     this.notifications = [
@@ -103,6 +103,17 @@ export class StoreLayoutComponent implements OnInit {
     this.navService.getSidePanelList();
     if(this.navService.sidePanelList.length) this.setActiveFlag();
     else this.navService.sidebarState.sidenavOpen = false;
+  }
+
+  signOut() {
+    if(this.commonService.store_details?.login_type=='vendor') {
+      if(this.cookieService.check('vInfo')) {
+        let vInfo = JSON.parse(this.cookieService.get('vInfo'));
+        this.commonService.signOut('/session/signin/vendor/'+vInfo.name);
+      }
+      else this.commonService.signOut('/session/signin/vendor');
+    }
+    else this.commonService.signOut('/session/signin');
   }
 
   selectItem(item) {

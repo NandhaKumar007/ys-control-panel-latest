@@ -231,8 +231,8 @@ export class DashboardComponent implements OnInit {
     if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
       this.preLoader = true;
       this.order_details = {
-        products: 0, order_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
-        dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0
+        products: 0, order_list: [], gc_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
+        dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0, gc_total_sales: 0
       };
       // DASHBOARD
       let formData: any = { from_date: this.filterForm.from_date, to_date: this.filterForm.to_date };
@@ -250,6 +250,10 @@ export class DashboardComponent implements OnInit {
             if(element.order_status=='dispatched') this.order_details.dispatched_orders++;
             if(element.order_status=='delivered') this.order_details.completed_orders++;
           });
+          this.order_details.gc_list = result.data.gc_list;
+          this.order_details.gc_total_sales = this.order_details.gc_list.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue['price'];
+          }, 0);
           this.chartPie = {
             ...echartStyles.defaultOptions, ...{
               tooltip: {

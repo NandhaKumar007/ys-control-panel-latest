@@ -6,7 +6,7 @@
       <div *ngIf="navService.sidePanelList?.length" class="menu-toggle" (click)="toggelSidebar()">
         <i class="material-icons">menu</i>
       </div>
-      <div [routerLink]="(this.commonService.store_details?.login_type=='vendor')? '/vendor-dashboard': '/dashboard'" class="cursor logo">
+      <div [routerLink]="(commonService.store_details?.login_type=='vendor')? '/vendor-dashboard': '/dashboard'" class="cursor logo">
         <img *ngIf="!commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo.svg"
           alt="yourstore-logo">
         <img *ngIf="commonService.dark_theme" class="desktop-logo" src="assets/images/yourstore_logo_white.svg"
@@ -131,8 +131,7 @@
             </div>
             <div class="profile-inner">
               <div class="footer d-flex justify-content-center align-items-center">
-                <button *ngIf="!commonService.master_token" class="signout-btn"
-                (click)="(this.commonService.store_details?.login_type=='vendor')? commonService.signOut('/session/signin/vendor'): commonService.signOut('/session/signin');">Sign Out</button>
+                <button *ngIf="!commonService.master_token" class="signout-btn" (click)="signOut();">Sign Out</button>
                 <ng-container *ngIf="commonService.master_token">
                   <button class="signout-btn mr-2" routerLink="/control-panel">Control Panel</button>
                   <button class="signout-btn ml-2" (click)="commonService.signOut('/session/signin/master');">Sign Out</button>
@@ -208,10 +207,16 @@
       <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
         <span class="flex-grow-1"></span>
         <div class="footer-logo d-flex align-items-center">
-          <img *ngIf="!commonService.dark_theme" src="assets/images/yourstore_logo.svg" alt="yourstore-logo">
-          <img *ngIf="commonService.dark_theme" src="assets/images/yourstore_logo_white.svg" alt="yourstore-logo">
-          <div class="ml-3">
-            <p class="m-0">&copy; {{currentYear}} All Rights Reserved. Estore Mastery Systems Pvt. Ltd.</p>
+          <a *ngIf="commonService.store_details?.login_type=='vendor'" href="https://yourstore.io" class="yourstore-text d-flex align-items-center" target="_blank">
+            <span class="px-0 float-left band-txt">Powered by</span>
+            <span class="px-0 float-right">
+              <img width="100%" height="100%" src="assets/images/yourstore_logo.svg" class="yourstore-logo band-txt" alt="yourstore-logo">
+            </span>
+          </a>
+          <img *ngIf="commonService.store_details?.login_type!='vendor'" class="mb-3 mb-md-0" style="width: 100px;" alt="yourstore-logo"
+          src="{{(commonService.dark_theme)? 'assets/images/yourstore_logo_white.svg': 'assets/images/yourstore_logo.svg'}}">
+          <div class="ml-md-3">
+            <p class="m-0">&copy; {{currentYear}} All Rights Reserved. {{(commonService.store_details?.login_type=='vendor')? commonService.store_details.company_details?.name: 'Estore Mastery Systems Pvt. Ltd.' }}</p>
           </div>
         </div>
       </div>

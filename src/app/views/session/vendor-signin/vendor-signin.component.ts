@@ -29,8 +29,8 @@ export class VendorSigninComponent implements OnInit {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params;
       if(this.params.store) {
-        if(!this.cookieService.check('vInfo')) this.getDomainInfo();
-        else {
+        if(this.cookieService.check('vInfo'))
+        {
           let vInfo = JSON.parse(this.cookieService.get('vInfo'));
           if(vInfo.name == this.params.store) {
             this.storeLogo = vInfo.logo;
@@ -38,6 +38,7 @@ export class VendorSigninComponent implements OnInit {
           }
           else this.getDomainInfo();
         }
+        else this.getDomainInfo()
       }
     });
   }

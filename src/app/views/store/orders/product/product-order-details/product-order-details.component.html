@@ -416,7 +416,7 @@
                           </div>
                         </ng-container>
                         <!-- update order status -->
-                        <form autocomplete="off" *ngIf="params?.type=='live'" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
+                        <form class="col-md-12 px-0" autocomplete="off" *ngIf="params?.type=='live'" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
                           <div *ngIf="vendor?.existing_status=='placed'" class="col-md-12 mb-1 summary-section">
                             <label class="radio radio-primary">
                               <input type="radio" name="order_status{{v+1}}" value="confirmed" [(ngModel)]="vendor.order_status">
@@ -448,12 +448,12 @@
                           </ng-container>
                         </form>
                         <!-- cancel order -->
-                        <ng-container *ngIf="vendor?.order_status!='cancelled'">
+                        <div *ngIf="vendor?.order_status!='cancelled'" class="col-md-12">
                           <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
                           (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
                             <span class="orng-outline-txt">Cancel Order</span>
                           </button>
-                        </ng-container>
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-2"></div>
@@ -549,8 +549,8 @@
                         <div class="col-12">
                           <button type="button" class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
                           <!-- Resend mail -->
-                          <button type="button" (click)="vendorInfo=vendor; onResendVendorMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
-                            <span class="blue-outline-txt">Resend Email</span>
+                          <button type="button" (click)="vendorInfo=vendor; onResendVendorMail(resendMailModal);" class="btn gray-btn w-100 mtb-10">
+                            <span class="gray-btn-txt">Resend Email</span>
                           </button>
                         </div>
                       </div>
@@ -1280,9 +1280,9 @@
         <!-- # cancel order -->
 
         <!-- Resend mail -->
-        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button"
-          (click)="onResendMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
-         <span class="blue-outline-txt">Resend Email</span> </button>
+        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button" (click)="onResendMail(resendMailModal);" class="btn gray-btn w-100 mtb-10">
+          <span class="gray-btn-txt">Resend Email</span>
+        </button>
         <!-- # Resend mail -->
 
         <!-- Place order -->
@@ -1511,9 +1511,9 @@
         <!-- # cancel order -->
 
         <!-- Resend mail -->
-        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button"
-          (click)="onResendVendorMail(resendMailModal);" class="btn blue-outline-txt w-100 mtb-10">
-         <span class="blue-outline-txt">Resend Email</span> </button>
+        <button *ngIf="!params?.coupon_id && params?.type!='inactive'" type="button" (click)="onResendVendorMail(resendMailModal);" class="btn gray-btn w-100 mtb-10">
+          <span class="gray-btn-txt">Resend Email</span>
+        </button>
         <!-- # Resend mail -->
       </div>
     </div>
