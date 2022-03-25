@@ -736,6 +736,27 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
     this.modalService.open(modalName, { size: 'lg' });
   }
+  onViewVendorInvoice(x, modalName) {
+    this.invoice_details = x;
+    if(this.order_details.invoice_number) this.invoice_details.invoice_number = this.order_details.invoice_number;
+    this.invoice_details.created_on = this.order_details.created_on;
+    this.invoice_details.currency_type = this.order_details.currency_type;
+    this.invoice_details.billing_address = this.order_details.billing_address;
+    this.invoice_details.shipping_address = this.order_details.shipping_address;
+    this.invoice_details.payment_details = this.order_details.payment_details;
+    this.invoice_details.item_list = this.order_details.item_list.filter(obj => obj.vendor_id==x.vendor_id);
+    if(this.tax_config.tax > 0) {
+      let totalPercentage = 100+parseFloat(this.tax_config.tax);
+      let onePercentAmount = this.invoice_details.sub_total/totalPercentage;
+      this.invoice_details.sub_total_wo_tax = onePercentAmount*100;
+      this.invoice_details.tax_amount = onePercentAmount*this.tax_config.tax;
+    }
+    this.invoice_order_list = [];
+    this.processItemList(this.invoice_details.item_list).then((respData) => {
+      this.invoice_order_list = respData;
+    });
+    this.modalService.open(modalName, { size: 'lg' });
+  }
   processItemList(itemList) {
     return new Promise((resolve, reject) => {
       let orderList: any = [];

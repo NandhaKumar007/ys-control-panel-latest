@@ -24,6 +24,11 @@ export class CollectionsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.commonService.page_attr?.type=='collections') {
+      let pageInfo = this.commonService.page_attr;
+      this.page = pageInfo.page;
+      delete this.commonService.page_attr;
+    }
     this.pageLoader = true;
     this.api.COLLECTION_LIST().subscribe(result => {
 			if(result.status) {
@@ -47,6 +52,11 @@ export class CollectionsComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  goModifyPage(x) {
+    this.commonService.page_attr = { type: 'collections', page: this.page, scroll_pos: this.commonService.scroll_y_pos };
+    this.router.navigate(["/features/collections/modify/"+x._id+"/"+this.maxRank]);
   }
 
 }

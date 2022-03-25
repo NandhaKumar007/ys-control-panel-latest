@@ -109,7 +109,7 @@ export class MenuSectionsComponent implements OnInit {
 
   // Route Change
 	onRouterChange(x) {
-		sessionStorage.setItem("selected_menu", JSON.stringify({_id: this.menuId, name: x.name}));
+		sessionStorage.setItem("selected_section", JSON.stringify({_id: this.menuId, name: x.name}));
 		this.router.navigate(["features/menus/"+this.menuId+'/'+x._id]);
   }
 

@@ -547,7 +547,7 @@
                           </div>
                         </div>
                         <div class="col-12">
-                          <button type="button" class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
+                          <button type="button" (click)="onViewVendorInvoice(vendor, invoiceModal);" class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
                           <!-- Resend mail -->
                           <button type="button" (click)="vendorInfo=vendor; onResendVendorMail(resendMailModal);" class="btn gray-btn w-100 mtb-10">
                             <span class="gray-btn-txt">Resend Email</span>
@@ -1392,7 +1392,7 @@
                 </div>
               </div>
               <div class="col-12">
-                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewInvoice(invoiceModal);"
+                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewVendorInvoice(vendorInfo, invoiceModal);"
                   class="btn btn-wide btn-primary w-100 mt-10">View Invoice</button>
               </div>
             </div>
@@ -2277,14 +2277,16 @@
           </div>
         </div>
         <div class="col-md-6">
-          <tr>
-            <td>
-              <p>Order Date</p>
-            </td>
-            <td>
-              <p>: {{invoice_details.created_on | date: "dd MMM y"}}</p>
-            </td>
-          </tr>
+          <div [ngClass]="(!invoice_details.invoice_number)? 'invoice-no mr-3': ''">
+            <tr>
+              <td>
+                <p>Order Date</p>
+              </td>
+              <td>
+                <p>: {{invoice_details.created_on | date: "dd MMM y"}}</p>
+              </td>
+            </tr>
+          </div>
         </div>
         <!-- address section -->
         <div class="col-12">
