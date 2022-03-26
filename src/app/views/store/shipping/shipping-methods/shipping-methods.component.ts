@@ -31,6 +31,8 @@ export class ShippingMethodsComponent implements OnInit {
     this.pageLoader = true;
     this.api.SHIPPING_LIST().subscribe(result => {
       if(result.status) {
+        this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
+        this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
         this.list = result.list.filter(obj => !obj.vendor_id);
         this.commonService.vendor_list.forEach(el => {
           el.shipping_list = result.list.filter(obj => obj.vendor_id==el._id);

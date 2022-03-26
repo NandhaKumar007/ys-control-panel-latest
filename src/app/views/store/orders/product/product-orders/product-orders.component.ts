@@ -10,6 +10,7 @@ import { ExcelService } from '../../../../../services/excel.service';
 import { CommonService } from '../../../../../services/common.service';
 import { StoreApiService } from '../../../../../services/store-api.service';
 import { FieldSearchPipe } from '../../../../../shared/pipes/field-search.pipe';
+import { environment } from '../../../../../../environments/environment';
 declare const Notification: any;
 
 @Component({
@@ -37,7 +38,7 @@ export class ProductOrdersComponent implements OnInit {
     // this.cookieService.set('blockSub', 'true');
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.page = 1; this.pageSize = 10;
-      if(!this.commonService.ios && !this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
+      if(!environment.keep_login && !this.commonService.ios && !this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
         if(Notification.permission=='default') document.getElementById('openSubModal').click();
         else if(Notification.permission=='granted' && !sessionStorage.getItem("sw_sub")) this.reqSub();
       }
