@@ -37,7 +37,7 @@ export class HomeLayoutComponent implements OnInit {
     { type: "discounted", disp_name: "Discounted" },
     { type: "category", disp_name: "Catalog" }
   ];
-  themeColorExists: boolean;
+  themeColorExists: boolean; configData: any = environment.config_data;
 
   constructor(
     private router: Router, config: NgbModalConfig, public modalService: NgbModal,

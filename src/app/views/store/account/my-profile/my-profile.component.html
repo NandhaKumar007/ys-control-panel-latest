@@ -53,10 +53,12 @@
             <input type="text" name="store_name" class="form-control" [(ngModel)]="storeData.name" #store_name="ngModel" required />
           </div>
           <div class="col-md-6">
-            <label>Category</label>
-            <select name="type" class="form-control select-arrow" [(ngModel)]="storeData.category" required>
-              <option [ngValue]="x.name" *ngFor="let x of commonService.store_categories;">{{x.display}}</option>
-            </select>
+            <ng-container *ngIf="configData.high_paid_packages.indexOf(commonService.store_details?.package_details?.package_id)==-1">
+              <label>Category</label>
+              <select name="type" class="form-control select-arrow" [(ngModel)]="storeData.category" required>
+                <option [ngValue]="x.name" *ngFor="let x of commonService.store_categories;">{{x.display}}</option>
+              </select>
+            </ng-container>
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Company Name</label>

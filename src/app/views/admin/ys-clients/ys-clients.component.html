@@ -49,7 +49,7 @@
         </select>
       </div>
     </div>
-    <div *ngIf="filterForm.list_type=='trial_expires_in' || filterForm.list_type=='inactive'" class="col-md-3 col-6">
+    <div *ngIf="filterForm.list_type=='trial_expires_in' || filterForm.list_type=='unused'" class="col-md-3 col-6">
       <div class="form-group">
         <select name="day_type" class="form-control select-arrow" [(ngModel)]="filterForm.day_type" (change)="ngOnInit();">
           <option value="eq">Equal to</option>
@@ -81,7 +81,7 @@
         </select>
       </div>
       <!-- Inactive Users -->
-      <div *ngIf="filterForm.list_type=='inactive'" class="form-group">
+      <div *ngIf="filterForm.list_type=='unused'" class="form-group">
         <select name="inactive_day" class="form-control select-arrow" [(ngModel)]="filterForm.inactive_day" (change)="ngOnInit();">
           <option value="3">3 Days</option>
           <option value="4">4 Days</option>
@@ -95,7 +95,7 @@
       </div>
     </div>
     <!-- search box -->
-    <div class="col-6" [ngClass]="(filterForm.list_type=='trial_expires_in' || filterForm.list_type=='inactive')? 'col-md-3': 'col-md-6'">
+    <div class="col-6" [ngClass]="(filterForm.list_type=='trial_expires_in' || filterForm.list_type=='unused')? 'col-md-3': 'col-md-6'">
       <div class="form-group">
         <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
       </div>

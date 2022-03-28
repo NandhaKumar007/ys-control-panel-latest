@@ -109,7 +109,7 @@
     <div *ngIf="commonService.ys_features.indexOf('newsletter')!=-1" class="col-md-6 col-lg-4 d-flex">
       <div (click)="onOpenSettingModal(newsletterModal);" class="card setting-card w-100 p-3 mb-4 cursor">
         <div class="d-flex align-items-center justify-content-center flex-column mt-2">
-          <label class="text-title cursor">Newsletter Configuration</label>
+          <label class="text-title cursor">Store Popup</label>
         </div>
       </div>
     </div>
@@ -655,20 +655,27 @@
 <!-- newsletter -->
 <ng-template #newsletterModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Newsletter Configuration</h4>
+    <h4 class="modal-title" id="modal-basic-title">Store Popup</h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onUpdateNewsletter();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="form-group mb-3 col-md-12">
+          <div class="form-group mb-3 col-md-6">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="newsletter_status" [(ngModel)]="app_setting.newsletter_status" (change)="!app_setting.newsletter_config? app_setting.newsletter_config={}: '';" #newsletter_status="ngModel">
-              <span>Enable Newsletter</span>
+              <input class="form-check-input" type="checkbox" name="newsletter_status" [(ngModel)]="app_setting.newsletter_status" (change)="!app_setting.newsletter_config? app_setting.newsletter_config={}: '';">
+              <span>Enable Store Popup</span>
               <span class="checkmark"></span>
             </label>
           </div>
           <ng-container *ngIf="app_setting.newsletter_status && app_setting.newsletter_config">
+            <div class="form-group mb-3 col-md-6">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="subscription_status" [(ngModel)]="app_setting.newsletter_config.subscription_status">
+                <span>Enable Newsletter Subscription</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
             <div class="col-md-12" align="center">
               <!-- <p>Photo Resolution: 450x300</p> -->
               <div *ngIf="app_setting.newsletter_config.image">
@@ -698,13 +705,35 @@
               <label>Button text</label>
               <input type="text" name="btn_text" class="form-control" [(ngModel)]="app_setting.newsletter_config.btn_text" #btn_text="ngModel" required />
             </div>
-            <div *ngIf="commonService.store_details?.type!='restaurant_based'" class="form-group mb-3 mt-4 col-md-6">
+            <div *ngIf="commonService.store_details?.type!='restaurant_based' && app_setting.newsletter_config.subscription_status" class="form-group mb-3 mt-4 col-md-6">
               <label class="checkbox checkbox-primary">
                 <input class="form-check-input" type="checkbox" name="open_onload" [(ngModel)]="app_setting.newsletter_config.open_onload" #open_onload="ngModel">
                 <span>Open popup on page load</span>
                 <span class="checkmark"></span>
               </label>
             </div>
+            <!-- link info -->
+            <ng-container *ngIf="!app_setting.newsletter_config?.subscription_status">
+              <div class="col-md-3 form-group mt-4 mb-3">
+                <label class="radio radio-primary">
+                  <input type="radio" name="link_type" [(ngModel)]="app_setting.newsletter_config.link_type" value="internal">
+                  <span>Link to Internal Link</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-md-3 form-group mt-4 mb-3">
+                <label class="radio radio-primary">
+                  <input type="radio" name="link_type" [(ngModel)]="app_setting.newsletter_config.link_type" value="external">
+                  <span>Link to External Link</span>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="col-md-6 form-group mb-3">
+                <label *ngIf="app_setting.newsletter_config.link_type=='internal'">{{commonService.store_details?.base_url}}{{app_setting.newsletter_config.link}}</label>
+                <label *ngIf="app_setting.newsletter_config.link_type=='external'">External Link</label>
+                <input type="text" name="link" class="form-control" [(ngModel)]="app_setting.newsletter_config.link" required />
+              </div>
+            </ng-container>
           </ng-container>
         </div>
       </div>

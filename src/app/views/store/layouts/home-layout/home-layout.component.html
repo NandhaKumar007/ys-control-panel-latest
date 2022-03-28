@@ -14,7 +14,7 @@
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <ng-container *ngIf="list?.length">
           <a href="{{commonService.store_details?.base_url}}" target="_blank" class="btn btn-primary">View Website</a>
-          <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary ml-3">Reset Layout</button>
+          <button *ngIf="commonService.store_details.login_type=='admin' && configData.high_paid_packages.indexOf(commonService.store_details?.package_details?.package_id)==-1" type="button" (click)="onResetLayout(resetModal);" class="btn btn-primary ml-3">Reset Layout</button>
         </ng-container>
         <button *ngIf="commonService.deployInProgress" type="button" class="btn btn-primary ml-3" (click)="commonService.goBack();">Go Back</button>
       </div>

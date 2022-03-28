@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../../services/common.service';
 import { StoreApiService } from '../../../../services/store-api.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-my-profile',
@@ -14,6 +15,7 @@ export class MyProfileComponent implements OnInit {
   storeData: any = {};
   addressInfo: any; pwdForm: any = {};
   state_list: any = [];
+  configData: any = environment.config_data;
   
   constructor(config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: StoreApiService) {
     config.backdrop = 'static'; config.keyboard = false;

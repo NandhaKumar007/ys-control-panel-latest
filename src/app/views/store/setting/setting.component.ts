@@ -271,6 +271,7 @@ export class SettingComponent implements OnInit {
             heading: "NEWSLETTER", sub_heading: "Subscribe now to get updates on latest trends and offers", btn_text: "SUBSCRIBE"
           }
         }
+        if(!this.app_setting.newsletter_config.link_type) this.app_setting.newsletter_config.link_type = 'internal';
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
@@ -350,6 +351,7 @@ export class SettingComponent implements OnInit {
 
   onUpdateNewsletter() {
     this.app_setting.submit = true;
+    if(!this.app_setting.newsletter_config.subscription_status) this.app_setting.newsletter_config.open_onload = true;
     this.api.UPDATE_STORE_PROPERTY_DETAILS({ "application_setting.newsletter_status": this.app_setting.newsletter_status, "application_setting.newsletter_config": this.app_setting.newsletter_config }).subscribe(result => {
       this.app_setting.submit = false;
       if(result.status) document.getElementById('closeModal').click();
