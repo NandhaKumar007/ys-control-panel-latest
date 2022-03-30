@@ -3,22 +3,37 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Vendors</h1>
-    <ul>
-      <li>View and manage your vendors</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Vendors</h1>
+        <ul>
+          <li>View and manage your vendors</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button (click)="vendorForm={ form_type: 'add', company_details: { made_in_home_country: '', shipping_type: '' }, registered_address: { country: commonService.store_details?.country }, pickup_address: { country: commonService.store_details?.country }, bank_details: {} }; modalService.open(vendorModal, { size: 'lg' });"
+        type="button" class="btn btn-primary">Add New Vendor</button>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-md-6">
-        <button type="button" class="btn btn-primary"
-          (click)="vendorForm={ form_type: 'add', company_details: {}, bank_details: {} }; modalService.open(vendorModal, { size: 'lg' });">Add
-          New Vendor</button>
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <select name="list_type" class="form-control select-arrow" [(ngModel)]="list_type" (change)="onTypeChange(list_type);">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="new">New</option>
+            <option value="declined">Declined</option>
+          </select>
+        </div>
       </div>
+      <div class="col-md-3 col-6"></div>
       <!-- search box -->
-      <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
+      <div class="col-md-6 mt-sm-15">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -27,7 +42,6 @@
   </div>
   <!-- DATA LIST -->
   <div *ngIf="list?.length" class="list-horizontal">
-
 
     <div class="data-list-card-wrapper">
       <div class="data-list-card-inner">
@@ -42,9 +56,8 @@
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>
               <div class="flex-grow-1 pl-2 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p class="w-30 w-sm-100 m-b-0">{{x.company_details?.name}}</p>
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <p class="w-30 w-sm-100 m-b-0">{{x.company_details?.name}}<br>{{x.company_details?.brand}}</p>
                   <p class="w-30 w-sm-100 m-0">{{x.email}}</p>
                   <!-- <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions"> -->
                     <div class="col-md-5 d-flex align-items-center justify-content-end">
@@ -57,15 +70,19 @@
                             </button>
                             <div class="dropdown-menu" ngbDropdownMenu>
                               <button class="dropdown-item" (click)="onEdit(x, 'edit_details', vendorModal);">Details</button>
-                              <button class="dropdown-item" (click)="vendorForm={ _id: x._id, email: x.email, image: x.image }; modalService.open(bannerModal);">Banner</button>
-                              <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Password</button>
-                              <button class="dropdown-item" (click)="onEdit(x, 'edit_permissions', permissionModal);">Permissions</button>
+                              <ng-container *ngIf="x.password && x.status!='declined'">
+                                <button class="dropdown-item" (click)="vendorForm={ _id: x._id, email: x.email, image: x.image }; modalService.open(bannerModal);">Banner</button>
+                                <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Password</button>
+                                <button class="dropdown-item" (click)="onEdit(x, 'edit_permissions', permissionModal);">Permissions</button>
+                              </ng-container>
                             </div>
                           </div>
                         </div>
-                        <button *ngIf="x.email && x.password" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
-                        class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
-                        {{ (x.status=='active')? 'Disable': 'Enable' }}</button>
+                        <button *ngIf="x.password && x.status!='declined'" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });" class="btn btn-wide mr-3 w-md-100"
+                        [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">{{ (x.status=='active')? 'Disable': 'Enable' }}</button>
+                        <button *ngIf="!x.password" (click)="deleteForm=x; modalService.open(activationModal, { centered: true });" class="btn gray-btn mr-3 w-md-100">
+                          <span class="gray-btn-txt">Approve/Reject</span>
+                        </button>
                         <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
                           <span class="orng-outline-txt">Remove</span>
                         </button>
@@ -115,14 +132,16 @@
             <label>Mobile</label>
             <input type="text" name="mobile" class="form-control" [(ngModel)]="vendorForm.mobile" required />
           </div>
-          <div class="col-md-6 mb-3">
-            <label>Page URL - {{commonService.store_details?.base_url}}/vendor/{{vendorForm?.page_url}}</label>
-            <input type="text" name="page_url" class="form-control" [(ngModel)]="vendorForm.page_url" appNoSplChar required />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label>Ad Credit</label>
-            <input type="text" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
-          </div>
+          <ng-container *ngIf="vendorForm.form_type!='add'">
+            <div class="col-md-6 mb-3">
+              <label>Page URL - {{commonService.store_details?.base_url}}/vendor/{{vendorForm?.page_url}}</label>
+              <input type="text" name="page_url" class="form-control" [(ngModel)]="vendorForm.page_url" appNoSplChar required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Ad Credit</label>
+              <input type="text" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
+            </div>
+          </ng-container>
         </div>
         <!-- login details -->
         <ng-container *ngIf="vendorForm.form_type=='add'">
@@ -132,7 +151,7 @@
           <div class="card">
             <div class="row card-body">
               <div class="col-md-6">
-                <label>Login Email</label>
+                <label>Email</label>
                 <input type="text" name="email" class="form-control" [(ngModel)]="vendorForm.email" required />
               </div>
               <div class="col-md-6">
@@ -150,32 +169,104 @@
           <div class="row card-body">
             <div class="col-md-6 mb-3">
               <label>Business Name</label>
-              <input type="text" name="company_name" class="form-control" [(ngModel)]="vendorForm.company_details.name"
-                required />
+              <input type="text" name="company_name" class="form-control" [(ngModel)]="vendorForm.company_details.name" required />
             </div>
-            <div class="col-md-12 mb-3">
-              <label>Registered Address</label>
-              <textarea name="company_address" [(ngModel)]="vendorForm.company_details.address" class="form-control"
-                required></textarea>
+            <div class="col-md-6 mb-3">
+              <label>Brand Name</label>
+              <input type="text" name="brand_name" class="form-control" [(ngModel)]="vendorForm.company_details.brand" required />
             </div>
-            <div class="col-md-12 mb-3">
-              <label>Pickup Address</label>
-              <textarea name="pickup_address" [(ngModel)]="vendorForm.company_details.pickup_address"
-                class="form-control" required></textarea>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
               <label>GST No</label>
-              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no"
-                required />
+              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Shipping Preferences</label>
+              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type">
+                <option value="">-- Select --</option>
+                <option value="free">Willing to provide free shipping on all orders</option>
+                <option value="free_above">Willing to provide free shipping on orders above ₹499</option>
+                <option value="paid">Will collect shipping charges on all orders</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label>Are all the products made in {{commonService.store_details?.country}}?</label>
-              <select name="made_in_home_country" class="form-control select-arrow"
-                [(ngModel)]="vendorForm.company_details.made_in_home_country">
-                <option value="undefined">-- Select --</option>
+              <select name="made_in_home_country" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.made_in_home_country">
+                <option value="">-- Select --</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
               </select>
+            </div>
+          </div>
+        </div>
+        <!-- registered address -->
+        <div class="col-md-12 mt-3">
+          <h6>REGISTERED ADDRESS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Country</label>
+              <select (change)="vendorForm.registered_address.state=''; onCountryChange('registered', vendorForm.registered_address.country);"
+              name="r_country" class="form-control" [(ngModel)]="vendorForm.registered_address.country" required>
+              <option value="">-- Select --</option>
+              <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [value]="x.name">{{x.name}}</option>
+            </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>State</label>
+              <select *ngIf="r_state_list?.length" class="form-control" name="r_state" [(ngModel)]="vendorForm.registered_address.state" required>
+                <option value="">-- Select --</option>
+                <option *ngFor="let x of r_state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+              </select>
+              <input *ngIf="!r_state_list?.length" type="text" name="r_state" class="form-control" [(ngModel)]="vendorForm.registered_address.state" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>City</label>
+              <input type="text" name="r_city" class="form-control" [(ngModel)]="vendorForm.registered_address.city" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Pincode</label>
+              <input type="text" name="r_pincode" class="form-control" [(ngModel)]="vendorForm.registered_address.pincode" required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Complete Address</label>
+              <textarea name="r_address" [(ngModel)]="vendorForm.registered_address.address" class="form-control" required></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- pickup address -->
+        <div class="col-md-12 mt-3">
+          <h6>PICKUP ADDRESS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Country</label>
+              <select (change)="vendorForm.pickup_address.state=''; onCountryChange('pickup', vendorForm.pickup_address.country);"
+              name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" required>
+              <option value="">-- Select --</option>
+              <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [value]="x.name">{{x.name}}</option>
+            </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>State</label>
+              <select *ngIf="p_state_list?.length" class="form-control" name="p_state" [(ngModel)]="vendorForm.pickup_address.state" required>
+                <option value="">-- Select --</option>
+                <option *ngFor="let x of p_state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+              </select>
+              <input *ngIf="!p_state_list?.length" type="text" name="p_state" class="form-control" [(ngModel)]="vendorForm.pickup_address.state" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>City</label>
+              <input type="text" name="p_city" class="form-control" [(ngModel)]="vendorForm.pickup_address.city" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Pincode</label>
+              <input type="text" name="p_pincode" class="form-control" [(ngModel)]="vendorForm.pickup_address.pincode" required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Complete Address</label>
+              <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>
             </div>
           </div>
         </div>
@@ -314,6 +405,34 @@
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- APPROVE/DECLINE MODAL -->
+<ng-template #activationModal let-modal>
+  <div class="modal-header pr-2 pt-2 pb-2">
+    <div></div>
+    <div class="d-flex">
+      <i class="material-icons" id="closeModal" (click)="modal.dismiss('Cross click');">close</i>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure on approving or rejecting the account
+        <span class="txt-grdint-highlight">"{{deleteForm.email}}?"</span>
+      </strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="onActivate('approve');" class="btn btn-wide black-outline-btn ladda-button m-1" [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">
+      <span class="black-outline-txt">Approve</span>
+    </button>
+    <button type="button" (click)="onActivate('decline');" class="btn btn-wide orng-outline-btn ladda-button m-1" [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">
+      <span class="orng-outline-txt">Reject</span>
+    </button>
+  </div>
 </ng-template>
 
 <!-- STATUS MODAL -->

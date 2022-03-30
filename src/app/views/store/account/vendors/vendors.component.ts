@@ -15,8 +15,8 @@ import { environment } from '../../../../../environments/environment';
 export class VendorsComponent implements OnInit {
 
   search_bar: string;
-  page = 1; pageSize = 10;
-  pageLoader: boolean;
+  page = 1; pageSize = 10; parent_list: any = [];
+  pageLoader: boolean; list_type: string = 'all';
   list: any = []; imgBaseUrl = environment.img_baseurl;
   vendorForm: any = {}; pwdForm: any = {}; deleteForm: any = {};
   permissionList: any = [
@@ -31,7 +31,8 @@ export class VendorsComponent implements OnInit {
         ] }
       ]
     }
-  ]
+  ];
+  r_state_list: any = []; p_state_list: any = [];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: AccountService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -41,9 +42,10 @@ export class VendorsComponent implements OnInit {
     this.pageLoader = true;
     this.api.VENDOR_LIST().subscribe(result => {
       if(result.status) {
-        this.list = result.list;
-        this.commonService.vendor_list = this.list;
-        this.commonService.updateLocalData('vendor_list', this.list);
+        this.parent_list = result.list;
+        this.commonService.vendor_list = this.parent_list;
+        this.commonService.updateLocalData('vendor_list', this.parent_list);
+        this.onTypeChange(this.list_type);
       }
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
@@ -192,6 +194,21 @@ export class VendorsComponent implements OnInit {
     });
   }
 
+  onActivate(x) {
+    this.deleteForm.submit = true;
+    this.api.VENDOR_ACTIVATION({ _id: this.deleteForm._id, type: x }).subscribe(result => {
+      this.deleteForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.deleteForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
   fileChangeListener(event) {
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
@@ -200,6 +217,29 @@ export class VendorsComponent implements OnInit {
         this.vendorForm.img_change = true;
       }
       reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  onTypeChange(x) {
+    this.pageLoader = true;
+    if(x=="active") this.list = this.parent_list.filter(obj => obj.password && obj.status=='active');
+    else if(x=="inactive") this.list = this.parent_list.filter(obj => obj.password && obj.status=='inactive');
+    else if(x=="new") this.list = this.parent_list.filter(obj => !obj.password && obj.status=='inactive');
+    else if(x=="declined") this.list = this.parent_list.filter(obj => obj.status=='declined');
+    else this.list = this.parent_list;
+    setTimeout(() => { this.pageLoader = false; }, 100);
+  }
+
+  onCountryChange(type, x) {
+    if(type=='registered') {
+      this.r_state_list = [];
+      let index = this.commonService.country_list.findIndex(object => object.name==x);
+      if(index!=-1) this.r_state_list = this.commonService.country_list[index].states;
+    }
+    else {
+      this.p_state_list = [];
+      let index = this.commonService.country_list.findIndex(object => object.name==x);
+      if(index!=-1) this.p_state_list = this.commonService.country_list[index].states;
     }
   }
 
