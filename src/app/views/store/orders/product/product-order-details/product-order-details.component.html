@@ -512,19 +512,6 @@
                             </div>
                           </div>
                         </ng-container>
-                        <ng-container *ngIf="vendor?.packaging_charges > 0">
-                          <div class="col-6">
-                            <div class="box-card card-head">
-                              <p>Packaging Charges</p>
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="box-card">
-                              <p class="pull-right text-right">
-                                {{vendor.packaging_charges | currency: commonService.store_currency?.country_code}}</p>
-                            </div>
-                          </div>
-                        </ng-container>
                         <div class="col-6">
                           <div class="box-card card-head">
                             <p>Shipping</p>
@@ -536,19 +523,6 @@
                               {{vendor.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
                           </div>
                         </div>
-                        <ng-container *ngIf="vendor?.cod_charges > 0">
-                          <div class="col-6">
-                            <div class="box-card card-head">
-                              <p>COD Charges</p>
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="box-card">
-                              <p class="pull-right text-right">
-                                {{vendor.cod_charges | currency: commonService.store_currency?.country_code}}</p>
-                            </div>
-                          </div>
-                        </ng-container>
                         <ng-container *ngIf="vendor?.discount_amount > 0">
                           <div class="col-6">
                             <div class="box-card card-head">
@@ -1357,19 +1331,6 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="vendorInfo?.packaging_charges > 0">
-                <div class="col-6">
-                  <div class="box-card card-head">
-                    <p>Packaging Charges</p>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="box-card">
-                    <p class="pull-right text-right">
-                      {{vendorInfo.packaging_charges | currency: commonService.store_currency?.country_code}}</p>
-                  </div>
-                </div>
-              </ng-container>
               <div class="col-6">
                 <div class="box-card card-head">
                   <p>Shipping</p>
@@ -1381,19 +1342,6 @@
                     {{vendorInfo.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
                 </div>
               </div>
-              <ng-container *ngIf="vendorInfo?.cod_charges > 0">
-                <div class="col-6">
-                  <div class="box-card card-head">
-                    <p>COD Charges</p>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="box-card">
-                    <p class="pull-right text-right">
-                      {{vendorInfo.cod_charges | currency: commonService.store_currency?.country_code}}</p>
-                  </div>
-                </div>
-              </ng-container>
               <ng-container *ngIf="vendorInfo?.discount_amount > 0">
                 <div class="col-6">
                   <div class="box-card card-head">
