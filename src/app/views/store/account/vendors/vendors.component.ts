@@ -227,7 +227,7 @@ export class VendorsComponent implements OnInit {
     else if(x=="new") this.list = this.parent_list.filter(obj => !obj.password && obj.status=='inactive');
     else if(x=="declined") this.list = this.parent_list.filter(obj => obj.status=='declined');
     else this.list = this.parent_list;
-    setTimeout(() => { this.pageLoader = false; }, 100);
+    setTimeout(() => { this.pageLoader = false; }, 500);
   }
 
   onCountryChange(type, x) {

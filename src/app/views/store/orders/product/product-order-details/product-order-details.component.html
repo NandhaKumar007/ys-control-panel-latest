@@ -80,10 +80,10 @@
               </div>
               <ng-container *ngFor="let x of group.item_list; let i=index;">
                 <div class="card card-in-card m-10 d-flex flex-row">
-                  <div class="list-thumb d-flex mtb-20">
+                  <div class="list-thumb d-flex p-2">
                     <img [src]="imgBaseUrl+x.image" alt="">
                   </div>
-                  <div class="flex-grow-1 pl-2 d-flex mtb-20">
+                  <div class="flex-grow-1 pl-2 d-flex">
                     <div class="card-body row">
                       <div class="col-md-5 d-flex justify-content-center flex-column">
                         <span>
@@ -155,10 +155,24 @@
             <ng-container *ngFor="let x of itemList; let i=index;" class="card m-10 d-flex flex-row pl-3 pr-3">
               <ng-container *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.vendor_details?._id">
                 <div class="card m-10 d-flex flex-row pl-3 pr-3">
-                  <div class="list-thumb d-flex mtb-20">
+                  <p *ngIf="x.item_status" class="p-0 m-0 status-div">
+                    <span *ngIf="x.item_status=='c_requested'">
+                      Cancellation Requested
+                      <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                    </span>
+                    <span *ngIf="x.item_status=='c_confirmed'">
+                      Cancelled
+                      <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                    </span>
+                    <span *ngIf="x.item_status=='c_declined'">
+                      Cancellation Request Declined
+                      <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                    </span>
+                  </p>
+                  <div class="list-thumb d-flex p-2">
                     <img [src]="imgBaseUrl+x.image" alt="">
                   </div>
-                  <div class="flex-grow-1 pl-2 d-flex mtb-20">
+                  <div class="flex-grow-1 pl-2 d-flex">
                     <div class="card-body row">
                       <div class="col-md-5 d-flex justify-content-center flex-column">
                         <span>
@@ -238,71 +252,85 @@
               <p class="sec-desc">Product Details</p>
               <!-- Item List -->
               <ng-container *ngFor="let x of itemList; let i=index;">
-                <div *ngIf="x.vendor_id==vendor.vendor_id" class="card card-in-card m-10 d-flex flex-row">
-                  <div class="list-thumb d-flex mtb-20">
-                    <img [src]="imgBaseUrl+x.image" alt="">
-                  </div>
-                  <div class="flex-grow-1 pl-2 d-flex mtb-20">
-                    <div class="card-body row">
-                      <div class="col-md-5 d-flex justify-content-center flex-column">
-                        <span>
-                          {{x.name}}
-                        </span>
-                        <ng-container *ngIf="x.variant_status">
-                          <ng-container *ngFor="let y of x.variant_types;">
-                            <span class="w-100">
-                              <b>{{y.name}}: </b>{{y.value}}</span>
+                <ng-container *ngIf="x.vendor_id==vendor.vendor_id">                 
+                  <div class="card card-in-card m-10 d-flex flex-row">
+                    <p *ngIf="x.item_status" class="p-0 m-0 status-div">
+                      <span *ngIf="x.item_status=='c_requested'">
+                        Cancellation Requested
+                        <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                      </span>
+                      <span *ngIf="x.item_status=='c_confirmed'">
+                        Cancelled
+                        <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                      </span>
+                      <span *ngIf="x.item_status=='c_declined'">
+                        Cancellation Request Declined
+                        <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+                      </span>
+                    </p>
+                    <div class="list-thumb d-flex p-2">
+                      <img [src]="imgBaseUrl+x.image" alt="">
+                    </div>
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div class="card-body row">
+                        <div class="col-md-5 d-flex justify-content-center flex-column">
+                          <span>{{x.name}}</span>
+                          <ng-container *ngIf="x.variant_status">
+                            <ng-container *ngFor="let y of x.variant_types;">
+                              <span class="w-100">
+                                <b>{{y.name}}: </b>{{y.value}}</span>
+                            </ng-container>
                           </ng-container>
-                        </ng-container>
-                        <span *ngIf="x.slot_details" class="w-100">
-                          <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
-                        </span>
-                        <div *ngIf="x.addon_status && x.selected_addon">
-                          <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
-                          <ng-container *ngIf="x.customization_status">
-                            <br>
-                            <b *ngIf="x.customized_model?.sizing_list?.length>1">
-                              {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-2].value[0].unique_name }} - 
-                              {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-1].value[0].unique_name }}
+                          <span *ngIf="x.slot_details" class="w-100">
+                            <b>Delivery on: </b>{{ x.slot_details?.date | date: "dd MMM y" }} ({{ x.slot_details?.slot }})
+                          </span>
+                          <div *ngIf="x.addon_status && x.selected_addon">
+                            <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
+                            <ng-container *ngIf="x.customization_status">
                               <br>
-                            </b>
-                            <b class="w-100 text-primary"
-                              (click)="commonService.custom_model=x.customized_model; modalService.open(customizationModal, { size: 'lg'});"
-                              style="cursor:pointer;">{{x.customized_model?.name}}</b>
-                          </ng-container>
+                              <b *ngIf="x.customized_model?.sizing_list?.length>1">
+                                {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-2].value[0].unique_name }} - 
+                                {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-1].value[0].unique_name }}
+                                <br>
+                              </b>
+                              <b class="w-100 text-primary"
+                                (click)="commonService.custom_model=x.customized_model; modalService.open(customizationModal, { size: 'lg'});"
+                                style="cursor:pointer;">{{x.customized_model?.name}}</b>
+                            </ng-container>
+                          </div>
                         </div>
-                      </div>
 
-                      <div class="col-md-2 flex-center"> {{x.sku}} </div>
-                      <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
-                      <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
-                        {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
-                      <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
-                        {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
-                        commonService.store_currency?.country_code}}</div>
-                      <!-- if customization exist -->
-                      <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
-                        <div class="btn-group">
-                          <div class="btn-group" ngbDropdown role="group" aria-label="Select all" placement="left">
-                            <button class="btn btn-wide black-outline-btn mr-3" ngbDropdownToggle>
-                              <span class="black-outline-txt">Edit</span>
-                            </button>
-                            <div class="dropdown-menu" ngbDropdownMenu>
-                              <button *ngIf="x.customized_model?.custom_list?.length"
-                                (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
-                                class="dropdown-item">Customization</button>
-                              <button *ngIf="x.customized_model?.mm_sets?.length"
-                                (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
-                                class="dropdown-item">Measurement</button>
-                              <button *ngIf="x.customized_model?.notes_list?.length"
-                                (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
+                        <div class="col-md-2 flex-center"> {{x.sku}} </div>
+                        <div class="col-md-2 flex-center">{{x.quantity}} {{x.unit? x.unit: 'Qty'}}</div>
+                        <div *ngIf="x.unit=='Pcs'" class="col-md-2 flex-center">
+                          {{ (x.final_price*x.quantity) | currency: commonService.store_currency?.country_code}}</div>
+                        <div *ngIf="x.unit!='Pcs'" class="col-md-2 flex-center">
+                          {{ ((x.final_price*x.quantity)+x.addon_price) | currency:
+                          commonService.store_currency?.country_code}}</div>
+                        <!-- if customization exist -->
+                        <div class="col-md-2 flex-center" *ngIf="!params?.coupon_id && x.customization_status">
+                          <div class="btn-group">
+                            <div class="btn-group" ngbDropdown role="group" aria-label="Select all" placement="left">
+                              <button class="btn btn-wide black-outline-btn mr-3" ngbDropdownToggle>
+                                <span class="black-outline-txt">Edit</span>
+                              </button>
+                              <div class="dropdown-menu" ngbDropdownMenu>
+                                <button *ngIf="x.customized_model?.custom_list?.length"
+                                  (click)="itemIndex=i; onEditCustomization(x.customized_model, editCustomModal);"
+                                  class="dropdown-item">Customization</button>
+                                <button *ngIf="x.customized_model?.mm_sets?.length"
+                                  (click)="itemIndex=i; onEditMeasurement(editMeasurementModal);"
+                                  class="dropdown-item">Measurement</button>
+                                <button *ngIf="x.customized_model?.notes_list?.length"
+                                  (click)="itemIndex=i; onEditNotes(editNotesModal);" class="dropdown-item">Notes</button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </ng-container>
               </ng-container>
               <!-- shipping details -->
               <div class="order-section">
@@ -450,7 +478,7 @@
                         <!-- cancel order -->
                         <div *ngIf="vendor?.order_status!='cancelled'" class="col-md-12">
                           <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
-                          (click)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(cancelVendorModal, { centered: true });" class="btn gray-btn w-100 mtb-10">
+                          (click)="cancelVendorOrder(vendor, cancelVendorModal);" class="btn gray-btn w-100 mtb-10">
                             <span class="gray-btn-txt">Cancel Order</span>
                           </button>
                         </div>
@@ -1504,8 +1532,7 @@
 
         <!-- cancel order -->
         <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive'" type="button"
-          (click)="errorMsg=null; btnLoader=false; modalService.open(cancelVendorModal, { centered: true });"
-          class="btn orng-outline-btn w-100 mtb-10">
+        (click)="cancelVendorOrder(vendorInfo, cancelVendorModal);" class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
         </button>
         <!-- # cancel order -->
@@ -2090,17 +2117,88 @@
 
 <!-- Cancel Vendor Order -->
 <ng-template #cancelVendorModal let-modal>
-  <div class="modal-body">
-    <p>
-      <strong>Are you sure you want to cancel the
-        <span class="text-danger">"{{ (commonService.store_details?.login_type!='vendor')? vendorInfo.vendor_name+' - ': '' }}#{{vendorInfo.order_number}}"</span> order?</strong>
+  <div class="modal-header pb-0">
+    <h4 *ngIf="vendorInfo.vendor_name" class="modal-title" id="modal-basic-title">{{vendorInfo.vendor_name}} - Items Cancellation</h4>
+    <h4 *ngIf="!vendorInfo.vendor_name" class="modal-title" id="modal-basic-title">Items Cancellation</h4>
+    <p id="closeModal" (click)="modal.dismiss('cancel');">
+      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        <path d="M0 0h24v24H0z" fill="none" />
+      </svg>
     </p>
   </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6 form-group mb-3">
+        <label>Reason</label>
+        <input type="text" name="cancel_reason" class="form-control" [(ngModel)]="vendorInfo.cancel_reason" />
+      </div>
+      <div class="col-md-12" *ngFor="let x of vendorInfo.item_list; let i=index;">        
+        <div class="card card-in-card m-10 d-flex flex-row">
+          <p *ngIf="x.item_status" class="p-0 m-0 status-div">
+            <span *ngIf="x.item_status=='c_requested'">
+              Cancellation Requested
+              <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+            </span>
+            <span *ngIf="x.item_status=='c_confirmed'">
+              Cancelled
+              <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+            </span>
+            <span *ngIf="x.item_status=='c_declined'">
+              Cancellation Request Declined
+              <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+            </span>
+          </p>
+          <div class="list-thumb d-flex p-2">
+            <img width="100px;" [src]="imgBaseUrl+x.image" alt="">
+          </div>
+          <div class="flex-grow-1 pl-2 d-flex">
+            <div class="card-body row">
+              <div class="col-md-6 d-flex justify-content-center flex-column">
+                <span>{{x.name}}</span>
+                <ng-container *ngIf="x.variant_status">
+                  <ng-container *ngFor="let y of x.variant_types;">
+                    <span class="w-100"><b>{{y.name}}: </b>{{y.value}}</span>
+                  </ng-container>
+                </ng-container>
+                <div *ngIf="x.addon_status && x.selected_addon">
+                  <b>Addon: </b><span class="w-100">{{x.selected_addon?.name}}</span>
+                  <ng-container *ngIf="x.customization_status">
+                    <br>
+                    <b *ngIf="x.customized_model?.sizing_list?.length>1">
+                      {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-2].value[0].unique_name }} - 
+                      {{ x.customized_model.sizing_list[x.customized_model.sizing_list.length-1].value[0].unique_name }}
+                      <br>
+                    </b>
+                    <b class="w-100 text-primary">{{x.customized_model?.name}}</b>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div *ngIf="x.item_status!='c_confirmed'" class="pull-right mt-5 pt-3">
+                  <label class="checkbox checkbox-primary">
+                    <input class="form-check-input" type="checkbox" name="select_item{{i+1}}" [(ngModel)]="x.item_checked">
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="vendorInfo.errorMsg">
+      <p class="text-danger">{{ vendorInfo.errorMsg }}</p>
+    </div>
+  </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
-      <span class="black-outline-txt">No</span>
+    <button type="button" (click)="modalService.open(confirmCancelVendorModal, { centered: true });" class="btn btn-wide black-outline-btn">
+      <span class="black-outline-txt">Approve</span>
     </button>
-    <button type="button" class="btn btn-wide btn-primary" (click)="modal.dismiss('cancel'); modalService.open(confirmCancelVendorModal, { centered: true });">Yes</button>
+    <button type="button" (click)="vendorInfo.request_type='reject'; onCancelVendorOrder();"
+    class="btn btn-wide btn-primary ladda-button" [disabled]="btnLoader" [ladda]="btnLoader">
+      Reject
+    </button>
   </div>
 </ng-template>
 
@@ -2108,19 +2206,17 @@
 <ng-template #confirmCancelVendorModal let-modal>
   <div class="modal-body">
     <p>
-      <strong>If you cancel the order
-        <span class="text-danger">"{{ (commonService.store_details?.login_type!='vendor')? vendorInfo.vendor_name+' - ': '' }}#{{vendorInfo.order_number}}"</span>, the products will revert back to stock.
-      </strong>
+      <strong>If you cancel the selected items, the products will revert back to stock.</strong>
     </p>
-    <div *ngIf="errorMsg">
-      <p class="text-danger">{{ errorMsg }}</p>
+    <div *ngIf="vendorInfo.errorMsg">
+      <p class="text-danger">{{ vendorInfo.errorMsg }}</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+    <button type="button" id="closeConfirmModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
       <span class="black-outline-txt">Cancel</span>
     </button>
-    <button type="button" (click)="onCancelVendorOrder();" class="btn btn-wide btn-primary ladda-button"
+    <button type="button" (click)="vendorInfo.request_type='cancel'; onCancelVendorOrder();" class="btn btn-wide btn-primary ladda-button"
       [disabled]="btnLoader" [ladda]="btnLoader">Ok</button>
   </div>
 </ng-template>
@@ -2152,6 +2248,36 @@
         [ladda]="courierForm.btnLoader">Ok</button>
     </div>
   </form>
+</ng-template>
+
+<!-- Cancel Item Info -->
+<ng-template #cancelItemInfoModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">{{itemInfo.name}}</h5>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="itemInfo?.cancel_info?.title">
+      <h6 class="mt-2">Reason</h6>
+      <p class="pl-2">{{itemInfo.cancel_info.title}}</p>
+    </ng-container>
+    <ng-container *ngIf="itemInfo?.cancel_info?.description">
+      <h6>Description</h6>
+      <p class="pl-2">{{itemInfo.cancel_info.description}}</p>
+    </ng-container>
+    <hr class="my-3">
+    <p *ngIf="itemInfo?.cancel_info?.request_on">
+      <b>Requested on:</b> {{itemInfo.cancel_info.request_on | date: "dd MMM y hh:mm a"}}
+    </p>
+    <p *ngIf="itemInfo?.cancel_info?.cancelled_on">
+      <b>Cancelled on:</b> {{itemInfo.cancel_info.cancelled_on | date: "dd MMM y hh:mm a"}}
+    </p>
+    <p *ngIf="itemInfo?.cancel_info?.declined_on && !itemInfo?.cancel_info?.cancelled_on">
+      <b>Declined on:</b> {{itemInfo.cancel_info.declined_on | date: "dd MMM y hh:mm a"}}
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="modal.dismiss('cancel')" class="btn btn-wide btn-primary">Close</button>
+  </div>
 </ng-template>
 
 <!-- Resend mail -->
@@ -2555,10 +2681,10 @@
           <div class="list-item col-md-12 mb-4">
             <p class="sec-desc">Product List</p>
             <div *ngFor="let x of remaining_items; let i=index;" class="card m-10 d-flex flex-row">
-              <div class="list-thumb d-flex mtb-20">
+              <div class="list-thumb d-flex p-2">
                 <img [src]="imgBaseUrl+x.image" alt="">
               </div>
-              <div class="flex-grow-1 pl-2 d-flex mtb-20">
+              <div class="flex-grow-1 pl-2 d-flex">
                 <div class="card-body row">
                   <div class="col-md-7 d-flex justify-content-center flex-column">
                     <span>{{x.name}}</span>

@@ -43,6 +43,12 @@
             <option value="Kgs">Weight (Kgs)</option>
           </select>
         </div>
+        <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-6 form-group mb-3">
+          <label>Vendor</label>
+          <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel" required>
+            <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.brand}}</option>
+          </select>
+        </div>
         <div class="col-md-12 form-group mb-3 quill-mb-5">
           <label>Description (optional)</label>
           <quill-editor class="rounded" [placeholder]="null" [(ngModel)]="productForm.description" [ngModelOptions]="{standalone: true}"></quill-editor>
@@ -85,12 +91,6 @@
             <div id="collapseOne" class="collapse" [ngClass]="(commonService.store_details?.additional_features?.adv_product_options)? 'show': ''" aria-labelledby="headingOne" data-parent="#accordionOne">
               <div class="card-body">
                 <div class="row">
-                  <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-3 form-group mb-3">
-                    <label>Vendor</label>
-                    <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel" required>
-                      <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.name}}</option>
-                    </select>
-                  </div>
                   <div class="col-md-3 form-group mb-3">
                     <label>Brand (optional)</label>
                     <input type="text" name="brand" class="form-control" [(ngModel)]="productForm.brand" #brand="ngModel" />

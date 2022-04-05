@@ -31,15 +31,25 @@
         <div class="card card-in-card p-3 mb-3">
           <h5 class="mb-3">STORE INFORMATION</h5>
           <div class="ml-3">
-            <p>{{vendorDetails?.company_details?.name}}</p>
-            <p>{{vendorDetails?.company_details?.gst_no}}</p>
-            <p>{{vendorDetails?.company_details?.address}}</p>
+            <p>{{vendorDetails?.company_details?.name}} ({{vendorDetails?.company_details?.brand}})</p>
+            <p><b>GST No:</b> {{vendorDetails?.company_details?.gst_no}}</p>
+            <p><b>PAN No:</b> {{vendorDetails?.company_details?.pan_no}}</p>
+          </div>
+        </div>
+        <div class="card card-in-card p-3 mb-3">
+          <h5 class="mb-3">REGISTERED ADDRESS</h5>
+          <div class="ml-3">
+            <p>{{vendorDetails?.registered_address?.address}}</p>
+            <p>{{vendorDetails?.registered_address?.city}} - {{vendorDetails?.registered_address?.pincode}}</p>
+            <p>{{vendorDetails?.registered_address?.state}}, {{vendorDetails?.registered_address?.country}}</p>
           </div>
         </div>
         <div class="card card-in-card p-3 mb-3">
           <h5 class="mb-3">PICKUP ADDRESS</h5>
           <div class="ml-3">
-            <p>{{vendorDetails?.company_details?.pickup_address}}</p>
+            <p>{{vendorDetails?.pickup_address?.address}}</p>
+            <p>{{vendorDetails?.pickup_address?.city}} - {{vendorDetails?.pickup_address?.pincode}}</p>
+            <p>{{vendorDetails?.pickup_address?.state}}, {{vendorDetails?.pickup_address?.country}}</p>
           </div>
         </div>
         <div class="card card-in-card p-3 mb-3">

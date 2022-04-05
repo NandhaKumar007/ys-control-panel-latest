@@ -64,8 +64,9 @@ export class ProductOrdersComponent implements OnInit {
   }
 
   getOrderList() {
+    this.list = [];
     if(this.filterForm.from_date && this.filterForm.to_date) {
-      this.pageLoader = true; this.list = [];
+      this.pageLoader = true;
       this.filterForm.date_type = 'created_on';
       if(this.filterForm.customer_id.indexOf('@')!=-1) {
         this.filterForm.guest_email = this.filterForm.customer_id;

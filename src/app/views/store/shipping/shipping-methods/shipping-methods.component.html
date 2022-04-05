@@ -38,7 +38,7 @@
     <div *ngFor="let vendor of commonService.vendor_list; let i=index;" class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-12">
-          <h4>{{vendor.company_details?.name}}</h4>
+          <h4>{{vendor.company_details?.brand}}</h4>
         </div>
       </div>
       <div class="row m-0">
@@ -182,7 +182,7 @@
             <div class="col-md-6 form-group mb-3">
               <label>Vendor</label>
               <select name="vendor_id" class="form-control" [(ngModel)]="shippingForm.vendor_id" required>
-                <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.name}}</option>
+                <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.brand}}</option>
               </select>
             </div>
             <div class="col-md-6 mb-3"></div>
