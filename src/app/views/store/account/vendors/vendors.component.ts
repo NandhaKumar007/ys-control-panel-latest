@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { AccountService } from '../account.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -14,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
 
 export class VendorsComponent implements OnInit {
 
-  search_bar: string;
+  search_bar: string; settingForm: any = {};
   page = 1; pageSize = 10; parent_list: any = [];
   pageLoader: boolean; list_type: string = 'all';
   list: any = []; imgBaseUrl = environment.img_baseurl;
@@ -34,7 +35,10 @@ export class VendorsComponent implements OnInit {
   ];
   r_state_list: any = []; p_state_list: any = [];
 
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private api: AccountService, public commonService: CommonService) {
+  constructor(
+    config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
+    public commonService: CommonService, private storeApi: StoreApiService
+    ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -189,6 +193,20 @@ export class VendorsComponent implements OnInit {
       }
       else {
         this.vendorForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  onUpdateCommission() {
+    this.storeApi.STORE_UPDATE({ vendor_commission: this.settingForm.commission }).subscribe(result => {
+      if(result.status) {
+        this.commonService.store_details.vendor_commission = result.data.vendor_commission;
+        this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        document.getElementById("closeModal").click();
+      }
+      else {
+        this.settingForm.errorMsg = result.message;
         console.log("response", result);
       }
     });

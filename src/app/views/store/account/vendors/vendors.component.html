@@ -12,6 +12,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button type="button" (click)="settingForm={ commission: commonService.store_details?.vendor_commission }; modalService.open(commissionModal);" class="btn btn-primary mr-3">Commission Setting</button>
         <button (click)="vendorForm={ form_type: 'add', company_details: { made_in_home_country: '', shipping_type: '' }, registered_address: { country: commonService.store_details?.country }, pickup_address: { country: commonService.store_details?.country }, bank_details: {} }; modalService.open(vendorModal, { size: 'lg' });"
         type="button" class="btn btn-primary">Add New Vendor</button>
       </div>
@@ -183,11 +184,11 @@
             </div>
             <div class="col-md-6 mb-3">
               <label>GST No</label>
-              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" required />
+              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" />
             </div>
             <div class="col-md-6 mb-3">
               <label>PAN No</label>
-              <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" required />
+              <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" />
             </div>
             <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
@@ -521,6 +522,34 @@
        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="vendorForm.submit" [ladda]="vendorForm.submit">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- COMMISSION MODAL -->
+<ng-template #commissionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Vendors Commission</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateCommission();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Commission in (%)</label>
+            <input type="text" name="commission" class="form-control" [(ngModel)]="settingForm.commission" appNumberOnly required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg">
+        <p class="text-danger">{{ settingForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
 </ng-template>

@@ -56,7 +56,7 @@ export class ControlPanelComponent implements OnInit {
             _id: result.data._id,
             name: result.data.name,
             email: result.data.email,
-             gst_no: result.data.gst_no,
+            gst_no: result.data.gst_no,
             website: result.data.website,
             base_url: result.data.base_url,
             sub_domain: result.data.sub_domain,
@@ -69,6 +69,7 @@ export class ControlPanelComponent implements OnInit {
             package_info: result.data.package_info,
             status: result.data.status
           };
+          if(result.data.vendor_commission) this.commonService.store_details.vendor_commission = result.data.vendor_commission;
           if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
           if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
           let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
