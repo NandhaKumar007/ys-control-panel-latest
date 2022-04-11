@@ -469,9 +469,27 @@
                                 <span class="checkmark"></span>
                               </label>
                             </div>
+                            <!-- TEMP CODE -->
+                            <div *ngIf="configData.multi_vendor.indexOf(commonService.store_details?._id)!=-1 && vendor.order_status=='dispatched' && !vendor.cp_status" class="col-md-12">
+                              <button type="button" (click)="selectedVendor=vendor; cpForm={}; modalService.open(deliveryPartnerModal);" class="btn btn-primary w-100">
+                                Check and Set Delivery Partner
+                              </button>
+                            </div>
+                            <!-- GHANA -->
+                            <ng-container *ngFor="let x of vendor.cp_orders;">
+                              <div class="col-md-12" *ngIf="vendor.cp_status && x.name=='Ghana' && x.status=='active'">
+                                <div class="card p-3 mb-3">
+                                  <div class="d-flex flex-column justify-content-between flex-lg-row">
+                                    <p class="w-40 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                                    <p class="w-30 w-sm-100 m-b-0">{{vendor?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <!-- # TEMP CODE # -->
                             <div class="col-md-12">
                               <button [disabled]="vendor.order_status=='delivered' && !vendor?.dispatched_on"
-                              type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
+                              type="submit" class="btn btn-primary w-100">Update Status</button>
                             </div>
                           </ng-container>
                         </form>
@@ -1244,7 +1262,7 @@
                   <div class="col-md-12">
                     <button type="submit"
                       [disabled]="order_details.order_status=='delivered' && order_details.item_groups?.length && !order_details?.dispatched_on"
-                      class="btn btn-primary ladda-button w-100">
+                      class="btn btn-primary w-100">
                       Update Status
                     </button>
                   </div>
@@ -1470,7 +1488,7 @@
                   </div>
                   <div class="col-md-12">
                     <button [disabled]="vendorInfo.order_status=='delivered' && !vendorInfo?.dispatched_on"
-                    type="submit" class="btn btn-primary ladda-button w-100">Update Status</button>
+                    type="submit" class="btn btn-primary w-100">Update Status</button>
                   </div>
                 </ng-container>
               </ng-container>
@@ -1527,6 +1545,40 @@
         <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- update delivery partner -->
+<ng-template #deliveryPartnerModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Set Delivery Partner - {{selectedVendor?.order_number}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onCreateGhanaAWB();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Choose Destination</label>
+            <select name="destination" [(ngModel)]="cpForm.destination" class="form-control select-arrow" required>
+              <option *ngFor="let x of destList;" [ngValue]="x.destination_id">{{x.destination_name}}</option>
+            </select>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Description (optional)</label>
+            <input type="text" name="description" class="form-control" [(ngModel)]="cpForm.description" />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="cpForm.errorMsg">
+        <p class="text-danger">{{ cpForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="cpForm.submit" [ladda]="cpForm.submit">Submit</button>
     </div>
   </form>
 </ng-template>

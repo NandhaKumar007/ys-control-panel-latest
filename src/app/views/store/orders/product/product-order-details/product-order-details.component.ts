@@ -6,6 +6,7 @@ import { AccountService } from '../../../account/account.service';
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
+import ghanaDestinations from '../../../../../../assets/json/ghana-local-destinations.json';
 
 @Component({
   selector: 'app-product-order-details',
@@ -27,12 +28,13 @@ export class ProductOrderDetailsComponent implements OnInit {
   custom_list: any = []; customIndex: number;
   existing_custom_list = []; selected_custom_list = [];
   invoice_details: any; invoice_order_list: any;
-  hsncode_exist: boolean;
+  hsncode_exist: boolean; cpForm: any = {};
   country_details: any; address_fields: any = [];
   vendorInfo: any = {}; selected_vendor: any;
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
   courierData: any = {}; itemInfo: any = {};
+  destList: any = []; selectedVendor: any;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
@@ -42,6 +44,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.destList = ghanaDestinations;
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
       this.remaining_items = []; this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
@@ -185,6 +188,21 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(address[element.keyword]) address.address_fields.push({ label: element.label, value: address[element.keyword] });
       });
     }
+  }
+
+  onCreateGhanaAWB() {
+    this.cpForm.submit = true;
+    this.api.GHANA_CREATE_ORDER({ _id: this.order_details._id, vendor_id: this.selectedVendor.vendor_id, destination: this.cpForm.destination, description: this.cpForm.description }).subscribe(result => {
+      this.cpForm.submit = false;
+      if(result.status) {
+        document.getElementById("closeModal").click();
+        this.ngOnInit();
+      }
+      else {
+        this.cpForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // courier partner

@@ -32,7 +32,8 @@ export const environment = {
     dinamic_order_id: ["60b52edf58954c13bf58b5a2", "61dd3dda459e175b4e42736f"],
     high_paid_packages: ["5f4cd235573e9a1e680239fd", "5f4cd434573e9a1e68023a03", "5f4cd4c5573e9a1e68023a04"], // starter, growth, premium
     hungover_id: "5fbcac07fd6ce3538c2cf355",
-    uru_id: "60805f647ee34b5a03e4ca0d"
+    uru_id: "60805f647ee34b5a03e4ca0d",
+    multi_vendor: ["5d0ca4c89f21de0314f98f24", "61f66d9edc229625753437a7"]
   },
   keep_login: false,
   base_url: "http://localhost:4500",
