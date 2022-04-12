@@ -268,17 +268,36 @@
   <div class="modal-body pb-0">
     <div class="row mt-3">
       <div class="col-md-12">
+        <p><b>Upgrade plan to use this feature</b></p>
+      </div>
+      <div class="col-md-6">
         <div>
-          <p><b>Upgrade to Essential plan to use this feature</b><br>Essential plan includes</p>
+          <p>Essential plan includes</p>
         </div>
         <div>
           <ul class="check-highlighted-points">
-            <li>Link Custom Domain</li>
             <li>Lower Transaction Fee at 2%</li>
-            <li>Unlimited Products</li>
-            <li>Product Reviews</li>
+            <li>Link Custom Domain</li>
+            <li>Unlimited Products & Reviews</li>
             <li>Online Payments with Payment Gateway</li>
             <li>Customer Portal</li>
+          </ul>
+          <ul class="check-highlighted-points2">
+            <li>and more<a (click)="modal.dismiss('Cross click');" routerLink="/deployment/plans">&nbsp;View All</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div>
+          <p>Professional plan includes</p>
+        </div>
+        <div>
+          <ul class="check-highlighted-points">
+            <li>Lower Transaction Fee at 1.5%</li>
+            <li>Link Existing Domain</li>
+            <li>Google & Facebook Integrations</li>
+            <li>SEO Editory</li> <br>
+            <li>Staff Account</li>
           </ul>
           <ul class="check-highlighted-points2">
             <li>and more<a (click)="modal.dismiss('Cross click');" routerLink="/deployment/plans">&nbsp;View All</a></li>
@@ -291,7 +310,7 @@
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">Cancel</span>
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click');" routerLink="/deployment/plans" class="btn btn-wide orng-outline-btn">
+    <button type="button" (click)="modal.dismiss('Cross click');" routerLink="/deployment/plans" class="btn btn-primary">
       <span class="orng-outline-txt">Upgrade Plan</span>
     </button>
   </div>
