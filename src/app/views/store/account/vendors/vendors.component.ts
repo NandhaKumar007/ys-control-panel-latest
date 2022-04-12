@@ -56,6 +56,15 @@ export class VendorsComponent implements OnInit {
     });
   }
 
+  onAddModal(modalName) {
+    this.vendorForm = {
+      form_type: 'add', password: this.generatePwd(), company_details: { made_in_home_country: '', shipping_type: '' },
+      registered_address: { country: this.commonService.store_details?.country },
+      pickup_address: { country: this.commonService.store_details?.country }, bank_details: {}
+    };
+    this.modalService.open(modalName, { size: 'lg' });
+  }
+
   onSubmit() {
     if(this.vendorForm.form_type=='add') {
       this.vendorForm.submit = true;
@@ -259,6 +268,13 @@ export class VendorsComponent implements OnInit {
       let index = this.commonService.country_list.findIndex(object => object.name==x);
       if(index!=-1) this.p_state_list = this.commonService.country_list[index].states;
     }
+  }
+
+  generatePwd() {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    for(let i = 0; i < 8; i++) text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
   }
 
 }

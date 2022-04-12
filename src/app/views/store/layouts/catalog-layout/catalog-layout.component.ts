@@ -50,10 +50,9 @@ export class CatalogLayoutComponent implements OnInit {
     this.api.UPDATE_CATALOG(this.bannerForm).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
-        this.sidebar.BUILD_CATEGORY_LIST().then((resp) => {
-          document.getElementById('closeBannerModal').click();
-          this.ngOnInit();
-        });
+        this.sidebar.BUILD_CATEGORY_LIST();
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
       }
       else {
         this.bannerForm.errorMsg = result.message;

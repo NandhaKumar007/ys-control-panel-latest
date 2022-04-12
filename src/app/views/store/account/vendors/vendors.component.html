@@ -13,8 +13,7 @@
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <button type="button" (click)="settingForm={ commission: commonService.store_details?.vendor_commission }; modalService.open(commissionModal);" class="btn btn-primary mr-3">Commission Setting</button>
-        <button (click)="vendorForm={ form_type: 'add', company_details: { made_in_home_country: '', shipping_type: '' }, registered_address: { country: commonService.store_details?.country }, pickup_address: { country: commonService.store_details?.country }, bank_details: {} }; modalService.open(vendorModal, { size: 'lg' });"
-        type="button" class="btn btn-primary">Add New Vendor</button>
+        <button (click)="onAddModal(vendorModal);" type="button" class="btn btn-primary">Add New Vendor</button>
       </div>
     </div>
   </div>
@@ -182,14 +181,16 @@
               <label>Brand Name</label>
               <input type="text" name="brand_name" class="form-control" [(ngModel)]="vendorForm.company_details.brand" required />
             </div>
-            <div class="col-md-6 mb-3">
-              <label>GST No</label>
-              <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>PAN No</label>
-              <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" />
-            </div>
+            <ng-container *ngIf="commonService.store_details?.country=='India'">
+              <div class="col-md-6 mb-3">
+                <label>GST No</label>
+                <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>PAN No</label>
+                <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" />
+              </div>
+            </ng-container>
             <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
               <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type">

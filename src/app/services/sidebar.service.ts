@@ -54,13 +54,11 @@ export class SidebarService {
 	constructor(private storeApi: StoreApiService, private commonService: CommonService, private router: Router) { }
 
 	BUILD_CATEGORY_LIST() {
-		return new Promise((resolve, reject) => {
-			this.storeApi.CATALOG_LIST().subscribe(result => {
-        this.commonService.catalog_list = [];
-        if(result.status) { this.commonService.catalog_list = result.list; }
-        this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
-			});
-		});
+    this.storeApi.CATALOG_LIST().subscribe(result => {
+      this.commonService.catalog_list = [];
+      if(result.status) { this.commonService.catalog_list = result.list; }
+      this.commonService.updateLocalData('catalog_list', this.commonService.catalog_list);
+    });
   }
   
   getSidePanelList() {

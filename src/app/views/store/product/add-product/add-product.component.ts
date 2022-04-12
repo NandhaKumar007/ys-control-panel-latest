@@ -68,8 +68,17 @@ export class AddProductComponent implements OnInit {
           { code: 6, day: "Saturday", active: false, opening_hrs: [] }
         ]
       };
-      this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
+      // auto sku
+      if(this.commonService.deploy_details?.auto_sku && this.commonService.deploy_details?.sku_config?.prefix) {
+        let prodCount = 0;
+        this.api.PRODUCTS_COUNT().subscribe(result => {
+          if(result.status) prodCount = result.count;
+          let numConvert = String(prodCount+1).padStart(this.commonService.deploy_details.sku_config.min_digit, '0');
+          this.productForm.sku = this.commonService.deploy_details.sku_config.prefix+numConvert;
+        });
+      }
       // product features
+      this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
