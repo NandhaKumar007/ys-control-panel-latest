@@ -66,6 +66,7 @@ export class VendorsComponent implements OnInit {
   }
 
   onSubmit() {
+    delete this.vendorForm.errorMsg;
     if(this.vendorForm.form_type=='add') {
       this.vendorForm.submit = true;
       this.vendorForm.status = "active";

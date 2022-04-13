@@ -224,50 +224,74 @@
     <div class="modal-body">
       <div class="form-group">
         <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="row">
-          <div class="col-md-12 form-group" [ngClass]="settingForm.host_type=='gmail'? 'mb-0': 'mb-3'">
-            <label>Host Type</label>
-            <select name="host_type" class="form-control select-arrow" [(ngModel)]="settingForm.host_type" required>
-              <option [ngValue]="x.value" *ngFor="let x of mailTypes">{{x.name}}</option>
-            </select>
-            <p *ngIf="settingForm.host_type=='gmail'">
-              <b>Note:</b> Please make sure <strong>Allow less secure apps</strong> was enabled
-              <a href="https://myaccount.google.com/lesssecureapps?pli=1" target="_blank" style="position: relative; top: 8px;">
-                <i class="material-icons">link</i>
-              </a><br>
-              <b style="visibility: hidden;">Note:</b> Please allow the access
-              <a href="https://accounts.google.com/b/0/DisplayUnlockCaptcha" target="_blank" style="position: relative; top: 8px;">
-                <i class="material-icons">link</i>
-              </a>
-            </p>
+          <div *ngIf="!settingForm.transporter" class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="enable_config" [(ngModel)]="settingForm.enable_config">
+              <span>Config own mail</span>
+              <span class="checkmark"></span>
+            </label>
           </div>
-          <ng-container *ngIf="settingForm.host_type=='roundcube'">
+          <ng-container *ngIf="settingForm.enable_config || settingForm.transporter">
+            <div class="col-md-12 form-group" [ngClass]="settingForm.host_type=='gmail'? 'mb-0': 'mb-3'">
+              <label>Host Type</label>
+              <select name="host_type" class="form-control select-arrow" [(ngModel)]="settingForm.host_type" required>
+                <option [ngValue]="x.value" *ngFor="let x of mailTypes">{{x.name}}</option>
+              </select>
+              <p *ngIf="settingForm.host_type=='gmail'">
+                <b>Note:</b> Please make sure <strong>Allow less secure apps</strong> was enabled
+                <a href="https://myaccount.google.com/lesssecureapps?pli=1" target="_blank" style="position: relative; top: 8px;">
+                  <i class="material-icons">link</i>
+                </a><br>
+                <b style="visibility: hidden;">Note:</b> Please allow the access
+                <a href="https://accounts.google.com/b/0/DisplayUnlockCaptcha" target="_blank" style="position: relative; top: 8px;">
+                  <i class="material-icons">link</i>
+                </a>
+              </p>
+            </div>
+            <ng-container *ngIf="settingForm.host_type=='roundcube'">
+              <div class="col-md-6 form-group mb-3">
+                <label>Domain</label>
+                <input type="text" name="mail_domain" class="form-control" [(ngModel)]="settingForm.mail_domain" required />
+              </div>
+              <div class="col-md-6 form-group mb-3">
+                <label>Mail Host</label>
+                <input type="text" name="mail_host" class="form-control" [(ngModel)]="settingForm.mail_host" required />
+              </div>
+            </ng-container>
             <div class="col-md-6 form-group mb-3">
-              <label>Domain</label>
-              <input type="text" name="mail_domain" class="form-control" [(ngModel)]="settingForm.mail_domain" required />
+              <label>Login Email</label>
+              <input type="email" name="username" class="form-control" [(ngModel)]="settingForm.username" required />
             </div>
             <div class="col-md-6 form-group mb-3">
-              <label>Mail Host</label>
-              <input type="text" name="mail_host" class="form-control" [(ngModel)]="settingForm.mail_host" required />
+              <label>{{ (settingForm.host_type=='zoho')? 'App': 'Login' }} Password</label>
+              <input [type]="settingForm.input_txt? 'text': 'password'" name="password" class="form-control" [(ngModel)]="settingForm.password" #password="ngModel" required />
+              <i class="material-icons visibility_icon" *ngIf="!settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility</i>
+              <i class="material-icons visibility_icon" *ngIf="settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility_off</i>
             </div>
           </ng-container>
-          <div class="col-md-6 form-group mb-3">
-            <label>Login Email</label>
-            <input type="email" name="username" class="form-control" [(ngModel)]="settingForm.username" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>{{ (settingForm.host_type=='zoho')? 'App': 'Login' }} Password</label>
-            <input [type]="settingForm.input_txt? 'text': 'password'" name="password" class="form-control" [(ngModel)]="settingForm.password" #password="ngModel" required />
-            <i class="material-icons visibility_icon" *ngIf="!settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility</i>
-            <i class="material-icons visibility_icon" *ngIf="settingForm.input_txt" (click)="settingForm.input_txt = !settingForm.input_txt" aria-hidden="true">visibility_off</i>
-          </div>
           <div class="col-md-6 form-group mb-3">
             <label>From Name</label>
             <input type="text" name="from_name" class="form-control" [(ngModel)]="settingForm.from_name" required />
           </div>
+          <div class="col-md-6"></div>
           <div class="col-md-6 form-group mb-3">
             <label>Contact No</label>
             <input type="text" name="contact_no" class="form-control" [(ngModel)]="settingForm.contact_no" />
           </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Customer Enquiry Email</label>
+            <input type="email" name="enquiry_email" class="form-control" [(ngModel)]="settingForm.enquiry_email" />
+          </div>
+          <ng-container *ngIf="commonService.ys_features.indexOf('vendors')!=-1">
+            <div class="col-md-6 form-group mb-3">
+              <label>Vendor Contact No</label>
+              <input type="text" name="vendor_contact_no" class="form-control" [(ngModel)]="settingForm.vendor_contact_no" />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Vendor Enquiry Email</label>
+              <input type="email" name="vendor_enquiry_email" class="form-control" [(ngModel)]="settingForm.vendor_enquiry_email" />
+            </div>
+          </ng-container>
         </div>
         <div class="row">
           <div class="col-md-12 form-group mb-3">
@@ -410,14 +434,6 @@
             </div>
           </div>
           <div class="col-md-12 mb-3 border-top"></div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Customer Enquiry Email</label>
-            <input type="email" name="enquiry_email" class="form-control" [(ngModel)]="app_setting.enquiry_email" #enquiry_email="ngModel" />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Vendor Enquiry Email</label>
-            <input type="email" name="vendor_enquiry_email" class="form-control" [(ngModel)]="app_setting.vendor_enquiry_email" #vendor_enquiry_email="ngModel" />
-          </div>
           <div class="col-md-6 form-group mb-3">
             <label>Cancel Order Email</label>
             <input type="email" name="cancel_order_email" class="form-control" [(ngModel)]="app_setting.cancel_order_email" #cancel_order_email="ngModel" required />

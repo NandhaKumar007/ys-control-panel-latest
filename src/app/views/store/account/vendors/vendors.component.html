@@ -191,6 +191,18 @@
                 <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" />
               </div>
             </ng-container>
+            <div *ngIf="commonService.store_details?.country!='India'" class="col-md-6 mb-3">
+              <label>TIN No</label>
+              <input type="text" name="tin_no" class="form-control" [(ngModel)]="vendorForm.company_details.tin_no" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Instagram Page URL</label>
+              <input type="text" name="instagram" class="form-control" [(ngModel)]="vendorForm.company_details.instagram" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Website URL (if available)</label>
+              <input type="text" name="website" class="form-control" [(ngModel)]="vendorForm.company_details.website" />
+            </div>
             <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
               <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type">
