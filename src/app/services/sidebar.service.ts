@@ -108,6 +108,10 @@ export class SidebarService {
           prodExtraList.push({ name: 'Variant Colors', state: '/product-extras/variant-colors', type: 'link' });
           routePermissionList.push("variant_colors");
         }
+        if(ysFeatures.indexOf('amenities')!=-1) {
+          prodExtraList.push({ name: 'Amenities', state: '/product-extras/amenities', type: 'link' });
+          routePermissionList.push("amenities");
+        }
         // products
         routePermissionList.push("catalogs", "products", "product_add", "product_edit");
         let prodList: IChildItem[] = [

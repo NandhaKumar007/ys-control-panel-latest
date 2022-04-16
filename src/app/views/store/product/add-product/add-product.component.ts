@@ -24,7 +24,7 @@ export class AddProductComponent implements OnInit {
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.catalog_list;
-  addonList: any; tagList: any; noteList: any; taxRates: any;  colorList: any;
+  addonList: any; tagList: any; noteList: any; taxRates: any;  colorList: any; amenityList: any;
   sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
@@ -83,6 +83,7 @@ export class AddProductComponent implements OnInit {
         if(result.status) {
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
           this.tagList = result.data.tag_list.filter(obj => obj.status=='active');
+          this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
           this.noteList = result.data.footnote_list;
           this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
           if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
@@ -158,6 +159,13 @@ export class AddProductComponent implements OnInit {
       });
     }
     if(!this.productForm.addon_status || !this.addonList.length) this.productForm.addon_must = false;
+    // amenities
+    this.productForm.amenity_list = [];
+    if(this.productForm.amenity_status) {
+      this.amenityList.forEach(el => {
+        if(el.amen_checked) this.productForm.amenity_list.push(el._id);
+      });
+    }
     // tag
     this.productForm.tag_list = [];
     if(this.productForm.tag_status) {

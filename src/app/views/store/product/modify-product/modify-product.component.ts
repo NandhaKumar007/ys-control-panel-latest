@@ -25,7 +25,7 @@ export class ModifyProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = []; intForm: any = {};
   addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
-  sizeCharts: any; faqList: any; aiStyleList: any; colorList: any;
+  sizeCharts: any; faqList: any; aiStyleList: any; colorList: any; amenityList: any;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
@@ -63,6 +63,7 @@ export class ModifyProductComponent implements OnInit {
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
+          this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
           let tempAddonList = result.data.addon_list.filter(obj => obj.status=='active');
           let tempTagList = result.data.tag_list.filter(obj => obj.status=='active');
           let tempFaqList = result.data.faq_list.filter(obj => obj.status=='active');
@@ -86,7 +87,7 @@ export class ModifyProductComponent implements OnInit {
                   if(element.options.findIndex(obj => obj.value==this.productForm.image_list[0].tag) != -1) this.productForm.tag_variant = element.options;
                 });
               }
-              if(this.productForm.variant_list && this.productForm.variant_list.length) {
+              if(this.productForm.variant_list?.length) {
                 this.existVariantList = this.productForm.variant_list;
                 this.productForm.variant_list.forEach(element => {
                   if(!element.sku) element.sku = this.productForm.sku;
@@ -114,6 +115,13 @@ export class ModifyProductComponent implements OnInit {
                 });
               }
               else this.noteList = tempNoteList;
+              // Amenities
+              if(this.productForm.amenity_list?.length) {
+                this.productForm.amenity_status = true;
+                this.amenityList.forEach(al => {
+                  if(this.productForm.amenity_list.indexOf(al._id) != -1) al.amen_checked = true;
+                });
+              }
               // Availability
               if(this.commonService.ys_features.indexOf('product_availability')!=-1) {
                 if(this.productForm.available_days.length) {
@@ -143,7 +151,7 @@ export class ModifyProductComponent implements OnInit {
                 this.commonService.aistyle_list = result.data;
                 this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
                 this.aiStyleList = this.commonService.aistyle_list;
-                if(this.productForm.aistyle_list && this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
+                if(this.productForm.aistyle_list?.length) this.productForm.aistyle_status = true;
                 this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
                   this.aiStyleList = list;
                 });
@@ -194,6 +202,13 @@ export class ModifyProductComponent implements OnInit {
       });
     }
     if(!this.productForm.addon_status || !this.addonList.length) this.productForm.addon_must = false;
+    // amenities
+    this.productForm.amenity_list = [];
+    if(this.productForm.amenity_status) {
+      this.amenityList.forEach(el => {
+        if(el.amen_checked) this.productForm.amenity_list.push(el._id);
+      });
+    }
     // tag
     this.productForm.tag_list = [];
     if(this.productForm.tag_status) {

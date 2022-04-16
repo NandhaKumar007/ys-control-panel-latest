@@ -244,4 +244,22 @@ export class ProductExtrasApiService {
     return this.http.patch<any>(environment.ws_url+'/store/product_colors', x, httpOptions);
   }
 
+  // AMENITIES
+  AMENITY_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/amenities', httpOptions);
+  }
+  ADD_AMENITY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/amenities', x, httpOptions);
+  }
+  UPDATE_AMENITY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/amenities', x, httpOptions); 
+  }
+  DELETE_AMENITY(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/amenities', x, httpOptions);
+  }
+
 }

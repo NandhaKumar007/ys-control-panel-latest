@@ -530,6 +530,35 @@
                     </div>
                   </div>
                   <!-- #FAQ -->
+
+                  <!-- AMENITIES -->
+                  <div *ngIf="commonService.ys_features.indexOf('amenities')!=-1 && amenityList?.length" [ngClass]="productForm.amenity_status? 'card p-3 mb-3': ''">
+                    <div class="row">
+                      <div class="col-md-12 form-group mb-3">
+                        <label class="checkbox checkbox-primary">
+                          <input class="form-check-input" type="checkbox" name="amenity_status" [(ngModel)]="productForm.amenity_status">
+                          <span>Apply Amenities</span>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row ml-3" *ngIf="productForm.amenity_status">
+                      <div class="col-md-12 form-group mb-3">
+                        <div class="card card-in-card p-3">
+                          <div class="row ml-3 mt-3">
+                            <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let x of amenityList | orderAsc:'rank'; let i=index;">
+                              <label class="checkbox checkbox-success">
+                                <input class="form-check-input" type="checkbox" name="amen_checked{{i}}" [(ngModel)]="x.amen_checked">
+                                <span>{{x.name}}</span>
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- #AMENITIES -->
                 
                   <!-- AI Style Assistant -->
                   <div *ngIf="commonService.ys_features.indexOf('shopping_assistant')!=-1 && aiStyleList?.length" [ngClass]="productForm.aistyle_status? 'card p-3 mb-3': ''">

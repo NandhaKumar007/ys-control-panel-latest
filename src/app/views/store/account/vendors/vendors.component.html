@@ -62,7 +62,7 @@
                   <p class="w-30 w-sm-100 m-b-0">
                     <span *ngIf="x.password && x.status=='active'" class="badge badge-warning badge-green">Active</span>
                     <span *ngIf="x.password && x.status=='inactive'" class="badge badge-primary badge-red">Inactive</span>
-                    <span *ngIf="!x.password && x.status=='inactive'" class="badge-info badge-blue">New</span>
+                    <span *ngIf="!x.password && x.status=='inactive'" class="badge badge-primary badge-blue">New</span>
                     <span *ngIf="x.status=='declined'" class="badge badge-primary badge-red">Declined</span>
                   </p>
                   <!-- <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions"> -->
