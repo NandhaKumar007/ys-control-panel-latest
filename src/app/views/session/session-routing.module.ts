@@ -5,8 +5,6 @@ const routes: Routes = [
   { path: 'signup', loadChildren: () => import('./signup/signup.module').then(m => m.SignupModule) },
   { path: 'signin', loadChildren: () => import('./signin/signin.module').then(m => m.SigninModule) },
   { path: 'signin/master', loadChildren: () => import('./signin/signin.module').then(m => m.SigninModule) },
-  // { path: 'signin/vendor', loadChildren: () => import('./vendor-signin/vendor-signin.module').then(m => m.VendorSigninModule) },
-  { path: 'signin/vendor/:store', loadChildren: () => import('./vendor-signin/vendor-signin.module').then(m => m.VendorSigninModule) },
   { path: 'forgot-password', loadChildren: () => import('./forgot-pwd/forgot-pwd.module').then(m => m.ForgotPwdModule) },
   { path: 'password-recovery/:token', loadChildren: () => import('./pwd-recovery/pwd-recovery.module').then(m => m.PwdRecoveryModule) }
 ];

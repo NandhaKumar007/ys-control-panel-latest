@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
-  selector: 'app-forgot-pwd',
-  templateUrl: './forgot-pwd.component.html',
-  styleUrls: ['./forgot-pwd.component.scss'],
+  selector: 'app-vendor-forgot-pwd',
+  templateUrl: './vendor-forgot-pwd.component.html',
+  styleUrls: ['./vendor-forgot-pwd.component.scss'],
   animations: [SharedAnimations]
 })
 
-export class ForgotPwdComponent implements OnInit {
+export class VendorForgotPwdComponent implements OnInit {
 
   forgotForm: any;
   loading: boolean; loadingText: string;
   successMsg: string; errorMsg: string;
 
-  constructor(private api: ApiService) { }
+  constructor(public commonService: CommonService, private api: ApiService) { }
 
   ngOnInit() {
     this.forgotForm = {};

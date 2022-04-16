@@ -11,10 +11,10 @@ declare const $: any;
 
 export class CommonService {
 
-  dark_theme: boolean;
-  vendorLoginBg: string = '#ec848b';
-  desktop_device: boolean;
   ios: boolean;
+  dark_theme: boolean;
+  desktop_device: boolean;
+  vendor_login_info: any = {};
   grid_list: any = [
     {
       type: "grid_1", name: "Grid 1", icon: "assets/images/grid/Grid-1.png", status: "enabled",

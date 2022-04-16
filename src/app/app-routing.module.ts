@@ -6,12 +6,17 @@ import { MasterGuard } from './guards/master.guard';
 import { PermissionGuard } from './guards/permission.guard';
 
 import { AuthLayoutComponent } from './shared/components/layouts/auth-layout/auth-layout.component';
+import { VendorAuthLayoutComponent } from './shared/components/layouts/vendor-auth-layout/vendor-auth-layout.component';
 import { AdminLayoutComponent } from './shared/components/layouts/admin-layout/admin-layout.component';
 import { StoreLayoutComponent } from './shared/components/layouts/store-layout/store-layout.component';
 
 const sessionRoutes: Routes = [
   { path: 'session', loadChildren: () => import('./views/session/session.module').then(m => m.SessionModule) },
   { path: 'control-panel', loadChildren: () => import('./views/admin/control-panel/control-panel.module').then(m => m.ControlPanelModule), canActivate: [MasterGuard] }
+];
+
+const vendorSessionRoutes: Routes = [
+  { path: '', loadChildren: () => import('./views/vendor-session/vendor-session.module').then(m => m.VendorSessionModule) }
 ];
 
 const adminRoutes: Routes = [
@@ -62,6 +67,7 @@ const routes: Routes = [
   { path: 'payment-summary/:type/:id', loadChildren: () => import('./views/others/payment-summary/payment-summary.module').then(m => m.PaymentSummaryModule) },
   { path: 'payment-failure', loadChildren: () => import('./views/others/payment-failure/payment-failure.module').then(m => m.PaymentFailureModule) },
   { path: '', component: AuthLayoutComponent, children: sessionRoutes },
+  { path: 'vendor', component: VendorAuthLayoutComponent, children: vendorSessionRoutes },
   { path: 'admin', component: AdminLayoutComponent, children: adminRoutes, canActivate: [MasterGuard] },
   { path: '', component: StoreLayoutComponent, children: storeRoutes, canActivate: [StoreGuard] },
   { path: '**', redirectTo: '404' }

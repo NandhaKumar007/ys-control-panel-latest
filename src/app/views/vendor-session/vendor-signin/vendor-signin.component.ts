@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
-import { CookieService } from 'ngx-cookie-service';
 import { ApiService } from '../../../services/api.service';
 import { CommonService } from '../../../services/common.service';
 import { ShippingService } from '../../store/shipping/shipping.service';
@@ -17,51 +16,14 @@ import { SidebarService } from '../../../services/sidebar.service';
 export class VendorSigninComponent implements OnInit {
 
   loading: boolean; loadingText: string;
-  loginForm: any = {}; pageLoader: boolean; params: any;
-  storeLogo: string;
+  loginForm: any = {};
 
   constructor(
-    private commonService: CommonService, public router: Router, private api: ApiService, private cookieService: CookieService,
-    private sidebar: SidebarService, private activeRoute: ActivatedRoute, private shipService: ShippingService
+    public commonService: CommonService, public router: Router, private api: ApiService,
+    private sidebar: SidebarService, private shipService: ShippingService
   ) { }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe((params: Params) => {
-      this.params = params;
-      if(this.params.store) {
-        if(this.cookieService.check('vInfo'))
-        {
-          let vInfo = JSON.parse(this.cookieService.get('vInfo'));
-          if(vInfo.name == this.params.store) {
-            this.storeLogo = vInfo.logo;
-            this.commonService.vendorLoginBg = vInfo.bg;
-            this.loginForm.store_id = vInfo.id;
-          }
-          else this.getDomainInfo();
-        }
-        else this.getDomainInfo()
-      }
-    });
-  }
-
-  getDomainInfo() {
-    this.pageLoader = true;
-    this.api.DOMAIN_INFO(this.params.store).subscribe(result => {
-      setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) {
-        this.loginForm.store_id = result.data._id;
-        this.storeLogo = "https://yourstore.io/api/uploads/"+result.data._id+"/logo.png?v="+new Date().valueOf();
-        if(result.data.theme_colors.vendor_bg) this.commonService.vendorLoginBg = result.data.theme_colors.vendor_bg;
-        let vInfo = { id: result.data._id, name: this.params.store, logo: this.storeLogo, bg: this.commonService.vendorLoginBg };
-        const cDate = new Date();
-        cDate.setHours(cDate.getHours() + 12);
-        this.cookieService.set('vInfo', JSON.stringify(vInfo), cDate);
-      }
-      else {
-        console.log("response", result);
-        this.router.navigate(['/session/signin/vendor']);
-      }
-    });
   }
 
   signin() {
