@@ -28,6 +28,7 @@ export class VendorSigninComponent implements OnInit {
 
   signin() {
     this.loading = true; this.loadingText = 'Signing in...';
+    this.loginForm.store_id = this.commonService.vendor_login_info?.id;
     this.api.VENDOR_LOGIN(this.loginForm).subscribe(result => {
       this.loading = false; this.loadingText = "";
       if(result.status) {

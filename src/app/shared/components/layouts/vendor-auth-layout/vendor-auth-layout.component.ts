@@ -26,7 +26,7 @@ export class VendorAuthLayoutComponent implements OnInit {
         let vInfo = JSON.parse(this.cookieService.get('vInfo'));
         if(vInfo.name == storeName) {
           this.commonService.vendor_login_info = vInfo;
-          setTimeout(() => { this.pageLoader = false; }, 500);
+          this.pageLoader = false;
         }
         else this.getDomainInfo(storeName);
       }
@@ -40,7 +40,7 @@ export class VendorAuthLayoutComponent implements OnInit {
         let storeLogo = "https://yourstore.io/api/uploads/"+result.data._id+"/logo.png?v="+new Date().valueOf();
         let bgColor = result.data.theme_colors.primary;
         if(result.data.theme_colors.vendor_bg) bgColor = result.data.theme_colors.vendor_bg;
-        let vInfo = { id: result.data._id, name: storeName, logo: storeLogo, bg_color: bgColor };
+        let vInfo = { id: result.data._id, name: result.data.sub_domain, logo: storeLogo, bg_color: bgColor };
         this.commonService.vendor_login_info = vInfo;
         const cDate = new Date();
         cDate.setHours(cDate.getHours() + 12);

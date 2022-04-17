@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { SwPush } from '@angular/service-worker';
-import { CookieService } from 'ngx-cookie-service';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../../environments/environment';
 import { SidebarService, IMenuItem } from '../../../../services/sidebar.service';
@@ -25,7 +24,7 @@ export class StoreLayoutComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private swPush: SwPush, private router: Router,
-    public navService: SidebarService, public commonService: CommonService, private cookieService: CookieService
+    public navService: SidebarService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     this.notifications = [
@@ -107,11 +106,7 @@ export class StoreLayoutComponent implements OnInit {
 
   signOut() {
     if(this.commonService.store_details?.login_type=='vendor') {
-      if(this.cookieService.check('vInfo')) {
-        let vInfo = JSON.parse(this.cookieService.get('vInfo'));
-        this.commonService.signOut('/session/signin/vendor/'+vInfo.name);
-      }
-      else this.commonService.signOut('/session/signin/vendor');
+      this.commonService.signOut('/vendor/signin/'+this.commonService.store_details?.sub_domain);
     }
     else this.commonService.signOut('/session/signin');
   }

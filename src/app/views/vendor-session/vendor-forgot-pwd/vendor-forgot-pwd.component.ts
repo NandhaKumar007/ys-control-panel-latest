@@ -26,7 +26,7 @@ export class VendorForgotPwdComponent implements OnInit {
 
   submit() {
     this.loading = true; this.loadingText = 'Sending mail...';
-    this.api.FORGOT_REQUEST({ email: this.forgotForm.email }).subscribe(result => {
+    this.api.VENDOR_FORGOT_REQUEST({ store_id: this.commonService.vendor_login_info.id, email: this.forgotForm.email }).subscribe(result => {
       this.loading = false; this.loadingText = "";
       if(result.status) {
         this.successMsg = result.message;
