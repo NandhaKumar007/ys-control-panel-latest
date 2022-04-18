@@ -181,6 +181,14 @@
               <label>Brand Name</label>
               <input type="text" name="brand_name" class="form-control" [(ngModel)]="vendorForm.company_details.brand" required />
             </div>
+            <div class="col-md-6 mb-3">
+              <label>Instagram Page URL</label>
+              <input type="text" name="instagram" class="form-control" [(ngModel)]="vendorForm.company_details.instagram" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Website URL (if available)</label>
+              <input type="text" name="website" class="form-control" [(ngModel)]="vendorForm.company_details.website" />
+            </div>
             <ng-container *ngIf="commonService.store_details?.country=='India'">
               <div class="col-md-6 mb-3">
                 <label>GST No</label>
@@ -196,16 +204,8 @@
               <input type="text" name="tin_no" class="form-control" [(ngModel)]="vendorForm.company_details.tin_no" />
             </div>
             <div class="col-md-6 mb-3">
-              <label>Instagram Page URL</label>
-              <input type="text" name="instagram" class="form-control" [(ngModel)]="vendorForm.company_details.instagram" />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>Website URL (if available)</label>
-              <input type="text" name="website" class="form-control" [(ngModel)]="vendorForm.company_details.website" />
-            </div>
-            <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
-              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type">
+              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type" [disabled]="vendorForm.form_type!='add'">
                 <option value="">-- Select --</option>
                 <option value="free">Willing to provide free shipping on all orders</option>
                 <option value="free_above">Willing to provide free shipping on orders above ₹499</option>
@@ -230,28 +230,28 @@
           <div class="row card-body">
             <div class="col-md-6 mb-3">
               <label>Country</label>
-              <select (change)="vendorForm.registered_address.state=''; onCountryChange('registered', vendorForm.registered_address.country);"
-              name="r_country" class="form-control" [(ngModel)]="vendorForm.registered_address.country" required>
-              <option value="">-- Select --</option>
-              <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [value]="x.name">{{x.name}}</option>
-            </select>
+              <input type="text" name="r_country" class="form-control" [(ngModel)]="vendorForm.registered_address.country" readonly required />
             </div>
-            <div class="col-md-6 mb-3">
-              <label>State</label>
-              <select *ngIf="r_state_list?.length" class="form-control" name="r_state" [(ngModel)]="vendorForm.registered_address.state" required>
-                <option value="">-- Select --</option>
-                <option *ngFor="let x of r_state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
-              </select>
-              <input *ngIf="!r_state_list?.length" type="text" name="r_state" class="form-control" [(ngModel)]="vendorForm.registered_address.state" required />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>City</label>
-              <input type="text" name="r_city" class="form-control" [(ngModel)]="vendorForm.registered_address.city" required />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>Pincode</label>
-              <input type="text" name="r_pincode" class="form-control" [(ngModel)]="vendorForm.registered_address.pincode" required />
-            </div>
+            <ng-container *ngFor="let field of reg_address_fields; let j=index;">
+              <ng-container *ngIf="field.keyword=='state'">
+                <!-- if state list exist -->
+                <div *ngIf="state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <select class="form-control" name="r_field{{j}}" [(ngModel)]="field.value" required>
+                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <!-- if not state list exist -->
+                <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <input class="form-control" type="text" name="r_field{{j}}" [(ngModel)]="field.value" required>
+                </div>
+              </ng-container>
+              <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
+                <label>{{field.label}}</label>
+                <input class="form-control" type="text" name="r_field{{j}}" [(ngModel)]="field.value" required>
+              </div>
+            </ng-container>
             <div class="col-md-12 mb-3">
               <label>Complete Address</label>
               <textarea name="r_address" [(ngModel)]="vendorForm.registered_address.address" class="form-control" required></textarea>
@@ -266,28 +266,28 @@
           <div class="row card-body">
             <div class="col-md-6 mb-3">
               <label>Country</label>
-              <select (change)="vendorForm.pickup_address.state=''; onCountryChange('pickup', vendorForm.pickup_address.country);"
-              name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" required>
-              <option value="">-- Select --</option>
-              <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [value]="x.name">{{x.name}}</option>
-            </select>
+              <input type="text" name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" readonly required />
             </div>
-            <div class="col-md-6 mb-3">
-              <label>State</label>
-              <select *ngIf="p_state_list?.length" class="form-control" name="p_state" [(ngModel)]="vendorForm.pickup_address.state" required>
-                <option value="">-- Select --</option>
-                <option *ngFor="let x of p_state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
-              </select>
-              <input *ngIf="!p_state_list?.length" type="text" name="p_state" class="form-control" [(ngModel)]="vendorForm.pickup_address.state" required />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>City</label>
-              <input type="text" name="p_city" class="form-control" [(ngModel)]="vendorForm.pickup_address.city" required />
-            </div>
-            <div class="col-md-6 mb-3">
-              <label>Pincode</label>
-              <input type="text" name="p_pincode" class="form-control" [(ngModel)]="vendorForm.pickup_address.pincode" required />
-            </div>
+            <ng-container *ngFor="let field of pick_address_fields; let j=index;">
+              <ng-container *ngIf="field.keyword=='state'">
+                <!-- if state list exist -->
+                <div *ngIf="state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <select class="form-control" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <!-- if not state list exist -->
+                <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                </div>
+              </ng-container>
+              <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
+                <label>{{field.label}}</label>
+                <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+              </div>
+            </ng-container>
             <div class="col-md-12 mb-3">
               <label>Complete Address</label>
               <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>

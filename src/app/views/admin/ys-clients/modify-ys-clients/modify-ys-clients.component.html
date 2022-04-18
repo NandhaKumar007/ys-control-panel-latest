@@ -28,7 +28,7 @@
             <div class="col-md-12">
               <div class="card p-3">
                 <div class="row">
-                  <div class="col-md-3 form-group mb-3">
+                  <div class="col-md-6 form-group mb-3">
                     <label>Store Name</label>
                     <input type="text" name="name" class="form-control" [(ngModel)]="clientForm.name" #name="ngModel" required />
                   </div>
@@ -47,10 +47,6 @@
                       <option value="quot_with_order_based">Order with Quotation</option>
                       <option value="restaurant_based">Restaurant</option>
                     </select>
-                  </div>
-                  <div class="col-md-3 form-group mb-3">
-                    <label>Domain</label>
-                    <input type="text" name="website" class="form-control" [(ngModel)]="clientForm.website" #website="ngModel" placeholder="example.com" required readonly />
                   </div>
                   <div class="col-md-6 form-group mb-3">
                     <label>Email</label>

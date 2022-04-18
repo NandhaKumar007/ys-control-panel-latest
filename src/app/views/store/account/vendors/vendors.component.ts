@@ -33,7 +33,9 @@ export class VendorsComponent implements OnInit {
       ]
     }
   ];
-  r_state_list: any = []; p_state_list: any = [];
+  state_list: any = [];
+  reg_address_fields: any = [];
+  pick_address_fields: any = [];
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
@@ -62,12 +64,19 @@ export class VendorsComponent implements OnInit {
       registered_address: { country: this.commonService.store_details?.country },
       pickup_address: { country: this.commonService.store_details?.country }, bank_details: {}
     };
+    this.onCountryChange(this.commonService.store_details?.country);
     this.modalService.open(modalName, { size: 'lg' });
   }
 
   onSubmit() {
     delete this.vendorForm.errorMsg;
     if(this.vendorForm.form_type=='add') {
+      this.reg_address_fields.forEach(element => {
+        if(element.value) this.vendorForm.registered_address[element.keyword] = element.value;
+      });
+      this.pick_address_fields.forEach(element => {
+        if(element.value) this.vendorForm.pickup_address[element.keyword] = element.value;
+      });
       this.vendorForm.submit = true;
       this.vendorForm.status = "active";
       this.api.ADD_VENDOR(this.vendorForm).subscribe((result) => {
@@ -83,6 +92,12 @@ export class VendorsComponent implements OnInit {
       });
     }
     if(this.vendorForm.form_type=='edit_details') {
+      this.reg_address_fields.forEach(element => {
+        if(element.value) this.vendorForm.registered_address[element.keyword] = element.value;
+      });
+      this.pick_address_fields.forEach(element => {
+        if(element.value) this.vendorForm.pickup_address[element.keyword] = element.value;
+      });
       this.vendorForm.submit = true;
       this.api.UPDATE_VENDOR(this.vendorForm).subscribe(result => {
         this.vendorForm.submit = false;
@@ -123,11 +138,19 @@ export class VendorsComponent implements OnInit {
 
   // EDIT
   onEdit(x, type, modalName) {
+    this.onCountryChange(this.commonService.store_details?.country);
     this.api.VENDOR_DETAILS(x._id).subscribe(result => {
       if(result.status) {
         this.vendorForm = result.data;
         delete this.vendorForm.password;
         this.vendorForm.form_type = type;
+        this.reg_address_fields.forEach(element => {
+          element.value = this.vendorForm.registered_address[element.keyword];
+        });
+        this.pick_address_fields.forEach(element => {
+          element.value = this.vendorForm.pickup_address[element.keyword];
+        });
+        // for permission
         this.permissionList.forEach(obj => {
           obj.sub_list.forEach(el => {
             delete el.selected; delete el.selected_option;
@@ -258,16 +281,17 @@ export class VendorsComponent implements OnInit {
     setTimeout(() => { this.pageLoader = false; }, 500);
   }
 
-  onCountryChange(type, x) {
-    if(type=='registered') {
-      this.r_state_list = [];
-      let index = this.commonService.country_list.findIndex(object => object.name==x);
-      if(index!=-1) this.r_state_list = this.commonService.country_list[index].states;
-    }
-    else {
-      this.p_state_list = [];
-      let index = this.commonService.country_list.findIndex(object => object.name==x);
-      if(index!=-1) this.p_state_list = this.commonService.country_list[index].states;
+  onCountryChange(x) {
+    this.state_list = [];
+    this.reg_address_fields = []; this.pick_address_fields = [];
+    let index = this.commonService.country_list.findIndex(object => object.name==x);
+    if(index!=-1) {
+      let cDetails = this.commonService.country_list[index];
+      this.state_list = cDetails.states;
+      cDetails.address_fields.forEach(el => {
+        this.reg_address_fields.push({ keyword: el.keyword, label: el.label });
+        this.pick_address_fields.push({ keyword: el.keyword, label: el.label });
+      });
     }
   }
 
