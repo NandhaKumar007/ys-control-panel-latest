@@ -185,9 +185,12 @@ export class AddProductComponent implements OnInit {
       this.aiStyleList.forEach(section => {
         if(section.aistyle_checked) {
           let optionArray = [];
-          section.option_list.forEach(option => {
-            if(option.aistyle_option_checked) optionArray.push(option._id);
-          });
+          if(section.type=='either_or') optionArray.push(section.selected_option);
+          else {
+            section.option_list.forEach(option => {
+              if(option.aistyle_option_checked) optionArray.push(option._id);
+            });
+          }
           this.productForm.aistyle_list.push({ [section._id]: optionArray });
         }
       });

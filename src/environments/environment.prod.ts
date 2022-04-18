@@ -33,6 +33,7 @@ export const environment = {
     high_paid_packages: ["5f4cd235573e9a1e680239fd", "5f4cd434573e9a1e68023a03", "5f4cd4c5573e9a1e68023a04"], // starter, growth, premium
     hungover_id: "5fbcac07fd6ce3538c2cf355",
     uru_id: "60805f647ee34b5a03e4ca0d",
+    stone_acres_id: "624fd5a8a96c721d4bef5bc5",
     multi_vendor: ["5d0ca4c89f21de0314f98f24", "61f66d9edc229625753437a7"]
   },
   keep_login: false,

@@ -92,7 +92,7 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-3 form-group mb-3">
-                    <label>Brand (optional)</label>
+                    <label>{{ (configData.stone_acres_id==commonService.store_details._id)? 'Location': 'Brand (optional)' }}</label>
                     <input type="text" name="brand" class="form-control" [(ngModel)]="productForm.brand" #brand="ngModel" />
                   </div>
                   <div class="col-md-3 form-group mb-3">
@@ -123,6 +123,17 @@
                     <label>External Link</label>
                     <input type="text" name="external_link" class="form-control" [(ngModel)]="productForm.external_link" #external_link="ngModel" />
                   </div>
+                  <ng-container *ngIf="configData.stone_acres_id==commonService.store_details._id">
+                    <div class="col-md-3 form-group mb-3">
+                      <label>Handover On</label>
+                      <input type="text" placeholder="Select Date" class="form-control" name="handover_on" autocomplete="off" bsDatepicker
+                      [(ngModel)]="productForm.handover_on" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                      <label>Embeded Iframe Location URL</label>
+                      <input type="text" name="location_url" class="form-control" [(ngModel)]="productForm.location_url" />
+                    </div>
+                  </ng-container>
                 </div>
 
                 <div class="row mt-2">
@@ -204,6 +215,10 @@
                             <select *ngIf="x.variant_names!='custom_name'" name="variant_names{{i}}" class="form-control" (change)="changeVariantNameSelect(x);" [(ngModel)]="x.variant_names" required>
                               <option value="Size">Size</option>
                               <option value="Colour">Colour</option>
+                              <ng-container *ngIf="configData.stone_acres_id==commonService.store_details._id">
+                                <option value="Type">Type</option>
+                                <option value="sq. ft.">sq. ft.</option>
+                              </ng-container>
                               <option value="custom_name">Custom Name</option>
                             </select>
                             <input *ngIf="x.variant_names=='custom_name'" type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" (focusout)="onCreateVariantList(productForm.variant_types)" required />

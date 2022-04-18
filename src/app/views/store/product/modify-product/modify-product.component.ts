@@ -80,6 +80,7 @@ export class ModifyProductComponent implements OnInit {
           this.api.PRODUCT_DETAILS(params.product_id).subscribe(result => {
             if(result.status) {
               this.productForm = result.data;
+              if(this.productForm.handover_on) this.productForm.handover_on = new Date(this.productForm.handover_on);
               if(!this.productForm.video_details) this.productForm.video_details = {};
               this.productForm.prev_rank = result.data.rank;
               if(this.productForm.image_tag_status) {
@@ -228,9 +229,12 @@ export class ModifyProductComponent implements OnInit {
       this.aiStyleList.forEach(section => {
         if(section.aistyle_checked) {
           let optionArray = [];
-          section.option_list.forEach(option => {
-            if(option.aistyle_option_checked) optionArray.push(option._id);
-          });
+          if(section.type=='either_or') optionArray.push(section.selected_option);
+          else {
+            section.option_list.forEach(option => {
+              if(option.aistyle_option_checked) optionArray.push(option._id);
+            });
+          }
           this.productForm.aistyle_list.push({ [section._id]: optionArray });
         }
       });
@@ -384,11 +388,17 @@ export class ModifyProductComponent implements OnInit {
         let tagIndex = productStyleList.findIndex(x => Object.keys(x)[0] == tagObject._id);
         if(tagIndex != -1) {
           tagObject.aistyle_checked = true;
-          tagObject.option_list.forEach(optionObject => {
-            let optionIndex = productStyleList[tagIndex][tagObject._id].findIndex(x => x == optionObject._id);
-            if(optionIndex != -1)
-              optionObject.aistyle_option_checked = true;
-          });
+          if(productStyleList[tagIndex][tagObject._id]?.length) {
+            if(tagObject.type=='either_or') {
+              tagObject.selected_option = productStyleList[tagIndex][tagObject._id][0];
+            }
+            else {
+              tagObject.option_list.forEach(optionObject => {
+                let optionIndex = productStyleList[tagIndex][tagObject._id].findIndex(x => x == optionObject._id);
+                if(optionIndex != -1) optionObject.aistyle_option_checked = true;
+              });
+            }
+          }
         }
       });
       resolve(styleList);
