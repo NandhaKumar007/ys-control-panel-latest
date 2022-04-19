@@ -354,7 +354,7 @@ export class SidebarService {
           accountList.push({ icon: 'supervisor_account', name: 'Vendors', state: '/account/vendors', type: 'link' });
           routePermissionList.push("vendors");
         }
-        if(ysFeatures.indexOf('courier_partners')!=-1 && this.commonService.store_details.dp_wallet_status) {
+        if(this.commonService.store_details.dp_wallet_status) {
           accountList.push({ icon: 'account_balance_wallet', name: 'Wallet', state: '/account/wallet', type: 'link' });
           routePermissionList.push("dp_wallet");
         }

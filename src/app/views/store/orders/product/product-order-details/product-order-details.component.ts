@@ -6,7 +6,6 @@ import { AccountService } from '../../../account/account.service';
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
-import ghanaDestinations from '../../../../../../assets/json/ghana-local-destinations.json';
 
 @Component({
   selector: 'app-product-order-details',
@@ -34,7 +33,6 @@ export class ProductOrderDetailsComponent implements OnInit {
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
   courierData: any = {}; itemInfo: any = {};
-  destList: any = []; selectedVendor: any;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
@@ -44,7 +42,6 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.destList = ghanaDestinations;
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
       this.remaining_items = []; this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
@@ -188,21 +185,6 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(address[element.keyword]) address.address_fields.push({ label: element.label, value: address[element.keyword] });
       });
     }
-  }
-
-  onCreateGhanaAWB() {
-    this.cpForm.submit = true;
-    this.api.GHANA_CREATE_ORDER({ _id: this.order_details._id, vendor_id: this.selectedVendor.vendor_id, destination: this.cpForm.destination, description: this.cpForm.description }).subscribe(result => {
-      this.cpForm.submit = false;
-      if(result.status) {
-        document.getElementById("closeModal").click();
-        this.ngOnInit();
-      }
-      else {
-        this.cpForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
   }
 
   // courier partner
@@ -439,6 +421,7 @@ export class ProductOrderDetailsComponent implements OnInit {
       let sendData = {
         _id: this.order_details._id,
         vendor_id: this.vendorInfo.vendor_id,
+        shipping_method: this.vendorInfo.shipping_method,
         order_status: this.vendorInfo.order_status
       }
       this.updateVendorOrderStatus(sendData);
@@ -451,8 +434,8 @@ export class ProductOrderDetailsComponent implements OnInit {
       };
       if(this.vendorInfo?.vendor_id) {
         sendData.vendor_id = this.vendorInfo.vendor_id;
+        sendData.shipping_method = this.vendorInfo.shipping_method;
         sendData.order_status = this.vendorInfo.order_status;
-        delete sendData.shipping_method;
       }
       this.api.UPDATE_ORDER_STATUS(sendData).subscribe(result => {
         this.btnLoader = false;
