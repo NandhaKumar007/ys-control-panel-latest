@@ -88,7 +88,15 @@
               <option value="Kgs">Weight (Kgs)</option>
             </select>
           </div>
-          <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-6 form-group mb-3">
+          <div *ngIf="configData.stone_acres_id==commonService.store_details._id" class="form-group col-md-3 mb-3">
+            <label>Property Type</label>
+            <select name="product_type" class="form-control" [(ngModel)]="productForm.product_type" required>
+              <option value="apartment">Apartments</option>
+              <option value="plot">Plots</option>
+              <option value="villa">Villa</option>
+            </select>
+          </div>
+          <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-3 form-group mb-3">
             <label>Vendor</label>
             <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel" required>
               <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.brand}}</option>
@@ -177,14 +185,14 @@
                       <input type="text" name="external_link" class="form-control" [(ngModel)]="productForm.external_link" #external_link="ngModel" />
                     </div>
                     <ng-container *ngIf="configData.stone_acres_id==commonService.store_details._id">
+                      <div class="col-md-12 form-group mb-3">
+                        <label>Embeded Iframe Location URL</label>
+                        <input type="text" name="location_url" class="form-control" [(ngModel)]="productForm.location_url" />
+                      </div>
                       <div class="col-md-3 form-group mb-3">
                         <label>Handover On</label>
                         <input type="text" placeholder="Select Date" class="form-control" name="handover_on" autocomplete="off" bsDatepicker
                         [(ngModel)]="productForm.handover_on" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
-                      </div>
-                      <div class="col-md-12 form-group mb-3">
-                        <label>Embeded Iframe Location URL</label>
-                        <input type="text" name="location_url" class="form-control" [(ngModel)]="productForm.location_url" />
                       </div>
                     </ng-container>
                   </div>

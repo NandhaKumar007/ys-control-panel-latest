@@ -446,7 +446,7 @@
             <label>Minimum Checkout Value</label>
             <input type="tel" name="min_checkout_value" class="form-control" [(ngModel)]="app_setting.min_checkout_value" #min_checkout_value="ngModel" appNumberOnly required />
           </div>
-          <div class="col-md-6 form-group mb-3">
+          <div *ngIf="commonService.ys_features.indexOf('gift_order')!=-1" class="col-md-6 form-group mb-3">
             <label>Gift Wrapping Charges</label>
             <input type="tel" name="gift_wrapping_charges" class="form-control" [(ngModel)]="app_setting.gift_wrapping_charges" #gift_wrapping_charges="ngModel" appNumberOnly required />
           </div>
