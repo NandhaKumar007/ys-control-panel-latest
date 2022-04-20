@@ -205,7 +205,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
-              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type" [disabled]="vendorForm.form_type!='add'">
+              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type" [disabled]="vendorForm.status=='active'">
                 <option value="">-- Select --</option>
                 <option value="free">Willing to provide free shipping on all orders</option>
                 <option value="free_above">Willing to provide free shipping on orders above ₹499</option>

@@ -63,6 +63,19 @@ export class ProductOrderDetailsComponent implements OnInit {
             else this.order_details.order_status='dispatched';
           }
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
+          // shipping info
+          if(this.order_details.order_type=='delivery') {
+            if(this.order_details.vendor_list?.length) {
+              this.order_details.vendor_list.forEach(ven => {
+                let shipIndex = this.commonService.shipping_list.findIndex(obj => obj._id==ven.shipping_method._id);
+                if(shipIndex!=-1) ven.shipping_info = this.commonService.shipping_list[shipIndex];
+              });
+            }
+            else {
+              let shipIndex = this.commonService.shipping_list.findIndex(obj => obj._id==this.order_details.shipping_method._id);
+              if(shipIndex!=-1) this.order_details.shipping_info = this.commonService.shipping_list[shipIndex];
+            }
+          }
           // vendor orders
           if(this.order_details.vendor_list?.length) {
             if(this.params.type=='live') {
@@ -118,12 +131,8 @@ export class ProductOrderDetailsComponent implements OnInit {
             else this.itemList = this.remaining_items;
           }
           // address
-          if(this.order_details.shipping_address) {
-            this.onGetAddrDetails(this.order_details.shipping_address);
-          }
-          if(this.order_details.billing_address) {
-            this.onGetAddrDetails(this.order_details.billing_address);
-          }
+          if(this.order_details.shipping_address) this.onGetAddrDetails(this.order_details.shipping_address);
+          if(this.order_details.billing_address) this.onGetAddrDetails(this.order_details.billing_address);
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
