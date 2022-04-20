@@ -712,7 +712,6 @@ export class SidebarService {
     };
     if(result.data.vendor_commission) this.commonService.store_details.vendor_commission = result.data.vendor_commission;
     if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
-    if(result.data.tax_config) this.commonService.store_details.tax_config = result.data.tax_config;
     this.commonService.updateLocalData('store_details', this.commonService.store_details);
     // deploy stages
     this.commonService.deploy_stages = result.data.deployDetails[0].deploy_stages;

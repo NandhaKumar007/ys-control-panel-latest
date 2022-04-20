@@ -117,40 +117,12 @@ export class ProductOrderDetailsComponent implements OnInit {
             }
             else this.itemList = this.remaining_items;
           }
-          // delivery partner info
-          let scpIndex = this.commonService.shipping_list.findIndex(obj => obj._id==this.order_details.shipping_method._id);
-          if(scpIndex!=-1) this.order_details.selected_cp = this.commonService.shipping_list[scpIndex];
           // address
           if(this.order_details.shipping_address) {
             this.onGetAddrDetails(this.order_details.shipping_address);
           }
           if(this.order_details.billing_address) {
             this.onGetAddrDetails(this.order_details.billing_address);
-          }
-          // tax details
-          if(this.commonService.store_details.tax_config) {
-            this.tax_config = this.commonService.store_details.tax_config;
-            this.tax_config.tax = 0;
-            if(this.order_details.billing_address.country==this.commonService.store_details.country) {
-              if(this.tax_config.domestic_states && this.tax_config.domestic_states.length) {
-                if(this.tax_config.domestic_states.indexOf(this.order_details.billing_address.state) != -1) {
-                  // domestic
-                  if(this.tax_config.domestic_tax) this.tax_config.tax = this.tax_config.domestic_tax;
-                }
-                else {
-                  // international
-                  if(this.tax_config.international_tax) this.tax_config.tax = this.tax_config.international_tax;
-                }
-              }
-              else {
-                // domestic
-                if(this.tax_config.domestic_tax) this.tax_config.tax = this.tax_config.domestic_tax;
-              }
-            }
-            else {
-              // international
-              if(this.tax_config.international_tax) this.tax_config.tax = this.tax_config.international_tax;
-            }
           }
         }
         else console.log("response", result);
@@ -748,12 +720,6 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   onViewInvoice(modalName) {
     this.invoice_details = this.order_details;
-    if(this.tax_config.tax > 0) {
-      let totalPercentage = 100+parseFloat(this.tax_config.tax);
-      let onePercentAmount = this.invoice_details.sub_total/totalPercentage;
-      this.invoice_details.sub_total_wo_tax = onePercentAmount*100;
-      this.invoice_details.tax_amount = onePercentAmount*this.tax_config.tax;
-    }
     this.invoice_order_list = [];
     this.processItemList(this.invoice_details.item_list).then((respData) => {
       this.invoice_order_list = respData;
@@ -769,12 +735,6 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.invoice_details.shipping_address = this.order_details.shipping_address;
     this.invoice_details.payment_details = this.order_details.payment_details;
     this.invoice_details.item_list = this.order_details.item_list.filter(obj => obj.vendor_id==x.vendor_id);
-    if(this.tax_config.tax > 0) {
-      let totalPercentage = 100+parseFloat(this.tax_config.tax);
-      let onePercentAmount = this.invoice_details.sub_total/totalPercentage;
-      this.invoice_details.sub_total_wo_tax = onePercentAmount*100;
-      this.invoice_details.tax_amount = onePercentAmount*this.tax_config.tax;
-    }
     this.invoice_order_list = [];
     this.processItemList(this.invoice_details.item_list).then((respData) => {
       this.invoice_order_list = respData;
@@ -1014,11 +974,6 @@ export class ProductOrderDetailsComponent implements OnInit {
         let onePercentAmount = amount/totalPercentage;
         return (onePercentAmount*100);
       }
-    }
-    else if(this.tax_config.tax > 0) {
-      let totalPercentage = 100+parseFloat(this.tax_config.tax);
-      let onePercentAmount = amount/totalPercentage;
-      return (onePercentAmount*100);
     }
     else return amount;
   }
