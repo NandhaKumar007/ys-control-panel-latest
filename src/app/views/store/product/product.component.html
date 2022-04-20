@@ -101,9 +101,8 @@
       <!-- vendor list -->
       <div *ngIf="vendorList.length" class="col-md-3 col-6">
         <div class="form-group">
-          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
-            (change)="ngOnInit();">
-            <option [ngValue]="x._id" *ngFor="let x of vendorList">{{x.company_details?.brand}}</option>
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id" (change)="ngOnInit();">
+            <option value="{{x._id}}" *ngFor="let x of vendorList;">{{x.company_details?.brand}}</option>
           </select>
         </div>
       </div>

@@ -380,39 +380,26 @@ export class AddProductComponent implements OnInit {
 
   oneVariant(variantOne) {
     variantOne.options.forEach(objectOne => {
-      if(this.primary_tax) {
-        this.productForm.variant_list.push({
-          variants: [objectOne.value],
-          [variantOne.name]: objectOne.value,
-          taxrate_id: this.primary_tax
-        });
-      }
-      else {
-        this.productForm.variant_list.push({
-          variants: [objectOne.value],
-          [variantOne.name]: objectOne.value
-        });
-      }
+      let objData: any = {
+        variants: [objectOne.value],
+        [variantOne.name]: objectOne.value
+      };
+      if(this.primary_tax) objData.taxrate_id = this.primary_tax;
+      if(this.productForm.sku) objData.sku = this.productForm.sku;
+      this.productForm.variant_list.push(objData);
     });
   }
   twoVariant(variantOne, variantTwo) {
     variantOne.options.forEach(objectOne => {
       variantTwo.options.forEach(objectTwo => {
-        if(this.primary_tax) {
-          this.productForm.variant_list.push({
-            variants: [objectOne.value, objectTwo.value],
-            [variantOne.name]: objectOne.value,
-            [variantTwo.name]: objectTwo.value,
-            taxrate_id: this.primary_tax
-          });
-        }
-        else {
-          this.productForm.variant_list.push({
-            variants: [objectOne.value, objectTwo.value],
-            [variantOne.name]: objectOne.value,
-            [variantTwo.name]: objectTwo.value
-          });
-        }
+        let objData: any = {
+          variants: [objectOne.value, objectTwo.value],
+          [variantOne.name]: objectOne.value,
+          [variantTwo.name]: objectTwo.value
+        };
+        if(this.primary_tax) objData.taxrate_id = this.primary_tax;
+        if(this.productForm.sku) objData.sku = this.productForm.sku;
+        this.productForm.variant_list.push(objData);
       });
     });
   }
@@ -420,23 +407,15 @@ export class AddProductComponent implements OnInit {
     variantOne.options.forEach(objectOne => {
       variantTwo.options.forEach(objectTwo => {
         variantThree.options.forEach(objectThree => {
-          if(this.primary_tax) {
-            this.productForm.variant_list.push({
-              variants: [objectOne.value, objectTwo.value, objectThree.value],
-              [variantOne.name]: objectOne.value,
-              [variantTwo.name]: objectTwo.value,
-              [variantThree.name]: objectThree.value,
-              taxrate_id: this.primary_tax
-            });
-          }
-          else {
-            this.productForm.variant_list.push({
-              variants: [objectOne.value, objectTwo.value, objectThree.value],
-              [variantOne.name]: objectOne.value,
-              [variantTwo.name]: objectTwo.value,
-              [variantThree.name]: objectThree.value
-            });
-          }
+          let objData: any = {
+            variants: [objectOne.value, objectTwo.value, objectThree.value],
+            [variantOne.name]: objectOne.value,
+            [variantTwo.name]: objectTwo.value,
+            [variantThree.name]: objectThree.value
+          };
+          if(this.primary_tax) objData.taxrate_id = this.primary_tax;
+          if(this.productForm.sku) objData.sku = this.productForm.sku;
+          this.productForm.variant_list.push(objData);
         });
       });
     });

@@ -582,7 +582,10 @@ export class ModifyProductComponent implements OnInit {
         if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
         if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;
       }
-      else if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+      else {
+        if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+        if(this.productForm.sku) jsonData.sku = this.productForm.sku;
+      }
       this.productForm.variant_list.push(jsonData);
     });
     this.existVariantList = this.productForm.variant_list;
@@ -602,7 +605,10 @@ export class ModifyProductComponent implements OnInit {
           if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
           if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;
         }
-        else if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+        else {
+          if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+          if(this.productForm.sku) jsonData.sku = this.productForm.sku;
+        }
         this.productForm.variant_list.push(jsonData);
       });
     });
@@ -624,7 +630,10 @@ export class ModifyProductComponent implements OnInit {
             if(this.existVariantList[varIndex].taxrate_id) jsonData.taxrate_id = this.existVariantList[varIndex].taxrate_id;
             if(!jsonData.taxrate_id && this.primary_tax) jsonData.taxrate_id = this.primary_tax;
           }
-          else if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+          else {
+            if(this.primary_tax) jsonData.taxrate_id = this.primary_tax;
+            if(this.productForm.sku) jsonData.sku = this.productForm.sku;
+          }
           this.productForm.variant_list.push(jsonData);
         });
       });

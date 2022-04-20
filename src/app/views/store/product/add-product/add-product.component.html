@@ -16,7 +16,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <button *ngIf="step_num==3" type="button" (click)="intForm = {}; modalService.open(catalogModal);" class="btn btn-primary">Add New Catalog</button>
+        <button *ngIf="step_num==3 && commonService.store_details?.login_type=='admin'" type="button" (click)="intForm = {}; modalService.open(catalogModal);" class="btn btn-primary">Add New Catalog</button>
       </div>
     </div>
   </div>
@@ -146,7 +146,7 @@
 
                 <div class="row mt-2">
                   <!--  featured product -->
-                  <div class="col-md-6 form-group mb-3">
+                  <div *ngIf="commonService.store_details?.login_type!='vendor'" class="col-md-6 form-group mb-3">
                     <label class="checkbox checkbox-primary">
                       <input class="form-check-input" type="checkbox" name="featured" [(ngModel)]="productForm.featured" #featured="ngModel">
                       <span>This is a featured product</span>
@@ -407,8 +407,8 @@
                               <span class="checkmark"></span>
                             </label>
                           </div>
-                          <div class="col-md-6">
-                            <span *ngIf="x.tag_checked" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
+                          <div *ngIf="x.tag_checked && commonService.store_details?.login_type=='admin'" class="col-md-6">
+                            <span (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
                             class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
                           </div>
                         </div>
@@ -450,8 +450,8 @@
                               <span class="checkmark"></span>
                             </label>
                           </div>
-                          <div class="col-md-6">
-                            <span *ngIf="x.note_checked" (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
+                          <div *ngIf="x.note_checked && commonService.store_details?.login_type=='admin'" class="col-md-6">
+                            <span (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
                             class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
                           </div>
                         </div>

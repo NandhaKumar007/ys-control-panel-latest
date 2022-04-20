@@ -41,7 +41,7 @@ export class ProductComponent implements OnInit {
     config.backdrop = 'static'; config.keyboard = false;
     // vendors
     if(this.commonService.vendor_list.length) {
-      this.vendorList = [{_id: 'all', company_details: { name: "All Vendors" }}];
+      this.vendorList = [{_id: 'all', company_details: { brand: "All Vendors" }}];
       this.commonService.vendor_list.forEach(obj => { this.vendorList.push(obj) });
     }
     // catalogs

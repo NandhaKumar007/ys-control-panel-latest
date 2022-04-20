@@ -377,7 +377,7 @@
                       <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
                         <div class="row">
                           <!-- tracking details -->
-                          <ng-container *ngIf="params?.type=='live' && vendor.order_status=='dispatched' && !vendor.shipping_method.delivery_method">
+                          <ng-container *ngIf="params?.type=='live' && vendor.order_status=='dispatched' && !vendor.shipping_method.delivery_method && !vendor.shipping_info?.dp_status">
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Tracking Number</label>
                               <input type="text" name="tracking_number" class="form-control" [(ngModel)]="vendor.shipping_method.tracking_number" required />
@@ -485,6 +485,11 @@
                               type="submit" class="btn btn-primary w-100">Update Status</button>
                             </div>
                           </ng-container>
+                          <!-- courier partner -->
+                          <div class="col-md-12" *ngIf="params?.type=='live' && vendor.existing_status=='confirmed' && !vendor.shipping_method.delivery_method && vendor.shipping_info?.dp_status">
+                            <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
+                            [ladda]="courierForm.btnLoader">Create Order in {{vendor.shipping_info?.dp_name}}</button>
+                          </div>
                           <!-- cancel order -->
                           <div *ngIf="vendor?.order_status!='cancelled'" class="col-md-12">
                             <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
@@ -1115,7 +1120,7 @@
             <div class="card order-summary-details mtb-10">
               <div class="row mtb-10">
                 <!-- tracking details -->
-                <ng-container *ngIf="params?.type=='live' && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
+                <ng-container *ngIf="params?.type=='live' && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method && !order_details.shipping_info?.dp_status">
                   <div class="col-md-12 form-group mb-3 summary-section">
                     <label>Tracking Number</label>
                     <input type="text" name="tracking_number" class="form-control"
@@ -1198,8 +1203,7 @@
                       <span class="checkmark"></span>
                     </label>
                   </div>
-                  <ng-container
-                    *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
+                  <ng-container *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
                     <div *ngIf="!order_details.item_groups?.length" class="col-md-12 mb-1 summary-section">
                       <label class="radio radio-primary">
                         <input type="radio" name="order_status" value="dispatched"
@@ -1218,13 +1222,17 @@
                     </label>
                   </div>
                   <div class="col-md-12">
-                    <button type="submit"
-                      [disabled]="order_details.order_status=='delivered' && order_details.item_groups?.length && !order_details?.dispatched_on"
+                    <button type="submit" [disabled]="order_details.order_status=='delivered' && order_details.item_groups?.length && !order_details?.dispatched_on"
                       class="btn btn-primary w-100">
                       Update Status
                     </button>
                   </div>
                 </ng-container>
+                <!-- courier partner -->
+                <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status">
+                  <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
+                  [ladda]="courierForm.btnLoader">Create Order in {{order_details.shipping_info?.dp_name}}</button>
+                </div>
               </div>
             </div>
           </form>
@@ -1358,7 +1366,7 @@
           <div class="card order-summary-details mtb-10">
             <div class="row mtb-10">
               <!-- tracking details -->
-              <ng-container *ngIf="params?.type=='live' && vendorInfo.order_status=='dispatched' && !vendorInfo.shipping_method.delivery_method">
+              <ng-container *ngIf="params?.type=='live' && vendorInfo.order_status=='dispatched' && !vendorInfo.shipping_method.delivery_method && !vendorInfo.shipping_info?.dp_status">
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Tracking Number</label>
                   <input type="text" name="tracking_number" class="form-control"
@@ -1463,6 +1471,11 @@
                   </div>
                 </ng-container>
               </ng-container>
+              <!-- courier partner -->
+              <div class="col-md-12" *ngIf="params?.type=='live' && vendorInfo.existing_status=='confirmed' && !vendorInfo.shipping_method.delivery_method && vendorInfo.shipping_info?.dp_status">
+                <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
+                [ladda]="courierForm.btnLoader">Create Order in {{vendorInfo.shipping_info?.dp_name}}</button>
+              </div>
             </div>
           </div>
         </form>
