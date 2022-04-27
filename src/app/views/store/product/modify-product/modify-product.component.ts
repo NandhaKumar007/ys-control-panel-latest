@@ -31,9 +31,9 @@ export class ModifyProductComponent implements OnInit {
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
-  configData: any= environment.config_data;
+  configData: any= environment.config_data; fileData: FormData;
 
-  @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
+  @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
@@ -300,13 +300,16 @@ export class ModifyProductComponent implements OnInit {
     let formData: any = {
       _id: this.productForm._id, image_tag_status: this.productForm.image_tag_status,
       image_list: this.productForm.image_list, video_details: this.productForm.video_details,
-      variant_status: false, variant_list: []
+      variant_status: false, variant_list: [], brochure: this.productForm.brochure
     };
     if(this.productForm.variant_status) {
       formData.variant_status = true;
       if(this.productForm.variant_list) formData.variant_list = this.productForm.variant_list;
     }
-    this.api.UPDATE_PRODUCT_IMAGES(formData).subscribe(result => {
+    this.fileData = new FormData();
+    this.fileData.append('attachment', this.productForm.brochure_src);
+    this.fileData.append('data', JSON.stringify(formData));
+    this.api.UPDATE_PRODUCT_IMAGES(this.fileData).subscribe(result => {
       this.updateDeployStatus();
       this.btnLoader = false;
       if(result.status) {
@@ -729,6 +732,16 @@ export class ModifyProductComponent implements OnInit {
         console.log("response", result);
       }
 		});
+  }
+
+  handleFileInput(files: FileList) {
+    this.productForm.brochure = null;
+    this.productForm.brochure_src = files[0];
+  }
+  resetFile() {
+    this.productForm.brochure = null;
+    delete this.productForm.brochure_src;
+    delete this.productForm.brochure_input;
   }
 
 }

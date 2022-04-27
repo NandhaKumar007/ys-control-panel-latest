@@ -35,7 +35,7 @@ export class DeployPackagesComponent implements OnInit {
   }
   top_features: any = [
     {
-      "free": "500 Products",
+      "free": "50 Products",
       "essential": "Unlimited Products",
       "professional": "Basic SEO Editor",
       "lite": "Unlimited Products",
@@ -162,7 +162,7 @@ export class DeployPackagesComponent implements OnInit {
     let genieAllFeatures = [
       {
         "name": "Unlimited Products",
-        "free": "Upto 500 products",
+        "free": "Upto 50 products",
         "essential": true,
         "professional": true,
         "help_content": "No limit on the total number of products"
@@ -694,7 +694,7 @@ export class DeployPackagesComponent implements OnInit {
     let genieMobileTopFeatures = [
       {
         "name": "Unlimited Products",
-        "free": "Upto 500 Products",
+        "free": "Upto 50 Products",
         "essential": true,
         "professional": true
       },

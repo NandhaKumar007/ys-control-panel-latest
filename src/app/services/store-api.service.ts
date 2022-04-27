@@ -77,7 +77,7 @@ export class StoreApiService {
     return this.http.get<any>(environment.ws_url+'/store/product/'+x, httpOptions);
   }
   ADD_PRODUCT(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    let httpOptions = { headers: new HttpHeaders({ 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/product', x, httpOptions);
   }
   UPDATE_PRODUCT(x) {
@@ -85,7 +85,7 @@ export class StoreApiService {
     return this.http.put<any>(environment.ws_url+'/store/product', x, httpOptions);
   }
   UPDATE_PRODUCT_IMAGES(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    let httpOptions = { headers: new HttpHeaders({ 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/product/images', x, httpOptions);
   }
   UPDATE_PRODUCT_DETAILS(x) {

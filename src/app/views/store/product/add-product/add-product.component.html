@@ -783,6 +783,25 @@
           </div>
         </div>
       </ng-container>
+      <!-- Brochure -->
+      <ng-container *ngIf="commonService.ys_features.indexOf('brochure')!=-1">
+        <div class="separator-breadcrumb border-top mt-3"></div>
+        <div class="row">
+          <div align="center" class="col-md-6 col-lg-4 d-flex form-group mb-3">
+            <div class="card w-100 p-3 mt-3 mb-3">
+              <ng-container *ngIf="productForm.brochure_src">
+                <span (click)="resetFile();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              </ng-container>
+              <label>
+                <div>
+                  <i class="material-icons add-img">picture_as_pdf</i>
+                </div>
+                <input #brochure type="file" name="brochure" [(ngModel)]="productForm.brochure_input" (change)="handleFileInput($event.target.files);" accept="application/pdf">
+              </label>
+            </div>
+          </div>
+        </div>
+      </ng-container>
 
       <div class="separator-breadcrumb border-top mt-5"></div>
       <div class="row">

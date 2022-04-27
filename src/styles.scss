@@ -4703,3 +4703,16 @@ p svg:hover {
     font-size:18px
   }
 }
+
+input[type=file]::file-selector-button {
+  border: 1px solid #ec848b;
+  // padding: 7px 7px;
+  padding: 0.375rem 0.75rem;
+  background-color: #ec848b;
+  color: #fff;
+}
+
+input[type=file] {
+  border-radius: 14px;
+  width: 100%;
+}

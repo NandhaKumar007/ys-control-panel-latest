@@ -30,9 +30,9 @@ export class AddProductComponent implements OnInit {
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
-  configData: any= environment.config_data;
+  configData: any= environment.config_data; fileData: FormData;
 
-  @ViewChild('cropper', {static: false}) cropper:ImageCropperComponent;
+  @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
@@ -227,8 +227,12 @@ export class AddProductComponent implements OnInit {
     if(!this.productForm.image_tag_status) {
       this.productForm.image_list.forEach(obj => { delete obj.tag; });
     }
+    this.fileData = new FormData();
+    this.fileData.append('attachment', this.productForm.brochure_src);
+    delete this.productForm.brochure_src;
+    this.fileData.append('data', JSON.stringify(this.productForm));
     // add product
-    this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
+    this.api.ADD_PRODUCT(this.fileData).subscribe(result => {
       this.updateDeployStatus();
       this.btnLoader = false;
       if(result.status) {
@@ -515,6 +519,16 @@ export class AddProductComponent implements OnInit {
     delete x.name;
     if(x.variant_names!='custom_name') x.name = x.variant_names;
     this.onCreateVariantList(this.productForm.variant_types);
+  }
+
+  handleFileInput(files: FileList) {
+    delete this.productForm.brochure;
+    this.productForm.brochure_src = files[0];
+  }
+  resetFile() {
+    delete this.productForm.brochure;
+    delete this.productForm.brochure_src;
+    delete this.productForm.brochure_input;
   }
 
 }
