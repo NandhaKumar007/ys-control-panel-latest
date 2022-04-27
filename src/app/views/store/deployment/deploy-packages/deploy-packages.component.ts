@@ -18,7 +18,7 @@ export class DeployPackagesComponent implements OnInit {
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
   paymentTypes: any = []; packageRank: number = 0;
-  environment: any = environment; defaultPlan: string;
+  environment: any = environment; freePlan: string;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
     customer_name: this.commonService.store_details.company_details.name,
@@ -94,7 +94,7 @@ export class DeployPackagesComponent implements OnInit {
     this.api.PACKAGE_LIST(this.commonService.store_details?.package_info?.category).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
-        this.defaultPlan = result.default_plan;
+        this.freePlan = result.free_plan;
         this.packageList = result.list;
         this.packageList.forEach(obj => {
           obj.keyword = obj.name.toLowerCase();
@@ -872,7 +872,7 @@ export class DeployPackagesComponent implements OnInit {
   onSelectPlan(x, modalName) {
     this.packageForm = x;
     this.packageForm.submit = false;
-    if(this.defaultPlan==x._id) this.modalService.open(modalName, { centered: true });
+    if(this.freePlan==x._id) this.modalService.open(modalName, { centered: true });
     else {
       let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
       this.api.PURCHASE_PLAN(formData).subscribe(result => {
