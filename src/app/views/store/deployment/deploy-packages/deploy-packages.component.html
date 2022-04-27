@@ -564,7 +564,7 @@
 
 <!-- Subscription Modal -->
 <ng-template #subscriptionModal let-modal>
-  <div *ngIf="defaultPlan!=packageForm._id" class="modal-header">
+  <div *ngIf="freePlan!=packageForm._id" class="modal-header">
     <div>
       <h4 class="modal-title" id="modal-basic-title">
         {{packageForm.name}} Plan
@@ -576,7 +576,7 @@
   </div>
   <div class="modal-body">
     <!-- for paid -->
-    <div *ngIf="defaultPlan!=packageForm._id" class="form-group">
+    <div *ngIf="freePlan!=packageForm._id" class="form-group">
       <div class="row">
         <div class="col-md-12">
           <div class="card apps-card w-100 py-3 mb-4">
@@ -631,7 +631,7 @@
       </div>
     </div>
     <!-- for free -->
-    <p *ngIf="defaultPlan==packageForm._id">
+    <p *ngIf="freePlan==packageForm._id">
       <strong>You have selected the free plan</strong>
     </p>
     <div *ngIf="packageForm.errorMsg">
@@ -639,12 +639,12 @@
     </div>
   </div>
   <!-- for paid -->
-  <div *ngIf="defaultPlan!=packageForm._id" class="modal-footer">
+  <div *ngIf="freePlan!=packageForm._id" class="modal-footer">
     <button type="button" *ngFor="let x of paymentTypes;" (click)="onSubscribe(x);" class="btn btn-wide btn-primary ladda-button m-1"
     [disabled]="packageForm.submit" [ladda]="packageForm.submit">{{x.btn_name}}</button>
   </div>
   <!-- for free -->
-  <div *ngIf="defaultPlan==packageForm._id" class="modal-footer">
+  <div *ngIf="freePlan==packageForm._id" class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
       <span class="black-outline-txt">Cancel</span>
     </button>
