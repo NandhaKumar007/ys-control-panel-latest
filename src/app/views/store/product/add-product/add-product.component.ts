@@ -30,7 +30,7 @@ export class AddProductComponent implements OnInit {
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
-  configData: any= environment.config_data; fileData: FormData;
+  configData: any= environment.config_data; brochForm: any = {};
 
   @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
@@ -227,21 +227,27 @@ export class AddProductComponent implements OnInit {
     if(!this.productForm.image_tag_status) {
       this.productForm.image_list.forEach(obj => { delete obj.tag; });
     }
-    this.fileData = new FormData();
-    this.fileData.append('attachment', this.productForm.brochure_src);
-    delete this.productForm.brochure_src;
-    this.fileData.append('data', JSON.stringify(this.productForm));
     // add product
-    this.api.ADD_PRODUCT(this.fileData).subscribe(result => {
+    this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.updateDeployStatus();
       this.btnLoader = false;
       if(result.status) {
+        if(this.brochForm.src) this.onUploadBrocure(result._id);
         this.router.navigate(['/products']);
       }
       else {
         this.productForm.errorMsg = result.message;
         console.log("response", result);
       }
+    });
+  }
+
+  onUploadBrocure(prodId) {
+    let fileData: FormData = new FormData();
+    fileData.append('attachment', this.brochForm.src);
+    fileData.append('data', JSON.stringify({ _id: prodId }));
+    this.api.UPLOAD_BROCHURE(fileData).subscribe(result => {
+      if(!result.status) console.log("response", result);
     });
   }
 
@@ -522,13 +528,7 @@ export class AddProductComponent implements OnInit {
   }
 
   handleFileInput(files: FileList) {
-    delete this.productForm.brochure;
-    this.productForm.brochure_src = files[0];
-  }
-  resetFile() {
-    delete this.productForm.brochure;
-    delete this.productForm.brochure_src;
-    delete this.productForm.brochure_input;
+    this.brochForm.src = files[0];
   }
 
 }

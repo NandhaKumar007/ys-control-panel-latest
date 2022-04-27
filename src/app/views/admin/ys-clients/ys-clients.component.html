@@ -122,7 +122,7 @@
               <div
                 class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                 <!-- OTHER DATA -->
-                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}<br>{{ x.email }}<br>{{ x._id }}</p>
+                <p class="m-0 w-15 w-sm-100 m-b-0">{{ x.name }}<br>{{ x.email }}<br>{{ x._id }}<br>{{x.country}} ({{x.company_details?.state}})</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{ (x.package_details?.billing_status)? x.package_name: 'Trial' }}</p>
                 <p class="m-0 w-15 w-sm-100 m-b-0">{{x.account_expiry | date: "dd MMM y"}}</p>
                 <div class="m-0 text-muted text-small w-15 w-sm-100 d-lg-flex align-items-center item-actions">

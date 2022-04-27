@@ -789,14 +789,14 @@
         <div class="row">
           <div align="center" class="col-md-6 col-lg-4 d-flex form-group mb-3">
             <div class="card w-100 p-3 mt-3 mb-3">
-              <ng-container *ngIf="productForm.brochure_src">
-                <span (click)="resetFile();" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+              <ng-container *ngIf="brochForm.src">
+                <span (click)="brochForm={};" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
               </ng-container>
               <label>
                 <div>
                   <i class="material-icons add-img">picture_as_pdf</i>
                 </div>
-                <input #brochure type="file" name="brochure" [(ngModel)]="productForm.brochure_input" (change)="handleFileInput($event.target.files);" accept="application/pdf">
+                <input #brochure type="file" name="brochure" [(ngModel)]="brochForm.brochure_input" (change)="handleFileInput($event.target.files);" accept="application/pdf">
               </label>
             </div>
           </div>

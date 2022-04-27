@@ -237,61 +237,63 @@
             </div>
           </ng-container>
           <!-- DP Integration -->
-          <div class="col-md-12 border-top mt-1 mb-3"></div>
-          <div class="col-md-12 form-group mb-3">
-            <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="dp_status" [(ngModel)]="shippingForm.dp_status">
-              <span>Enable Delivery Partner Integration</span><span class="checkmark"></span>
-            </label>
-          </div>
-          <ng-container *ngIf="shippingForm.dp_status">
-            <div class="col-md-6 form-group mb-3">
-              <label>Type</label>
-              <select name="dp_name" class="form-control select-arrow" (change)="onChangeCP();" [(ngModel)]="shippingForm.dp_name" required>
-                <option value="">-- Select --</option>
-                <option value="Delhivery">Delhivery</option>
-              </select>
-            </div>
+          <ng-container *ngIf="commonService.master_token">
+            <div class="col-md-12 border-top mt-1 mb-3"></div>
             <div class="col-md-12 form-group mb-3">
-              <label>Token</label>
-              <input type="text" name="dp_token" class="form-control" [(ngModel)]="shippingForm.dp_token" required />
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="dp_status" [(ngModel)]="shippingForm.dp_status">
+                <span>Enable Delivery Partner Integration</span><span class="checkmark"></span>
+              </label>
             </div>
-            <!-- Delhivery -->
-            <ng-container *ngIf="shippingForm.dp_name=='Delhivery'">
-              <div class="col-md-12"><h6 class="m-0">SELLER INFORMATION</h6></div>
-              <div class="w-100 card m-3">
-                <div class="row card-body">
-                  <div class="col-md-6 form-group mb-3">
-                    <label>Name</label>
-                    <input type="text" name="seller_name" class="form-control" [(ngModel)]="shippingForm.dp_metadata.seller_name" required />
-                  </div>
-                  <div class="col-md-12 form-group">
-                    <label>Address</label>
-                    <input type="text" name="seller_addr" class="form-control" [(ngModel)]="shippingForm.dp_metadata.seller_addr" required />
+            <ng-container *ngIf="shippingForm.dp_status">
+              <div class="col-md-6 form-group mb-3">
+                <label>Type</label>
+                <select name="dp_name" class="form-control select-arrow" (change)="onChangeCP();" [(ngModel)]="shippingForm.dp_name" required>
+                  <option value="">-- Select --</option>
+                  <option value="Delhivery">Delhivery</option>
+                </select>
+              </div>
+              <div class="col-md-12 form-group mb-3">
+                <label>Token</label>
+                <input type="text" name="dp_token" class="form-control" [(ngModel)]="shippingForm.dp_token" required />
+              </div>
+              <!-- Delhivery -->
+              <ng-container *ngIf="shippingForm.dp_name=='Delhivery'">
+                <div class="col-md-12"><h6 class="m-0">SELLER INFORMATION</h6></div>
+                <div class="w-100 card m-3">
+                  <div class="row card-body">
+                    <div class="col-md-6 form-group mb-3">
+                      <label>Name</label>
+                      <input type="text" name="seller_name" class="form-control" [(ngModel)]="shippingForm.dp_metadata.seller_name" required />
+                    </div>
+                    <div class="col-md-12 form-group">
+                      <label>Address</label>
+                      <input type="text" name="seller_addr" class="form-control" [(ngModel)]="shippingForm.dp_metadata.seller_addr" required />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-12"><h6 class="m-0">RETURN INFORMATION</h6></div>
-              <div class="w-100 card m-3">
-                <div class="row card-body">
-                  <div class="col-md-6 form-group mb-3">
-                    <label>Address</label>
-                    <input type="text" name="return_addr" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_addr" required />
-                  </div>
-                  <div class="col-md-6 form-group mb-3">
-                    <label>City</label>
-                    <input type="text" name="return_city" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_city" required />
-                  </div>
-                  <div class="col-md-6 form-group">
-                    <label>State</label>
-                    <input type="text" name="return_state" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_state" required />
-                  </div>
-                  <div class="col-md-6 form-group">
-                    <label>Pincode</label>
-                    <input type="text" name="return_pincode" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_pincode" required />
+                <div class="col-md-12"><h6 class="m-0">RETURN INFORMATION</h6></div>
+                <div class="w-100 card m-3">
+                  <div class="row card-body">
+                    <div class="col-md-6 form-group mb-3">
+                      <label>Address</label>
+                      <input type="text" name="return_addr" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_addr" required />
+                    </div>
+                    <div class="col-md-6 form-group mb-3">
+                      <label>City</label>
+                      <input type="text" name="return_city" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_city" required />
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label>State</label>
+                      <input type="text" name="return_state" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_state" required />
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label>Pincode</label>
+                      <input type="text" name="return_pincode" class="form-control" [(ngModel)]="shippingForm.dp_metadata.return_pincode" required />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
             </ng-container>
           </ng-container>
         </div>
