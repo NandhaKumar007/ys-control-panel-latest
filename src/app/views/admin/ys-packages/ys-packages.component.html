@@ -88,16 +88,25 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="col-md-6 form-group mb-3">
+          <div class="col-md-3 form-group mb-3">
             <label>Category</label>
             <select name="category" class="form-control" [(ngModel)]="packageForm.category" #category="ngModel" required>
               <option *ngFor="let x of commonService.package_categories;" value="{{x.name}}">{{x.display}}</option>
             </select>
           </div>
-          <div class="col-md-6 form-group mb-3">
+          <div class="col-md-3 form-group mb-3">
+            <label>Service Type</label>
+            <select name="service" class="form-control" [(ngModel)]="packageForm.service" #service="ngModel" required>
+              <option *ngFor="let x of commonService.ys_services;" value="{{x.name}}">{{x.display}}</option>
+            </select>
+          </div>
+          <div class="col-md-3 form-group mb-3">
             <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel"
-              required />
+            <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel" required />
+          </div>
+          <div class="col-md-3 form-group mb-3">
+            <label>Diplay Text</label>
+            <input type="text" name="disp_name" class="form-control" [(ngModel)]="packageForm.disp_name" #disp_name="ngModel" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Description</label>

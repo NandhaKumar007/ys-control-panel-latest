@@ -118,7 +118,14 @@ export class CommonService {
   ];
   package_categories: any = [
     { display: 'Genie', name: 'genie' },
-    { display: 'Pro', name: 'pro' }
+    { display: 'Pro', name: 'pro' },
+    { display: 'None', name: 'none' }
+  ];
+  ys_services: any = [
+    { display: 'B2C Ecommerce', name: 'order_based' },
+    { display: 'B2B Ecommerce', name: 'quot_based' },
+    { display: 'Multi Vendor Ecommerce', name: 'multi_vendor' },
+    { display: 'Service Ecommerce', name: 'service_based' }
   ];
   colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;

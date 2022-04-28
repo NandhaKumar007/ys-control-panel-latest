@@ -91,7 +91,7 @@ export class DeployPackagesComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true;
-    this.api.PACKAGE_LIST(this.commonService.store_details?.package_info?.category).subscribe(result => {
+    this.api.PACKAGE_LIST(this.commonService.store_details?.type, this.commonService.store_details?.package_info?.category).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.freePlan = result.free_plan;

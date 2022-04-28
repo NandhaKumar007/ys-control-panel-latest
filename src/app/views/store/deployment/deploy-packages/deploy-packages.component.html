@@ -27,7 +27,7 @@
             <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
               <div class="pricing-col-inner w-100">
                 <div class="">
-                  <h4 class="text-left">{{x.name}}</h4>
+                  <h4 class="text-left">{{x.disp_name}}</h4>
                   <p class="text-left" [innerHTML]="x.description"></p>
                 </div>
                 <div *ngIf="!commonService.store_details?.package_details?.billing_status && !commonService.store_details?.package_details?.expiry_date">
@@ -315,12 +315,12 @@
   <section class="pricing-section-wrapper mobile-pricing-table">
     <ul class="nav nav-tabs sticky-pricing-nav d-flex justify-content-center">
       <li *ngFor="let x of packageList; let i=index;" class="nav-item" [ngStyle]="{'width.%': (packageList.length>3)? '25' : '33.33' }">
-        <a class="nav-link text-center" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.name}}</a>
+        <a class="nav-link text-center" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.disp_name}}</a>
       </li>
     </ul>
     <div *ngIf="packageList[selectedIndex]" class="p-0">
       <div class="containerp-0">
-        <h3>{{packageList[selectedIndex].name}}</h3>
+        <h3>{{packageList[selectedIndex].disp_name}}</h3>
         <p [innerHTML]="packageList[selectedIndex].description"></p>
         <div class="mb-2" *ngIf="!commonService.store_details?.package_details?.billing_status && !commonService.store_details?.package_details?.expiry_date">
           <button class="btn btn-primary w-100" (click)="onSelectPlan(packageList[selectedIndex], subscriptionModal);">Select Plan</button>
@@ -567,7 +567,7 @@
   <div *ngIf="freePlan!=packageForm._id" class="modal-header">
     <div>
       <h4 class="modal-title" id="modal-basic-title">
-        {{packageForm.name}} Plan
+        {{packageForm.disp_name}} Plan
       </h4>
     </div>
     <div class="d-flex">
@@ -657,7 +657,7 @@
 <ng-template #upgradeModal let-modal>
   <div class="modal-header">
     <div>
-      <h4 class="modal-title" id="modal-basic-title">{{upgradeData.package_details?.name}} Plan</h4>
+      <h4 class="modal-title" id="modal-basic-title">{{upgradeData.package_details?.disp_name}} Plan</h4>
     </div>
     <div class="d-flex">
       <i class="material-icons" id="closeModal" (click)="modal.dismiss('Cross click');">close</i>

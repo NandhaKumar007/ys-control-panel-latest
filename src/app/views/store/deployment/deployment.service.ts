@@ -14,7 +14,7 @@ export class DeploymentService {
   DEPLOY_DETAILS(storeId) { return this.http.get<any>(environment.ws_url+'/others/deploy?store_id='+storeId); }
   UPDATE_DEPLOY_DETAILS(x) { return this.http.put<any>(environment.ws_url+'/others/deploy', x); }
 
-  PACKAGE_LIST(x) { return this.http.get<any>(environment.ws_url+'/others/packages?category='+x); }
+  PACKAGE_LIST(x, y) { return this.http.get<any>(environment.ws_url+'/others/packages?service='+x+'&category='+y); }
   PURCHASE_PLAN(x) { return this.http.post<any>(environment.ws_url+'/others/plan', x); }
   CHANGE_PLAN(x) { return this.http.put<any>(environment.ws_url+'/others/plan', x); }
 
