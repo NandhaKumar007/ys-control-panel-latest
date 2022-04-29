@@ -152,7 +152,7 @@ export class SidebarService {
           routePermissionList.push("quotations");
         }
         // orders
-        if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based' || this.commonService.store_details.type == 'restaurant_based') {
+        if(this.commonService.store_details.type != 'quot_based') {
           // product
           let orderList: IChildItem[] = [
             { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
@@ -436,7 +436,7 @@ export class SidebarService {
       //   routePermissionList.push("quotations", "abandoned_quotes");
       // }
       // orders
-      if(this.commonService.store_details.type == 'order_based' || this.commonService.store_details.type == 'quot_with_order_based' || this.commonService.store_details.type == 'restaurant_based') {
+      if(this.commonService.store_details.type != 'quot_based') {
         // product
         let orderList: IChildItem[] = [];
         if(subuserFeatures.indexOf('live_orders')!=-1)

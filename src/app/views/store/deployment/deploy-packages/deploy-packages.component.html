@@ -24,7 +24,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-10">
           <div class="row">
-            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <h4 class="text-left">{{x.disp_name}}</h4>
@@ -72,7 +72,7 @@
         </div>
         <div class="col-md-10">
           <div class="row">
-            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <p *ngIf="x.keyword!='free'" class="m-0">
@@ -107,7 +107,7 @@
         </div>
         <div class="col-md-10">
           <div class="row">
-            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <p class="m-0">
@@ -139,7 +139,7 @@
         </div>
         <div class="col-md-10">
           <div class="row">
-            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.transaction_limit | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month</p>
@@ -166,7 +166,7 @@
         </div>
         <div class="col-md-10">
           <div class="row">
-            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+            <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
                   <p class="m-0">{{x.currency_types[commonService.store_currency?.country_code]?.live | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
@@ -192,7 +192,7 @@
         <div class="col-md-10">
           <div class="row" *ngIf="i===0">
             <ng-container *ngFor="let y of packageList;">
-              <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
                 <div class="pricing-col-inner w-100" style="border: none; padding-top: 0px;">
                   <b *ngIf="top_fea_info[y.keyword]">
                     {{ top_fea_info[y.keyword] }}
@@ -203,7 +203,7 @@
           </div>
           <div class="row">
             <ng-container *ngFor="let y of packageList;">
-              <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+              <div class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
                 <div class="pricing-col-inner w-100">
                   <div class="">
                     <p class="m-0">{{x[y.keyword]}}</p>
@@ -248,7 +248,7 @@
           <div class="col-md-10">
             <div class="row">
               <ng-container *ngFor="let y of packageList;">
-                <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                <div class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
                   <div class="pricing-col-inner w-100">
                     <div *ngIf="x[y.keyword]">
                       <span *ngIf="x[y.keyword]!=true" class="tooltip-container">
@@ -292,7 +292,7 @@
           <div class="col-md-10">
             <div class="row">
               <ng-container *ngFor="let y of packageList;">
-                <div class="d-flex pricing-col p-0" [ngClass]="(packageList.length>3)? 'col-md-3': 'col-md-4'">
+                <div class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
                   <div class="pricing-col-inner w-100">
                     <div *ngIf="x[y.keyword]">
                       <p class="m-0">
@@ -314,7 +314,7 @@
   <!-- mobile -->
   <section class="pricing-section-wrapper mobile-pricing-table">
     <ul class="nav nav-tabs sticky-pricing-nav d-flex justify-content-center">
-      <li *ngFor="let x of packageList; let i=index;" class="nav-item" [ngStyle]="{'width.%': (packageList.length>3)? '25' : '33.33' }">
+      <li *ngFor="let x of packageList; let i=index;" class="nav-item" [ngStyle]="{'width.%': (packageList.length===1)? '100':(packageList.length===2)? '50': '33.33'}">
         <a class="nav-link text-center" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.disp_name}}</a>
       </li>
     </ul>
@@ -601,20 +601,20 @@
             <div class="row m-0" *ngIf="paymentData.cgst && paymentData.sgst">
               <div class="col-md-12"><hr class="my-2"></div>
               <div class="col-9">
-                <p class="mb-0">GST</p>
+                <p class="mb-0">GST({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%)</p>
               </div>
               <div class="col-3 d-flex justify-content-end">
-                <p class="mb-0">({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%) {{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="mb-0">{{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>
             <!-- IGST -->
             <div class="row m-0" *ngIf="paymentData.igst">
               <div class="col-md-12"><hr class="my-2"></div>
               <div class="col-9">
-                <p class="mb-0" >GST</p>
+                <p class="mb-0" >GST({{paymentData.igst.percentage}}%)</p>
               </div>
               <div class="col-3 d-flex justify-content-end">
-                <p class="mb-0">({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="mb-0">{{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>  
             <div class="row m-0">
@@ -725,20 +725,20 @@
             <div class="row m-0" *ngIf="paymentData.cgst && paymentData.sgst">
               <div class="col-md-12"><hr class="my-2"></div>
               <div class="col-9">
-                <p class="mb-0">GST</p>
+                <p class="mb-0">GST({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%)</p>
               </div>
               <div class="col-3 d-flex justify-content-end">
-                <p class="mb-0">({{paymentData.cgst.percentage+paymentData.sgst.percentage}}%) {{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="mb-0">{{(paymentData.cgst.amount+paymentData.sgst.amount) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>
             <!-- IGST -->
             <div class="row m-0" *ngIf="paymentData.igst">
               <div class="col-md-12"><hr class="my-2"></div>
               <div class="col-9">
-                <p class="mb-0" >GST</p>
+                <p class="mb-0" >GST({{paymentData.igst.percentage}}%)</p>
               </div>
               <div class="col-3 d-flex justify-content-end">
-                <p class="mb-0">({{paymentData.igst.percentage}}%) {{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p class="mb-0">{{paymentData.igst.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
               </div>
             </div>  
             <div class="row m-0">

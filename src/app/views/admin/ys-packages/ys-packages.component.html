@@ -101,8 +101,8 @@
             </select>
           </div>
           <div class="col-md-3 form-group mb-3">
-            <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel" required />
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="packageForm.name" #name="ngModel" [disabled]="formType!='add'" required />
           </div>
           <div class="col-md-3 form-group mb-3">
             <label>Diplay Text</label>

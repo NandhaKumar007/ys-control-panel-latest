@@ -120,7 +120,7 @@
             <p>
               <b>Current Plan</b>
             </p>
-            <p>{{billDetails?.package_details?.name | uppercase}}</p>
+            <p>{{billDetails?.package_details?.disp_name | uppercase}}</p>
           </div>
           <div class="col-md-6">
             <div *ngIf="commonService.master_token" class="d-flex justify-content-end">
@@ -135,7 +135,7 @@
           <div *ngIf="billDetails?.next_package_details" class="col-md-12">
             <div class="">
               <p>
-                <b>Upgrade to {{billDetails?.next_package_details?.name}} Plan</b>
+                <b>Upgrade to {{billDetails?.next_package_details?.disp_name}} Plan</b>
               </p>
             </div>
             <div class="">

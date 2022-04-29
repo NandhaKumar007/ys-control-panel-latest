@@ -38,46 +38,101 @@ export class DeployPackagesComponent implements OnInit {
       "free": "50 Products",
       "essential": "Unlimited Products",
       "professional": "Basic SEO Editor",
+
       "lite": "Unlimited Products",
+
       "starter": "Abandoned Cart Recovery",
       "growth": "Manual Order Creation",
-      "premium": "Product Customization Module"
+      "premium": "Product Customization Module",
+
+      "b2b-growth": "Manual Order Creation",
+      "b2b-premium": "Product Customization Module",
+
+      "service-starter": "Abandoned Cart Recovery",
+      "service-growth": "Manual Order Creation",
+
+      "multi-vendor-premium": "Product Customization Module",
+      "multi-vendor-premium-plus": "Product Customization Module"
     },
     {
       "free": "Free Sub Domain",
       "essential": "Custom Domain",
       "professional": "Link Existing Domain",
+
       "lite": "Advanced SEO Editor",
+
       "starter": "Blog Module",
       "growth": "Product FAQ",
-      "premium": "Calculated Shipping Rates"
+      "premium": "Calculated Shipping Rates",
+
+      "b2b-growth": "Product FAQ",
+      "b2b-premium": "Calculated Shipping Rates",
+
+      "service-starter": "Blog Module",
+      "service-growth": "Product FAQ",
+
+      "multi-vendor-premium": "Calculated Shipping Rates",
+      "multi-vendor-premium-plus": "Calculated Shipping Rates"
     },
     {
       "free": "Order Status Triggers",
       "essential": "Product Reviews",
       "professional": "Google Analytics",
+
       "lite": "Unlimited Menus",
+
       "starter": "Testimonial Uploader",
       "growth": "Gift Cards",
-      "premium": "Currency Converter"
+      "premium": "Currency Converter",
+
+      "b2b-growth": "Gift Cards",
+      "b2b-premium": "Currency Converter",
+
+      "service-starter": "Testimonial Uploader",
+      "service-growth": "Gift Cards",
+
+      "multi-vendor-premium": "Currency Converter",
+      "multi-vendor-premium-plus": "Currency Converter"
     },
     {
       "free": "UPI & Bank Transfer",
       "essential": "Payment Gateway",
       "professional": "Facebook Pixel",
+
       "lite": "Messenger Integration",
+      
       "starter": "Product Filters and Tags",
       "growth": "Order Instructions/Comments",
-      "premium": "Lowest Transaction Fee"
+      "premium": "Lowest Transaction Fee",
+
+      "b2b-growth": "Order Instructions/Comments",
+      "b2b-premium": "Lowest Transaction Fee",
+
+      "service-starter": "Product Filters and Tags",
+      "service-growth": "Order Instructions/Comments",
+
+      "multi-vendor-premium": "Lowest Transaction Fee",
+      "multi-vendor-premium-plus": "Lowest Transaction Fee"
     },
     {
       "free": "1 menu 4 categories",
       "essential": "Mega Menu",
       "professional": "2 Staff Account",
+
       "lite": "1 Staff Account",
+
       "starter": "5 Staff Account",
       "growth": "10 Staff Account",
-      "premium": "20 Staff Account"
+      "premium": "20 Staff Account",
+
+      "b2b-growth": "10 Staff Account",
+      "b2b-premium": "20 Staff Account",
+      
+      "service-starter": "5 Staff Account",
+      "service-growth": "10 Staff Account",
+
+      "multi-vendor-premium": "20 Staff Account",
+      "multi-vendor-premium-plus": "20 Staff Account"
     },
   ];
   @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
@@ -91,7 +146,7 @@ export class DeployPackagesComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true;
-    this.api.PACKAGE_LIST(this.commonService.store_details?.type, this.commonService.store_details?.package_info?.category).subscribe(result => {
+    this.api.PACKAGE_LIST(this.commonService.store_details.package_details?.package_id).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.freePlan = result.free_plan;

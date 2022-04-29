@@ -124,8 +124,8 @@ export class CommonService {
   ys_services: any = [
     { display: 'B2C Ecommerce', name: 'order_based' },
     { display: 'B2B Ecommerce', name: 'quot_based' },
-    { display: 'Multi Vendor Ecommerce', name: 'multi_vendor' },
-    { display: 'Service Ecommerce', name: 'service_based' }
+    { display: 'Service Ecommerce', name: 'service_based' },
+    { display: 'Multi Vendor Ecommerce', name: 'multi_vendor' }
   ];
   colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;
