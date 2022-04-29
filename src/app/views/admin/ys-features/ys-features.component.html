@@ -3,31 +3,54 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Apps</h1>
-    <ul>
-      <li>Manage and edit yourstore app properties</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-12 p-0">
+        <div class="row">
+          <div class="col-md-8 d-flex justify-content-end align-items-start flex-column">
+            <h1>Apps</h1>
+            <ul>
+              <li>Manage and edit yourstore app properties</li>
+            </ul>
+          </div>
+          <div class="col-md-4 mt-2 d-flex align-items-end justify-content-end mt-sm-15">
+            <button type="button" class="btn btn-primary" routerLink="/admin/features/add">Add Feature</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="row mb-4">
     <div class="col-md-3">
       <div class="form-group">
-        <select name="type" (change)="onChange(selected_category);" [(ngModel)]="selected_category" class="form-control select-arrow">
+        <select name="selected_category" (change)="onChange();" [(ngModel)]="selected_category" class="form-control select-arrow">
           <option value="all">All</option>
           <option *ngFor="let x of commonService.feature_categories | orderAsc:'rank';" value="{{x.name}}">{{x.name}}</option>
         </select>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <div class="form-group">
-        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+        <select name="selected_package" (change)="onChange();" [(ngModel)]="selected_package" class="form-control select-arrow">
+          <option value="all">All</option>
+          <option *ngFor="let x of commonService.admin_packages | orderAsc:'rank';" value="{{x._id}}">{{x.name}}</option>
+        </select>
       </div>
     </div>
     <div class="col-md-3">
-      <div class="pull-right">
-        <button type="button" class="btn btn-primary" routerLink="/admin/features/add">Add Feature</button>
+      <div class="form-group">
+        <select name="fea_type" (change)="onChange();" [(ngModel)]="fea_type" class="form-control select-arrow">
+          <option value="all">All</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
       </div>
     </div>
   </div>
@@ -51,14 +74,19 @@
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <!-- OTHER DATA -->
                   <p class="m-0 w-20 w-sm-100">{{ x.name }}</p>
-                  <p class="m-0 w-20 w-sm-100">{{ (x.packages?.length)? x.packages.join(', '): 'NA' }}</p>
-                  <p class="m-0 w-20 w-sm-100" *ngIf="x.disc_status && !x.disc_expired">{{
+                  <p class="m-0 w-20 w-sm-100">
+                    <ng-container *ngIf="x.packages?.length">
+                      <li *ngFor="let p of x.packages;">{{p}}</li>
+                    </ng-container>
+                    <ng-container *ngIf="!x.packages?.length">NA</ng-container>
+                  </p>
+                  <!-- <p class="m-0 w-20 w-sm-100" *ngIf="x.disc_status && !x.disc_expired">{{
                     x.disc_currency_types.INR.price |
                     currency:'INR':'symbol':'1.0' }} off till {{ x.disc_to | date: "dd MMM y" }}</p>
                   <p class="m-0 w-20 w-sm-100" *ngIf="x.disc_status && x.disc_expired">{{
                     x.disc_currency_types.INR.price |
                     currency:'INR':'symbol':'1.0' }} off expired</p>
-                  <p class="m-0 w-20 w-sm-100" *ngIf="!x.disc_status">{{ 0 | currency:'INR':'symbol':'1.0' }} off</p>
+                  <p class="m-0 w-20 w-sm-100" *ngIf="!x.disc_status">{{ 0 | currency:'INR':'symbol':'1.0' }} off</p> -->
                   <p class="m-0 text-muted text-small w-sm-100 d-lg-block item-actions">
                     <button class="btn btn-wide btn-outline-secondary w-md-100 mr-3"
                       routerLink="/admin/features/update/{{x._id}}">Edit</button>

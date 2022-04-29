@@ -17,7 +17,8 @@ export class YsFeaturesComponent implements OnInit {
   pageLoader: boolean; parent_list: any = []; list: any = [];
   deleteForm: any; search_bar: string;
   curr_end_date: any = new Date().setHours(23,59,59,999);
-  selected_category: string = 'all';
+  selected_category: string = 'all'; selected_package: string = 'all';
+  fea_type: string = 'all';
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private adminApi: AdminApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -41,7 +42,7 @@ export class YsFeaturesComponent implements OnInit {
             if(new Date(obj.disc_to).setHours(23,59,59,999) < new Date().setHours(0,0,0,0)) obj.disc_expired = true;
           }
           this.parent_list.push(obj);
-          this.onChange(this.selected_category);
+          this.onChange();
         });
       }
       else console.log("response", result);
@@ -63,10 +64,23 @@ export class YsFeaturesComponent implements OnInit {
 		});
   }
 
-  onChange(x) {
+  onChange() {
     this.list = [];
-    if(x=='all') this.list = this.parent_list;
-    else this.list = this.parent_list.filter(el => el.category==x);
+    if(this.selected_category=='all' && this.selected_package=='all') this.list = this.parent_list;
+    else if(this.selected_category=='all') {
+      this.list = this.parent_list.filter(el => el.linked_packages.findIndex(obj => obj.package_id==this.selected_package)!=-1);
+    }
+    else if(this.selected_package=='all') {
+      this.list = this.parent_list.filter(el => el.category==this.selected_category);
+    }
+    else this.list = this.parent_list.filter(el => el.category==this.selected_category && el.linked_packages.findIndex(obj => obj.package_id==this.selected_package)!=-1);
+    // charges type
+    if(this.fea_type=='free') {
+      this.list = this.list.filter(el => el.linked_packages.length && el.linked_packages[0]?.currency_types['INR']?.price===0);
+    }
+    if(this.fea_type=='paid') {
+      this.list = this.list.filter(el => el.linked_packages.length && el.linked_packages[0]?.currency_types['INR']?.price>0);
+    }
   }
 
 }
