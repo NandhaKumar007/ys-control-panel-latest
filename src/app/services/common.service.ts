@@ -122,10 +122,10 @@ export class CommonService {
     { display: 'None', name: 'none' }
   ];
   ys_services: any = [
-    { display: 'B2C Ecommerce', name: 'order_based' },
-    { display: 'B2B Ecommerce', name: 'quot_based' },
-    { display: 'Service Ecommerce', name: 'service_based' },
-    { display: 'Multi Vendor Ecommerce', name: 'multi_vendor' }
+    { display: 'B2C Ecommerce', short_name: "b2c", name: 'order_based' },
+    { display: 'B2B Ecommerce', short_name: "b2b", name: 'quot_based' },
+    { display: 'Service Ecommerce', short_name: "service", name: 'service_based' },
+    { display: 'Multi Vendor Ecommerce', short_name: "vendor", name: 'multi_vendor' }
   ];
   colorNames: any = ['Color', 'color', 'Colour', 'colour'];
   host_name: string = window.location.hostname;

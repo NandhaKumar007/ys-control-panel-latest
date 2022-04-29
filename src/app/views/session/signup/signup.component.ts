@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
@@ -14,7 +14,7 @@ import { CommonService } from '../../../services/common.service';
 
 export class SignupComponent implements OnInit {
 
-  signupForm: any;
+  signupForm: any; params: any;
   step: number = 1; stateList: any = [];
   currencyList: any = [
     { "country_code": "INR", "html_code": "&#x20B9;" },
@@ -23,10 +23,10 @@ export class SignupComponent implements OnInit {
     { "country_code": "AED", "html_code": "AED" }
   ];
   
-  constructor(private router: Router, private api: ApiService, public commonService: CommonService) {
+  constructor(private router: Router, private activeRoute: ActivatedRoute, private api: ApiService, public commonService: CommonService) {
     this.signupForm = {
       country: "India", currency_types: this.currencyList[0],
-      company_details: { dial_code: "+91", state: "" }, category: ""
+      company_details: { dial_code: "+91", state: "" }, category: "", type: ""
     };
     if(environment.keep_login) this.signupForm.signup_from = "app";
     if(!localStorage.getItem("country_list")) {
@@ -41,12 +41,20 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(environment.keep_login) this.commonService.loadChat();
+    this.activeRoute.params.subscribe((params: Params) => {
+      this.params = params;
+      if(environment.keep_login) this.commonService.loadChat();
+    });
   }
 
   onSubmit() {
     this.signupForm.submit = true;
     this.signupForm.company_details.name = this.signupForm.name;
+    if(this.params.category) this.signupForm.ys_category = this.params.category;
+    if(this.params.service) {
+      let sIndex = this.commonService.ys_services.findIndex(obj => obj.short_name==this.params.service);
+      if(sIndex!=-1) this.signupForm.type = this.commonService.ys_services[sIndex].name;
+    }
     if(sessionStorage.getItem("app_token")) this.signupForm.app_token = sessionStorage.getItem("app_token");
     sessionStorage.setItem('formData', JSON.stringify(this.signupForm));
     this.api.SIGNUP(this.signupForm).subscribe(result => {

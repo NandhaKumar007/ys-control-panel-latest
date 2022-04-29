@@ -45,14 +45,14 @@ export class DeployPackagesComponent implements OnInit {
       "growth": "Manual Order Creation",
       "premium": "Product Customization Module",
 
-      "b2b-growth": "Manual Order Creation",
-      "b2b-premium": "Product Customization Module",
+      "b2b-growth": "Inbuilt Quote Management",
+      "b2b-premium": "Split Payment Collection",
 
-      "service-starter": "Abandoned Cart Recovery",
-      "service-growth": "Manual Order Creation",
+      "service-starter": "Schedule Appointments",
+      "service-growth": "Product Based Scheduling",
 
-      "multi-vendor-premium": "Product Customization Module",
-      "multi-vendor-premium-plus": "Product Customization Module"
+      "multi-vendor-premium": "Vendor Dashboard",
+      "multi-vendor-premium-plus": "Ad Management Module"
     },
     {
       "free": "Free Sub Domain",
@@ -65,14 +65,14 @@ export class DeployPackagesComponent implements OnInit {
       "growth": "Product FAQ",
       "premium": "Calculated Shipping Rates",
 
-      "b2b-growth": "Product FAQ",
-      "b2b-premium": "Calculated Shipping Rates",
+      "b2b-growth": "Manage Inventory",
+      "b2b-premium": "Bulk Product Pricing",
 
-      "service-starter": "Blog Module",
-      "service-growth": "Product FAQ",
+      "service-starter": "Manage Appointments",
+      "service-growth": "Manual Order Creation",
 
-      "multi-vendor-premium": "Calculated Shipping Rates",
-      "multi-vendor-premium-plus": "Calculated Shipping Rates"
+      "multi-vendor-premium": "Logistics Integration",
+      "multi-vendor-premium-plus": "Vendor Staff Accounts"
     },
     {
       "free": "Order Status Triggers",
@@ -85,14 +85,14 @@ export class DeployPackagesComponent implements OnInit {
       "growth": "Gift Cards",
       "premium": "Currency Converter",
 
-      "b2b-growth": "Gift Cards",
-      "b2b-premium": "Currency Converter",
+      "b2b-growth": "Manual Order Creation",
+      "b2b-premium": "Product Customization Module",
 
-      "service-starter": "Testimonial Uploader",
-      "service-growth": "Gift Cards",
+      "service-starter": "List/Sell Services",
+      "service-growth": "Product FAQ",
 
-      "multi-vendor-premium": "Currency Converter",
-      "multi-vendor-premium-plus": "Currency Converter"
+      "multi-vendor-premium": "Payment Gateway Integration",
+      "multi-vendor-premium-plus": "Product Rating and Reviews"
     },
     {
       "free": "UPI & Bank Transfer",
@@ -105,14 +105,14 @@ export class DeployPackagesComponent implements OnInit {
       "growth": "Order Instructions/Comments",
       "premium": "Lowest Transaction Fee",
 
-      "b2b-growth": "Order Instructions/Comments",
-      "b2b-premium": "Lowest Transaction Fee",
+      "b2b-growth": "Product FAQ",
+      "b2b-premium": "Calculated Shipping Rates",
 
-      "service-starter": "Product Filters and Tags",
-      "service-growth": "Order Instructions/Comments",
+      "service-starter": "Abandoned Cart Recovery",
+      "service-growth": "Gift Cards",
 
-      "multi-vendor-premium": "Lowest Transaction Fee",
-      "multi-vendor-premium-plus": "Lowest Transaction Fee"
+      "multi-vendor-premium": "Flexible Commission",
+      "multi-vendor-premium-plus": "Advanced Reports"
     },
     {
       "free": "1 menu 4 categories",
@@ -125,14 +125,14 @@ export class DeployPackagesComponent implements OnInit {
       "growth": "10 Staff Account",
       "premium": "20 Staff Account",
 
-      "b2b-growth": "10 Staff Account",
-      "b2b-premium": "20 Staff Account",
+      "b2b-growth": "Order Instructions/Comments",
+      "b2b-premium": "Lowest Transaction Fee",
       
-      "service-starter": "5 Staff Account",
-      "service-growth": "10 Staff Account",
+      "service-starter": "Blog Module",
+      "service-growth": "Order Instructions/Comments",
 
-      "multi-vendor-premium": "20 Staff Account",
-      "multi-vendor-premium-plus": "20 Staff Account"
+      "multi-vendor-premium": "Manual Vendor Payouts",
+      "multi-vendor-premium-plus": "Automated Vendor Payouts"
     },
   ];
   @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
