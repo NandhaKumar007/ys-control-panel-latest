@@ -34,8 +34,8 @@
                   <button class="btn btn-primary" (click)="onSelectPlan(x, subscriptionModal);">Select Plan</button>
                 </div>
                 <div *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
-                  <button *ngIf="x.rank===packageRank" class="btn btn-primary" disabled>Current Plan</button>
-                  <button *ngIf="x.rank!=packageRank" (click)="onChangePlan(x, upgradeModal);" class="btn btn-primary">
+                  <button *ngIf="x._id===commonService.store_details?.package_details?.package_id" class="btn btn-primary" disabled>Current Plan</button>
+                  <button *ngIf="x._id!=commonService.store_details?.package_details?.package_id" (click)="onChangePlan(x, upgradeModal);" class="btn btn-primary">
                     Select Plan
                   </button>
                 </div>
@@ -326,8 +326,8 @@
           <button class="btn btn-primary w-100" (click)="onSelectPlan(packageList[selectedIndex], subscriptionModal);">Select Plan</button>
         </div>
         <div class="mb-2" *ngIf="commonService.store_details?.package_details?.billing_status && commonService.store_details?.package_details?.expiry_date">
-          <button *ngIf="packageList[selectedIndex].rank===packageRank" class="btn btn-primary w-100" disabled>Current Plan</button>
-          <button *ngIf="packageList[selectedIndex].rank!=packageRank" (click)="onChangePlan(packageList[selectedIndex], upgradeModal);" class="btn btn-primary w-100">
+          <button *ngIf="packageList[selectedIndex]._id===commonService.store_details?.package_details?.package_id" class="btn btn-primary w-100" disabled>Current Plan</button>
+          <button *ngIf="packageList[selectedIndex]._id!=commonService.store_details?.package_details?.package_id" (click)="onChangePlan(packageList[selectedIndex], upgradeModal);" class="btn btn-primary w-100">
             Select Plan
           </button>
         </div>

@@ -17,7 +17,7 @@ export class DeployPackagesComponent implements OnInit {
 
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
-  paymentTypes: any = []; packageRank: number = 0;
+  paymentTypes: any = [];
   environment: any = environment; freePlan: string;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
@@ -150,13 +150,11 @@ export class DeployPackagesComponent implements OnInit {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.freePlan = result.free_plan;
-        this.packageList = result.list;
+        this.packageList = result.list.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
         this.packageList.forEach(obj => {
           obj.keyword = obj.name.toLowerCase();
           obj.description = obj.description.replace(new RegExp('\n', 'g'), "<br />")
         });
-        let pIndex = this.packageList.findIndex(obj => obj._id==this.commonService.store_details.package_details.package_id);
-        if(pIndex!=-1) this.packageRank = this.packageList[pIndex].rank;
       }
       else console.log("response", result);
     });
@@ -187,9 +185,9 @@ export class DeployPackagesComponent implements OnInit {
         "name": "Call Support",
         "essential": true,
         "professional": true
-      },
+      }
     ];
-    let proSupportService = [
+    let b2cSupportService = [
       {
         "name": "Standard Email Support",
         "lite": true,
@@ -211,7 +209,69 @@ export class DeployPackagesComponent implements OnInit {
       {
         "name": "Call Support",
         "premium": true
+      }
+    ];
+    let b2bSupportService = [
+      {
+        "name": "Standard Email Support",
+        "b2b-growth": true,
+        "b2b-premium": true
       },
+      {
+        "name": "Priority Email Support",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Priority Chat Support",
+        "b2b-premium": true
+      },
+      {
+        "name": "Call Support",
+        "b2b-premium": true
+      }
+    ];
+    let serviceSupportService = [
+      {
+        "name": "Standard Email Support",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Priority Email Support",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Priority Chat Support",
+        "service-growth": true
+      },
+      {
+        "name": "Call Support",
+        "service-growth": true
+      }
+    ];
+    let vendorSupportService = [
+      {
+        "name": "Standard Email Support",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Priority Email Support",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Priority Chat Support",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Call Support",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      }
     ];
     // all features
     let genieAllFeatures = [
@@ -221,13 +281,6 @@ export class DeployPackagesComponent implements OnInit {
         "essential": true,
         "professional": true,
         "help_content": "No limit on the total number of products"
-      },
-      {
-        "name": "Discount Codes",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
       },
       {
         "name": "Sub domain",
@@ -335,13 +388,6 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Present measurements for product sizes available on sale"
       },
       {
-        "name": "Product Search",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Add an omnibox to your website to search through products, brands, categories and SKUs"
-      },
-      {
         "name": "App Store Access",
         "free": true,
         "essential": true,
@@ -361,6 +407,18 @@ export class DeployPackagesComponent implements OnInit {
         "essential": true,
         "professional": true,
         "help_content": "Change the banners and segment image to best portray your brand"
+      },
+      {
+        "name": "Discount Codes",
+        "essential": true,
+        "professional": true,
+        "help_content": "Run powerfull campaingns to boost your sale"
+      },
+      {
+        "name": "Product Search",
+        "essential": true,
+        "professional": true,
+        "help_content": "Add an omnibox to your website to search through products, brands, categories and SKUs"
       },
       {
         "name": "Payment Gateway",
@@ -460,7 +518,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Create two additional user accounts and assign permissions"
       }
     ];
-    let proAllFeatures = [
+    let b2cAllFeatures = [
       {
         "name": "Unlimited Products",
         "lite": true,
@@ -745,6 +803,791 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Give your customers an option to choose from a list of currencies"
       }
     ];
+    let b2bAllFeatures = [
+      {
+        "name": "Unlimited Products",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "No limit on the total number of products"
+      },
+      {
+        "name": "Advanced discount options",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Run powerfull campaingns to boost your sale"
+      },
+      {
+        "name": "Dashboard",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "An overview to your complete sales data"
+      },
+      {
+        "name": "Order Status Triggers",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Emails that are triggered by various events in your sales process"
+      },
+      {
+        "name": "Invoice Generator",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Auto Generated Invoices for each orders"
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Drive more organic traffic with custom SEO optimisation"
+      },
+      {
+        "name": "Multi Format Sales Report",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Download your product, category and total sales reports in XLS, CSV and PDF"
+      },
+      {
+        "name": "Standard Email Template",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Preset email templates for order information and various user interaction with the site"
+      },
+      {
+        "name": "Payment Gateway Integration",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Connect your store with our list of supported payment partners and start receiving payments"
+      },
+      {
+        "name": "CoD",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Offer your customers the prefered payment method"
+      },
+      {
+        "name": "Tax Module",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Collect TAX's applicable on your sale from your customers"
+      },
+      {
+        "name": "SSL",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "SSL is a security protocol that creates an encrypted link between a web server and a web browser"
+      },
+      {
+        "name": "Unlimited Product Variants",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Add multiple combinations of product variants like size, colour, etc.."
+      },
+      {
+        "name": "Unlimited Menus",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Creating a menu with multiple levels of categorisation and improve navigation"
+      },
+      {
+        "name": "Flat Rate Shipping Integration",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Set flat shipping charges for both domestic and international orders"
+      },
+      {
+        "name": "Social Media Login",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "One click social logins for hassle free signups"
+      },
+      {
+        "name": "Google - Facebook Ad Tracking",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Gain insights into your social media campaigns and traffic"
+      },
+      {
+        "name": "Custom Product Footnotes",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Add additional information about products in a structured layout"
+      },
+      {
+        "name": "Custom Size Chart",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Present measurements for product sizes available on sale"
+      },
+      {
+        "name": "Messenger Integration",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Chat with your customers directly on their social media"
+      },
+      {
+        "name": "Bulk Upload",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Upload multiplt products at once by uploading a simple CSV sheet"
+      },
+      {
+        "name": "Product Search",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Add an omnibox to your website to search through products, brands, categories and SKUs"
+      },
+      {
+        "name": "App Store Access",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Access to our wide collection of apps"
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Automatic email reminders for incomplete purchases"
+      },
+      {
+        "name": "Testimonial Uploader",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
+      },
+      {
+        "name": "Browser Push Notificatons",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Keep your customer updated with regular push notifications"
+      },
+      {
+        "name": "Blog Module",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Engage your customers with butifull blogs that helps you sell more"
+      },
+      {
+        "name": "Customer Feedback Module",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Get your customers valuble feedback"
+      },
+      {
+        "name": "Newsletter Subscription",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Build an organic and powerfull mailing list"
+      },
+      {
+        "name": "Product Filters and Tags",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Improve product discoverability through tagged attributes  like price, color and size"
+      },
+      {
+        "name": "Product FAQ",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Answer questions before your customers ask"
+      },
+      {
+        "name": "Gift Cards",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Enable gifting solutions for your customers"
+      },
+      {
+        "name": "Mark Product as Gift",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Allow shoppers to mark products as gifts and hide the selling price from order recepients"
+      },
+      {
+        "name": "Order Instructions/Comments",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Get additional details from your users while they checkout"
+      },
+      {
+        "name": "Manual Order Creation",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "Create orders manually to manage offline sales"
+      },
+      {
+        "name": "Inbuilt Quote Management",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Manage Inventory",
+        "b2b-growth": true,
+        "b2b-premium": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Calculated Shipping Rates",
+        "b2b-premium": true,
+        "help_content": "Automatically calculate shipping charge based on weight and country"
+      },
+      {
+        "name": "Product Customization Module",
+        "b2b-premium": true,
+        "help_content": "Add multi customizable options to let customers build their own product"
+      },
+      {
+        "name": "Product Measurement Module",
+        "b2b-premium": true,
+        "help_content": "Get measurement sets from your customers to truly create a bespoke product"
+      },
+      {
+        "name": "Currency Convertor",
+        "b2b-premium": true,
+        "help_content": "Give your customers an option to choose from a list of currencies"
+      },
+      {
+        "name": "Split Payment Collection",
+        "b2b-premium": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Bulk Product Pricing",
+        "b2b-premium": true,
+        "help_content": "NA"
+      }
+    ];
+    let serviceAllFeatures = [
+      {
+        "name": "Unlimited Products",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "No limit on the total number of products"
+      },
+      {
+        "name": "Advanced discount options",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Run powerfull campaingns to boost your sale"
+      },
+      {
+        "name": "Dashboard",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "An overview to your complete sales data"
+      },
+      {
+        "name": "Order Status Triggers",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Emails that are triggered by various events in your sales process"
+      },
+      {
+        "name": "Invoice Generator",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Auto Generated Invoices for each orders"
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Drive more organic traffic with custom SEO optimisation"
+      },
+      {
+        "name": "Multi Format Sales Report",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Download your product, category and total sales reports in XLS, CSV and PDF"
+      },
+      {
+        "name": "Standard Email Template",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Preset email templates for order information and various user interaction with the site"
+      },
+      {
+        "name": "Payment Gateway Integration",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Connect your store with our list of supported payment partners and start receiving payments"
+      },
+      {
+        "name": "CoD",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Offer your customers the prefered payment method"
+      },
+      {
+        "name": "Tax Module",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Collect TAX's applicable on your sale from your customers"
+      },
+      {
+        "name": "SSL",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "SSL is a security protocol that creates an encrypted link between a web server and a web browser"
+      },
+      {
+        "name": "Unlimited Product Variants",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Add multiple combinations of product variants like size, colour, etc.."
+      },
+      {
+        "name": "Unlimited Menus",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Creating a menu with multiple levels of categorisation and improve navigation"
+      },
+      {
+        "name": "Flat Rate Shipping Integration",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Set flat shipping charges for both domestic and international orders"
+      },
+      {
+        "name": "Social Media Login",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "One click social logins for hassle free signups"
+      },
+      {
+        "name": "Google - Facebook Ad Tracking",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Gain insights into your social media campaigns and traffic"
+      },
+      {
+        "name": "Custom Product Footnotes",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Add additional information about products in a structured layout"
+      },
+      {
+        "name": "Custom Size Chart",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Present measurements for product sizes available on sale"
+      },
+      {
+        "name": "Messenger Integration",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Chat with your customers directly on their social media"
+      },
+      {
+        "name": "Bulk Upload",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Upload multiplt products at once by uploading a simple CSV sheet"
+      },
+      {
+        "name": "Product Search",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Add an omnibox to your website to search through products, brands, categories and SKUs"
+      },
+      {
+        "name": "App Store Access",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Access to our wide collection of apps"
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Automatic email reminders for incomplete purchases"
+      },
+      {
+        "name": "Testimonial Uploader",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
+      },
+      {
+        "name": "Browser Push Notificatons",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Keep your customer updated with regular push notifications"
+      },
+      {
+        "name": "Blog Module",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Engage your customers with butifull blogs that helps you sell more"
+      },
+      {
+        "name": "Customer Feedback Module",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Get your customers valuble feedback"
+      },
+      {
+        "name": "Newsletter Subscription",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Build an organic and powerfull mailing list"
+      },
+      {
+        "name": "Product Filters and Tags",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "Improve product discoverability through tagged attributes  like price, color and size"
+      },
+      {
+        "name": "Schedule Appointments",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Manage Appointments",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "List/Sell Services",
+        "service-starter": true,
+        "service-growth": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Product Based Scheduling",
+        "service-growth": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Product FAQ",
+        "service-growth": true,
+        "help_content": "Answer questions before your customers ask"
+      },
+      {
+        "name": "Gift Cards",
+        "service-growth": true,
+        "help_content": "Enable gifting solutions for your customers"
+      },
+      {
+        "name": "Mark Product as Gift",
+        "service-growth": true,
+        "help_content": "Allow shoppers to mark products as gifts and hide the selling price from order recepients"
+      },
+      {
+        "name": "Order Instructions/Comments",
+        "service-growth": true,
+        "help_content": "Get additional details from your users while they checkout"
+      },
+      {
+        "name": "Manual Order Creation",
+        "service-growth": true,
+        "help_content": "Create orders manually to manage offline sales"
+      },
+      // {
+      //   "name": "Calculated Shipping Rates",
+      //   "help_content": "Automatically calculate shipping charge based on weight and country"
+      // },
+      // {
+      //   "name": "Product Customization Module",
+      //   "help_content": "Add multi customizable options to let customers build their own product"
+      // },
+      // {
+      //   "name": "Product Measurement Module",
+      //   "help_content": "Get measurement sets from your customers to truly create a bespoke product"
+      // },
+      // {
+      //   "name": "Currency Convertor",
+      //   "help_content": "Give your customers an option to choose from a list of currencies"
+      // }
+    ];
+    let vendorAllFeatures = [
+      {
+        "name": "Unlimited Products",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "No limit on the total number of products"
+      },
+      {
+        "name": "Advanced discount options",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Run powerfull campaingns to boost your sale"
+      },
+      {
+        "name": "Dashboard",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "An overview to your complete sales data"
+      },
+      {
+        "name": "Order Status Triggers",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Emails that are triggered by various events in your sales process"
+      },
+      {
+        "name": "Invoice Generator",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Auto Generated Invoices for each orders"
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Drive more organic traffic with custom SEO optimisation"
+      },
+      {
+        "name": "Multi Format Sales Report",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Download your product, category and total sales reports in XLS, CSV and PDF"
+      },
+      {
+        "name": "Standard Email Template",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Preset email templates for order information and various user interaction with the site"
+      },
+      {
+        "name": "Payment Gateway Integration",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Connect your store with our list of supported payment partners and start receiving payments"
+      },
+      {
+        "name": "CoD",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Offer your customers the prefered payment method"
+      },
+      {
+        "name": "Tax Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Collect TAX's applicable on your sale from your customers"
+      },
+      {
+        "name": "SSL",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "SSL is a security protocol that creates an encrypted link between a web server and a web browser"
+      },
+      {
+        "name": "Unlimited Product Variants",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Add multiple combinations of product variants like size, colour, etc.."
+      },
+      {
+        "name": "Unlimited Menus",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Creating a menu with multiple levels of categorisation and improve navigation"
+      },
+      {
+        "name": "Flat Rate Shipping Integration",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Set flat shipping charges for both domestic and international orders"
+      },
+      {
+        "name": "Social Media Login",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "One click social logins for hassle free signups"
+      },
+      {
+        "name": "Google - Facebook Ad Tracking",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Gain insights into your social media campaigns and traffic"
+      },
+      {
+        "name": "Custom Product Footnotes",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Add additional information about products in a structured layout"
+      },
+      {
+        "name": "Custom Size Chart",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Present measurements for product sizes available on sale"
+      },
+      {
+        "name": "Messenger Integration",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Chat with your customers directly on their social media"
+      },
+      {
+        "name": "Bulk Upload",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Upload multiplt products at once by uploading a simple CSV sheet"
+      },
+      {
+        "name": "Product Search",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Add an omnibox to your website to search through products, brands, categories and SKUs"
+      },
+      {
+        "name": "App Store Access",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Access to our wide collection of apps"
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Automatic email reminders for incomplete purchases"
+      },
+      {
+        "name": "Testimonial Uploader",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
+      },
+      {
+        "name": "Browser Push Notificatons",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Keep your customer updated with regular push notifications"
+      },
+      {
+        "name": "Blog Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Engage your customers with butifull blogs that helps you sell more"
+      },
+      {
+        "name": "Customer Feedback Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Get your customers valuble feedback"
+      },
+      {
+        "name": "Newsletter Subscription",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Build an organic and powerfull mailing list"
+      },
+      {
+        "name": "Product Filters and Tags",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Improve product discoverability through tagged attributes  like price, color and size"
+      },
+      {
+        "name": "Product FAQ",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Answer questions before your customers ask"
+      },
+      {
+        "name": "Gift Cards",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Enable gifting solutions for your customers"
+      },
+      {
+        "name": "Mark Product as Gift",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Allow shoppers to mark products as gifts and hide the selling price from order recepients"
+      },
+      {
+        "name": "Order Instructions/Comments",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Get additional details from your users while they checkout"
+      },
+      {
+        "name": "Manual Order Creation",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Create orders manually to manage offline sales"
+      },
+      {
+        "name": "Calculated Shipping Rates",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Automatically calculate shipping charge based on weight and country"
+      },
+      {
+        "name": "Product Customization Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Add multi customizable options to let customers build their own product"
+      },
+      {
+        "name": "Product Measurement Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Get measurement sets from your customers to truly create a bespoke product"
+      },
+      {
+        "name": "Currency Convertor",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "Give your customers an option to choose from a list of currencies"
+      },
+      {
+        "name": "Vendor Dashboard",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Logistics Integration",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Flexible Commission",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Manual Vendor Payouts",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Ad Management Module",
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Vendor Staff Accounts",
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Product Rating and Reviews",
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Advanced Reports",
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      },
+      {
+        "name": "Automated Vendor Payouts",
+        "multi-vendor-premium-plus": true,
+        "help_content": "NA"
+      }
+    ];
     // mobile top features
     let genieMobileTopFeatures = [
       {
@@ -818,7 +1661,7 @@ export class DeployPackagesComponent implements OnInit {
         "professional": true
       }
     ];
-    let proMobileTopFeatures = [
+    let b2cMobileTopFeatures = [
       {
         "name": "Unlimited Products",
         "lite": true,
@@ -912,15 +1755,254 @@ export class DeployPackagesComponent implements OnInit {
         "premium": true
       }
     ];
+    let b2bMobileTopFeatures = [
+      {
+        "name": "Unlimited Products",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Order Status Triggers",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "CoD",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Staff Accounts",
+        "b2b-growth": 10,
+        "b2b-premium": 20
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Unlimited Menus",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Messenger Integration",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Blog Module",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Testimonial Uploader",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Product Filters and Tags",
+        "b2b-growth": true,
+        "b2b-premium": true
+      },
+      {
+        "name": "Product Customization Module",
+        "b2b-premium": true
+      },
+      {
+        "name": "Calculated Shipping Rates",
+        "b2b-premium": true
+      },
+      {
+        "name": "Currency Converter",
+        "b2b-premium": true
+      }
+    ];
+    let serviceMobileTopFeatures = [
+      {
+        "name": "Unlimited Products",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Order Status Triggers",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "CoD",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Staff Accounts",
+        "service-starter": 5,
+        "service-growth": 10
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Unlimited Menus",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Messenger Integration",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Blog Module",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Testimonial Uploader",
+        "service-starter": true,
+        "service-growth": true
+      },
+      {
+        "name": "Product Filters and Tags",
+        "service-starter": true,
+        "service-growth": true
+      },
+      // {
+      //   "name": "Product Customization Module"
+      // },
+      // {
+      //   "name": "Calculated Shipping Rates"
+      // },
+      // {
+      //   "name": "Currency Converter"
+      // }
+    ];
+    let vendorMobileTopFeatures = [
+      {
+        "name": "Unlimited Products",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Order Status Triggers",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "CoD",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Staff Accounts",
+        "multi-vendor-premium": 20,
+        "multi-vendor-premium-plus": 20
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Unlimited Menus",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Advanced SEO Editor",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Messenger Integration",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Abandoned Cart Recovery",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Blog Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Testimonial Uploader",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Product Filters and Tags",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Product Customization Module",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Calculated Shipping Rates",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      },
+      {
+        "name": "Currency Converter",
+        "multi-vendor-premium": true,
+        "multi-vendor-premium-plus": true
+      }
+    ];
     if(this.commonService.store_details?.package_info?.category=='genie') {
       this.support_service = genieSupportService;
       this.all_features = genieAllFeatures;
       this.mobile_top_features = genieMobileTopFeatures;
     }
     else {
-      this.support_service = proSupportService;
-      this.all_features = proAllFeatures;
-      this.mobile_top_features = proMobileTopFeatures;
+      if(this.commonService.store_details?.package_info?.service=='order_based') {
+        this.support_service = b2cSupportService;
+        this.all_features = b2cAllFeatures;
+        this.mobile_top_features = b2cMobileTopFeatures;
+      }
+      else if(this.commonService.store_details?.package_info?.service=='quot_based') {
+        this.support_service = b2bSupportService;
+        this.all_features = b2bAllFeatures;
+        this.mobile_top_features = b2bMobileTopFeatures;
+      }
+      else if(this.commonService.store_details?.package_info?.service=='service_based') {
+        this.support_service = serviceSupportService;
+        this.all_features = serviceAllFeatures;
+        this.mobile_top_features = serviceMobileTopFeatures;
+      }
+      else if(this.commonService.store_details?.package_info?.service=='multi_vendor') {
+        this.support_service = vendorSupportService;
+        this.all_features = vendorAllFeatures;
+        this.mobile_top_features = vendorMobileTopFeatures;
+      }
     }
   }
 
