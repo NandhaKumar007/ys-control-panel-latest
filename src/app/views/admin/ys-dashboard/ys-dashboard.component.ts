@@ -11,9 +11,9 @@ import { CommonService } from '../../../services/common.service';
 })
 export class YsDashboardComponent implements OnInit {
 
-  page = 1; pageSize = 6;
-  preLoader: boolean; filterForm: any;
   card_details: any = {};
+  preLoader: boolean; filterForm: any;
+  page = 1; orderPage = 1; revenuePage = 1;
   chartLine: any; dashboardCategory: string = 'genie';
 
   constructor(private datepipe: DatePipe, private adminApi: AdminApiService, public commonService: CommonService) { }
@@ -79,6 +79,22 @@ export class YsDashboardComponent implements OnInit {
             this.card_details.revenue = 0;
             this.card_details.revenue_list.forEach(obj => {
               this.card_details.revenue += obj.amount;
+            });
+            // store orders
+            this.card_details.store_orders = [];
+            this.card_details.store_revenues = [];
+            this.card_details.activated_list.forEach(el => {
+              el.currency = el.currency_types.filter(obj => obj.default_currency)[0];
+              let storeOrders = this.card_details.order_list.filter(obj => obj.store_id==el._id);
+              el.orders = storeOrders.length;
+              el.revenue = 0;
+              if(el.orders>0) {
+                el.revenue = storeOrders.reduce((accumulator, currentValue) => {
+                  return accumulator + currentValue['final_price'];
+                }, 0);
+                this.card_details.store_orders.push(el);
+                this.card_details.store_revenues.push(el);
+              }
             });
           }
           else console.log("dashboard response", result);
