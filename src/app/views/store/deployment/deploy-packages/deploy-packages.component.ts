@@ -1018,13 +1018,13 @@ export class DeployPackagesComponent implements OnInit {
         "name": "Inbuilt Quote Management",
         "b2b-growth": true,
         "b2b-premium": true,
-        "help_content": "NA"
+        "help_content": "Receive custom quote requests directly from your website"
       },
       {
         "name": "Manage Inventory",
         "b2b-growth": true,
         "b2b-premium": true,
-        "help_content": "NA"
+        "help_content": "Auto online inventory update based on the sale"
       },
       {
         "name": "Calculated Shipping Rates",
@@ -1049,12 +1049,12 @@ export class DeployPackagesComponent implements OnInit {
       {
         "name": "Split Payment Collection",
         "b2b-premium": true,
-        "help_content": "NA"
+        "help_content": "Accept advance or full payment upon order confirmation"
       },
       {
         "name": "Bulk Product Pricing",
         "b2b-premium": true,
-        "help_content": "NA"
+        "help_content": "Give maximum and minimum quantity-based pricing and discounts"
       }
     ];
     let serviceAllFeatures = [
@@ -1242,24 +1242,24 @@ export class DeployPackagesComponent implements OnInit {
         "name": "Schedule Appointments",
         "service-starter": true,
         "service-growth": true,
-        "help_content": "NA"
+        "help_content": "Your clients can make appointments with you without any overlap"
       },
       {
         "name": "Manage Appointments",
         "service-starter": true,
         "service-growth": true,
-        "help_content": "NA"
+        "help_content": "Easy to manage appointments and reservations module for your business"
       },
       {
         "name": "List/Sell Services",
         "service-starter": true,
         "service-growth": true,
-        "help_content": "NA"
+        "help_content": "List your services or products and start selling"
       },
       {
         "name": "Product Based Scheduling",
         "service-growth": true,
-        "help_content": "NA"
+        "help_content": "Set individual scheduling and time-based services for each product"
       },
       {
         "name": "Product FAQ",
@@ -1542,50 +1542,50 @@ export class DeployPackagesComponent implements OnInit {
         "name": "Vendor Dashboard",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Individual access to each vendor to monitor sales and inventory"
       },
       {
         "name": "Logistics Integration",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Integration with top logistic partners to automate shipping"
       },
       {
         "name": "Flexible Commission",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Set commission the way you would like to charge your vendors"
       },
       {
         "name": "Manual Vendor Payouts",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Process Payouts to vendors on a successful sale"
       },
       {
         "name": "Ad Management Module",
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Make more revenue from your vendors by selling ad space on the homepage"
       },
       {
         "name": "Vendor Staff Accounts",
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Permission-based staff account access for your vendor's dashboard"
       },
       {
         "name": "Product Rating and Reviews",
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Publish moderated customer reviews for the products on the website"
       },
       {
         "name": "Advanced Reports",
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Get a detailed report of how your store is performing"
       },
       {
         "name": "Automated Vendor Payouts",
         "multi-vendor-premium-plus": true,
-        "help_content": "NA"
+        "help_content": "Automated payout processing to vendors on a successful sale"
       }
     ];
     // mobile top features
