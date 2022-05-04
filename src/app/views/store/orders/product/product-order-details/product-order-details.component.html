@@ -152,7 +152,7 @@
         <ng-container *ngIf="itemList?.length">
           <div *ngIf="!order_details.vendor_list?.length || commonService.store_details?.login_type=='vendor'" class="list-item col-md-12 p-0 mb-4">
             <p class="sec-desc">Product Details</p>
-            <ng-container *ngFor="let x of itemList; let i=index;" class="card m-10 d-flex flex-row pl-3 pr-3">
+            <ng-container *ngFor="let x of itemList; let i=index;">
               <ng-container *ngIf="commonService.store_details?.login_type!='vendor' || x.vendor_id==commonService.vendor_details?._id">
                 <div class="card m-10 d-flex flex-row pl-3 pr-3">
                   <p *ngIf="x.item_status" class="p-0 m-0 status-div">
