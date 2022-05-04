@@ -186,6 +186,11 @@ export class SidebarService {
             // inactive orders
             if(inactiveOrders.length>1) orderList.push({ name: 'Failed Payments', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
             else orderList.push({ icon: 'error_outline', name: 'Failed Payments', state: '/orders/inactive-orders', type: 'link' });
+            // vendor settlement
+            if(ysFeatures.indexOf('vendors')!=-1) {
+              orderList.push({ icon: 'paid', name: 'Settlement Orders', state: '/orders/settlement', type: 'link' });
+              routePermissionList.push("vendor_settlement");
+            }
             // abandoned
             if(ysFeatures.indexOf('abandoned_cart')!=-1) {
               orderList.push({ name: 'Abandoned Cart', type: 'dropDown', icon: 'remove_shopping_cart', sub: [
