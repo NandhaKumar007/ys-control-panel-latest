@@ -4103,6 +4103,11 @@ p svg:hover {
     min-width: 100%;
     max-width: 100%;
   }
+  .ribbon-band {
+    top: 16px!important;
+    right: 16px!important;
+    left: auto!important;
+  }
 }
 
 @media screen and (max-width: 601px) {
@@ -4715,4 +4720,23 @@ input[type=file]::file-selector-button {
 input[type=file] {
   border-radius: 14px;
   width: 100%;
+}
+
+.ribbon-band {
+  position: absolute;
+  border-radius: 8px;
+  padding: 1px 10px;
+  color: #fff;
+  left: 6px;
+  top: 6px;
+  font-size: 10px;
+}
+.yellow-band {
+  background: #f1bf32;
+}
+.blue-band {
+  background: #0984e3;
+}
+.red-band {
+  background: #EC848B;
 }

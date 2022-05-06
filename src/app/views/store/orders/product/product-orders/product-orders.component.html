@@ -116,18 +116,13 @@
         <div class="row m-0">
 
            <!-- SINGLE LIST ITEM -->
-    <div
-    *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-    class="col-md-12 list-item data-list-card p-0" [ngClass]="{
-      'has-quick-band': x.quick_order_id,
-      'has-find-band': !x.quick_order_id && x.order_by=='admin',
-      'has-guest-band': !x.quick_order_id && x.order_by=='guest' }" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+    <div *ngFor="let x of list | gridSearch: { order_number: search_bar, customer_name: search_bar, customer_email: search_bar, customer_mobile: search_bar, shipping_customer_name: search_bar, billing_customer_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+    class="col-md-12 list-item data-list-card p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
     <div class="d-flex flex-row">
-      <div *ngIf="x.order_by!='user' || x.quick_order_id" [ngClass]="{
-      'quick-band': x.quick_order_id,
-      'find-band': !x.quick_order_id && x.order_by=='admin',
-      'guest-band': !x.quick_order_id && x.order_by=='guest' }"></div>
+      <div *ngIf="x.quick_order_id" class="ribbon-band">Quick Order</div>
+      <div *ngIf="x.order_by=='admin'" class="ribbon-band blue-band">Manual Order</div>
+      <div *ngIf="x.order_by=='guest'" class="ribbon-band yellow-band">Guest Order</div>
       <div class="flex-grow-1 pl-2 d-flex">
         <div
           class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">

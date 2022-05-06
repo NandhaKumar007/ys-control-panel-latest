@@ -23,6 +23,7 @@ export class CustomerDetailsComponent implements OnInit {
   custom_list: any = []; addonForm: any = {};
   customIndex: number; mmIndex: number = 0;
   selected_unit: any = {}; parent_mm_list: any = [];
+  configData: any= environment.config_data;
   measurementList: any;
 
   constructor(
@@ -282,7 +283,7 @@ export class CustomerDetailsComponent implements OnInit {
     });
   }
 
-  onUpdateCustom(modalName) {
+  onUpdateCustom() {
     let reqInput = this.validateForm('custom-form');
     if(reqInput===undefined) {
       let customAlert = this.checkCustomSelection();
@@ -312,7 +313,7 @@ export class CustomerDetailsComponent implements OnInit {
     }
   }
 
-  onUpdateMeasurement(modalName) {
+  onUpdateMeasurement() {
     let reqInput = this.validateForm('mm-form');
     if(reqInput===undefined) {
       // for find additional qty
@@ -341,7 +342,7 @@ export class CustomerDetailsComponent implements OnInit {
     }
   }
 
-  onUpdateNotes(modalName) {
+  onUpdateNotes() {
     let reqInput = this.validateForm('notes-form');
     if(reqInput===undefined) {
       this.addonForm.submit = true;

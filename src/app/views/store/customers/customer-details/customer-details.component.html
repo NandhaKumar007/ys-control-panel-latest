@@ -433,6 +433,15 @@
 
   <div class="modal-body lg-modal-body slim-scroll">
     <form id="custom-form" name="custom-form" autocomplete="off">
+      <div *ngIf="commonService.store_details?._id==configData.hungover_id" class="row">
+        <div class="col-md-12">
+          <label class="checkbox checkbox-primary">
+            <input class="form-check-input" type="checkbox" name="update_order" [(ngModel)]="addonForm.update_order">
+            <span>Update this information in live orders</span>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
       <div class="card p-3 m-0">
         <div class="row">
           <div class="col-md-12">
@@ -497,7 +506,7 @@
       <!-- right btn -->
       <button *ngIf="custom_list[customIndex+1]?.filtered_option_list?.length" (click)="onCustomNext();"
         class="btn btn-wide btn-primary">NEXT</button>
-      <button *ngIf="!custom_list[customIndex+1]?.filtered_option_list?.length" (click)="onUpdateCustom(customModal);"
+      <button *ngIf="!custom_list[customIndex+1]?.filtered_option_list?.length" (click)="onUpdateCustom();"
         [disabled]="addonForm.submit"
         class="btn btn-wide btn-primary d-flex justify-content-center align-items-center">UPDATE</button>
       <!-- #right btn -->
@@ -518,6 +527,15 @@
 
   <div class="modal-body lg-modal-body slim-scroll">
     <form id="mm-form" name="mm-form" autocomplete="off">
+      <div *ngIf="commonService.store_details?._id==configData.hungover_id" class="row">
+        <div class="col-md-12">
+          <label class="checkbox checkbox-primary">
+            <input class="form-check-input" type="checkbox" name="update_order" [(ngModel)]="addonForm.update_order">
+            <span>Update this information in live orders</span>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
       <div class="card p-3 m-0">
         <div class="row">
           <div class="col-md-12">
@@ -612,7 +630,7 @@
       <!-- right btn -->
       <button *ngIf="(addonForm?.mm_sets?.length-1)>mmIndex" (click)="onMmNext();"
         class="btn btn-wide btn-primary">NEXT</button>
-      <button *ngIf="(addonForm?.mm_sets?.length-1)==mmIndex" (click)="onUpdateMeasurement(measurementModal);"
+      <button *ngIf="(addonForm?.mm_sets?.length-1)==mmIndex" (click)="onUpdateMeasurement();"
         [disabled]="addonForm.submit" class="btn btn-wide btn-primary">UPDATE</button>
       <!-- #right btn -->
     </div>
@@ -632,6 +650,15 @@
 
   <div class="modal-body slim-scroll">
     <form id="notes-form" name="notes-form" autocomplete="off">
+      <div *ngIf="commonService.store_details?._id==configData.hungover_id" class="row">
+        <div class="col-md-12">
+          <label class="checkbox checkbox-primary">
+            <input class="form-check-input" type="checkbox" name="update_order" [(ngModel)]="addonForm.update_order">
+            <span>Update this information in live orders</span>
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
       <div class="card p-3 m-0">
         <div class="row">
           <div class="col-md-12">
@@ -672,7 +699,7 @@
     <!-- alert end -->
     <div class="proceed-sec d-flex justify-content-between w-100 m-0">
       <button (click)="modal.dismiss('Cross click');" class="btn btn-wide btn-primary">CLOSE</button>
-      <button (click)="onUpdateNotes(notesModal);" [disabled]="addonForm.submit"
+      <button (click)="onUpdateNotes();" [disabled]="addonForm.submit"
         class="btn btn-wide btn-primary">UPDATE</button>
     </div>
   </div>
