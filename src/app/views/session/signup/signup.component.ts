@@ -14,7 +14,7 @@ import { CommonService } from '../../../services/common.service';
 
 export class SignupComponent implements OnInit {
 
-  signupForm: any; params: any;
+  signupForm: any; params: any; queryParams: any;
   step: number = 1; stateList: any = [];
   currencyList: any = [
     { "country_code": "INR", "html_code": "&#x20B9;" },
@@ -23,7 +23,7 @@ export class SignupComponent implements OnInit {
     { "country_code": "AED", "html_code": "AED" }
   ];
   
-  constructor(private router: Router, private activeRoute: ActivatedRoute, private api: ApiService, public commonService: CommonService) {
+  constructor(public router: Router, private activeRoute: ActivatedRoute, private api: ApiService, public commonService: CommonService) {
     this.signupForm = {
       country: "India", currency_types: this.currencyList[0],
       company_details: { dial_code: "+91", state: "" }, category: "", type: ""
@@ -41,21 +41,23 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe((params: Params) => {
-      this.params = params;
-      this.commonService.loadChat();
+    this.activeRoute.queryParams.subscribe((queryParams: Params) => {
+      this.queryParams = queryParams;
+      this.activeRoute.params.subscribe((params: Params) => { this.params = params; });
     });
+    this.commonService.loadChat();
   }
 
   onSubmit() {
     this.signupForm.submit = true;
     this.signupForm.company_details.name = this.signupForm.name;
-    if(this.params.category) this.signupForm.ys_category = this.params.category;
+    if(this.router.url.indexOf('/pro') != -1) this.signupForm.ys_category = 'pro';
     if(this.params.service) {
       let sIndex = this.commonService.ys_services.findIndex(obj => obj.short_name==this.params.service);
       if(sIndex!=-1) this.signupForm.type = this.commonService.ys_services[sIndex].name;
     }
-    if(this.params.from) this.signupForm.request_from = this.params.from;
+    if(!this.signupForm.type) delete this.signupForm.type;
+    this.signupForm.query_params = this.queryParams;
     if(sessionStorage.getItem("app_token")) this.signupForm.app_token = sessionStorage.getItem("app_token");
     sessionStorage.setItem('formData', JSON.stringify(this.signupForm));
     this.api.SIGNUP(this.signupForm).subscribe(result => {

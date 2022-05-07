@@ -30,6 +30,10 @@ export class YsClientsComponent implements OnInit {
   }
 
   ngOnInit() {
+    let tempServices = {
+      order_based: 'B2C', quot_based: 'B2B', service_based: 'Service',
+      multi_vendor: 'Multi-Vendor', restaurant_based: 'Restaurant'
+    };
     this.pageLoader = true; this.page = 1;
     let filterType = "type="+this.filterForm.list_type;
     if(this.filterForm.list_type=='trial_expires_in') {
@@ -49,11 +53,16 @@ export class YsClientsComponent implements OnInit {
         this.list = result.list;
         this.list.forEach(obj => {
           obj.account_expiry = obj.package_details.trial_expiry;
-          if(obj.package_details.billing_status && obj.package_details.expiry_date)
+          if(obj.package_details.billing_status && obj.package_details.expiry_date) {
             obj.account_expiry = obj.package_details.expiry_date;
+          }
           obj.package_name = "NA";
           let packIndex = this.commonService.admin_packages.findIndex(x => x._id==obj.package_details.package_id);
-          if(packIndex!=-1) obj.package_name = this.commonService.admin_packages[packIndex].name;
+          if(packIndex!=-1) {
+            obj.package_name = this.commonService.admin_packages[packIndex].name;
+            obj.package_category = this.commonService.admin_packages[packIndex].category;
+            obj.package_service = tempServices[this.commonService.admin_packages[packIndex].service];
+          }
         });
       }
       else console.log("response", result);
@@ -198,6 +207,8 @@ export class YsClientsComponent implements OnInit {
     this.list.forEach(obj => {
       let sendData = {};
       sendData['Store Name'] = obj.name;
+      sendData['Type'] = 'Genie';
+      if(obj.package_category=='pro' && obj.package_service) sendData['Type'] = obj.package_service;
       sendData['Name'] = obj.company_details.contact_person;
       sendData['Phone Number'] = obj.company_details.dial_code+' '+obj.company_details.mobile;
       sendData['Email ID'] = obj.email;

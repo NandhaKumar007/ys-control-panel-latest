@@ -120,7 +120,7 @@
     class="col-md-12 list-item data-list-card p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
     <div class="d-flex flex-row">
-      <div *ngIf="x.quick_order_id" class="ribbon-band">Quick Order</div>
+      <div *ngIf="x.quick_order_id" class="ribbon-band red-band">Quick Order</div>
       <div *ngIf="x.order_by=='admin'" class="ribbon-band blue-band">Manual Order</div>
       <div *ngIf="x.order_by=='guest'" class="ribbon-band yellow-band">Guest Order</div>
       <div class="flex-grow-1 pl-2 d-flex">

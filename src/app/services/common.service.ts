@@ -122,8 +122,8 @@ export class CommonService {
     { display: 'None', name: 'none' }
   ];
   ys_services: any = [
-    { display: 'B2C Ecommerce', short_name: "b2c", name: 'order_based' },
-    { display: 'B2B Ecommerce', short_name: "b2b", name: 'quot_based' },
+    { display: 'B2C/D2C Ecommerce  (Sell directly to customers)', short_name: "b2c", name: 'order_based' },
+    { display: 'B2B & Wholesale Ecommerce (Sell directly to businesses)', short_name: "b2b", name: 'quot_based' },
     { display: 'Service Ecommerce', short_name: "service", name: 'service_based' },
     { display: 'Multi Vendor Ecommerce', short_name: "vendor", name: 'multi_vendor' }
   ];

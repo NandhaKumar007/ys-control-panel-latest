@@ -111,10 +111,13 @@
 
           <div
           *ngFor="let x of list | orderDesc:'created_on' | gridSearch: { _id: search_bar, name: search_bar, email: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index;"
-          class="list-item data-list-card col-md-12 p-0" [ngClass]="x.signup_from=='app' ? 'has-find-band': ''" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          class="list-item data-list-card col-md-12 p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
     
           <div class="d-flex flex-row">
-            <div [ngClass]="x.signup_from=='app'? 'find-band': ''"></div>
+            <div *ngIf="x.signup_from=='app'" class="ribbon-band blue-band">Signup from App</div>
+            <div *ngIf="x.package_category=='pro' && x.package_service" class="ribbon-band yellow-band">
+              {{x.package_service}}
+            </div>
             <div class="list-thumb d-flex align-items-center ml-3 mtb-10">
               <img class="client-logo" [src]="imgBaseUrl+'uploads/'+x._id+'/social_logo.jpg?v='+verNum" alt="">
             </div>

@@ -249,7 +249,7 @@
                     <div class="col-lg-12">
                       <div class="mb-3">
                         <label class="black mb-1"><strong>Business Category</strong></label>
-                        <select *ngIf="params?.category=='pro' && !params?.service" name="service_type" [(ngModel)]="signupForm.type" class="mb-3 project-category" required>
+                        <select *ngIf="router.url.indexOf('/pro')!=-1 && !params?.service" name="service_type" [(ngModel)]="signupForm.type" class="mb-3 project-category" required>
                           <option value="">-- Select Type --</option>
                           <option *ngFor="let x of commonService.ys_services;" [ngValue]="x.name">{{x.display}}</option>
                         </select>
