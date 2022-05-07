@@ -43,7 +43,7 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params;
-      if(environment.keep_login) this.commonService.loadChat();
+      this.commonService.loadChat();
     });
   }
 
@@ -55,6 +55,7 @@ export class SignupComponent implements OnInit {
       let sIndex = this.commonService.ys_services.findIndex(obj => obj.short_name==this.params.service);
       if(sIndex!=-1) this.signupForm.type = this.commonService.ys_services[sIndex].name;
     }
+    if(this.params.from) this.signupForm.request_from = this.params.from;
     if(sessionStorage.getItem("app_token")) this.signupForm.app_token = sessionStorage.getItem("app_token");
     sessionStorage.setItem('formData', JSON.stringify(this.signupForm));
     this.api.SIGNUP(this.signupForm).subscribe(result => {
@@ -97,7 +98,7 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if(environment.keep_login) this.commonService.hideChat();
+    this.commonService.hideChat();
   }
 
 }

@@ -16,6 +16,7 @@ export class VsOrderDetailsComponent implements OnInit {
   pageLoader: boolean; itemList: any = [];
   vendorInfo: any = {}; vendorDetails: any = {};
   imgBaseUrl = environment.img_baseurl;
+  cmsn_config: any = {};
 
   constructor(
     private activeRoute: ActivatedRoute, private api: OrderService, public commonService: CommonService
@@ -34,7 +35,29 @@ export class VsOrderDetailsComponent implements OnInit {
           // vendor details
           let vIndex = this.commonService.vendor_list.findIndex(el => el._id==this.params.vendor_id);
           if(vIndex!=-1) this.vendorDetails = this.commonService.vendor_list[vIndex];
-          // console.log(this.vendorDetails)
+          // calculate commission
+          this.vendorInfo.commission_tax = 0;
+          this.vendorInfo.total_commission = this.vendorInfo.shipping_method?.dp_charges;
+          this.cmsn_config = this.commonService.deploy_details.cmsn_config;
+          if(this.commonService.deploy_details.cmsn_type=='order') {
+            let cmsnPercent = (this.commonService.deploy_details.cmsn_in_pct/100);
+            this.vendorInfo.items_commission = Math.ceil(this.vendorInfo.sub_total*cmsnPercent);
+            this.vendorInfo.total_commission += this.vendorInfo.items_commission;
+          }
+          // payment gateway charges
+          if(this.order_details.payment_details?.name!='COD' && this.cmsn_config.pgw_charges>0) {
+            let pgCharges = (this.cmsn_config.pgw_charges/100);
+            this.vendorInfo.pg_charges = Math.ceil(this.vendorInfo.grand_total*pgCharges);
+            this.vendorInfo.total_commission += this.vendorInfo.pg_charges;
+          }
+          // tax on commission
+          if(this.cmsn_config.tax_for_cmsn && this.cmsn_config.tax_in_pct>0) {
+            let cmsnTax = (this.cmsn_config.tax_in_pct/100);
+            this.vendorInfo.commission_tax = Math.ceil(this.vendorInfo.total_commission*cmsnTax);
+          }
+          // settlement date
+          let settleDate = this.vendorInfo[this.cmsn_config.settlem_type];
+          this.vendorInfo.settlement_on = new Date(settleDate).setDate(new Date(settleDate).getDate() + 10);
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);

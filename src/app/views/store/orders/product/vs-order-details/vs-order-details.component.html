@@ -161,10 +161,84 @@
                   </p>
                 </div>
               </div>
-              <div class="col-12">
-                <button *ngIf="params?.type!='inactive'" type="button" class="btn btn-wide btn-primary w-100 mt-10">
-                  View Invoice
-                </button>
+              <div class="col-12"><hr class="mt-3"></div>
+              <!-- Commission -->
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Commision on Items</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    - {{vendorInfo.items_commission | currency: commonService.store_currency?.country_code}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Actual Shipping</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    - {{vendorInfo.shipping_method?.dp_charges | currency: commonService.store_currency?.country_code}}
+                  </p>
+                </div>
+              </div>
+              <ng-container *ngIf="vendorInfo.pg_charges>0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Payment Gateway Charges ({{cmsn_config.pgw_charges}}%)</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      - {{vendorInfo.pg_charges | currency: commonService.store_currency?.country_code}}
+                    </p>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="col-12"><hr class="mt-3"></div>
+              <ng-container *ngIf="vendorInfo.commission_tax>0">
+                <div class="col-6">
+                  <div class="box-card card-head">
+                    <p>Tax on Commission ({{cmsn_config.tax_in_pct}}%)</p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="box-card">
+                    <p class="pull-right text-right">
+                      - {{vendorInfo.commission_tax | currency: commonService.store_currency?.country_code}}
+                    </p>
+                  </div>
+                </div>
+              </ng-container>
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Settlement Amount</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    {{ vendorInfo.final_price - (vendorInfo.total_commission + vendorInfo.commission_tax) | currency: commonService.store_currency?.country_code }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card card-head">
+                  <p>Settlement On</p>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="box-card">
+                  <p class="pull-right text-right">
+                    {{ vendorInfo.settlement_on | date: "dd MMM y"}}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
