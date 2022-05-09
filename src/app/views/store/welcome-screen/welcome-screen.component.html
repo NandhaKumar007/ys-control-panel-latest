@@ -1,4 +1,4 @@
-<section *ngIf="router.url.indexOf('activated')!=-1" class="you-dit-it-section">
+<section *ngIf="params.type=='activated'" class="you-dit-it-section">
   <div class="you-dit-it-vector-top">
     <img src="assets/images/others/top.png" alt="image-top">
   </div>
@@ -26,7 +26,7 @@
   </div>
 </section>
 
-<section *ngIf="router.url.indexOf('created')!=-1" class="you-dit-it-section">
+<section *ngIf="params.type=='created'" class="you-dit-it-section">
   <div class="you-dit-it-vector-top">
     <img src="assets/images/others/top.png" alt="image-top">
   </div>

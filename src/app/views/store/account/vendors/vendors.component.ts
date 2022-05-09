@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { AccountService } from '../account.service';
-import { StoreApiService } from '../../../../services/store-api.service';
+import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -15,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
 
 export class VendorsComponent implements OnInit {
 
-  search_bar: string; settingForm: any = {};
+  search_bar: string; settingForm: any = { cmsn_config: {} };
   page = 1; pageSize = 10; parent_list: any = [];
   pageLoader: boolean; list_type: string = 'all';
   list: any = []; imgBaseUrl = environment.img_baseurl;
@@ -39,7 +39,7 @@ export class VendorsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
-    public commonService: CommonService, private storeApi: StoreApiService
+    public commonService: CommonService, private deployService: DeploymentService
     ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -231,11 +231,24 @@ export class VendorsComponent implements OnInit {
     });
   }
 
-  onUpdateCommission() {
-    this.storeApi.STORE_UPDATE({ vendor_commission: this.settingForm.commission }).subscribe(result => {
+  onOpencmsnModal(modalName) {
+    this.settingForm = { cmsn_type: '', cmsn_in_pct: 0, cmsn_config: { settlem_type: 'dispatched_on' }, price_range: [] };
+    if(localStorage.getItem('deploy_details')) {
+      let deployDetails = this.commonService.decryptData(localStorage.getItem("deploy_details"));
+      this.settingForm.price_range = deployDetails.price_range;
+      if(deployDetails.cmsn_type) this.settingForm.cmsn_type = deployDetails.cmsn_type;
+      if(deployDetails.cmsn_in_pct) this.settingForm.cmsn_in_pct = deployDetails.cmsn_in_pct;
+      if(deployDetails.cmsn_config) this.settingForm.cmsn_config = deployDetails.cmsn_config;
+    }
+    this.modalService.open(modalName);
+  }
+  onUpdateCommission(x) {
+    x.store_id = this.commonService.store_details._id;
+    this.deployService.UPDATE_DEPLOY_DETAILS(x).subscribe(result => {
       if(result.status) {
-        this.commonService.store_details.vendor_commission = result.data.vendor_commission;
-        this.commonService.updateLocalData('store_details', this.commonService.store_details);
+        this.commonService.deploy_details = result.data;
+        delete this.commonService.deploy_details.deploy_stages;
+        this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
         document.getElementById("closeModal").click();
       }
       else {

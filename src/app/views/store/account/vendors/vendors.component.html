@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <button type="button" (click)="settingForm={ commission: commonService.store_details?.vendor_commission }; modalService.open(commissionModal);" class="btn btn-primary mr-3">Commission Setting</button>
+        <button type="button" (click)="onOpencmsnModal(commissionModal);" class="btn btn-primary mr-3">Commission Setting</button>
         <button (click)="onAddModal(vendorModal);" type="button" class="btn btn-primary">Add New Vendor</button>
       </div>
     </div>
@@ -145,7 +145,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label>Ad Credit</label>
-              <input type="text" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
+              <input type="tel" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
             </div>
           </ng-container>
         </div>
@@ -544,13 +544,83 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Update Vendors Commission</h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onUpdateCommission();" ngNativeValidate>
-    <div class="modal-body">
+  <form autocomplete="off" (ngSubmit)="onUpdateCommission(settingForm);" ngNativeValidate>
+    <div class="modal-body pb-0">
       <div class="form-group">
         <div class="row">
           <div class="col-md-12 form-group mb-3">
+            <label>Type</label>
+            <select name="cmsn_type" class="form-control select-arrow" [(ngModel)]="settingForm.cmsn_type">
+              <option value="">-- Select --</option>
+              <option value="flat">Flat Rates</option>
+              <option value="order_range">Order Value Range</option>
+              <option value="product_range">Product Range</option>
+            </select>
+          </div>
+          <div *ngIf="settingForm.cmsn_type=='order'" class="col-md-12 form-group mb-3">
             <label>Commission in (%)</label>
-            <input type="text" name="commission" class="form-control" [(ngModel)]="settingForm.commission" appNumberOnly required />
+            <input type="tel" name="cmsn_in_pct" class="form-control" [(ngModel)]="settingForm.cmsn_in_pct" appNumberOnly required />
+          </div>
+          <div *ngIf="settingForm.cmsn_type!='order'" class="col-md-12 mb-3">
+            <div class="card p-3">
+              <div class="row">
+                <div class="col-md-12 mb-2">
+                  <b>PRICE RANGE</b>
+                </div>
+                <div class="col-md-12" *ngFor="let x of settingForm.price_range; let i=index;">
+                  <div class="card card-in-card w-100 p-3 mb-3">
+                    <span (click)="settingForm.price_range.splice(i, 1);" class="material-icons item-close absolute-item-close float-right" aria-hidden="true">close</span>
+                    <div class="row">
+                      <div class="col-md-6 form-group mb-3">
+                        <label>Price Above</label>
+                        <input type="tel" name="r_price{{i}}" class="form-control" [(ngModel)]="x.price" appNumberOnly required />
+                      </div>
+                      <div class="col-md-6 form-group mb-3">
+                        <label>Percentage</label>
+                        <input type="tel" name="r_percent{{i}}" class="form-control" [(ngModel)]="x.percentage" appNumberOnly required />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <p class="add-another mb-0 pull-right" (click)="settingForm.price_range.push({});">ADD NEW</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Payment Gateway Charges (%)</label>
+            <input type="tel" name="pgw_charges" class="form-control" [(ngModel)]="settingForm.cmsn_config.pgw_charges" appNumberOnly required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="tax_on_cmsn" [(ngModel)]="settingForm.cmsn_config.tax_on_cmsn">
+              <span>Tax on Commission</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="settingForm.cmsn_config.tax_on_cmsn">
+            <div *ngIf="commonService.store_details?.country!='India'" class="col-md-6 form-group mb-3">
+              <label>Tax Name</label>
+              <input type="text" name="tax_name" class="form-control" [(ngModel)]="settingForm.cmsn_config.tax_name" required />
+            </div>
+            <div class="form-group mb-3" [ngClass]="(commonService.store_details?.country!='India')? 'col-md-6': 'col-md-12'">
+              <label>Tax (%)</label>
+              <input type="tel" name="tax_in_pct" class="form-control" [(ngModel)]="settingForm.cmsn_config.tax_in_pct" appNumberOnly required />
+            </div>
+          </ng-container>
+        </div>
+        <div class="row">
+          <div class="col-md-6 form-group mb-3">
+            <label>Settlement After</label>
+            <select name="settlem_type" class="form-control select-arrow" [(ngModel)]="settingForm.cmsn_config.settlem_type">
+              <option value="dispatched_on">Dispatched</option>
+              <option value="delivered_on">Delivered</option>
+            </select>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Settlement in Days</label>
+            <input type="tel" name="settlem_in_days" class="form-control" [(ngModel)]="settingForm.cmsn_config.settlem_in_days" appNumberOnly required />
           </div>
         </div>
       </div>

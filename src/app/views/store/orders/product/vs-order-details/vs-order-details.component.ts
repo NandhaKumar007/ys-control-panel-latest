@@ -39,8 +39,17 @@ export class VsOrderDetailsComponent implements OnInit {
           this.vendorInfo.commission_tax = 0;
           this.vendorInfo.total_commission = this.vendorInfo.shipping_method?.dp_charges;
           this.cmsn_config = this.commonService.deploy_details.cmsn_config;
-          if(this.commonService.deploy_details.cmsn_type=='order') {
+          if(this.commonService.deploy_details.cmsn_type=='flat') {
             let cmsnPercent = (this.commonService.deploy_details.cmsn_in_pct/100);
+            this.vendorInfo.items_commission = Math.ceil(this.vendorInfo.sub_total*cmsnPercent);
+            this.vendorInfo.total_commission += this.vendorInfo.items_commission;
+          }
+          else if(this.commonService.deploy_details.cmsn_type=='order_range') {
+            let priceRange = this.commonService.deploy_details.price_range.sort((a, b) => 0 - (a.price > b.price ? -1 : 1));
+            let prIndex = priceRange.findIndex(obj => obj.price > this.vendorInfo.sub_total);
+            if(prIndex==-1) prIndex = priceRange.length - 1;
+            else prIndex--;
+            let cmsnPercent = (priceRange[prIndex].percentage/100);
             this.vendorInfo.items_commission = Math.ceil(this.vendorInfo.sub_total*cmsnPercent);
             this.vendorInfo.total_commission += this.vendorInfo.items_commission;
           }
@@ -51,13 +60,13 @@ export class VsOrderDetailsComponent implements OnInit {
             this.vendorInfo.total_commission += this.vendorInfo.pg_charges;
           }
           // tax on commission
-          if(this.cmsn_config.tax_for_cmsn && this.cmsn_config.tax_in_pct>0) {
+          if(this.cmsn_config.tax_on_cmsn && this.cmsn_config.tax_in_pct>0) {
             let cmsnTax = (this.cmsn_config.tax_in_pct/100);
             this.vendorInfo.commission_tax = Math.ceil(this.vendorInfo.total_commission*cmsnTax);
           }
           // settlement date
           let settleDate = this.vendorInfo[this.cmsn_config.settlem_type];
-          this.vendorInfo.settlement_on = new Date(settleDate).setDate(new Date(settleDate).getDate() + 10);
+          this.vendorInfo.settlement_on = new Date(settleDate).setDate(new Date(settleDate).getDate() + this.cmsn_config.settlem_in_days);
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
