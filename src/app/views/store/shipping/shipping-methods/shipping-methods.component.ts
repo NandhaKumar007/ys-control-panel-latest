@@ -20,7 +20,7 @@ export class ShippingMethodsComponent implements OnInit {
   list: any = [];
   pageLoader: boolean;
   deliveryPartners: any = [
-    { name: "Delhivery", base_url: "https://staging-express.delhivery.com", tracking_link: "https://www.delhivery.com/track/package/" }
+    { name: "Delhivery", tracking_link: "https://www.delhivery.com/track/package/" }
   ];
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, public commonService: CommonService, private deployApi: DeploymentService) {
@@ -78,7 +78,7 @@ export class ShippingMethodsComponent implements OnInit {
       if(result.status) {
         this.shippingForm = result.data;
         this.shippingForm.formType = 'update';
-        if(!this.shippingForm.dp_metadata) this.shippingForm.dp_metadata = {};
+        if(!this.shippingForm.dp_config) this.shippingForm.dp_config = {};
         if(!this.shippingForm.dp_name) this.shippingForm.dp_name = "";
         this.modalService.open(modalName, {size: 'lg'});
       }
@@ -131,10 +131,7 @@ export class ShippingMethodsComponent implements OnInit {
   onChangeCP() {
     if(this.shippingForm.dp_name) {
       let dIndex = this.deliveryPartners.findIndex(obj => obj.name==this.shippingForm.dp_name);
-      if(dIndex!=-1) {
-        this.shippingForm.tracking_link = this.deliveryPartners[dIndex].tracking_link;
-        this.shippingForm.dp_base_url = this.deliveryPartners[dIndex].base_url;
-      }
+      if(dIndex!=-1) this.shippingForm.tracking_link = this.deliveryPartners[dIndex].tracking_link;
     }
   }
 

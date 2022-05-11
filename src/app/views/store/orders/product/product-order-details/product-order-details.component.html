@@ -1229,9 +1229,12 @@
                   </div>
                 </ng-container>
                 <!-- courier partner -->
-                <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status">
-                  <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
+                <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status && !order_details.cp_status">
+                  <button type="button" (click)="createCpOrder();" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
                   [ladda]="courierForm.btnLoader">Create Order in {{order_details.shipping_info?.dp_name}}</button>
+                </div>
+                <div class="col-md-12" align="center" *ngIf="courierForm.errorMsg">
+                  <p class="text-danger mt-2 mb-0">{{ courierForm.errorMsg }}</p>
                 </div>
               </div>
             </div>

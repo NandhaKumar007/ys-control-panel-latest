@@ -85,31 +85,17 @@ export class OrderService {
   }
 
   // courier partners
-  DELHIVERY_CREATE_ORDER(x) {
+  CREATE_CP_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/courier_partner/delhivery', x, httpOptions);
+    return this.http.post<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
   }
   DELHIVERY_UPDATE_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/courier_partner/delhivery', x, httpOptions);
   }
-
-  DUNZO_CREATE_ORDER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/courier_partner/dunzo', x, httpOptions);
-  }
-  DUNZO_ORDER_STATUS(orderId, dunzoId) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partner/dunzo?order_id='+orderId+'&courier_id='+dunzoId, httpOptions);
-  }
   CANCEL_DUNZO_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/courier_partner/dunzo', x, httpOptions);
-  }
-
-  GHANA_CREATE_ORDER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.post<any>(environment.ws_url+'/store/courier_partner/ghana', x, httpOptions);
   }
 
   // Coupon

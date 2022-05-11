@@ -26,6 +26,7 @@ export class ProductOrdersComponent implements OnInit {
   page = 1; pageSize = 10; exportLoader: boolean;
   params: any = {}; filterForm: any = {};
   list: any = []; scrollPos: number = 0;
+  orderTypes: any = [];
 
   constructor(
     private api: OrderService, private activeRoute: ActivatedRoute, private excelService: ExcelService, private datePipe: DatePipe, private cookieService: CookieService,
@@ -38,6 +39,9 @@ export class ProductOrdersComponent implements OnInit {
     // this.cookieService.set('blockSub', 'true');
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.page = 1; this.pageSize = 10;
+      if(this.params.type=='live') this.orderTypes = ['placed', 'confirmed', 'dispatched'];
+      if(this.params.type=='delivered') this.orderTypes = ['delivered'];
+      if(this.params.type=='cancelled') this.orderTypes = ['cancelled'];
       if(!environment.keep_login && !this.commonService.ios && !this.cookieService.check('blockSub') && !this.commonService.master_token && this.commonService.store_details.login_type=='admin' && this.params.type=='live' && this.swPush.isEnabled) {
         if(Notification.permission=='default') document.getElementById('openSubModal').click();
         else if(Notification.permission=='granted' && !sessionStorage.getItem("sw_sub")) this.reqSub();
@@ -147,35 +151,40 @@ export class ProductOrdersComponent implements OnInit {
               }
               // vendor
               if(obj.vendor_list?.length) {
-                if(this.commonService.store_details.login_type=='vendor') {
-                  let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
-                  if(venIndex!=-1) {
-                    obj.order_number = obj.vendor_list[venIndex].order_number;
-                    obj.order_status = obj.vendor_list[venIndex].order_status;
-                    obj.final_price = obj.vendor_list[venIndex].final_price;
-                  }
-                }
-                else if(this.params.type=='live') {
-                  let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
-                  let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
-                  if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
-                    if(confirmedCount>0) {
-                      obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
+                let tIndex = obj.vendor_list.findIndex(el => this.orderTypes.indexOf(el.order_status)!=-1);
+                if(tIndex!=-1)
+                {
+                  if(this.commonService.store_details.login_type=='vendor') {
+                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
+                    if(venIndex!=-1) {
+                      obj.order_number = obj.vendor_list[venIndex].order_number;
+                      obj.order_status = obj.vendor_list[venIndex].order_status;
+                      obj.final_price = obj.vendor_list[venIndex].final_price;
                     }
                   }
-                  else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
-                    obj.order_status = 'confirmed';
-                    let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
-                    if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
+                  else if(this.params.type=='live') {
+                    let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
+                    let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
+                    if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
+                      if(confirmedCount>0) {
+                        obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
+                      }
+                    }
+                    else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
+                      obj.order_status = 'confirmed';
+                      let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
+                      if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
+                    }
+                    else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
+                      obj.order_status = 'dispatched';
+                      let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
+                      if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
+                    }
                   }
-                  else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
-                    obj.order_status = 'dispatched';
-                    let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
-                    if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
-                  }
+                  this.list.push(obj);
                 }
               }
-              this.list.push(obj);
+              else this.list.push(obj);
             });
           }
           else console.log("response", result);
@@ -213,10 +222,10 @@ export class ProductOrdersComponent implements OnInit {
       sendData['City'] = order.shipping_address.city;
       sendData['State'] = order.shipping_address.state;
       sendData['Pincode'] = order.shipping_address.pincode;
-      if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1) {
-        sendData['Delivery Time'] = 'NA';
-        if(order.delivery_time) sendData['Delivery Time'] = this.datePipe.transform(order.delivery_time, 'dd MMM y hh:mm a');
-      }
+      // if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1) {
+      //   sendData['Delivery Time'] = 'NA';
+      //   if(order.delivery_time) sendData['Delivery Time'] = this.datePipe.transform(order.delivery_time, 'dd MMM y hh:mm a');
+      // }
       sendData['Shipping'] = order.shipping_cost;
       sendData['COD Charges'] = order.cod_charges;
       sendData['Gift Card'] = giftCardAmount;
