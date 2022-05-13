@@ -55,7 +55,6 @@ export class ModifyProductComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.aiStyleList = [];
-      if(localStorage.getItem("aistyle_list")) this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.btnLoader = false; this.pageLoader = true;
       this.maxRank = params.rank; this.step_num = params.step;
@@ -138,27 +137,31 @@ export class ModifyProductComponent implements OnInit {
                 }
               }
               // AI Styles
-              if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
-              this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
-                this.aiStyleList = list;
-              });
+              if(this.commonService.ys_features.indexOf('shopping_assistant')!=-1) {
+                if(this.productForm.aistyle_list.length) this.productForm.aistyle_status = true;
+                if(localStorage.getItem("aistyle_list")) {
+                  this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
+                  this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
+                    this.aiStyleList = list;
+                  });
+                }
+                else {
+                  this.peApi.AI_STYLE_DETAILS().subscribe(result => {
+                    if(result.status) {
+                      this.commonService.aistyle_list = result.data;
+                      this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
+                      this.aiStyleList = result.data;
+                      this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
+                        this.aiStyleList = list;
+                      });
+                    }
+                  });
+                }
+              }
             }
             else console.log("response", result);
             setTimeout(() => { this.pageLoader = false; }, 500);
           });
-          if(this.commonService.ys_features.indexOf('shopping_assistant')!=-1 && !localStorage.getItem("aistyle_list")) {
-            this.peApi.AI_STYLE_DETAILS().subscribe(result => {
-              if(result.status) {
-                this.commonService.aistyle_list = result.data;
-                this.commonService.updateLocalData('aistyle_list', this.commonService.aistyle_list);
-                this.aiStyleList = this.commonService.aistyle_list;
-                if(this.productForm.aistyle_list?.length) this.productForm.aistyle_status = true;
-                this.aiStyleModify(this.aiStyleList, this.productForm.aistyle_list).then((list) => {
-                  this.aiStyleList = list;
-                });
-              }
-            });
-          }
         }
         else console.log("response", result);
       });

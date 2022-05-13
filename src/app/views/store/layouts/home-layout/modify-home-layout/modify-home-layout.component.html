@@ -43,7 +43,7 @@
                 <p *ngIf="layoutDetails?.type=='section' && grid_details.resolutions && grid_details.resolutions[i]?.value">{{grid_details.resolutions[i].value}}</p>
                 <i *ngIf="!x.desktop_img" class="material-icons">add_photo_alternate</i>
                 <figure *ngIf="x.desktop_img" class="desktop-layout-image-sec">
-                  <img *ngIf="x?.desktop_img_change" [src]="x.desktop_img">
+                  <img *ngIf="x?.desktop_img_change" [src]="x.temp_desktop_img">
                   <ng-container *ngIf="!x?.desktop_img_change">
                     <!-- except primary slider -->
                     <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.desktop_img">
@@ -61,9 +61,13 @@
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.desktop_img" (change)="fileChangeListener('desktop', i, $event)" accept="image/jpeg">
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.desktop_img" (change)="fileChangeListener('desktop', i, $event)"
+                  [accept]="(layoutDetails?.type=='primary_slider' && i===0)? 'image/jpeg': 'image/gif, image/jpeg, image/png'">
                   <label class="custom-file-label">Choose file</label>
                 </div>
+              </div>
+              <div *ngIf="x.d_err_msg" class="mt-2">
+                <p class="mb-0 error-msg">Accept file size upto 1 MB</p>
               </div>
               <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-3">
                 <label>Image Alt Name</label>
@@ -80,7 +84,7 @@
                 <p>(Mobile) - 1140 x 1400 pixels @72ppi</p>
                 <i *ngIf="!x.mobile_img" class="material-icons">add_photo_alternate</i>
                 <figure *ngIf="x.mobile_img" class="desktop-layout-image-sec">
-                  <img *ngIf="x?.mobile_img_change" [src]="x.mobile_img">
+                  <img *ngIf="x?.mobile_img_change" [src]="x.temp_mobile_img">
                   <ng-container *ngIf="!x?.mobile_img_change">
                     <!-- except primary slider -->
                     <img *ngIf="layoutDetails?.type!='primary_slider'" [src]="imgBaseUrl+x.mobile_img">
@@ -92,9 +96,13 @@
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.mobile_img" (change)="fileChangeListener('mobile', i, $event)" accept="image/jpeg">
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!x.mobile_img" (change)="fileChangeListener('mobile', i, $event)"
+                  [accept]="(layoutDetails?.type=='primary_slider' && i===0)? 'image/jpeg': 'image/gif, image/jpeg, image/png'">
                   <label class="custom-file-label">Choose file</label>
                 </div>
+              </div>
+              <div *ngIf="x.m_err_msg" class="mt-2">
+                <p class="mb-0 error-msg">Accept file size upto 1 MB</p>
               </div>
             </div>
           </div>
@@ -358,16 +366,19 @@
               <div class="desktop-banner" align="center">
                 <p>780 x 780 @ 72ppi</p>
                 <i *ngIf="!shopping_assist_config.image" class="material-icons">add_photo_alternate</i>
-                <img *ngIf="shopping_assist_config.image && shopping_assist_config.img_change" [src]="shopping_assist_config.image">
+                <img *ngIf="shopping_assist_config.image && shopping_assist_config.img_change" [src]="shopping_assist_config.temp_image">
                 <ng-container *ngIf="shopping_assist_config.image && !shopping_assist_config.img_change">
                   <img [src]="imgBaseUrl+shopping_assist_config.image">
                 </ng-container>
               </div>
               <div class="h-100 d-flex align-items-end">
                 <div class="custom-file mt-2">
-                  <input type="file" name="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/jpeg">
+                  <input type="file" name="layout_img" class="custom-file-input" [required]="!shopping_assist_config.image" (change)="shopAssistFileChangeListener($event);" accept="image/gif, image/jpeg, image/png">
                   <label class="custom-file-label">Choose file</label>
                 </div>
+              </div>
+              <div *ngIf="shopping_assist_config.err_msg" class="mt-2">
+                <p class="mb-0 error-msg">Accept file size upto 1 MB</p>
               </div>
               <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-3">
                 <label>Image Alt Name</label>

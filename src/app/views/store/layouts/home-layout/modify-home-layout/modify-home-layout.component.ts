@@ -20,8 +20,8 @@ export class ModifyHomeLayoutComponent implements OnInit {
     { name: "Middle Left", value: "m_l" }, { name: "Middle Center", value: "m_c" }, { name: "Middle Right", value: "m_r" },
     { name: "Bottom Left", value: "b_l" }, { name: "Bottom Center", value: "b_c" }, { name: "Bottom Right", value: "b_r" }
   ];
-  grid_details: any = {};
-  shopping_assist_config: any;
+  grid_details: any = {}; shopping_assist_config: any;
+  fileList: FormData; fileLimitInKB: number = 1024;
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService
@@ -85,8 +85,40 @@ export class ModifyHomeLayoutComponent implements OnInit {
 
   onUpdateLayout() {
     this.btnLoader = true;
-    if(this.layoutDetails.type=='shopping_assistant') this.layoutDetails.shopping_assistant_config = this.shopping_assist_config;
-    this.api.UPDATE_LAYOUT_LIST(this.layoutDetails).subscribe(result => {
+    let layoutData: any = {};
+    for(let key in this.layoutDetails) {
+      if(this.layoutDetails.hasOwnProperty(key)) layoutData[key] = this.layoutDetails[key];
+    }
+    this.fileList = new FormData();
+    if(layoutData.type=='shopping_assistant') {
+      if(this.shopping_assist_config.img_change) {
+        layoutData.shopping_assistant_config = {};
+        this.fileList.append('attachments', this.shopping_assist_config.image);
+        for(let key in this.shopping_assist_config) {
+          if(key!='image' && key!='temp_image' && this.shopping_assist_config.hasOwnProperty(key))
+            layoutData.shopping_assistant_config[key] = this.shopping_assist_config[key];
+        }
+        this.fileList.append('data', JSON.stringify(layoutData));
+        this.callUpdateApi();
+      }
+      else {
+        layoutData.shopping_assistant_config = this.shopping_assist_config;
+        this.fileList.append('data', JSON.stringify(layoutData));
+        this.callUpdateApi();
+      }
+    }
+    else {
+      this.onSetFormData(layoutData.image_list).then((imgList) => {
+        layoutData.image_list = imgList;
+        this.fileList.append('data', JSON.stringify(layoutData));
+        this.callUpdateApi();
+      });
+    }
+  }
+
+  callUpdateApi() {
+    this.api.UPDATE_LAYOUT_LIST(this.fileList).subscribe(result => {
+      this.btnLoader = false;
       if(result.status) {
         this.router.navigate(["/layouts/home"]);
       }
@@ -94,35 +126,79 @@ export class ModifyHomeLayoutComponent implements OnInit {
         this.layoutDetails.errorMsg = result.message;
         console.log("response", result);
       }
-      this.btnLoader = false;
+    });
+  }
+
+  onSetFormData(imgList) {
+    return new Promise((resolve, reject) => {
+      let updatedList = [];
+      for(let i=0; i<imgList.length; i++)
+      {
+        let imgData = imgList[i];
+        if(imgData.desktop_img_change) this.fileList.append('attachments', imgData['desktop_img'], i+'_d');
+        if(imgData.mobile_img_change) this.fileList.append('attachments', imgData['mobile_img'], i+'_m');
+        let objData = {};
+        for(let key in imgData) {
+          if(imgData.desktop_img_change || imgData.mobile_img_change) {
+            if(imgData.desktop_img_change) {
+              if(key!='desktop_img' && key!='temp_desktop_img' && imgData.hasOwnProperty(key)) objData[key] = imgData[key];
+            }
+            if(imgData.mobile_img_change) {
+              if(key!='mobile_img' && key!='temp_mobile_img' && imgData.hasOwnProperty(key)) objData[key] = imgData[key];
+            }
+          }
+          else objData = imgData;
+        }
+        updatedList.push(objData)
+      }
+      resolve(updatedList);
     });
   }
 
   fileChangeListener(devType, index, event) {
+    delete this.layoutDetails.image_list[index].d_err_msg;
+    delete this.layoutDetails.image_list[index].m_err_msg;
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
+      let fileData = event.target.files[0];
+      let fileInKB = Math.round(fileData.size/ 1024);
       reader.onload = (event: ProgressEvent) => {
         if(devType=='desktop') {
-          this.layoutDetails.image_list[index].desktop_img = (<FileReader>event.target).result;
-          this.layoutDetails.image_list[index].desktop_img_change = true;
+          if(fileInKB<=this.fileLimitInKB) {
+            this.layoutDetails.image_list[index].temp_desktop_img = (<FileReader>event.target).result;
+            this.layoutDetails.image_list[index].desktop_img = fileData;
+            this.layoutDetails.image_list[index].desktop_img_change = true;
+          }
+          else this.layoutDetails.image_list[index].d_err_msg = true;
         }
         else {
-          this.layoutDetails.image_list[index].mobile_img = (<FileReader>event.target).result;
-          this.layoutDetails.image_list[index].mobile_img_change = true;
+          if(fileInKB<=this.fileLimitInKB) {
+            this.layoutDetails.image_list[index].temp_mobile_img = (<FileReader>event.target).result;
+            this.layoutDetails.image_list[index].mobile_img = fileData;
+            this.layoutDetails.image_list[index].mobile_img_change = true;
+          }
+          else this.layoutDetails.image_list[index].m_err_msg = true;
         }
       }
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(fileData);
     }
   }
 
   shopAssistFileChangeListener(event) {
+    delete this.shopping_assist_config.err_msg;
     if(event.target.files && event.target.files[0]) {
       let reader = new FileReader();
+      let fileData = event.target.files[0];
+      let fileInKB = Math.round(fileData.size/ 1024);
       reader.onload = (event: ProgressEvent) => {
-        this.shopping_assist_config.image = (<FileReader>event.target).result;
-        this.shopping_assist_config.img_change = true;
+        if(fileInKB<=this.fileLimitInKB) {
+          this.shopping_assist_config.temp_image = (<FileReader>event.target).result;
+          this.shopping_assist_config.image = fileData;
+          this.shopping_assist_config.img_change = true;
+        }
+        else this.shopping_assist_config.err_msg = true;
       }
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(fileData);
     }
   }
 
