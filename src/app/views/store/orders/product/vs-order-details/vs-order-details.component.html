@@ -7,7 +7,7 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-8">
-        <h1>#{{ vendorInfo.order_number }}</h1>
+        <h1>#{{ vendorOrderDetails.order_number }}</h1>
         <ul>
           <li>View and manage your order</li>
         </ul>
@@ -34,9 +34,9 @@
               <div class="flex-grow-1 pl-2 d-flex">
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p class="w-30 w-sm-100 m-b-0">{{ vendorDetails?.company_details?.brand }}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{ vendorDetails?.email }}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{ vendorDetails?.mobile }}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{ vendorInfo?.company_details?.brand }}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{ vendorInfo?.email }}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{ vendorInfo?.mobile }}</p>
                 </div>
               </div>
             </div>
@@ -46,6 +46,20 @@
         <div class="list-item col-md-12 p-0 mb-4">
           <p class="sec-desc">Product Details</p>
           <div *ngFor="let x of itemList; let i=index;" class="card m-10 d-flex flex-row pl-3 pr-3">
+            <p *ngIf="x.item_status" class="p-0 m-0 status-div">
+              <span *ngIf="x.item_status=='c_requested'">
+                Cancellation Requested
+                <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+              </span>
+              <span *ngIf="x.item_status=='c_confirmed'">
+                Cancelled
+                <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+              </span>
+              <span *ngIf="x.item_status=='c_declined'">
+                Cancellation Request Declined
+                <i (click)="itemInfo=x; modalService.open(cancelItemInfoModal, { centered: true });" class="material-icons-outlined">info</i>
+              </span>
+            </p>
             <div class="list-thumb d-flex p-2">
               <img [src]="imgBaseUrl+x.image" alt="">
             </div>
@@ -108,11 +122,11 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{vendorInfo.sub_total | currency: commonService.store_currency?.country_code}}
+                    {{subTotal | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
-              <ng-container *ngIf="vendorInfo?.gift_wrapper > 0">
+              <ng-container *ngIf="vendorOrderDetails?.gift_wrapper > 0">
                 <div class="col-6">
                   <div class="box-card card-head">
                     <p>Gift Wrapping</p>
@@ -121,7 +135,7 @@
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      {{vendorInfo.gift_wrapper | currency: commonService.store_currency?.country_code}}</p>
+                      {{vendorOrderDetails.gift_wrapper | currency: commonService.store_currency?.country_code}}</p>
                   </div>
                 </div>
               </ng-container>
@@ -133,10 +147,10 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{vendorInfo.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
+                    {{vendorOrderDetails.shipping_cost | currency: commonService.store_currency?.country_code}}</p>
                 </div>
               </div>
-              <ng-container *ngIf="vendorInfo?.discount_amount > 0">
+              <ng-container *ngIf="vendorOrderDetails?.discount_amount > 0">
                 <div class="col-6">
                   <div class="box-card card-head">
                     <p>Discount</p>
@@ -145,7 +159,7 @@
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      -{{vendorInfo.discount_amount | currency: commonService.store_currency?.country_code}}</p>
+                      -{{vendorOrderDetails.discount_amount | currency: commonService.store_currency?.country_code}}</p>
                   </div>
                 </div>
               </ng-container>
@@ -157,7 +171,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{vendorInfo.final_price | currency: commonService.store_currency?.country_code}}
+                    {{vendorOrderDetails.settlement_info?.order_total | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -171,7 +185,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    - {{vendorInfo.items_commission | currency: commonService.store_currency?.country_code}}
+                    - {{vendorOrderDetails.settlement_info?.items_cmsn | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -183,35 +197,35 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    - {{vendorInfo.shipping_method?.dp_charges | currency: commonService.store_currency?.country_code}}
+                    - {{vendorOrderDetails.shipping_method?.dp_charges | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
-              <ng-container *ngIf="vendorInfo.pg_charges>0">
+              <ng-container *ngIf="vendorOrderDetails.settlement_info?.pg_charges>0">
                 <div class="col-6">
                   <div class="box-card card-head">
-                    <p>Payment Gateway Charges ({{cmsn_config.pgw_charges}}%)</p>
+                    <p>Payment Gateway Charges ({{vendorOrderDetails.settlement_info?.pg_in_pct}}%)</p>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      - {{vendorInfo.pg_charges | currency: commonService.store_currency?.country_code}}
+                      - {{vendorOrderDetails.settlement_info.pg_charges | currency: commonService.store_currency?.country_code}}
                     </p>
                   </div>
                 </div>
               </ng-container>
               <div class="col-12"><hr class="mt-3"></div>
-              <ng-container *ngIf="vendorInfo.commission_tax>0">
+              <ng-container *ngIf="vendorOrderDetails.settlement_info?.cmsn_tax>0">
                 <div class="col-6">
                   <div class="box-card card-head">
-                    <p>Tax on Commission ({{cmsn_config.tax_in_pct}}%)</p>
+                    <p>Tax on Commission ({{vendorOrderDetails.settlement_info.tax_in_pct}}%)</p>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      - {{vendorInfo.commission_tax | currency: commonService.store_currency?.country_code}}
+                      - {{vendorOrderDetails.settlement_info.cmsn_tax | currency: commonService.store_currency?.country_code}}
                     </p>
                   </div>
                 </div>
@@ -224,7 +238,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{ vendorInfo.final_price - (vendorInfo.total_commission + vendorInfo.commission_tax) | currency: commonService.store_currency?.country_code }}
+                    {{ vendorOrderDetails.settlement_info?.settlement_amt | currency: commonService.store_currency?.country_code }}
                   </p>
                 </div>
               </div>
@@ -236,9 +250,15 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{ vendorInfo.settlement_on | date: "dd MMM y"}}
+                    {{ vendorOrderDetails.settlement_on | date: "dd MMM y"}}
                   </p>
                 </div>
+              </div>
+              <div *ngIf="vendorOrderDetails.settlement_info?.status!='paid'" class="col-12">
+                <button type="button" class="btn blue-outline-btn w-100 mtb-10"
+                (click)="errorMsg=null; btnLoader=false; modalService.open(markPaidModal, { centered: true });">
+                  <span class="blue-outline-txt">Mark as Paid</span>
+                </button>
               </div>
             </div>
           </div>
@@ -261,7 +281,7 @@
                 </div>
               </div>
             </ng-container>
-            <ng-container *ngIf="vendorInfo?.confirmed_on">
+            <ng-container *ngIf="vendorOrderDetails?.confirmed_on">
               <div class="col-5">
                 <div class="box-card card-head">
                   <p>Confirmed on</p>
@@ -269,11 +289,11 @@
               </div>
               <div class="col-7">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{ vendorInfo.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="pull-right text-right">{{ vendorOrderDetails.confirmed_on | date: "dd MMM y hh:mm a"}}</p>
                 </div>
               </div>
             </ng-container>
-            <ng-container *ngIf="vendorInfo?.dispatched_on">
+            <ng-container *ngIf="vendorOrderDetails?.dispatched_on">
               <div class="col-5">
                 <div class="box-card card-head">
                   <p>Dispatched on</p>
@@ -281,11 +301,11 @@
               </div>
               <div class="col-7">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{ vendorInfo.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="pull-right text-right">{{ vendorOrderDetails.dispatched_on | date: "dd MMM y hh:mm a"}}</p>
                 </div>
               </div>
             </ng-container>
-            <ng-container *ngIf="vendorInfo?.delivered_on">
+            <ng-container *ngIf="vendorOrderDetails?.delivered_on">
               <div class="col-5">
                 <div class="box-card card-head">
                   <p>Delivered on</p>
@@ -293,7 +313,19 @@
               </div>
               <div class="col-7">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{ vendorInfo.delivered_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="pull-right text-right">{{ vendorOrderDetails.delivered_on | date: "dd MMM y hh:mm a"}}</p>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="vendorOrderDetails?.settled_on">
+              <div class="col-5">
+                <div class="box-card card-head">
+                  <p>Settled on</p>
+                </div>
+              </div>
+              <div class="col-7">
+                <div class="box-card">
+                  <p class="pull-right text-right">{{ vendorOrderDetails.settled_on | date: "dd MMM y hh:mm a"}}</p>
                 </div>
               </div>
             </ng-container>
@@ -304,3 +336,54 @@
   </div>
 
 </div>
+
+<!-- Cancel Item Info -->
+<ng-template #cancelItemInfoModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">{{itemInfo.name}}</h5>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="itemInfo?.cancel_info?.title">
+      <h6 class="mt-2">Reason</h6>
+      <p class="pl-2">{{itemInfo.cancel_info.title}}</p>
+    </ng-container>
+    <ng-container *ngIf="itemInfo?.cancel_info?.description">
+      <h6>Description</h6>
+      <p class="pl-2">{{itemInfo.cancel_info.description}}</p>
+    </ng-container>
+    <hr class="my-3">
+    <p *ngIf="itemInfo?.cancel_info?.request_on">
+      <b>Requested on:</b> {{itemInfo.cancel_info.request_on | date: "dd MMM y hh:mm a"}}
+    </p>
+    <p *ngIf="itemInfo?.cancel_info?.cancelled_on">
+      <b>Cancelled on:</b> {{itemInfo.cancel_info.cancelled_on | date: "dd MMM y hh:mm a"}}
+    </p>
+    <p *ngIf="itemInfo?.cancel_info?.declined_on && !itemInfo?.cancel_info?.cancelled_on">
+      <b>Declined on:</b> {{itemInfo.cancel_info.declined_on | date: "dd MMM y hh:mm a"}}
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" (click)="modal.dismiss('cancel')" class="btn btn-wide btn-primary">Close</button>
+  </div>
+</ng-template>
+
+<!-- Mark as Paid -->
+<ng-template #markPaidModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to mark this amount as PAID
+        <span class="text-danger">"#{{vendorOrderDetails.order_number}}"</span>?
+      </strong>
+    </p>
+    <div *ngIf="errorMsg">
+      <p class="text-danger">{{ errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" (click)="onMarkPaid();" class="btn btn-wide btn-primary ladda-button"
+      [disabled]="btnLoader" [ladda]="btnLoader">Confirm</button>
+  </div>
+</ng-template>

@@ -557,11 +557,11 @@
               <option value="product_range">Product Range</option>
             </select>
           </div>
-          <div *ngIf="settingForm.cmsn_type=='order'" class="col-md-12 form-group mb-3">
+          <div *ngIf="settingForm.cmsn_type=='flat'" class="col-md-12 form-group mb-3">
             <label>Commission in (%)</label>
             <input type="tel" name="cmsn_in_pct" class="form-control" [(ngModel)]="settingForm.cmsn_in_pct" appNumberOnly required />
           </div>
-          <div *ngIf="settingForm.cmsn_type!='order'" class="col-md-12 mb-3">
+          <div *ngIf="settingForm.cmsn_type!='flat'" class="col-md-12 mb-3">
             <div class="card p-3">
               <div class="row">
                 <div class="col-md-12 mb-2">

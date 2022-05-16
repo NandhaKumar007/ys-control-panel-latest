@@ -30,15 +30,27 @@
         </div>
       </div>
       <div class="col-md-3 col-6">
-        <!-- <div class="form-group">
+        <div class="form-group">
+          <input type="text" placeholder="Select Date" class="form-control" name="from_date" [(ngModel)]="filterForm.from_date"
+          (ngModelChange)="getOrderList();" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="form-group">
+          <input type="text" placeholder="Select Date" class="form-control" name="to_date" [(ngModel)]="filterForm.to_date"
+          (ngModelChange)="getOrderList();" bsDatepicker [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+        </div>
+      </div>
+      <!-- <div class="col-md-3 col-6">
+        <div class="form-group">
           <select name="list_type" class="form-control select-arrow" [(ngModel)]="filterForm.list_type" (change)="getOrderList();">
             <option value="all">All</option>
             <option value="pending">Settlement Pending</option>
             <option value="settled">Settlement Completed</option>
           </select>
-        </div> -->
-      </div>
-      <div class="col-md-6 col-6">
+        </div>
+      </div> -->
+      <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -53,19 +65,24 @@
         <div class="row m-0">
 
           <!-- SINGLE LIST ITEM -->
-          <div
-            *ngFor="let x of list | gridSearch: { order_number: search_bar, vendor_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
-            class="col-md-12 list-item data-list-card p-0"
-            [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+          <div *ngFor="let x of list | orderAsc:'settlement_on' | gridSearch: { order_number: search_bar, vendor_name: search_bar } | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          class="col-md-12 list-item data-list-card p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
 
             <div class="d-flex flex-row">
               <div class="flex-grow-1 pl-2 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">{{ (x.vendor_name)? x.vendor_name: 'NA' }}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{x.delivered_on | date: "dd MMM y"}}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{x.final_price | currency: commonService.store_currency?.country_code}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{x.settlement_on | date: "dd MMM y"}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{x.order_total | currency: commonService.store_currency?.country_code}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{x.settlement_amt | currency: commonService.store_currency?.country_code}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">
+                    <span *ngIf="x.settlement_status" class="badge" [ngClass]="{
+                      'badge-warning badge-green': x.settlement_status=='paid',
+                      'badge-warning badge-blue': x.settlement_status=='pending',
+                      'badge-primary badge-red': x.settlement_status=='failed'
+                    }">{{ x.settlement_status | titlecase }}</span>
+                  </p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
                     <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
                       routerLink="/orders/settlement/{{x._id}}/{{x.vendor_id}}">
