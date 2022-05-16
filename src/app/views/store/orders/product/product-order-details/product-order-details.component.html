@@ -504,7 +504,7 @@
                             </div>
                           </ng-container>
                           <!-- courier partner -->
-                          <div class="col-md-12" *ngIf="params?.type=='live' && vendor.existing_status=='confirmed' && !vendor.shipping_method.delivery_method && vendor.shipping_info?.dp_status">
+                          <div class="col-md-12" *ngIf="params?.type=='live' && vendor.existing_status=='confirmed' && !vendor.shipping_method.delivery_method && vendor.shipping_info?.dp_status && !vendorInfo.cp_status">
                             <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
                             [ladda]="courierForm.btnLoader">Create Order in {{vendor.shipping_info?.dp_name}}</button>
                           </div>
@@ -1493,7 +1493,7 @@
                 </ng-container>
               </ng-container>
               <!-- courier partner -->
-              <div class="col-md-12" *ngIf="params?.type=='live' && vendorInfo.existing_status=='confirmed' && !vendorInfo.shipping_method.delivery_method && vendorInfo.shipping_info?.dp_status">
+              <div class="col-md-12" *ngIf="params?.type=='live' && vendorInfo.existing_status=='confirmed' && !vendorInfo.shipping_method.delivery_method && vendorInfo.shipping_info?.dp_status && !vendorInfo.cp_status">
                 <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
                 [ladda]="courierForm.btnLoader">Create Order in {{vendorInfo.shipping_info?.dp_name}}</button>
               </div>
