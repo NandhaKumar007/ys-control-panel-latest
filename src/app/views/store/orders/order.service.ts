@@ -97,6 +97,10 @@ export class OrderService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/courier_partner/dunzo', x, httpOptions);
   }
+  GHANA_CREATE_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/courier_partner/ghana', x, httpOptions);
+  }
 
   // Coupon
   COUPON_LIST(x) {

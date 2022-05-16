@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { OrderService } from '../../order.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
@@ -22,7 +22,7 @@ export class VsOrderDetailsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute,
-    private api: OrderService, public commonService: CommonService
+    private api: OrderService, public commonService: CommonService, private router: Router
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -63,7 +63,7 @@ export class VsOrderDetailsComponent implements OnInit {
       this.btnLoader = false;
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.ngOnInit();
+        this.router.navigate(['/orders/settlement']);
       }
       else {
         this.errorMsg = result.message;
