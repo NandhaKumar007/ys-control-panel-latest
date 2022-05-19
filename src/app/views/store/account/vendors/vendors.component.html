@@ -124,7 +124,10 @@
 <!-- VENDOR MODAL -->
 <ng-template #vendorModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{(vendorForm.form_type=='add')? 'Add New Vendor': vendorForm.email}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">
+      {{(vendorForm.form_type=='add')? 'Add New Vendor': vendorForm.email}}
+      <span *ngIf="vendorForm.payout_contact_id">- {{vendorForm.payout_contact_id}}</span>
+    </h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="modal-body">
@@ -296,35 +299,32 @@
         </div>
         <!-- bank details -->
         <div class="col-md-12 mt-3">
-          <h6>BANK DETAILS</h6>
+          <h6>BANK DETAILS
+            <span *ngIf="vendorForm.bank_details?.payout_account_id">- {{vendorForm.bank_details.payout_account_id}}</span>
+          </h6>
         </div>
         <div class="card">
           <div class="row card-body">
             <div class="col-md-6 mb-3">
               <label>Beneficiary Name</label>
-              <input type="text" name="beneficiary_name" class="form-control"
-                [(ngModel)]="vendorForm.bank_details.beneficiary" required />
+              <input type="text" name="beneficiary_name" class="form-control" [(ngModel)]="vendorForm.bank_details.beneficiary" required />
             </div>
             <div class="col-md-6 mb-3"></div>
             <div class="col-md-6 mb-3">
               <label>Bank Name</label>
-              <input type="text" name="bank_name" class="form-control" [(ngModel)]="vendorForm.bank_details.name"
-                required />
+              <input type="text" name="bank_name" class="form-control" [(ngModel)]="vendorForm.bank_details.name" required />
             </div>
             <div class="col-md-6 mb-3">
               <label>Branch</label>
-              <input type="text" name="branch" class="form-control" [(ngModel)]="vendorForm.bank_details.branch"
-                required />
+              <input type="text" name="branch" class="form-control" [(ngModel)]="vendorForm.bank_details.branch" required />
             </div>
             <div class="col-md-6">
               <label>IFSC Code</label>
-              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code"
-                required />
+              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" required />
             </div>
             <div class="col-md-6">
               <label>Account No</label>
-              <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no"
-                required />
+              <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no" required />
             </div>
           </div>
         </div>
@@ -334,8 +334,7 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-        (click)="modal.dismiss('Cross click');">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="vendorForm.submit"

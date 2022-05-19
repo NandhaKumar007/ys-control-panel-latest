@@ -94,6 +94,14 @@ export class ModifyProductComponent implements OnInit {
                   if(!element.taxrate_id && this.productForm.taxrate_id) element.taxrate_id = this.productForm.taxrate_id;
                 });
               }
+              // image tags
+              if(this.productForm.badge_list?.length) {
+                this.productForm.badge_status = true;
+                this.productForm.badges = [];
+                this.productForm.badge_list.forEach(element => {
+                  this.productForm.badges.push({value:element , display:element});
+                });
+              }
               this.adddonListModify(tempAddonList, this.productForm.addon_list).then((list) => {
                 this.addonList = list;
               });
@@ -280,6 +288,13 @@ export class ModifyProductComponent implements OnInit {
         _id: this.productForm._id, sku: this.productForm.sku, rank: this.productForm.rank, prev_rank: this.productForm.prev_rank, stock: this.productForm.stock,
         variant_status: this.productForm.variant_status, variant_types: this.productForm.variant_types, variant_list: this.productForm.variant_list
       };
+    }
+    // image tags
+    if(this.productForm.badge_status) {
+      this.productForm.badge_list = [];
+      this.productForm.badges.forEach(object => {
+        this.productForm.badge_list.push(object.value);
+      });
     }
     // update details
     this.api.UPDATE_PRODUCT(formData).subscribe(result => {

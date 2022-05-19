@@ -679,9 +679,10 @@ export class SidebarService {
       let orderList: IChildItem[] = [
         { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },
         { icon: 'check_circle_outline', name: 'Completed Orders', state: '/orders/product/delivered/all', type: 'link' },
-        { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' }
+        { icon: 'highlight_off', name: 'Cancelled Orders', state: '/orders/product/cancelled/all', type: 'link' },
+        { icon: 'paid', name: 'Settlement Orders', state: '/orders/settlement', type: 'link' }
       ];
-      routePermissionList.push("orders");
+      routePermissionList.push("orders", "vendor_settlement");
       this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
       // ad management
       routePermissionList.push("ad_management");

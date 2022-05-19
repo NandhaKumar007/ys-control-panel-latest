@@ -50,7 +50,7 @@
           </select>
         </div>
       </div> -->
-      <div class="col-md-3 col-6">
+      <div class="col-6" [ngClass]="(commonService.store_details?.login_type=='admin')? 'col-md-3': 'col-md-6'">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -71,7 +71,7 @@
             <div class="d-flex flex-row">
               <div class="flex-grow-1 pl-2 d-flex">
                 <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p class="w-30 w-sm-100 m-b-0">{{ (x.vendor_name)? x.vendor_name: 'NA' }}</p>
+                  <p *ngIf="commonService.store_details?.login_type=='admin'" class="w-30 w-sm-100 m-b-0">{{ (x.vendor_name)? x.vendor_name: 'NA' }}</p>
                   <p class="w-30 w-sm-100 m-b-0">#{{x.order_number}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{x.settlement_on | date: "dd MMM y"}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{x.order_total | currency: commonService.store_currency?.country_code}}</p>

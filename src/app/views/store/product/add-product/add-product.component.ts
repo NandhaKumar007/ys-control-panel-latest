@@ -227,6 +227,13 @@ export class AddProductComponent implements OnInit {
     if(!this.productForm.image_tag_status) {
       this.productForm.image_list.forEach(obj => { delete obj.tag; });
     }
+    // image tags
+    if(this.productForm.badge_status) {
+      this.productForm.badge_list = [];
+      this.productForm.badges.forEach(object => {
+        this.productForm.badge_list.push(object.value);
+      });
+    }
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.updateDeployStatus();

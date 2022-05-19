@@ -282,9 +282,8 @@
                               <input type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" #name="ngModel" (focusout)="onCreateVariantList(productForm.variant_types)" required />
                             </div>
                             <div *ngIf="commonService.ys_features.indexOf('variant_colors')==-1 || commonService.colorNames.indexOf(x.name)==-1" class="col-md-8 form-group mb-3">
-                              <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
-                                [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);"
-                                required></tag-input>
+                              <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
+                              [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);" required></tag-input>
                             </div>
                             <div *ngIf="commonService.ys_features.indexOf('variant_colors')!=-1 && commonService.colorNames.indexOf(x.name)!=-1" class="col-md-8 form-group mb-3">
                               <div class="custom-tag-list-wrapper">
@@ -669,6 +668,26 @@
                     </div>
                   </div>
                   <!-- #Availability -->
+
+                  <!-- Apply Image Tags -->
+                  <div [ngClass]="productForm.badge_status? 'card p-3 mb-3': ''">
+                    <div class="row">
+                      <div class="col-md-12 form-group mb-3">
+                        <label class="checkbox checkbox-primary">
+                          <input class="form-check-input" type="checkbox" name="badge_status" [(ngModel)]="productForm.badge_status">
+                          <span>Apply Image Tags</span>
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="row ml-3" *ngIf="productForm.badge_status">
+                      <div class="col-md-6 form-group mb-3">
+                        <tag-input class="w-100" name="badges" id="badges" [(ngModel)]="productForm.badges" placeholder=""
+                        [secondaryPlaceholder]="'Enter tags separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- #Apply Image Tags -->
                 </div>
               </div>
             </div>

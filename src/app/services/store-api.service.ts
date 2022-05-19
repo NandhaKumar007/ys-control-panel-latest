@@ -166,10 +166,6 @@ export class StoreApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.get<any>(environment.ws_url+'/store/product_features', httpOptions);
   }
-  STORE_FEATURES() {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/store_features', httpOptions);
-  }
 
   // donation
   DONATION_LIST(x) {

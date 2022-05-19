@@ -26,8 +26,8 @@
   <div class="top-filter-sec">
     <div class="row">
       <div class="col-lg-9">
-        <!-- customer details -->
-        <div class="order-section mtb-10">
+        <!-- vendor details -->
+        <div *ngIf="commonService.store_details?.login_type=='admin'" class="order-section mtb-10">
           <p class="sec-desc">Vendor Details</p>
           <div class="col-md-12 list-item p-0 mtb-10">
             <div class="card mb-4 d-flex flex-row">
@@ -254,7 +254,7 @@
                   </p>
                 </div>
               </div>
-              <div *ngIf="vendorOrderDetails.settlement_info?.status!='paid'" class="col-12">
+              <div *ngIf="vendorOrderDetails.settlement_info?.status!='paid' && commonService.store_details?.login_type=='admin'" class="col-12">
                 <button type="button" class="btn blue-outline-btn w-100 mtb-10"
                 (click)="errorMsg=null; btnLoader=false; modalService.open(markPaidModal, { centered: true });">
                   <span class="blue-outline-txt">Mark as Paid</span>
