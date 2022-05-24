@@ -38,7 +38,7 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "xlsx", "echarts", "file-saver"
+              "core-js", "raf", "xlsx", "echarts", "file-saver"
             ]
           },
           "configurations": {

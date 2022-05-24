@@ -41,6 +41,8 @@
     "echarts": "4.6.0",
     "feather-icons": "4.7.3",
     "file-saver": "^2.0.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "ladda": "^2.0.1",
     "ngx-bootstrap": "^6.1.0",
     "ngx-chips": "2.1.0",

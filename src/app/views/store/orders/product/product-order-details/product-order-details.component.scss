@@ -1,0 +1,44 @@
+.modal-table {
+  td {
+    vertical-align: middle;
+  }
+  th, td {
+    border: 1px solid #000;
+  }
+  .deli_img1 {
+    width: 60px;
+    height: auto
+  }
+  .deli_img2 {
+    width: 200px;
+    height: auto
+  }
+  p {
+    font-size: 14px;
+  }
+  .border-none {
+    border: 0
+  }
+  .pad-0 {
+    padding: 0
+  }
+  th, .total-b {
+    font-weight: 600;
+  }
+  .border-ltb0 {
+    border-top: 0;
+    border-left: 0;
+    border-bottom: 0
+  }
+  .border-rtb0 {
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0
+  }
+}
+
+@media screen and (min-width:1200px) {
+  .modal-table {
+    width: 500px;
+  }
+}

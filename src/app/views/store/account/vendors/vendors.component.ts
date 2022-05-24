@@ -188,22 +188,42 @@ export class VendorsComponent implements OnInit {
   }
 
   onUpdateStatus() {
-    if(this.deleteForm.exist_status=='active') this.deleteForm.status='inactive';
-    else this.deleteForm.status='active';
-    this.api.UPDATE_VENDOR({ _id: this.deleteForm._id, status: this.deleteForm.status, session_key: new Date().valueOf() }).subscribe(result => {
+    let newStatus = 'active';
+    if(this.deleteForm.status=='active') newStatus = 'inactive';
+    this.deleteForm.submit = true;
+    this.api.UPDATE_VENDOR({ _id: this.deleteForm._id, form_type: 'change_status', status: newStatus, session_key: new Date().valueOf() }).subscribe(result => {
+      this.deleteForm.submit = false;
       if(result.status) {
         document.getElementById('closeModal').click();
         this.ngOnInit();
       }
       else {
         console.log("response", result);
-        this.deleteForm.error_msg = result.message;
+        this.deleteForm.errorMsg = result.message;
+      }
+    });
+  }
+
+  // Link to RazorpayX
+  onLink() {
+    this.deleteForm.submit = true;
+    delete this.deleteForm.errorMsg;
+    this.api.LINK_VENDOR({ _id: this.deleteForm._id }).subscribe(result => {
+      this.deleteForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        console.log("response", result);
+        this.deleteForm.errorMsg = result.message;
       }
     });
   }
 
   // UPDATE PWD
   onUpdatePwd() {
+    delete this.pwdForm.errorMsg;
     this.api.UPDATE_VENDOR_PWD(this.pwdForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

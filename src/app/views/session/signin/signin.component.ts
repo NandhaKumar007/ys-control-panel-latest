@@ -70,6 +70,7 @@ export class SigninComponent implements OnInit {
         };
         if(result.data.vendor_commission) this.commonService.store_details.vendor_commission = result.data.vendor_commission;
         if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
+        if(result.data.payout_gateway) this.commonService.store_details.payout_gateway = result.data.payout_gateway;
         let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);
@@ -188,6 +189,7 @@ export class SigninComponent implements OnInit {
         };
         if(result.data.vendor_commission) this.commonService.store_details.vendor_commission = result.data.vendor_commission;
         if(result.data.dp_wallet_status) this.commonService.store_details.dp_wallet_status = result.data.dp_wallet_status;
+        if(result.data.payout_gateway) this.commonService.store_details.payout_gateway = result.data.payout_gateway;
         let currencyIndex = result.data.currency_types.findIndex(obj => obj.default_currency);
         this.commonService.store_currency = result.data.currency_types[currencyIndex];
         this.commonService.updateLocalData('store_currency', this.commonService.store_currency);

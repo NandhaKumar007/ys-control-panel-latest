@@ -89,6 +89,12 @@ export class OrderService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
   }
+  ORDER_PACKING_SLIP(orderId, vendorId) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    let reqUrl = environment.ws_url+'/store/courier_partner?order_id='+orderId;
+    if(vendorId) { reqUrl += '&vendor_id='+vendorId; }
+    return this.http.get<any>(reqUrl, httpOptions);
+  }
   DELHIVERY_UPDATE_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/courier_partner/delhivery', x, httpOptions);

@@ -65,6 +65,10 @@
                     <span *ngIf="!x.password && x.status=='inactive'" class="badge badge-primary badge-blue">New</span>
                     <span *ngIf="x.status=='declined'" class="badge badge-primary badge-red">Declined</span>
                   </p>
+                  <p *ngIf="commonService.store_details?.payout_gateway" class="w-10 w-sm-100 m-b-0">
+                    <i *ngIf="x.payout_contact_id" class="material-icons success-icon" title="Account linked with RazorpayX">verified</i>
+                    <i *ngIf="!x.payout_contact_id" class="material-icons error-msg" title="Not linked with RazorpayX">error</i>
+                  </p>
                   <!-- <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions"> -->
                     <div class="col-md-4 d-flex align-items-center justify-content-end">
                       <div class="text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
@@ -72,7 +76,7 @@
                           <div class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all"
                             placement="left">
                             <button class="btn btn-wide black-outline-btn w-md-100" ngbDropdownToggle>
-                              <span class="black-outline-txt">Edit</span>
+                              <span class="black-outline-txt">Actions</span>
                             </button>
                             <div class="dropdown-menu" ngbDropdownMenu>
                               <button class="dropdown-item" (click)="onEdit(x, 'edit_details', vendorModal);">Details</button>
@@ -80,17 +84,19 @@
                                 <button class="dropdown-item" (click)="vendorForm={ _id: x._id, email: x.email, image: x.image }; modalService.open(bannerModal);">Banner</button>
                                 <button class="dropdown-item" (click)="pwdForm={_id: x._id, email: x.email}; modalService.open(changePwdModal);">Password</button>
                                 <button class="dropdown-item" (click)="onEdit(x, 'edit_permissions', permissionModal);">Permissions</button>
+                                <button *ngIf="commonService.store_details?.payout_gateway && !x.payout_contact_id" class="dropdown-item"
+                                (click)="deleteForm=x; modalService.open(linkModal, { centered: true });">Link to RazorpayX</button>
+                                <button class="dropdown-item" (click)="deleteForm=x; deleteForm.submit=null; modalService.open(deleteModal, { centered: true });">Remove</button>
                               </ng-container>
                             </div>
                           </div>
                         </div>
-                        <button *ngIf="x.password && x.status!='declined'" (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });" class="btn btn-wide mr-3 w-md-100"
-                        [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">{{ (x.status=='active')? 'Disable': 'Enable' }}</button>
+                        <button *ngIf="x.password && x.status!='declined'" (click)="deleteForm=x; deleteForm.submit=null; modalService.open(statusModal, { centered: true });"
+                        class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
+                          {{ (x.status=='active')? 'Disable': 'Enable' }}
+                        </button>
                         <button *ngIf="!x.password" (click)="deleteForm=x; modalService.open(activationModal, { centered: true });" class="btn gray-btn mr-3 w-md-100">
                           <span class="gray-btn-txt">Approve/Reject</span>
-                        </button>
-                        <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
-                          <span class="orng-outline-txt">Remove</span>
                         </button>
                       </div>
                     </div>
@@ -151,7 +157,15 @@
               <input type="tel" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
             </div>
           </ng-container>
+          <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.payout_contact_id" class="col-md-12 mb-3">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="update_contact" [(ngModel)]="vendorForm.update_contact">
+              <b>Update Contact Information in RazorpayX</b>
+              <span class="checkmark"></span>
+            </label>
+          </div>
         </div>
+        <hr class="mt-0 mb-3">
         <!-- login details -->
         <ng-container *ngIf="vendorForm.form_type=='add'">
           <div class="col-md-12">
@@ -320,11 +334,18 @@
             </div>
             <div class="col-md-6">
               <label>IFSC Code</label>
-              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" required />
+              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" pattern=".{11,11}" required title="Invalid Code" maxlength="11" required />
             </div>
             <div class="col-md-6">
               <label>Account No</label>
               <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no" required />
+            </div>
+            <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.bank_details?.payout_account_id" class="col-md-12 mt-3">
+              <label class="checkbox checkbox-success">
+                <input class="form-check-input" type="checkbox" name="update_bank" [(ngModel)]="vendorForm.update_bank">
+                <b>Update Bank Details in RazorpayX</b>
+                <span class="checkmark"></span>
+              </label>
             </div>
           </div>
         </div>
@@ -461,7 +482,7 @@
 <!-- STATUS MODAL -->
 <ng-template #statusModal let-modal>
   <div class="modal-body">
-    <p><strong>Are you sure you want to {{ (deleteForm.exist_status=='active')? 'disable': 'enable' }} the <span
+    <p><strong>Are you sure you want to {{ (deleteForm.status=='active')? 'disable': 'enable' }} the <span
           class="text-danger">"{{deleteForm.email}}"</span>?</strong></p>
     <div *ngIf="deleteForm.errorMsg">
       <p class="text-danger">{{ deleteForm.errorMsg }}</p>
@@ -469,8 +490,9 @@
   </div>
   <div class="modal-footer">
     <button type="button" id="closeModal" class="btn btn-wide btn-outline-secondary"
-      (click)="modal.dismiss('Cross click');">No</button>
-    <button type="button" (click)="onUpdateStatus();" class="btn btn-primary">Yes</button>
+    (click)="modal.dismiss('Cross click');">No</button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">Yes</button>
   </div>
 </ng-template>
 
@@ -487,13 +509,32 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-      (click)="modal.dismiss('Cross click');">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
-    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
-      <span class="orng-outline-txt">Yes</span>
+    <button type="button" (click)="onDelete();" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">Yes</button>
+  </div>
+</ng-template>
+
+<!-- LINK MODAL -->
+<ng-template #linkModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to link
+        <span class="txt-grdint-highlight">"{{deleteForm.email}}"</span> to RazorpayX?
+      </strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
     </button>
+    <button type="button" (click)="onLink();" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">Yes</button>
   </div>
 </ng-template>
 
