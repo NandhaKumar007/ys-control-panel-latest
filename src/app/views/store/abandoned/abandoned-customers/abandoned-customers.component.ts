@@ -44,7 +44,7 @@ export class AbandonedCustomersComponent implements OnInit {
       if(result.status) {
         this.list = result.list;
         this.list.forEach(element => {
-          element.city = "NA";
+          element.mobile = "NA";
           if(element.address_list.length) {
             let filteredAddress = [element.address_list[0]];
             let billingIndex = element.address_list.findIndex(obj => obj.billing_address);
@@ -52,9 +52,7 @@ export class AbandonedCustomersComponent implements OnInit {
             element.mobile = filteredAddress[0].mobile;
             if(element.mobile.charAt(0) === '0') element.mobile = element.mobile.substring(1);
             if(filteredAddress[0].dial_code) element.mobile = filteredAddress[0].dial_code+" "+element.mobile;
-            element.city = filteredAddress[0].city;
           }
-          else if(!element.mobile) element.mobile = "NA";
           element.cart_total = this.calcCartTotal(element.cart_list);
         });
         this.totalPages = Math.ceil(result.count/this.pageSize);
@@ -87,10 +85,29 @@ export class AbandonedCustomersComponent implements OnInit {
 
   exportAsXLSX() {
     this.exportLoader = true;
-    this.createList(this.list).then((exportList: any[]) => {
-      this.excelService.exportAsExcelFile(exportList, 'customer-abandoned-cart'+' export '+new Date().getTime());
-      setTimeout(() => { this.exportLoader = false; }, 500);
-    })
+    let fileName = 'customer-abandoned-cart'+' export '+new Date().getTime();
+    this.customerApi.ALL_ABANDONED_CARTS().subscribe(result => {
+      if(result.status) {
+        let customerList = result.list;
+        customerList.forEach(element => {
+          element.mobile = "NA"; element.city = "NA";
+          if(element.address_list.length) {
+            let filteredAddress = [element.address_list[0]];
+            let billingIndex = element.address_list.findIndex(obj => obj.billing_address);
+            if(billingIndex!=-1) filteredAddress = [element.address_list[billingIndex]];
+            element.mobile = filteredAddress[0].mobile;
+            if(element.mobile.charAt(0) === '0') element.mobile = element.mobile.substring(1);
+            if(filteredAddress[0].dial_code) element.mobile = filteredAddress[0].dial_code+" "+element.mobile;
+            element.city = filteredAddress[0].city;
+          }
+        });
+        this.createList(customerList).then((exportList: any[]) => {
+          this.excelService.exportAsExcelFile(exportList, fileName);
+          setTimeout(() => { this.exportLoader = false; }, 500);
+        });
+      }
+      else console.log("response", result);
+    });
   }
   async createList(productList) {
     let updatedList = [];

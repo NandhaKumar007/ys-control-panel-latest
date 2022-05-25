@@ -3,11 +3,19 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Abandoned {{ (router.url.indexOf('cart')!=-1)? 'Carts': 'Quotes' }} - Signed Up Users</h1>
-    <ul>
-      <li>View and manage the abandoned-{{ (router.url.indexOf('cart')!=-1)? 'carts': 'quotes' }}</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Abandoned {{ (router.url.indexOf('cart')!=-1)? 'Carts': 'Quotes' }} - Signed Up Users</h1>
+        <ul>
+          <li>View and manage the abandoned-{{ (router.url.indexOf('cart')!=-1)? 'carts': 'quotes' }}</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button *ngIf="commonService.store_details.login_type=='admin'" type="button" (click)="exportAsXLSX();"
+        class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+      </div>
+    </div>
   </div>
 
   <div class="separator-breadcrumb border-top"></div>
