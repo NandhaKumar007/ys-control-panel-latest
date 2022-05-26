@@ -100,18 +100,18 @@ export class CreateProductOrderComponent implements OnInit {
       let finalPrice = (element.final_price*element.quantity)+parseFloat(element.addon_price);
       if(element.unit=="Pcs") finalPrice = element.final_price*element.quantity;
       // vendor
-      if(element.vendor_id && this.commonService.ys_features.indexOf('vendors')!=-1) {
-        let vendorIndex = this.orderForm.vendor_list.findIndex(obj => obj.vendor_id==element.vendor_id);
-        if(vendorIndex != -1) this.orderForm.vendor_list[vendorIndex].total += finalPrice;
-        else {
-          let vendorData: any = { vendor_id: element.vendor_id, total: finalPrice };
-          if(this.orderForm.order_status=='confirmed') {
-            vendorData.status = 'confirmed';
-            vendorData.confirmed_on = new Date();
-          }
-          this.orderForm.vendor_list.push(vendorData);
-        }
-      }
+      // if(element.vendor_id && this.commonService.ys_features.indexOf('vendors')!=-1) {
+      //   let vendorIndex = this.orderForm.vendor_list.findIndex(obj => obj.vendor_id==element.vendor_id);
+      //   if(vendorIndex != -1) this.orderForm.vendor_list[vendorIndex].total += finalPrice;
+      //   else {
+      //     let vendorData: any = { vendor_id: element.vendor_id, total: finalPrice };
+      //     if(this.orderForm.order_status=='confirmed') {
+      //       vendorData.status = 'confirmed';
+      //       vendorData.confirmed_on = new Date();
+      //     }
+      //     this.orderForm.vendor_list.push(vendorData);
+      //   }
+      // }
     });
     // coupon
     if(this.offerAmount > 0) {
@@ -1331,9 +1331,9 @@ export class CreateProductOrderComponent implements OnInit {
     productDetails.seo_details = x.seo_details;
     productDetails.image = x.image;
     // check already exist in cart
-    let cartIndex = this.cart_list.findIndex(obj => obj.product_id==x.product_id && JSON.stringify(obj.variant_types)==JSON.stringify(x.variant_types));
+    // let cartIndex = this.cart_list.findIndex(obj => obj.product_id==x.product_id && JSON.stringify(obj.variant_types)==JSON.stringify(x.variant_types));
     // remove product, if already exist
-    if(cartIndex != -1) this.cart_list.splice(cartIndex, 1);
+    // if(cartIndex != -1) this.cart_list.splice(cartIndex, 1);
     this.cart_list.push(productDetails);
     this.cart_list.forEach((obj, index) => {
       obj.cart_id = index+1;

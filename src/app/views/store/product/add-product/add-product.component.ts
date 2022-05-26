@@ -69,7 +69,7 @@ export class AddProductComponent implements OnInit {
         ]
       };
       // auto sku
-      if(this.commonService.deploy_details?.auto_sku && this.commonService.deploy_details?.sku_config?.prefix) {
+      if(this.commonService.deploy_details?.auto_sku && this.commonService.deploy_details?.sku_config?.min_digit) {
         let prodCount = 0;
         this.api.PRODUCTS_COUNT().subscribe(result => {
           if(result.status) prodCount = result.count;
