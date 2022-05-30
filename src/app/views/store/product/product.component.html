@@ -136,7 +136,7 @@
                   <div class="row w-100 h-100 d-flex align-items-center m-0">
                     <div class="col-md-5">
                       <p class="m-0 only-product-name">{{x.name}}</p>
-                      <p class="m-0" style="color: #157DEC;">{{x._id}}</p>
+                      <!-- <p class="m-0" style="color: #157DEC;">{{x._id}}</p> -->
                       <p *ngIf="x.stock>0" class="m-0 only-product-stock">{{x.stock}} {{x.unit}} in Stock</p>
                       <p *ngIf="x.stock==0" class="m-0 only-product-out-stock">Out of Stock</p>
                     </div>

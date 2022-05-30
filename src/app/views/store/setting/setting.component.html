@@ -129,6 +129,14 @@
         </div>
       </div>
     </div>
+
+    <div class="col-md-6 col-lg-4 d-flex">
+      <div (click)="onOpenSkuModal(skuModal);" class="card setting-card w-100 p-3 mb-4 cursor">
+        <div class="d-flex align-items-center justify-content-center flex-column mt-2">
+          <label class="text-title cursor">Auto SKU</label>
+        </div>
+      </div>
+    </div>
     
   </div>
 </div>
@@ -632,6 +640,46 @@
        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- sku -->
+<ng-template #skuModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Auto SKU Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSKU();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="auto_sku" [(ngModel)]="settingForm.auto_sku" #auto_sku="ngModel">
+              <span>Enable</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="settingForm.auto_sku && settingForm.sku_config">
+            <div class="col-md-6 form-group mb-3">
+              <label>Prefix</label>
+              <input type="text" name="sku_prefix" class="form-control" [(ngModel)]="settingForm.sku_config.prefix" #sku_prefix="ngModel" />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>Min digit</label>
+              <input type="tel" name="sku_min_digit" class="form-control" [(ngModel)]="settingForm.sku_config.min_digit" #sku_min_digit="ngModel" required appNumberOnly />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg"><p class="text-danger">{{ settingForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="settingForm.submit"
+      [ladda]="settingForm.submit">Update</button>
     </div>
   </form>
 </ng-template>

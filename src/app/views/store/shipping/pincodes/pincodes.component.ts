@@ -18,7 +18,7 @@ export class PincodesComponent implements OnInit {
   exportLoader: boolean;
   new_list: any = [];
   list: any = []; pincodes: string;
-  addForm: any = {};
+  addForm: any = {}; resetForm: any;
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ShippingService, private excelService: ExcelService) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -59,6 +59,22 @@ export class PincodesComponent implements OnInit {
       }
       else {
         this.addForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  onReset() {
+    this.resetForm.submit = true;
+    this.api.UPDATE_PINCODES({ list: [] }).subscribe(result => {
+      this.resetForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.list = result.list.sort((a, b) => 0 - (a > b ? -1 : 1));
+        this.pincodes = this.list.join(', ');
+      }
+      else {
+        this.resetForm.errorMsg = result.message;
         console.log("response", result);
       }
     });

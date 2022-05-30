@@ -406,20 +406,25 @@
                     <div class="col-md-12 form-group mb-3" *ngFor="let x of tagList | orderAsc:'rank'; let i=index;">
                       <div class="card card-in-card p-3">
                         <div class="row">
-                          <div class="col-md-6">
+                          <div class="col-md-5">
                             <label class="checkbox checkbox-success">
                               <input class="form-check-input" type="checkbox" name="tag_checked{{i}}" [(ngModel)]="x.tag_checked" #tag_checked="ngModel">
                               <span>{{x.name}}</span>
                               <span class="checkmark"></span>
                             </label>
                           </div>
-                          <div *ngIf="x.tag_checked && commonService.store_details?.login_type=='admin'" class="col-md-6">
-                            <span (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
-                            class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
-                          </div>
+                          <ng-container *ngIf="x.tag_checked">
+                            <div class="col-md-4">
+                              <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
+                              class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
+                            </div>
+                            <div class="col-md-3 pl-0">
+                              <input type="text" name="tag_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
+                            </div>
+                          </ng-container>
                         </div>
                         <div *ngIf="x.tag_checked" class="row ml-3 mt-3">
-                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'name'; let j=index;">
+                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'name':x.search | orderAsc:'name'; let j=index;">
                             <label class="checkbox checkbox-warning">
                               <input class="form-check-input" type="checkbox" name="tag_option_checked{{i+1}}{{j}}" [(ngModel)]="y.tag_option_checked" #tag_option_checked="ngModel">
                               <span>{{y.name}}</span>
@@ -448,7 +453,7 @@
                     <div class="col-md-12 form-group mb-3" *ngFor="let x of noteList | orderAsc:'rank'; let i=index;">
                       <div class="card card-in-card p-3">
                         <div class="row">
-                          <div class="col-md-6">
+                          <div class="col-md-5">
                             <label class="checkbox checkbox-success">
                               <input class="form-check-input" type="checkbox" name="note_checked{{i}}" [(ngModel)]="x.note_checked" (change)="x.selected_option=x.option_list[0].description"
                                 #note_checked="ngModel">
@@ -456,13 +461,18 @@
                               <span class="checkmark"></span>
                             </label>
                           </div>
-                          <div *ngIf="x.note_checked && commonService.store_details?.login_type=='admin'" class="col-md-6">
-                            <span (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
-                            class="badge badge-warning badge-green w-30 m-0 pull-right cursor">Add More Options</span>
-                          </div>
+                          <ng-container *ngIf="x.note_checked">
+                            <div *ngIf="x.note_checked" class="col-md-4">
+                              <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
+                              class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
+                            </div>
+                            <div class="col-md-3 pl-0">
+                              <input type="text" name="note_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
+                            </div>
+                          </ng-container>
                         </div>
                         <div *ngIf="x.note_checked" class="row ml-3 mt-3">
-                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | orderAsc:'description'; let j=index;">
+                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'description':x.search | orderAsc:'description'; let j=index;">
                             <label class="radio radio-warning d-inline-block">
                               <input type="radio" name="{{x.name}}" value="{{y.description}}" [checked]="x.selected_option==y.description" (change)="x.selected_option=y.description;">
                               <span>{{y.description}}</span>
@@ -490,14 +500,20 @@
                   <div class="row ml-3" *ngIf="productForm.faq_status">
                     <div class="col-md-12 form-group mb-3" *ngFor="let x of faqList | orderAsc:'rank'; let i=index;">
                       <div class="card card-in-card p-3">
-                        <label class="checkbox checkbox-success">
-                          <input class="form-check-input" type="checkbox" name="faq_checked{{i}}" [(ngModel)]="x.faq_checked" (change)="!x.selected_answer? x.selected_answer=x.answer_list[0]._id: ''"
-                            #faq_checked="ngModel">
-                          <span>{{x.name}}</span>
-                          <span class="checkmark"></span>
-                        </label>
+                        <div class="row">
+                          <div class="col-md-9">
+                            <label class="checkbox checkbox-success">
+                              <input class="form-check-input" type="checkbox" name="faq_checked{{i}}" [(ngModel)]="x.faq_checked" (change)="!x.selected_answer? x.selected_answer=x.answer_list[0]._id: ''" #faq_checked="ngModel">
+                              <span>{{x.name}}</span>
+                              <span class="checkmark"></span>
+                            </label>
+                          </div>
+                          <div *ngIf="x.faq_checked" class="col-md-3 pl-0">
+                            <input type="text" name="faq_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
+                          </div>
+                        </div>
                         <div *ngIf="x.faq_checked" class="row ml-3 mt-3">
-                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.answer_list; let j=index;">
+                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.answer_list | fieldSearch:'answer':x.search; let j=index;">
                             <label class="radio radio-warning d-inline-block">
                               <input type="radio" name="{{x.name}}" value="{{y._id}}" [checked]="x.selected_answer==y._id" (change)="x.selected_answer=y._id;">
                               <span>{{y.answer}}</span>
@@ -554,13 +570,20 @@
                   <div class="row ml-3" *ngIf="productForm.aistyle_status">
                     <div class="col-md-12 form-group mb-3" *ngFor="let x of aiStyleList; let i=index;">
                       <div class="card card-in-card p-3">
-                        <label class="checkbox checkbox-success">
-                          <input class="form-check-input" type="checkbox" name="aistyle_checked{{i}}" (change)="(x.aistyle_checked && x.type=='either_or' && x.option_list.length && !x.selected_option)? x.selected_option=x.option_list[0]._id: ''" [(ngModel)]="x.aistyle_checked" #aistyle_checked="ngModel">
-                          <span>{{x.heading}}</span>
-                          <span class="checkmark"></span>
-                        </label>
+                        <div class="row">
+                          <div class="col-md-9">
+                            <label class="checkbox checkbox-success">
+                              <input class="form-check-input" type="checkbox" name="aistyle_checked{{i}}" (change)="(x.aistyle_checked && x.type=='either_or' && x.option_list.length && !x.selected_option)? x.selected_option=x.option_list[0]._id: ''" [(ngModel)]="x.aistyle_checked" #aistyle_checked="ngModel">
+                              <span>{{x.heading}}</span>
+                              <span class="checkmark"></span>
+                            </label>
+                          </div>
+                          <div *ngIf="x.aistyle_checked" class="col-md-3 pl-0">
+                            <input type="text" name="sa_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
+                          </div>
+                        </div>
                         <div *ngIf="x.aistyle_checked" class="row ml-3 mt-3">
-                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list; let j=index;">
+                          <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'heading':x.search; let j=index;">
                             <!-- radio -->
                             <label *ngIf="x.type=='either_or'" class="radio radio-warning d-inline-block">
                               <input type="radio" name="aistyle_{{x.heading}}" value="{{y._id}}" [checked]="x.selected_option==y._id" (change)="x.selected_option=y._id;">
@@ -769,7 +792,7 @@
                   </div>
                 </ng-container>
                 <div *ngIf="!x.image_list?.length || x.image_list?.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
-                  <div class="add-another-opt w-100" (click)="x.image_list.length? x.image_list.push({}): x.image_list=[{}];">
+                  <div class="add-another-opt w-100" (click)="x.image_list?.length? x.image_list.push({}): x.image_list=[{}];">
                     <p>ADD {{ x.image_list?.length? 'ANOTHER': 'NEW' }} IMAGE</p>
                   </div>
                 </div>
@@ -838,7 +861,12 @@
     <!-- STEP 3 -->
     <form *ngIf="step_num==3" autocomplete="off" (ngSubmit)="onAdd();" ngNativeValidate>
       <!-- categories -->
-      <div class="row" *ngFor="let x of categoryList; let i=index;">
+      <div class="row">
+        <div class="form-group mb-3 col-md-4">
+          <input type="text" name="cat_search" placeholder="Search" class="form-control" [(ngModel)]="catSearch" />
+        </div>
+      </div>
+      <div class="row" *ngFor="let x of categoryList | fieldSearch:'name':catSearch; let i=index;">
         <div class="form-group mb-3 col-md-12">
           <label class="checkbox checkbox-primary">
             <input class="form-check-input" type="checkbox" name="selected" [(ngModel)]="x.selected" [checked]="x.selected" [ngModelOptions]="{standalone: true}"

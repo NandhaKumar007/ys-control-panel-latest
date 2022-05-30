@@ -31,6 +31,7 @@ export class AddProductComponent implements OnInit {
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
   configData: any= environment.config_data; brochForm: any = {};
+  catSearch: string;
 
   @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
@@ -53,7 +54,7 @@ export class AddProductComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      this.aiStyleList = [];
+      this.aiStyleList = []; delete this.catSearch;
       if(localStorage.getItem("aistyle_list")) this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
       this.categoryList.forEach(element => { element.selected = false; });
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;

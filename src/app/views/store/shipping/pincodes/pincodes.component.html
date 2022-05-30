@@ -12,7 +12,8 @@
 
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
         <button type="button" class="btn btn-primary" (click)="addForm={}; modalService.open(addModal);">Import</button>
-        <button type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button ml-3" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+        <button type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button ml-3 mr-3" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+        <button type="button" class="btn btn-primary" (click)="resetForm={}; modalService.open(resetModal, { centered: true });">Clear All</button>
       </div>
     </div>
   </div>
@@ -74,4 +75,24 @@
       <button type="submit" (click)="addForm.type='update'" class="btn btn-wide btn-primary" [disabled]="addForm.submit">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- RESET MODAL -->
+<ng-template #resetModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to clear all the pincodes?</strong>
+    </p>
+    <div *ngIf="resetForm.errorMsg">
+      <p class="text-danger">{{ resetForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" class="btn btn-wide orng-outline-btn" [disabled]="resetForm.submit" (click)="onReset();">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
 </ng-template>

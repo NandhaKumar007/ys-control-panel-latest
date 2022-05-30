@@ -4,6 +4,7 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { StoreApiService } from '../../../services/store-api.service';
+import { DeploymentService } from '../deployment/deployment.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -54,7 +55,7 @@ export class SettingComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService,
-    private api: StoreApiService, private atp: AmazingTimePickerService, private router: Router
+    private api: StoreApiService, private atp: AmazingTimePickerService, private deployApi: DeploymentService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -250,6 +251,35 @@ export class SettingComponent implements OnInit {
       if(result.status) document.getElementById('closeModal').click();
       else {
         this.app_setting.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  // auto SKU
+  onOpenSkuModal(modalName) {
+    this.settingForm = { auto_sku: false, sku_config: {} };
+    let deployDetails = this.commonService.decryptData(localStorage.getItem("deploy_details"));
+    if(deployDetails?.auto_sku) this.settingForm.auto_sku = deployDetails.auto_sku;
+    if(deployDetails?.sku_config) this.settingForm.sku_config = deployDetails.sku_config;
+    this.modalService.open(modalName);
+  }
+  onUpdateSKU() {
+    this.settingForm.submit = true;
+    let formData = {
+      store_id: this.commonService.store_details._id, auto_sku: this.settingForm.auto_sku,
+      sku_config: this.settingForm.sku_config
+    };
+    this.deployApi.UPDATE_DEPLOY_DETAILS(formData).subscribe(result => {
+      this.settingForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.commonService.deploy_details = result.data;
+        delete this.commonService.deploy_details.deploy_stages;
+        this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
+      }
+      else {
+        this.settingForm.errorMsg = result.message;
         console.log("response", result);
       }
     });
