@@ -92,11 +92,11 @@ export class SidebarService {
           prodExtraList.push({ name: 'Footnote', state: '/product-extras/footnote', type: 'link' });
           routePermissionList.push("foot_note");
         }
-        if(ysFeatures.indexOf('size_chart')!=-1) {
+        if(ysFeatures.indexOf('vendors')==-1 && ysFeatures.indexOf('size_chart')!=-1) {
           prodExtraList.push({ name: 'Size Chart', state: '/product-extras/size-chart', type: 'link' });
           routePermissionList.push("size_chart");
         }
-        if(ysFeatures.indexOf('faq')!=-1) {
+        if(ysFeatures.indexOf('vendors')==-1 && ysFeatures.indexOf('faq')!=-1) {
           prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
           routePermissionList.push("faq");
         }
@@ -672,9 +672,34 @@ export class SidebarService {
       // dashboard
       routePermissionList.push("vendor_dashboard");
       this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/vendor-dashboard' });
+      // product extras
+      let prodExtraList: IChildItem[] = [];
+      if(ysFeatures.indexOf('product_filters')!=-1 && this.commonService.vendor_features.indexOf('product_filters')!=-1) {
+        prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
+        routePermissionList.push("tags");
+      }
+      if(ysFeatures.indexOf('foot_note')!=-1 && this.commonService.vendor_features.indexOf('foot_note')!=-1) {
+        prodExtraList.push({ name: 'Footnote', state: '/product-extras/footnote', type: 'link' });
+        routePermissionList.push("foot_note");
+      }
+      if(ysFeatures.indexOf('size_chart')!=-1 && this.commonService.vendor_features.indexOf('size_chart')!=-1) {
+        prodExtraList.push({ name: 'Size Chart', state: '/product-extras/size-chart', type: 'link' });
+        routePermissionList.push("size_chart");
+      }
+      if(ysFeatures.indexOf('faq')!=-1 && this.commonService.vendor_features.indexOf('faq')!=-1) {
+        prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
+        routePermissionList.push("faq");
+      }
       // products
       routePermissionList.push("products", "product_add", "product_edit");
-      this.sidePanelList.push({ name: 'Products', type: 'link', icon: 'category', state: '/products' });
+      if(prodExtraList.length) {
+        let prodList: IChildItem[] = [
+          { icon: 'category', name: 'All Products', state: '/products', type: 'link' },
+          { name: 'Product Extras', type: 'dropDown', icon: 'extension', sub: prodExtraList }
+        ];
+        this.sidePanelList.push({ name: 'Products', type: 'dropDown', icon: 'category', sub: prodList });
+      }
+      else this.sidePanelList.push({ name: 'Products', type: 'link', icon: 'category', state: '/products' });
       // orders
       let orderList: IChildItem[] = [
         { icon: 'slow_motion_video', name: 'Live Orders', state: '/orders/product/live/all', type: 'link' },

@@ -14,10 +14,8 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary"
-          (click)="addForm = { rank: maxRank+1, option_list: [{}] }; modalService.open(addModal, { size: 'lg'});">Add
-          New Tag
-        </button>
+        <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
+        (click)="onAdd(tagModal);">Add New Tag</button>
       </div>
       <!-- search box -->
       <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
@@ -45,44 +43,32 @@
                   <!-- OTHER DATA -->
 
                   <div class="row">
-                    <div class="col-md-2 d-flex align-items-center">
+                    <div class="col-md-3 d-flex align-items-center">
                       <p class="w-sm-100 m-b-0">{{x.name}}</p>
                     </div>
                     <div class="col-md-3 d-flex align-items-center">
                       <p class="w-sm-100 m-b-0">{{x._id}}</p>
                     </div>
                     <div class="col-md-2 d-flex align-items-center">
-                      <p class="m-0 text-muted text-small w-sm-100 m-b-0">{{x.option_list?.length}} Options</p>
+                      <p *ngIf="commonService.ys_features.indexOf('vendors')==-1" class="m-0 text-muted text-small w-sm-100 m-b-0">
+                        {{x.option_list?.length}} Options
+                      </p>
+                      <p *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type=='vendor'" class="m-0 text-muted text-small w-sm-100 m-b-0">
+                        {{x.option_list?.length}} Options
+                      </p>
                     </div>
-                    <div class="col-md-5 d-flex align-items-center justify-content-end">
+                    <div class="col-md-4 d-flex align-items-center justify-content-end">
                       <p class="m-0 text-muted text-small w-sm-100 d-lg-block item-actions">
-                        <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
+                        <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, tagModal);">
                           <span class="black-outline-txt">Edit</span>
                         </button>
-                        <button class="btn orng-outline-btn w-md-100"
+                        <button *ngIf="commonService.store_details?.login_type!='vendor'" class="btn orng-outline-btn w-md-100"
                           (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
-                          <span class="orng-outline-txt">
-                            Remove
-                          </span>
+                          <span class="orng-outline-txt">Remove</span>
                         </button>
                       </p>
                     </div>
                   </div>
-
-                  <!-- <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{x._id}}</p>
-                  <p class="m-0 text-muted text-small w-15 w-sm-100 m-b-0">{{x.option_list?.length}} Options</p>
-                  <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
-                      <span class="black-outline-txt">Edit</span>
-                    </button>
-                    <button class="btn orng-outline-btn w-md-100"
-                      (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
-                      <span class="orng-outline-txt">
-                        Remove
-                      </span>
-                    </button>
-                  </p> -->
                 </div>
               </div>
             </div>
@@ -112,33 +98,33 @@
   </div>
 </div>
 
-<!-- ADD MODAL -->
-<ng-template #addModal let-modal>
+<!-- TAG MODAL -->
+<ng-template #tagModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">New Tag</h4>
+    <h4 class="modal-title" id="modal-basic-title">
+       {{ (tagForm.form_type=='add')? 'New Tag': tagForm.name }}
+    </h4>
   </div>
-  <form autocomplete="off" (ngSubmit)="onAdd();" ngNativeValidate>
+  <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
     <div class="modal-body">
       <div class="form-group">
-        <div class="row">
+        <div *ngIf="commonService.store_details?.login_type!='vendor'" class="row">
           <div class="col-md-6 form-group mb-3">
             <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
+            <input type="text" name="name" class="form-control" [(ngModel)]="tagForm.name" required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1"
-              max="{{maxRank+1}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="tagForm.rank" min="1" max="{{maxRank+1}}" appNumberOnly required />
           </div>
         </div>
-
         <div class="row">
-          <div class="col-md-6" *ngFor="let x of addForm.option_list; let i=index;">
+          <div class="col-md-6" *ngFor="let x of tagForm.option_list; let i=index;">
             <div class="row">
               <div class="col-md-12 form-group mb-3">
                 <div class="card p-2">
                   <label>Option {{i+1}}</label>
-                  <span *ngIf="addForm.option_list.length > 1" (click)="addForm.option_list.splice(i, 1);"
+                  <span *ngIf="tagForm.option_list.length > 1" (click)="tagForm.option_list.splice(i, 1);"
                     class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
                   <input type="text" name="name{{i}}" id="name" class="form-control" [(ngModel)]="x.name"
                     #name="ngModel" required />
@@ -146,78 +132,24 @@
               </div>
             </div>
           </div>
-          <div class="col-md-12 form-group">
-            <span class="add-another  x-close" (click)="addForm.option_list.push({});">
+          <div *ngIf="tagForm.option_list?.length" class="col-md-12 form-group">
+            <span class="add-another  x-close" (click)="tagForm.option_list.push({});">
               <b>ADD ANOTHER OPTION</b>
             </span>
           </div>
         </div>
       </div>
-      <div *ngIf="addForm.errorMsg">
-        <p class="text-danger">{{ addForm.errorMsg }}</p>
+      <div *ngIf="tagForm.errorMsg">
+        <p class="text-danger">{{ tagForm.errorMsg }}</p>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-        (click)="modal.dismiss('Cross click');">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary">Add</button>
-    </div>
-  </form>
-</ng-template>
-
-<!-- EDIT MODAL -->
-<ng-template #editModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{ editForm.name }}</h4>
-  </div>
-  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="row">
-          <div class="col-md-6 form-group mb-3">
-            <label>Title</label>
-            <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
-          </div>
-          <div class="col-md-6 form-group mb-3">
-            <label>Rank</label>
-            <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1"
-              max="{{maxRank}}" appNumberOnly required />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6" *ngFor="let x of editForm.option_list; let i=index;">
-            <div class="row">
-              <div class="col-md-12 form-group mb-3">
-                <div class="card p-2">
-                  <label>Option {{i+1}}</label>
-                  <span *ngIf="editForm.option_list.length > 1" (click)="editForm.option_list.splice(i, 1);"
-                    class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
-                  <input type="text" name="name{{i}}" id="name" class="form-control" [(ngModel)]="x.name"
-                    #name="ngModel" required />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-12 form-group">
-            <p class="add-another  x-close" (click)="editForm.option_list.push({});">
-              <b>ADD ANOTHER OPTION</b>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="editForm.errorMsg">
-        <p class="text-danger">{{ editForm.errorMsg }}</p>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn"
-        (click)="modal.dismiss('Cross click');">
-        <span class="black-outline-txt">Cancel</span>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="tagForm.submit" [ladda]="tagForm.submit">
+        {{ (tagForm.form_type=='add')? 'Add': 'Update' }}
       </button>
-      <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
 </ng-template>
@@ -238,8 +170,7 @@
       (click)="modal.dismiss('Cross click');">
       <span class="black-outline-txt">No</span>
     </button>
-    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
-      <span class="orng-outline-txt">Yes</span>
-    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">Yes</button>
   </div>
 </ng-template>

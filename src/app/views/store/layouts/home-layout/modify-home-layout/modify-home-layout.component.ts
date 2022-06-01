@@ -138,17 +138,23 @@ export class ModifyHomeLayoutComponent implements OnInit {
         if(imgData.desktop_img_change) this.fileList.append('attachments', imgData['desktop_img'], i+'_d');
         if(imgData.mobile_img_change) this.fileList.append('attachments', imgData['mobile_img'], i+'_m');
         let objData = {};
-        for(let key in imgData) {
-          if(imgData.desktop_img_change || imgData.mobile_img_change) {
-            if(imgData.desktop_img_change) {
-              if(key!='desktop_img' && key!='temp_desktop_img' && imgData.hasOwnProperty(key)) objData[key] = imgData[key];
-            }
-            if(imgData.mobile_img_change) {
-              if(key!='mobile_img' && key!='temp_mobile_img' && imgData.hasOwnProperty(key)) objData[key] = imgData[key];
+        if(imgData.desktop_img_change || imgData.mobile_img_change) {
+          for(let key in imgData) {
+            if(imgData.hasOwnProperty(key) && key!='temp_desktop_img' && key!='temp_mobile_img')
+            {
+              if(imgData.desktop_img_change && imgData.mobile_img_change) {
+                if(key!='desktop_img' && key!='mobile_img') objData[key] = imgData[key];
+              }
+              else if(imgData.desktop_img_change) {
+                if(key!='desktop_img') objData[key] = imgData[key];
+              }
+              else if(imgData.mobile_img_change) {
+                if(key!='mobile_img') objData[key] = imgData[key];
+              }
             }
           }
-          else objData = imgData;
         }
+        else objData = imgData;
         updatedList.push(objData)
       }
       resolve(updatedList);

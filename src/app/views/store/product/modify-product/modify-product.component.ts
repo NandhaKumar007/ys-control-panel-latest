@@ -9,6 +9,7 @@ import { CustomerApiService } from '../../../../services/customer-api.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { environment } from '../../../../../environments/environment';
 import { CommonService } from '../../../../services/common.service';
+import { AccountService } from '../../account/account.service';
 import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 
 @Component({
@@ -32,14 +33,14 @@ export class ModifyProductComponent implements OnInit {
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
   configData: any= environment.config_data; brochForm: any = {};
-  catSearch: string;
+  catSearch: string; productFeatures: any; vendorAdmin: boolean;
 
   @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
     private peApi: ProductExtrasApiService, public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService,
-    private deployApi: DeploymentService
+    private deployApi: DeploymentService, private accountApi: AccountService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -56,17 +57,19 @@ export class ModifyProductComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.aiStyleList = []; delete this.catSearch;
+      if(this.commonService.ys_features.indexOf('vendors')!=-1 && this.commonService.store_details?.login_type!='vendor') this.vendorAdmin = true;
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
       this.btnLoader = false; this.pageLoader = true;
       this.maxRank = params.rank; this.step_num = params.step;
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
+          this.productFeatures = result.data;
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
           this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
           let tempAddonList = result.data.addon_list.filter(obj => obj.status=='active');
           let tempTagList = result.data.tag_list.filter(obj => obj.status=='active');
-          let tempFaqList = result.data.faq_list.filter(obj => obj.status=='active');
+          let tempFaqList = result.data.faq_list;
           let tempNoteList = result.data.footnote_list;
           if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
             this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
@@ -77,6 +80,16 @@ export class ModifyProductComponent implements OnInit {
           }
           this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
           this.colorList = result.data.color_list;
+          // for vendor login
+          if(this.commonService.store_details?.login_type=='vendor') {
+            this.accountApi.VENDOR_LIST().subscribe((result) => {
+              if(result.status) this.setVendorInfo(result.data);
+              else {
+                console.log("response", result);
+                this.faqList = []; this.sizeCharts = []; this.tagList = [];
+              }
+            });
+          }
           this.api.PRODUCT_DETAILS(params.product_id).subscribe(result => {
             if(result.status) {
               this.productForm = result.data;
@@ -103,27 +116,40 @@ export class ModifyProductComponent implements OnInit {
                   this.productForm.badges.push({value:element , display:element});
                 });
               }
+              // vendor
+              if(this.productForm.vendor_id) {
+                this.accountApi.VENDOR_DETAILS(this.productForm.vendor_id).subscribe(result => {
+                  if(result.status) this.setVendorInfo(result.data);
+                  else {
+                    console.log("response", result);
+                    this.faqList = []; this.sizeCharts = []; this.tagList = [];
+                  }
+                });
+              }
+              else {
+                this.tagListModify(tempTagList, this.productForm.tag_list).then((list) => {
+                  this.tagList = list;
+                });
+                this.faqListModify(tempFaqList, this.productForm.faq_list).then((list) => {
+                  this.faqList = list;
+                });
+                // foot note
+                if(this.productForm.footnote_list.length) {
+                  this.productForm.note_status = true;
+                  this.footNoteListModify(tempNoteList, this.productForm.footnote_list).then((list) => {
+                    this.noteList = tempNoteList;
+                  });
+                }
+                else this.noteList = tempNoteList;
+              }
+              // addon
               this.adddonListModify(tempAddonList, this.productForm.addon_list).then((list) => {
                 this.addonList = list;
-              });
-              this.tagListModify(tempTagList, this.productForm.tag_list).then((list) => {
-                this.tagList = list;
-              });
-              this.faqListModify(tempFaqList, this.productForm.faq_list).then((list) => {
-                this.faqList = list;
               });
               this.processCategoryList(this.productForm.category_id).then((list) => {
                 this.categoryList = list;
               });
               if(tempAddonList.length==this.addonCheckedCount) this.productForm.select_all = true;
-              // foot note
-              if(this.productForm.footnote_list.length) {
-                this.productForm.note_status = true;
-                this.footNoteListModify(tempNoteList, this.productForm.footnote_list).then((list) => {
-                  this.noteList = tempNoteList;
-                });
-              }
-              else this.noteList = tempNoteList;
               // Amenities
               if(this.productForm.amenity_list?.length) {
                 this.productForm.amenity_status = true;
@@ -473,6 +499,46 @@ export class ModifyProductComponent implements OnInit {
   }
 
   /* Common Functions */
+  onChangeVendor(vendorId) {
+    this.accountApi.VENDOR_DETAILS(vendorId).subscribe(result => {
+      if(result.status) this.setVendorInfo(result.data);
+      else {
+        console.log("response", result);
+        this.faqList = []; this.sizeCharts = []; this.tagList = [];
+      }
+    });
+  }
+  setVendorInfo(vInfo) {
+    let tempNoteList = [];
+    vInfo.footnote_list.forEach(el => { tempNoteList.push(el); });
+    this.productFeatures.footnote_list.forEach(el => { tempNoteList.push(el); });
+    let tempFaqList = vInfo.faq_list;
+    this.sizeCharts = this.productFeatures.size_chart.filter(el => el.status=='active' && el.vendor_id==vInfo._id);
+    let tempTagList = [];
+    this.productFeatures.tag_list.filter(obj => obj.status=='active').forEach(obj => {
+      obj.option_list = [];
+      let vtIndex = obj.vendor_list.findIndex(v => v.vendor_id==vInfo._id);
+      if(vtIndex!=-1) {
+        obj.option_list = obj.vendor_list[vtIndex].option_list;
+        tempTagList.push(obj);
+      }
+    });
+    this.tagListModify(tempTagList, this.productForm.tag_list).then((list) => {
+      this.tagList = list;
+    });
+    this.faqListModify(tempFaqList, this.productForm.faq_list).then((list) => {
+      this.faqList = list;
+    });
+    // foot note
+    if(this.productForm.footnote_list.length) {
+      this.productForm.note_status = true;
+      this.footNoteListModify(tempNoteList, this.productForm.footnote_list).then((list) => {
+        this.noteList = tempNoteList;
+      });
+    }
+    else this.noteList = tempNoteList;
+  }
+
   fileChangeListener(index, $event, cropper: ImageCropperComponent) {
     this.imageIndex = index;
     this.productForm.image_list[index].img_change = true;

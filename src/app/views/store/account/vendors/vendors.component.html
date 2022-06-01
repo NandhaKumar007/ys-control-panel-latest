@@ -411,9 +411,14 @@
         <div class="row">
           <ng-container *ngFor="let x of permissionList; let i=index;">
             <div class="col-md-12 mb-3">
-              <span class="primary-color">
+              <span *ngIf="x.title" class="primary-color">
                 <b>{{x.title}}</b>
               </span>
+              <label *ngIf="x.name" class="checkbox checkbox-success">
+                <input class="form-check-input" type="checkbox" name="selected{{i+1}}" [(ngModel)]="x.selected">
+                <span>{{x.name}}</span>
+                <span class="checkmark"></span>
+              </label>
             </div>
             <ng-container *ngFor="let y of x.sub_list; let j=index;">
               <div class="col-md-6 col-lg-4 form-group mt-1 mb-1">

@@ -104,7 +104,7 @@
           </ng-container>
           <div *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1" class="col-md-3 form-group mb-3">
             <label>Vendor</label>
-            <select name="vendor_id" class="form-control" [(ngModel)]="productForm.vendor_id" #vendor_id="ngModel" required>
+            <select name="vendor_id" class="form-control" (change)="onChangeVendor(productForm.vendor_id);" [(ngModel)]="productForm.vendor_id" required>
               <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.brand}}</option>
             </select>
           </div>
@@ -410,9 +410,9 @@
                       <div class="form-group mb-3 col-md-12">
                         <label class="checkbox checkbox-primary">
                           <input class="form-check-input" type="checkbox" name="chart_status" [(ngModel)]="productForm.chart_status" (change)="!productForm.chart_id? productForm.chart_id=sizeCharts[0]._id: ''"
-                            #chart_status="ngModel">
-                          <span>Apply Size Chart</span>
-                          <span class="checkmark"></span>
+                          [disabled]="vendorAdmin && !productForm.vendor_id">
+                          <span>Apply Size Chart {{ (vendorAdmin && !productForm.vendor_id)? '(Please choose vendor before select)': '' }}</span>
+                          <span [ngClass]="(vendorAdmin && !productForm.vendor_id)? 'check-disable': ''" class="checkmark"></span>
                         </label>
                       </div>
                     </div>
@@ -439,44 +439,47 @@
                     <div class="row">
                       <div class="col-md-12 form-group mb-3">
                         <label class="checkbox checkbox-primary">
-                          <input class="form-check-input" type="checkbox" name="tag_status" [(ngModel)]="productForm.tag_status" #tag_status="ngModel">
-                          <span>Apply Tags</span>
-                          <span class="checkmark"></span>
+                          <input class="form-check-input" type="checkbox" name="tag_status" [(ngModel)]="productForm.tag_status"
+                          [disabled]="vendorAdmin && !productForm.vendor_id">
+                          <span>Apply Tags {{ (vendorAdmin && !productForm.vendor_id)? '(Please choose vendor before select)': '' }}</span>
+                          <span [ngClass]="(vendorAdmin && !productForm.vendor_id)? 'check-disable': ''" class="checkmark"></span>
                         </label>
                       </div>
                     </div>
                     <div class="row ml-3" *ngIf="productForm.tag_status">
-                      <div class="col-md-12 form-group mb-3" *ngFor="let x of tagList | orderAsc:'rank'; let i=index;">
-                        <div class="card card-in-card p-3">
-                          <div class="row">
-                            <div class="col-md-5">
-                              <label class="checkbox checkbox-success">
-                                <input class="form-check-input" type="checkbox" name="tag_checked{{i}}" [(ngModel)]="x.tag_checked" #tag_checked="ngModel">
-                                <span>{{x.name}}</span>
-                                <span class="checkmark"></span>
-                              </label>
+                      <ng-container *ngFor="let x of tagList | orderAsc:'rank'; let i=index;">
+                        <div *ngIf="x.option_list?.length" class="col-md-12 form-group mb-3">
+                          <div class="card card-in-card p-3">
+                            <div class="row">
+                              <div class="col-md-5">
+                                <label class="checkbox checkbox-success">
+                                  <input class="form-check-input" type="checkbox" name="tag_checked{{i}}" [(ngModel)]="x.tag_checked" #tag_checked="ngModel">
+                                  <span>{{x.name}}</span>
+                                  <span class="checkmark"></span>
+                                </label>
+                              </div>
+                              <ng-container *ngIf="x.tag_checked">
+                                <div class="col-md-4">
+                                  <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
+                                  class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
+                                </div>
+                                <div class="col-md-3 pl-0">
+                                  <input type="text" name="tag_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
+                                </div>
+                              </ng-container>
                             </div>
-                            <ng-container *ngIf="x.tag_checked">
-                              <div class="col-md-4">
-                                <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
-                                class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
+                            <div *ngIf="x.tag_checked" class="row ml-3 mt-3">
+                              <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'name':x.search | orderAsc:'name'; let j=index;">
+                                <label class="checkbox checkbox-warning">
+                                  <input class="form-check-input" type="checkbox" name="tag_option_checked{{i+1}}{{j}}" [(ngModel)]="y.tag_option_checked" #tag_option_checked="ngModel">
+                                  <span>{{y.name}}</span>
+                                  <span class="checkmark"></span>
+                                </label>
                               </div>
-                              <div class="col-md-3 pl-0">
-                                <input type="text" name="tag_search{{i}}" placeholder="Search" class="form-control" [(ngModel)]="x.search" />
-                              </div>
-                            </ng-container>
-                          </div>
-                          <div *ngIf="x.tag_checked" class="row ml-3 mt-3">
-                            <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'name':x.search | orderAsc:'name'; let j=index;">
-                              <label class="checkbox checkbox-warning">
-                                <input class="form-check-input" type="checkbox" name="tag_option_checked{{i+1}}{{j}}" [(ngModel)]="y.tag_option_checked" #tag_option_checked="ngModel">
-                                <span>{{y.name}}</span>
-                                <span class="checkmark"></span>
-                              </label>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </ng-container>
                     </div>
                   </div>
                   <!-- #Tags -->
@@ -486,9 +489,10 @@
                     <div class="row">
                       <div class="col-md-12 form-group mb-3">
                         <label class="checkbox checkbox-primary">
-                          <input class="form-check-input" type="checkbox" name="note_status" [(ngModel)]="productForm.note_status" #note_status="ngModel">
-                          <span>Apply Foot Note</span>
-                          <span class="checkmark"></span>
+                          <input class="form-check-input" type="checkbox" name="note_status" [(ngModel)]="productForm.note_status"
+                          [disabled]="vendorAdmin && !productForm.vendor_id">
+                          <span>Apply Foot Note {{ (vendorAdmin && !productForm.vendor_id)? '(Please choose vendor before select)': '' }}</span>
+                          <span [ngClass]="(vendorAdmin && !productForm.vendor_id)? 'check-disable': ''" class="checkmark"></span>
                         </label>
                       </div>
                     </div>
@@ -515,7 +519,7 @@
                             </ng-container>
                           </div>
                           <div *ngIf="x.note_checked" class="row ml-3 mt-3">
-                            <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'description':x.search | orderAsc:'description'; let j=index;">
+                            <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let y of x.option_list | fieldSearch:'description':x.search; let j=index;">
                               <label class="radio radio-warning d-inline-block">
                                 <input type="radio" name="{{x.name}}" value="{{y.description}}" [checked]="x.selected_option==y.description" (change)="x.selected_option=y.description;">
                                 <span>{{y.description}}</span>
@@ -534,9 +538,10 @@
                     <div class="row">
                       <div class="col-md-12 form-group mb-3">
                         <label class="checkbox checkbox-primary">
-                          <input class="form-check-input" type="checkbox" name="faq_status" [(ngModel)]="productForm.faq_status" #faq_status="ngModel">
-                          <span>Apply FAQ</span>
-                          <span class="checkmark"></span>
+                          <input class="form-check-input" type="checkbox" name="faq_status" [(ngModel)]="productForm.faq_status"
+                          [disabled]="vendorAdmin && !productForm.vendor_id">
+                          <span>Apply FAQ {{ (vendorAdmin && !productForm.vendor_id)? '(Please choose vendor before select)': '' }}</span>
+                          <span [ngClass]="(vendorAdmin && !productForm.vendor_id)? 'check-disable': ''" class="checkmark"></span>
                         </label>
                       </div>
                     </div>

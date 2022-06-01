@@ -42,6 +42,14 @@ export class VendorsComponent implements OnInit {
     public commonService: CommonService, private deployService: DeploymentService
     ) {
     config.backdrop = 'static'; config.keyboard = false;
+    if(this.commonService.ys_features.indexOf('product_filters') != -1)
+      this.permissionList.push({ keyword: "product_filters", name: "Product Tags", sub_list: [] });
+    if(this.commonService.ys_features.indexOf('foot_note') != -1)
+      this.permissionList.push({ keyword: "foot_note", name: "Foot Note", sub_list: [] });
+    if(this.commonService.ys_features.indexOf('faq') != -1)
+      this.permissionList.push({ keyword: "faq", name: "FAQ", sub_list: [] });
+    if(this.commonService.ys_features.indexOf('size_chart') != -1)
+      this.permissionList.push({ keyword: "size_chart", name: "Size Chart", sub_list: [] });
   }
 
   ngOnInit() {
@@ -114,6 +122,7 @@ export class VendorsComponent implements OnInit {
     if(this.vendorForm.form_type=='edit_permissions') {
       let sendData = { _id: this.vendorForm._id, permission_list: [], session_key: new Date().valueOf() };
       this.permissionList.forEach(obj => {
+        if(obj.selected) sendData.permission_list.push(obj.keyword);
         obj.sub_list.forEach(el => {
           if(el.selected) {
             sendData.permission_list.push(el.keyword);
@@ -152,6 +161,8 @@ export class VendorsComponent implements OnInit {
         });
         // for permission
         this.permissionList.forEach(obj => {
+          delete obj.selected;
+          if(obj.keyword && this.vendorForm.permission_list.indexOf(obj.keyword)!=-1) obj.selected = true;
           obj.sub_list.forEach(el => {
             delete el.selected; delete el.selected_option;
             if(this.vendorForm.permission_list.indexOf(el.keyword)!=-1) el.selected = true;

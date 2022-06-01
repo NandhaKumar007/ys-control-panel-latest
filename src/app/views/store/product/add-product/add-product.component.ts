@@ -9,6 +9,7 @@ import { CustomerApiService } from '../../../../services/customer-api.service';
 import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
+import { AccountService } from '../../account/account.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -31,14 +32,14 @@ export class AddProductComponent implements OnInit {
   image_count: number = environment.default_img_count;
   selectedVariantOptions: any []; selectedVariantIndex: number;
   configData: any= environment.config_data; brochForm: any = {};
-  catSearch: string;
+  catSearch: string; productFeatures: any; vendorAdmin: boolean;
 
   @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
     private peApi: ProductExtrasApiService, public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService,
-    private deployApi: DeploymentService
+    private deployApi: DeploymentService, private accountApi: AccountService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -55,6 +56,7 @@ export class AddProductComponent implements OnInit {
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.aiStyleList = []; delete this.catSearch;
+      if(this.commonService.ys_features.indexOf('vendors')!=-1 && this.commonService.store_details?.login_type!='vendor') this.vendorAdmin = true;
       if(localStorage.getItem("aistyle_list")) this.aiStyleList = this.commonService.decryptData(localStorage.getItem("aistyle_list"));
       this.categoryList.forEach(element => { element.selected = false; });
       if(this.commonService.ys_features.indexOf('variant_image_tag')!=-1) this.image_count = environment.variant_img_count;
@@ -82,11 +84,12 @@ export class AddProductComponent implements OnInit {
       this.addonList = []; this.tagList = []; this.noteList = []; this.taxRates = []; this.sizeCharts = []; this.taxonomyList = [];
       this.api.PRODUCT_FEATURES().subscribe(result => {
         if(result.status) {
+          this.productFeatures = result.data;
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
           this.tagList = result.data.tag_list.filter(obj => obj.status=='active');
           this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
           this.noteList = result.data.footnote_list;
-          this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
+          this.faqList = result.data.faq_list;
           if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
             this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
             if(this.taxRates.length) {
@@ -101,6 +104,16 @@ export class AddProductComponent implements OnInit {
           this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
           if(this.taxonomyList.length) this.productForm.taxonomy_id = this.taxonomyList[0]._id;
           this.colorList = result.data.color_list;
+          // for vendor login
+          if(this.commonService.store_details?.login_type=='vendor') {
+            this.accountApi.VENDOR_LIST().subscribe((result) => {
+              if(result.status) this.setVendorInfo(result.data);
+              else {
+                console.log("response", result);
+                this.faqList = []; this.sizeCharts = []; this.tagList = [];
+              }
+            });
+          }
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
@@ -272,6 +285,32 @@ export class AddProductComponent implements OnInit {
   }
 
   /* Common Functions */
+  onChangeVendor(vendorId) {
+    this.accountApi.VENDOR_DETAILS(vendorId).subscribe(result => {
+      if(result.status) this.setVendorInfo(result.data);
+      else {
+        console.log("response", result);
+        this.faqList = []; this.sizeCharts = []; this.tagList = [];
+      }
+    });
+  }
+  setVendorInfo(vInfo) {
+    this.noteList = [];
+    vInfo.footnote_list.forEach(el => { this.noteList.push(el); });
+    this.productFeatures.footnote_list.forEach(el => { this.noteList.push(el); });
+    this.faqList = vInfo.faq_list;
+    this.sizeCharts = this.productFeatures.size_chart.filter(el => el.status=='active' && el.vendor_id==vInfo._id);
+    this.tagList = [];
+    this.productFeatures.tag_list.filter(obj => obj.status=='active').forEach(obj => {
+      obj.option_list = [];
+      let vtIndex = obj.vendor_list.findIndex(v => v.vendor_id==vInfo._id);
+      if(vtIndex!=-1) {
+        obj.option_list = obj.vendor_list[vtIndex].option_list;
+        this.tagList.push(obj);
+      }
+    });
+  }
+
   fileChangeListener(index, $event, cropper: ImageCropperComponent) {
     this.imageIndex = index;
     this.productForm.image_list[index].img_change = true;

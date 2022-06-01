@@ -112,9 +112,9 @@
                 <div class="">
                   <p class="m-0">
                     {{x.currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%
-                    <ng-container *ngIf="x.keyword=='free'">
+                    <!-- <ng-container *ngIf="x.keyword=='free'">
                       (Min {{ commonService.store_currency?.country_code }} {{ x.currency_types[commonService.store_currency?.country_code]?.amount }})
-                    </ng-container>
+                    </ng-container> -->
                   </p>
                 </div>
               </div>
@@ -388,9 +388,9 @@
               <div class="m_pricing-col-inner m-pricing-r">
                 <p class="m-0">
                   {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.transaction_fees}}%
-                  <ng-container *ngIf="packageList[selectedIndex].keyword=='free'">
+                  <!-- <ng-container *ngIf="packageList[selectedIndex].keyword=='free'">
                     (Min {{ commonService.store_currency?.country_code }} {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount}})
-                  </ng-container>
+                  </ng-container> -->
                 </p>
               </div>
             </div>

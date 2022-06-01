@@ -4740,3 +4740,10 @@ input[type=file] {
 .red-band {
   background: #EC848B;
 }
+
+.checkbox input[disabled] ~ *, .radio input[disabled] ~ * {
+  color: #000!important;
+}
+.check-disable {
+  background-color: #E8E8E8!important;cursor:not-allowed;
+}
