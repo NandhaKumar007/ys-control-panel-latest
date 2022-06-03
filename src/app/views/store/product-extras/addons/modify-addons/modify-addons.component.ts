@@ -15,20 +15,22 @@ export class ModifyAddonsComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   addonForm: any; maxRank: any = 0; measurementList: any = [];
   imgBaseUrl = environment.img_baseurl;
+  vendor_id: string = "";
 
   constructor(private api: ProductExtrasApiService, public commonService: CommonService, public router: Router, private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.btnLoader = false; this.pageLoader = true; this.maxRank = params.rank;
+      if(params.vendor_id) this.vendor_id = params.vendor_id;
       // edit
       if(this.router.url.includes("modify")) {
         let tempMmList = [];
-        this.api.MEASUREMENT_LIST().subscribe(result => {
+        this.api.MEASUREMENT_LIST(this.vendor_id).subscribe(result => {
           if(result.status) tempMmList = result.list;
           else console.log("mm response", result);
           // addon details
-          this.api.ADDON_DETAILS(params.addon_id).subscribe(result => {
+          this.api.ADDON_DETAILS(params.addon_id, this.vendor_id).subscribe(result => {
             if(result.status) {
               this.addonForm = result.data;
               this.addonForm.prev_rank = this.addonForm.rank;
@@ -44,7 +46,7 @@ export class ModifyAddonsComponent implements OnInit {
       }
       else {
         this.addonForm = { rank: this.maxRank, custom_list: [], min_stock: 0 };
-        this.api.MEASUREMENT_LIST().subscribe(result => {
+        this.api.MEASUREMENT_LIST(this.vendor_id).subscribe(result => {
           if(result.status) this.measurementList = result.list;
           else console.log("response", result);
           setTimeout(() => { this.pageLoader = false; }, 500);
@@ -66,6 +68,7 @@ export class ModifyAddonsComponent implements OnInit {
       delete this.addonForm.notes_title;
       this.addonForm.notes_list = [];
     }
+    if(this.vendor_id) this.addonForm.vendor_id = this.vendor_id;
     if(this.router.url.includes("modify")) {
       this.api.UPDATE_ADDON(this.addonForm).subscribe(result => {
         this.btnLoader = false;
@@ -133,6 +136,10 @@ export class ModifyAddonsComponent implements OnInit {
     this.measurementList.forEach(object => {
       object.mm_checked = value;
     });
+  }
+
+  ngOnDestroy() {
+    if(this.vendor_id) sessionStorage.setItem("vid", this.vendor_id);
   }
 
 }

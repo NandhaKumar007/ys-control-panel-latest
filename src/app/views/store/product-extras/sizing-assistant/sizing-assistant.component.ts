@@ -29,7 +29,7 @@ export class SizingAssistantComponent implements OnInit {
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
-    this.api.MEASUREMENT_LIST().subscribe(result => {
+    this.api.MEASUREMENT_LIST('').subscribe(result => {
       if(result.status) this.measurementList = result.list;
     });
   }

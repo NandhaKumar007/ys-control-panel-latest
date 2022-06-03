@@ -4,22 +4,35 @@
 
 <div *ngIf="!pageLoader">
 
-  <div class="breadcrumb">
-    <h1>Size Chart</h1>
-    <ul>
-      <li>These are your applicable charts</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Size Chart</h1>
+        <ul>
+          <li>These are your applicable charts</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <a *ngIf="vendor_id || commonService.ys_features.indexOf('vendors')==-1 || commonService.store_details?.login_type=='vendor'" type="button" class="btn btn-primary"
+        routerLink="{{ (vendor_id)? '/product-extras/size-chart/create/'+vendor_id: '/product-extras/size-chart/create' }}">Add New Chart</a>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-6">
-        <button type="button" routerLink="/product-extras/size-chart/create" class="btn btn-primary">Add New
-          Chart</button>
-      </div>
+      <ng-container *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type!='vendor'">
+        <div class="col-md-3 col-6">
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="vendor_id" (change)="ngOnInit();">
+            <option value="">-- Select vendor --</option>
+            <option value="{{x._id}}" *ngFor="let x of commonService.vendor_list;">{{x.company_details?.brand}}</option>
+          </select>
+        </div>
+        <div class="col-md-3"></div>
+      </ng-container>
       <!-- search box -->
-      <div class="col-md-6 mt-sm-15" align="right">
+      <div class="col-md-6 mt-sm-15">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -47,7 +60,7 @@
                   <p class="w-15 w-sm-50 m-b-0">{{x._id}}</p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
                     <button class="btn btn-wide black-outline-btn w-md-100 mr-3"
-                      routerLink="/product-extras/size-chart/modify/{{x._id}}">
+                    routerLink="{{ (vendor_id)? '/product-extras/size-chart/modify/'+x._id+'/'+vendor_id: '/product-extras/size-chart/modify/'+x._id }}" >
                       <span class="black-outline-txt">Edit</span>
                     </button>
                     <button class="btn orng-outline-btn w-md-100"

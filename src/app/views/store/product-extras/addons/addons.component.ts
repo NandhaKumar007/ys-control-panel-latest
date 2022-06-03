@@ -18,7 +18,7 @@ export class AddonsComponent implements OnInit {
   list: any = []; maxRank: any = 0;
 	deleteForm: any; search_bar: string;
   pageLoader: boolean; scrollPos: number = 0;
-  btnForm: any = {};
+  btnForm: any = {}; vendor_id: string = "";
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService,
@@ -28,6 +28,10 @@ export class AddonsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(sessionStorage.getItem("vid")) {
+      this.vendor_id = sessionStorage.getItem("vid");
+      sessionStorage.removeItem("vid");
+    }
     if(this.commonService.page_attr) {
       let pageInfo = this.commonService.page_attr;
       delete this.commonService.page_attr;
@@ -35,8 +39,8 @@ export class AddonsComponent implements OnInit {
       this.page = pageInfo.page_no;
       this.search_bar = pageInfo.search;
     }
-    this.pageLoader = true;
-    this.api.ADDON_LIST().subscribe(result => {
+    this.pageLoader = true; this.list = [];
+    this.api.ADDON_LIST(this.vendor_id).subscribe(result => {
 			if(result.status) {
         // category list
         this.list = result.list;
@@ -75,6 +79,7 @@ export class AddonsComponent implements OnInit {
 
   // DELETE
   onDelete() {
+    if(this.vendor_id) this.deleteForm.vendor_id = this.vendor_id;
     this.api.DELETE_ADDON(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -96,8 +101,10 @@ export class AddonsComponent implements OnInit {
 		});
   }
 
-  goModifyPage() {
+  goModifyPage(x) {
     this.commonService.page_attr = { page_no: this.page, search: this.search_bar, scroll_pos: this.commonService.scroll_y_pos };
+    if(this.vendor_id) this.router.navigate(['/product-extras/addons/modify/'+x._id+'/'+this.maxRank+'/'+this.vendor_id]);
+    else this.router.navigate(['/product-extras/addons/modify/'+x._id+'/'+this.maxRank]);
   }
 
 }

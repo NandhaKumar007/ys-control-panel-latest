@@ -461,7 +461,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.updateErrorMsg = null;
     this.customizationForm = customization;
     this.existing_custom_list = customization.custom_list;
-    this.extrasApi.ADDON_DETAILS(this.order_details.item_list[this.itemIndex].selected_addon._id).subscribe(result => {
+    this.extrasApi.ADDON_DETAILS(this.order_details.item_list[this.itemIndex].selected_addon._id, '').subscribe(result => {
       if(result.status) {
         this.customIndex = 0;
         this.custom_list = result.data.custom_list;

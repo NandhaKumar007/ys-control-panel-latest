@@ -5,7 +5,9 @@ import { SizeChartComponent } from './size-chart.component';
 const routes: Routes = [
   { path: '', component: SizeChartComponent },
   { path: 'create', loadChildren: () => import('./modify-size-chart/modify-size-chart.module').then(m => m.ModifySizeChartModule) },
-  { path: 'modify/:chart_id', loadChildren: () => import('./modify-size-chart/modify-size-chart.module').then(m => m.ModifySizeChartModule) }
+  { path: 'create/:vendor_id', loadChildren: () => import('./modify-size-chart/modify-size-chart.module').then(m => m.ModifySizeChartModule) },
+  { path: 'modify/:chart_id', loadChildren: () => import('./modify-size-chart/modify-size-chart.module').then(m => m.ModifySizeChartModule) },
+  { path: 'modify/:chart_id/:vendor_id', loadChildren: () => import('./modify-size-chart/modify-size-chart.module').then(m => m.ModifySizeChartModule) }
 ];
 
 @NgModule({

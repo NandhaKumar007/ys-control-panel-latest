@@ -92,11 +92,11 @@ export class SidebarService {
           prodExtraList.push({ name: 'Footnote', state: '/product-extras/footnote', type: 'link' });
           routePermissionList.push("foot_note");
         }
-        if(ysFeatures.indexOf('vendors')==-1 && ysFeatures.indexOf('size_chart')!=-1) {
+        if(ysFeatures.indexOf('size_chart')!=-1) {
           prodExtraList.push({ name: 'Size Chart', state: '/product-extras/size-chart', type: 'link' });
           routePermissionList.push("size_chart");
         }
-        if(ysFeatures.indexOf('vendors')==-1 && ysFeatures.indexOf('faq')!=-1) {
+        if(ysFeatures.indexOf('faq')!=-1) {
           prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
           routePermissionList.push("faq");
         }
@@ -291,7 +291,7 @@ export class SidebarService {
           moduleList.push({ icon: 'assistant', name: 'Shopping Assistant', state: '/product-extras/shop-assistant', type: 'link' });
           routePermissionList.push("shopping_assistant");
         }
-        if(ysFeatures.indexOf('sizing_assistant')!=-1) {
+        if(ysFeatures.indexOf('vendors')==-1 && ysFeatures.indexOf('sizing_assistant')!=-1) {
           moduleList.push({ icon: 'straighten', name: 'Sizing Assistant', state: '/product-extras/sizing-assistant', type: 'link' });
           routePermissionList.push("sizing_assistant");
         }
@@ -674,6 +674,14 @@ export class SidebarService {
       this.sidePanelList.push({ name: 'Dashboard', type: 'link', icon: 'dashboard', state: '/vendor-dashboard' });
       // product extras
       let prodExtraList: IChildItem[] = [];
+      if(ysFeatures.indexOf('measurements')!=-1 && this.commonService.vendor_features.indexOf('measurements')!=-1) {
+        prodExtraList.push({ name: 'Measurement Sets', state: '/product-extras/measurement-sets', type: 'link' });
+        routePermissionList.push("measurements");
+      }
+      if(ysFeatures.indexOf('addons')!=-1 && this.commonService.vendor_features.indexOf('addons')!=-1) {
+        prodExtraList.push({ name: 'Addons', state: '/product-extras/addons', type: 'link' });
+        routePermissionList.push("addons");
+      }
       if(ysFeatures.indexOf('product_filters')!=-1 && this.commonService.vendor_features.indexOf('product_filters')!=-1) {
         prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
         routePermissionList.push("tags");

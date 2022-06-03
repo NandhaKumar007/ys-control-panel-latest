@@ -18,14 +18,15 @@ export class FootNoteComponent implements OnInit {
 	list: any = []; maxRank: any = 0;
 	addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
+  vendor_id: string = "";
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
-    this.pageLoader = true;
-    this.api.FOOTNOTE_LIST().subscribe(result => {
+    this.pageLoader = true; this.list = [];
+    this.api.FOOTNOTE_LIST(this.vendor_id).subscribe(result => {
 			if(result.status) {
         this.list = result.list;
 				this.maxRank = this.list.length;
@@ -37,6 +38,7 @@ export class FootNoteComponent implements OnInit {
 
   // ADD
   onAdd() {
+    if(this.vendor_id) this.addForm.vendor_id = this.vendor_id;
     this.api.ADD_FOOTNOTE(this.addForm).subscribe(result => {
 			if(result.status) {
 				document.getElementById('closeModal').click();
@@ -52,7 +54,7 @@ export class FootNoteComponent implements OnInit {
 
   // EDIT
   onEdit(x, modalName) {
-    this.api.FOOTNOTE_LIST().subscribe(result => {
+    this.api.FOOTNOTE_LIST(this.vendor_id).subscribe(result => {
 			if(result.status) {
         let noteList = result.list;
         let index = noteList.findIndex(obj => obj._id==x._id);
@@ -69,6 +71,7 @@ export class FootNoteComponent implements OnInit {
   
   // UPDATE
   onUpdate() {
+    if(this.vendor_id) this.editForm.vendor_id = this.vendor_id;
 		this.api.UPDATE_FOOTNOTE(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -84,6 +87,7 @@ export class FootNoteComponent implements OnInit {
 
   // DELETE
   onDelete() {
+    if(this.vendor_id) this.deleteForm.vendor_id = this.vendor_id;
     this.api.DELETE_FOOTNOTE(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

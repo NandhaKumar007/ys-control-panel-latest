@@ -12,13 +12,13 @@ export class ProductExtrasApiService {
   constructor(private http: HttpClient) { }
 
   // ADDONS
-  ADDON_LIST() {
+  ADDON_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/addon', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/addon?vendor_id='+x, httpOptions);
   }
-  ADDON_DETAILS(x) {
+  ADDON_DETAILS(addonId, vendorId) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/addon/'+x, httpOptions); 
+    return this.http.get<any>(environment.ws_url+'/store/addon?addon_id='+addonId+'&vendor_id='+vendorId, httpOptions);
   }
   ADD_ADDON(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -65,9 +65,9 @@ export class ProductExtrasApiService {
   }
 
   // FAQ
-  FAQ_LIST() {
+  FAQ_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/faq', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/faq?vendor_id='+x, httpOptions);
   }
   ADD_FAQ(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -83,9 +83,9 @@ export class ProductExtrasApiService {
   }
 
   // FOOT NOTE
-  FOOTNOTE_LIST() {
+  FOOTNOTE_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/footnote', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/footnote?vendor_id='+x, httpOptions);
   }
   ADD_FOOTNOTE(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -101,9 +101,9 @@ export class ProductExtrasApiService {
   }
 
   // MEASUREMENTS
-  MEASUREMENT_LIST() {
+  MEASUREMENT_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/measurement', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/measurement?vendor_id='+x, httpOptions);
   }
   ADD_MEASUREMENT(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
@@ -133,9 +133,9 @@ export class ProductExtrasApiService {
   }
 
   // SIZE CHART
-  CHART_LIST() {
+  CHART_LIST(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/size_chart', httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/size_chart?vendor_id='+x, httpOptions);
   }
   ADD_CHART(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

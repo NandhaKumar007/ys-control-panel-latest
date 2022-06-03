@@ -208,7 +208,7 @@ export class CustomerDetailsComponent implements OnInit {
         let index = modelList.findIndex(obj => obj._id==modelId);
         if(index!=-1) {
           this.addonForm = modelList[index];
-          this.prodExtApi.ADDON_DETAILS(this.addonForm.addon_id).subscribe(result => {
+          this.prodExtApi.ADDON_DETAILS(this.addonForm.addon_id, '').subscribe(result => {
             if(result.status) {
               let addonDetails = result.data;
               this.addonForm.price = addonDetails.price;
@@ -249,7 +249,7 @@ export class CustomerDetailsComponent implements OnInit {
               else if(type=="measurement") {
                 this.mmIndex = 0;
                 if(!this.measurementList) {
-                  this.prodExtApi.MEASUREMENT_LIST().subscribe(result => {
+                  this.prodExtApi.MEASUREMENT_LIST('').subscribe(result => {
                     if(result.status) this.measurementList = result.list;
                     else this.measurementList = [];
                     this.buildMmList(addonDetails.mm_list, this.measurementList).then((resp: any) => {

@@ -3,26 +3,38 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>FAQ</h1>
-    <ul>
-      <li>Filter your products efficiently</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>FAQ</h1>
+        <ul>
+          <li>Filter your products efficiently</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button *ngIf="vendor_id || commonService.ys_features.indexOf('vendors')==-1 || commonService.store_details?.login_type=='vendor'" type="button" class="btn btn-primary"
+        (click)="addForm = { rank: maxRank+1, answer_list: [{}] }; modalService.open(addModal, { size: 'lg'});">
+          Add New FAQ
+        </button>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-md-6">
-        <button type="button" class="btn btn-primary"
-          (click)="addForm = { rank: maxRank+1, answer_list: [{}] }; modalService.open(addModal, { size: 'lg'});">Add
-          New FAQ</button>
-      </div>
-      <!-- search box -->
-      <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
-        <div class="form-group">
-          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      <ng-container *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type!='vendor'">
+        <div class="col-md-3 col-6">
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="vendor_id" (change)="ngOnInit();">
+            <option value="">-- Select vendor --</option>
+            <option value="{{x._id}}" *ngFor="let x of commonService.vendor_list;">{{x.company_details?.brand}}</option>
+          </select>
         </div>
+        <div class="col-md-3"></div>
+      </ng-container>
+      <!-- search box -->
+      <div class="col-md-6 mt-sm-15">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
       </div>
     </div>
   </div>

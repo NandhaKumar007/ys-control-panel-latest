@@ -5,7 +5,9 @@ import { AddonsComponent } from './addons.component';
 const routes: Routes = [
   { path: '', component: AddonsComponent },
   { path: 'add/:rank', loadChildren: () => import('./modify-addons/modify-addons.module').then(m => m.ModifyAddonsModule) },
-  { path: 'modify/:addon_id/:rank', loadChildren: () => import('./modify-addons/modify-addons.module').then(m => m.ModifyAddonsModule) }
+  { path: 'add/:rank/:vendor_id', loadChildren: () => import('./modify-addons/modify-addons.module').then(m => m.ModifyAddonsModule) },
+  { path: 'modify/:addon_id/:rank', loadChildren: () => import('./modify-addons/modify-addons.module').then(m => m.ModifyAddonsModule) },
+  { path: 'modify/:addon_id/:rank/:vendor_id', loadChildren: () => import('./modify-addons/modify-addons.module').then(m => m.ModifyAddonsModule) }
 ];
 
 @NgModule({

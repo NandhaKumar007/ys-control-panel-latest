@@ -20,14 +20,15 @@ export class MeasurementsComponent implements OnInit {
 	addForm: any; editForm: any; deleteForm: any;
   pageLoader: boolean; btnLoader: boolean;
   imgBaseUrl = environment.img_baseurl;
+  vendor_id: string = "";
 
 	constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
-    this.pageLoader = true;
-		this.api.MEASUREMENT_LIST().subscribe(result => {
+    this.pageLoader = true; this.list = [];
+		this.api.MEASUREMENT_LIST(this.vendor_id).subscribe(result => {
 			if(result.status) {
         this.list = result.list;
 				this.maxRank = this.list.length;
@@ -40,6 +41,7 @@ export class MeasurementsComponent implements OnInit {
   // ADD
 	onAdd() {
     this.btnLoader = true;
+    if(this.vendor_id) this.addForm.vendor_id = this.vendor_id;
 		this.api.ADD_MEASUREMENT(this.addForm).subscribe(result => {
 			if(result.status) {
 				document.getElementById('closeModal').click();
@@ -57,7 +59,7 @@ export class MeasurementsComponent implements OnInit {
 	// EDIT
   onEdit(x, modalName) {
     this.btnLoader = false;
-    this.api.MEASUREMENT_LIST().subscribe(result => {
+    this.api.MEASUREMENT_LIST(this.vendor_id).subscribe(result => {
 			if(result.status) {
         let index = result.list.findIndex(obj => obj._id==x._id);
         if(index!=-1) {
@@ -74,6 +76,7 @@ export class MeasurementsComponent implements OnInit {
   // UPDATE
 	onUpdate() {
     this.btnLoader = true;
+    if(this.vendor_id) this.editForm.vendor_id = this.vendor_id;
 		this.api.UPDATE_MEASUREMENT(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -90,6 +93,7 @@ export class MeasurementsComponent implements OnInit {
   
   // DELETE
   onDelete() {
+    if(this.vendor_id) this.deleteForm.vendor_id = this.vendor_id;
     this.api.DELETE_MEASUREMENT(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();

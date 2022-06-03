@@ -42,6 +42,10 @@ export class VendorsComponent implements OnInit {
     public commonService: CommonService, private deployService: DeploymentService
     ) {
     config.backdrop = 'static'; config.keyboard = false;
+    if(this.commonService.ys_features.indexOf('measurements') != -1)
+      this.permissionList.push({ keyword: "measurements", name: "Measurement Sets", sub_list: [] });
+    if(this.commonService.ys_features.indexOf('addons') != -1)
+      this.permissionList.push({ keyword: "addons", name: "Addons", sub_list: [] });
     if(this.commonService.ys_features.indexOf('product_filters') != -1)
       this.permissionList.push({ keyword: "product_filters", name: "Product Tags", sub_list: [] });
     if(this.commonService.ys_features.indexOf('foot_note') != -1)

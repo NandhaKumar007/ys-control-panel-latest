@@ -13,15 +13,17 @@ export class ModifySizeChartComponent implements OnInit {
   params: any; chartForm: any = {};
   keys: any = []; duplicateKeys: any = [];
   pageLoader: boolean; btnLoader: boolean;
+  vendor_id: string = "";
 
   constructor(private router: Router, private api: ProductExtrasApiService, private activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.btnLoader = false;
+      if(this.params.vendor_id) this.vendor_id = this.params.vendor_id;
       if(this.params.chart_id) {
         this.pageLoader = true;
-        this.api.CHART_LIST().subscribe(result => {
+        this.api.CHART_LIST(this.vendor_id).subscribe(result => {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if(result.status) {
             let taxList = result.list;
@@ -53,6 +55,7 @@ export class ModifySizeChartComponent implements OnInit {
   // ADD
   onAdd() {
     this.btnLoader = true;
+    if(this.vendor_id) this.chartForm.vendor_id = this.vendor_id;
     this.api.ADD_CHART(this.chartForm).subscribe(result => {
 			if(result.status) this.router.navigate(['product-extras/size-chart']);
 			else {
@@ -66,6 +69,7 @@ export class ModifySizeChartComponent implements OnInit {
   // UPDATE
   onUpdate() {
     this.btnLoader = true;
+    if(this.vendor_id) this.chartForm.vendor_id = this.vendor_id;
 		this.api.UPDATE_CHART(this.chartForm).subscribe(result => {
       if(result.status) this.router.navigate(['product-extras/size-chart']);
       else {
@@ -112,6 +116,10 @@ export class ModifySizeChartComponent implements OnInit {
     });
     this.keys = Object.keys(this.chartForm.chart_list[0]);
     this.duplicateKeys.splice(keyIndex, 1);
+  }
+
+  ngOnDestroy() {
+    if(this.vendor_id) sessionStorage.setItem("vid", this.vendor_id);
   }
 
 }

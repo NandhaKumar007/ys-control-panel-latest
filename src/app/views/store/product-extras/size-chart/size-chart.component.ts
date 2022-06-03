@@ -16,14 +16,19 @@ export class SizeChartComponent implements OnInit {
   page = 1; pageSize = 10;
   list: any = []; deleteForm: any;
   pageLoader: boolean; search_bar: string;
+  vendor_id: string = "";
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
-    this.pageLoader = true;
-    this.api.CHART_LIST().subscribe(result => {
+    this.pageLoader = true; this.list = [];
+    if(sessionStorage.getItem("vid")) {
+      this.vendor_id = sessionStorage.getItem("vid");
+      sessionStorage.removeItem("vid");
+    }
+    this.api.CHART_LIST(this.vendor_id).subscribe(result => {
       if(result.status) this.list = result.list;
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
@@ -32,6 +37,7 @@ export class SizeChartComponent implements OnInit {
 
   // DELETE
   onDelete() {
+    if(this.vendor_id) this.deleteForm.vendor_id = this.vendor_id;
     this.api.DELETE_CHART(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
