@@ -88,8 +88,12 @@ export class AddProductComponent implements OnInit {
           this.addonList = result.data.addon_list.filter(obj => obj.status=='active');
           this.tagList = result.data.tag_list.filter(obj => obj.status=='active');
           this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
+          this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
           this.noteList = result.data.footnote_list;
-          this.faqList = result.data.faq_list;
+          this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
+          // for vendor login
+          if(this.commonService.store_details?.login_type=='vendor') this.onChangeVendor(this.commonService.vendor_details._id);
+          // common features
           if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
             this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
             if(this.taxRates.length) {
@@ -100,20 +104,9 @@ export class AddProductComponent implements OnInit {
               }
             }
           }
-          this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
           this.taxonomyList = result.data.taxonomy.filter(obj => obj.status=='active');
           if(this.taxonomyList.length) this.productForm.taxonomy_id = this.taxonomyList[0]._id;
           this.colorList = result.data.color_list;
-          // for vendor login
-          if(this.commonService.store_details?.login_type=='vendor') {
-            this.accountApi.VENDOR_LIST().subscribe((result) => {
-              if(result.status) this.setVendorInfo(result.data);
-              else {
-                console.log("response", result);
-                this.faqList = []; this.sizeCharts = []; this.tagList = [];
-              }
-            });
-          }
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
@@ -286,20 +279,23 @@ export class AddProductComponent implements OnInit {
 
   /* Common Functions */
   onChangeVendor(vendorId) {
-    this.accountApi.VENDOR_DETAILS(vendorId).subscribe(result => {
+    this.api.VENDOR_FEATURES(vendorId).subscribe(result => {
       if(result.status) this.setVendorInfo(result.data);
       else {
         console.log("response", result);
-        this.faqList = []; this.sizeCharts = []; this.tagList = [];
+        this.addonList = []; this.faqList = []; this.sizeCharts = []; this.tagList = [];
       }
     });
   }
   setVendorInfo(vInfo) {
+    this.addonList = vInfo.addon_list.filter(obj => obj.status=='active');
+    this.faqList = vInfo.faq_list.filter(el => el.status=='active');
+    this.sizeCharts = vInfo.size_chart.filter(el => el.status=='active');
+    // foot notes
     this.noteList = [];
     vInfo.footnote_list.forEach(el => { this.noteList.push(el); });
     this.productFeatures.footnote_list.forEach(el => { this.noteList.push(el); });
-    this.faqList = vInfo.faq_list;
-    this.sizeCharts = this.productFeatures.size_chart.filter(el => el.status=='active' && el.vendor_id==vInfo._id);
+    // product tags
     this.tagList = [];
     this.productFeatures.tag_list.filter(obj => obj.status=='active').forEach(obj => {
       obj.option_list = [];

@@ -324,9 +324,9 @@
                   <div class="row">
                     <div class="col-md-12 form-group mb-3">
                       <label class="checkbox checkbox-primary">
-                        <input class="form-check-input" type="checkbox" name="addon_status" [(ngModel)]="productForm.addon_status" #addon_status="ngModel">
-                        <span>Apply Add-Ons</span>
-                        <span class="checkmark"></span>
+                        <input class="form-check-input" type="checkbox" name="addon_status" [(ngModel)]="productForm.addon_status" [disabled]="vendorAdmin && !productForm.vendor_id">
+                        <span>Apply Add-Ons {{ (vendorAdmin && !productForm.vendor_id)? '(Please choose vendor before select)': '' }}</span>
+                        <span [ngClass]="(vendorAdmin && !productForm.vendor_id)? 'check-disable': ''" class="checkmark"></span>
                       </label>
                     </div>
                   </div>
@@ -417,7 +417,7 @@
                             </div>
                             <ng-container *ngIf="x.tag_checked">
                               <div class="col-md-4">
-                                <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
+                                <span *ngIf="commonService.ys_features.indexOf('vendors')==-1 && commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_tag: x, name: x.name, option_list: [{}] }; modalService.open(tagModal);"
                                 class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
                               </div>
                               <div class="col-md-3 pl-0">
@@ -467,7 +467,7 @@
                           </div>
                           <ng-container *ngIf="x.note_checked">
                             <div *ngIf="x.note_checked" class="col-md-4">
-                              <span *ngIf="commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
+                              <span *ngIf="commonService.ys_features.indexOf('vendors')==-1 && commonService.store_details?.login_type=='admin'" (click)="intForm = { selected_note: x, name: x.name, option_list: [{}] }; modalService.open(noteModal);"
                               class="badge badge-warning badge-green m-0 pull-right cursor">Add More Options</span>
                             </div>
                             <div class="col-md-3 pl-0">
@@ -653,7 +653,7 @@
                 <!-- #Availability -->
 
                 <!-- Apply Image Tags -->
-                <div [ngClass]="productForm.badge_status? 'card p-3 mb-3': ''">
+                <!-- <div [ngClass]="productForm.badge_status? 'card p-3 mb-3': ''">
                   <div class="row">
                     <div class="col-md-12 form-group mb-3">
                       <label class="checkbox checkbox-primary">
@@ -669,7 +669,7 @@
                       [secondaryPlaceholder]="'Enter tags separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- #Apply Image Tags -->
               </div>
             </div>
