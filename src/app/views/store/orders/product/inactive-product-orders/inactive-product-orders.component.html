@@ -36,7 +36,7 @@
       <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" placeholder="Select Date" class="form-control" name="from_date"
-            [(ngModel)]="filterForm.from_date" (ngModelChange)="ngOnInit();" bsDatepicker
+            [(ngModel)]="filterForm.from_date" (ngModelChange)="ngOnInit();" bsDatepicker [maxDate]="currDate"
             [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
@@ -44,7 +44,7 @@
         <div class="form-group">
           <input type="text" placeholder="Select Date" class="form-control" name="to_date"
             [(ngModel)]="filterForm.to_date" (ngModelChange)="ngOnInit();" bsDatepicker [minDate]="filterForm.from_date"
-            [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+            [maxDate]="currDate" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
 

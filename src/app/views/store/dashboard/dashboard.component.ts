@@ -229,6 +229,8 @@ export class DashboardComponent implements OnInit {
 
   getDashboardData() {
     if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
+      this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
+      this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
       this.preLoader = true;
       this.order_details = {
         products: 0, order_list: [], gc_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
@@ -241,8 +243,9 @@ export class DashboardComponent implements OnInit {
         setTimeout(() => { this.preLoader = false; }, 500);
         if(result.status) {
           this.order_details.products = result.data.products;
+          let cancelledOrders = result.data.order_list.filter(obj => obj.order_status=='cancelled');
+          this.order_details.cancelled_orders = cancelledOrders.length;
           this.order_details.order_list = result.data.order_list.filter(obj => obj.order_status!='cancelled');
-          this.order_details.cancelled_orders = result.data.order_list.length - this.order_details.order_list.length;
           this.order_details.order_list.forEach(element => {
             this.order_details.total_sales += element.final_price;
             if(element.order_status=='placed') this.order_details.placed_orders++;
@@ -323,7 +326,11 @@ export class DashboardComponent implements OnInit {
       // CUSTOMERS
       this.customerLoader = true;
       this.customer_details = { total_customers: 0, abandoned_count: 0, top_customers: [] };
-      this.storeApi.DASHBOARD_CUSTOMERS({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, limit: 4 }).subscribe(result => {
+      let fData = {
+        from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, limit: 4,
+        ced: new Date(new Date().setHours(23,59,59,999)), cd: new Date()
+      };
+      this.storeApi.DASHBOARD_CUSTOMERS(fData).subscribe(result => {
         setTimeout(() => { this.customerLoader = false; }, 500);
         if(result.status) {
           this.customer_details.total_customers = result.data.total_customers;
@@ -392,8 +399,8 @@ export class DashboardComponent implements OnInit {
   }
   
   async buildLineChart(orderList) {
-    let diff = Math.abs(new Date(this.filterForm.from_date).getTime() - this.filterForm.to_date.getTime());
-    let diffDays = Math.ceil(diff / (1000*3600*24));
+    let diff = Math.abs(new Date(this.filterForm.from_date).getTime() - this.filterForm.to_date.getTime())+1;
+    let diffDays = Math.ceil(diff / (1000*3600*24))-1;
     let dayList = []; let ordersCountList = [];
     if(diffDays > 0) {
       for(let i=1; i<=diffDays; i++)

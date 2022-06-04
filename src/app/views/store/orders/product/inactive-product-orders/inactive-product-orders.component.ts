@@ -15,7 +15,7 @@ export class InactiveProductOrdersComponent implements OnInit {
   pageLoader: boolean; search_bar: string;
   page = 1; pageSize = 10; scrollPos: number = 0;
   filterForm: any = { type: 'All', from_date: new Date(), to_date: new Date() };
-  list: any = [];
+  list: any = []; currDate = new Date();
 
   constructor(private api: OrderService, public commonService: CommonService) { }
 
@@ -30,7 +30,11 @@ export class InactiveProductOrdersComponent implements OnInit {
       if(pageInfo.filter_form.to_date) this.filterForm.to_date = new Date(pageInfo.filter_form.to_date);
     }
     if(this.filterForm.from_date && this.filterForm.to_date) {
-      if(this.filterForm.to_date == new Date) this.filterForm.to_date = new Date(new Date().setMinutes(new Date().getMinutes() - 10));
+      this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
+      let today = new Date().getDate()+new Date().getMonth()+new Date().getFullYear();
+      let selectedDay = new Date(this.filterForm.to_date).getDate()+new Date(this.filterForm.to_date).getMonth()+new Date(this.filterForm.to_date).getFullYear();
+      if(selectedDay==today) this.filterForm.to_date = new Date(new Date().setMinutes(new Date().getMinutes() - 10));
+      else this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
       this.pageLoader = true;
       this.api.INACTIVE_ORDER_LIST(this.filterForm).subscribe(result => {
         if(result.status) {

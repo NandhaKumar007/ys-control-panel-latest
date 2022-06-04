@@ -41,6 +41,8 @@ export class GiftcardOrdersComponent implements OnInit {
 
   getCouponList() {
     if(this.filterForm.from_date && this.filterForm.to_date) {
+      this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
+      this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
       this.api.COUPON_LIST(this.filterForm).subscribe(result => {
         if(result.status) {
           this.parentList = result.list;

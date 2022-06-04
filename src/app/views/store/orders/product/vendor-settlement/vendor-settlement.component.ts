@@ -40,6 +40,8 @@ export class VendorSettlementComponent implements OnInit {
   getOrderList() {
     this.list = [];
     if(this.filterForm.from_date && this.filterForm.to_date) {
+      this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
+      this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
       this.pageLoader = true;
       this.api.SETTLEMENT_ORDERS(this.filterForm).subscribe(result => {
         if(result.status) {
