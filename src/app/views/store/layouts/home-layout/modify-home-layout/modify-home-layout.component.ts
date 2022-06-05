@@ -21,7 +21,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
     { name: "Bottom Left", value: "b_l" }, { name: "Bottom Center", value: "b_c" }, { name: "Bottom Right", value: "b_r" }
   ];
   grid_details: any = {}; shopping_assist_config: any;
-  fileList: FormData; fileLimitInKB: number = 1024;
+  fileList: FormData; fileLimitInKB: number = 1024; videoLimitInKB: number = 5120;
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService
@@ -50,12 +50,14 @@ export class ModifyHomeLayoutComponent implements OnInit {
           }
           else if(this.layoutDetails.type=='shopping_assistant') {
             this.shopping_assist_config = this.layoutDetails.shopping_assistant_config;
-            if(this.shopping_assist_config.image) this.shopping_assist_config.exist_image = this.shopping_assist_config.image;
-            if(!this.shopping_assist_config.changing_text.length) this.shopping_assist_config.changing_text = [{ value: ''}];
+            if(!this.shopping_assist_config.changing_text?.length) this.shopping_assist_config.changing_text = [{ value: ''}];
           }
-          else if(!this.layoutDetails.image_list.length) {
+          else if(!this.layoutDetails.image_list.length && this.layoutDetails.type!='video_section') {
             if(this.layoutDetails.type=='multiple_highlighted_section') this.layoutDetails.image_list.push({ rank: 1, content_status: true, content_details: {} });
             else this.layoutDetails.image_list.push({ rank: 1, points_list: [] });
+          }
+          else if(this.layoutDetails.type=='video_section' && !this.layoutDetails.video_details) {
+            this.layoutDetails.video_details = {};
           }
           // product list
           this.api.PRODUCT_LIST({ category_id: 'all' }).subscribe(result => {
@@ -91,21 +93,28 @@ export class ModifyHomeLayoutComponent implements OnInit {
     }
     this.fileList = new FormData();
     if(layoutData.type=='shopping_assistant') {
-      if(this.shopping_assist_config.img_change) {
-        layoutData.shopping_assistant_config = {};
-        this.fileList.append('attachments', this.shopping_assist_config.image);
-        for(let key in this.shopping_assist_config) {
-          if(key!='image' && key!='temp_image' && this.shopping_assist_config.hasOwnProperty(key))
-            layoutData.shopping_assistant_config[key] = this.shopping_assist_config[key];
-        }
-        this.fileList.append('data', JSON.stringify(layoutData));
-        this.callUpdateApi();
+      layoutData.shopping_assistant_config = {};
+      for(let key in this.shopping_assist_config) {
+        if(key!='image' && key!='temp_image' && this.shopping_assist_config.hasOwnProperty(key))
+          layoutData.shopping_assistant_config[key] = this.shopping_assist_config[key];
       }
-      else {
-        layoutData.shopping_assistant_config = this.shopping_assist_config;
-        this.fileList.append('data', JSON.stringify(layoutData));
-        this.callUpdateApi();
+      if(this.shopping_assist_config.img_change) this.fileList.append('attachments', this.shopping_assist_config.image);
+      else layoutData.shopping_assistant_config.image = this.shopping_assist_config.image;
+      this.fileList.append('data', JSON.stringify(layoutData));
+      this.callUpdateApi();
+    }
+    else if(layoutData.type=='video_section') {
+      layoutData.video_details = {};
+      for(let key in this.layoutDetails.video_details) {
+        if(this.layoutDetails.video_details.hasOwnProperty(key) && key!='thumbnail' && key!='src' && key!='temp_image' && key!='temp_video')
+          layoutData.video_details[key] = this.layoutDetails.video_details[key];
       }
+      if(this.layoutDetails.video_details.video_change) this.fileList.append('video', this.layoutDetails.video_details.src);
+      else layoutData.video_details.src = this.layoutDetails.video_details.src;
+      if(this.layoutDetails.video_details.img_change) this.fileList.append('thumbnail', this.layoutDetails.video_details.thumbnail);
+      else layoutData.video_details.thumbnail = this.layoutDetails.video_details.thumbnail;
+      this.fileList.append('data', JSON.stringify(layoutData));
+      this.callUpdateApi();
     }
     else {
       this.onSetFormData(layoutData.image_list).then((imgList) => {
@@ -203,6 +212,41 @@ export class ModifyHomeLayoutComponent implements OnInit {
           this.shopping_assist_config.img_change = true;
         }
         else this.shopping_assist_config.err_msg = true;
+      }
+      reader.readAsDataURL(fileData);
+    }
+  }
+
+  videoSecFileChangeListener(event) {
+    delete this.layoutDetails.video_details.img_err_msg;
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      let fileData = event.target.files[0];
+      let fileInKB = Math.round(fileData.size/ 1024);
+      reader.onload = (event: ProgressEvent) => {
+        if(fileInKB<=this.fileLimitInKB) {
+          this.layoutDetails.video_details.temp_image = (<FileReader>event.target).result;
+          this.layoutDetails.video_details.thumbnail = fileData;
+          this.layoutDetails.video_details.img_change = true;
+        }
+        else this.layoutDetails.video_details.img_err_msg = true;
+      }
+      reader.readAsDataURL(fileData);
+    }
+  }
+  videoChangeListener(event) {
+    delete this.layoutDetails.video_details.vid_err_msg;
+    if(event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      let fileData = event.target.files[0];
+      let fileInKB = Math.round(fileData.size/ 1024);
+      reader.onload = (event: ProgressEvent) => {
+        if(fileInKB<=this.videoLimitInKB) {
+          this.layoutDetails.video_details.temp_video = (<FileReader>event.target).result;
+          this.layoutDetails.video_details.src = fileData;
+          this.layoutDetails.video_details.video_change = true;
+        }
+        else this.layoutDetails.video_details.vid_err_msg = true;
       }
       reader.readAsDataURL(fileData);
     }

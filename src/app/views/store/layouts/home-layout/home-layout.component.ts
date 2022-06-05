@@ -47,11 +47,19 @@ export class HomeLayoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.commonService.deploy_details.theme_colors && this.commonService.deploy_details.theme_colors.primary) this.themeColorExists = true;
-    if(this.commonService.ys_features.indexOf('testimonials') !== -1) this.layoutTypes.push({ name: "Testimonial", value: "testimonial" });
-    if(this.commonService.ys_features.indexOf('shopping_assistant') !== -1) this.layoutTypes.push({ name: "Shopping Assistant", value: "shopping_assistant" });
-    if(this.commonService.ys_features.indexOf('blogs') !== -1) this.layoutTypes.push({ name: "Blogs", value: "blogs" });
-    if(this.commonService.ys_features.indexOf('shop_the_look') !== -1) this.layoutTypes.push({ name: "Shop the Look", value: "shop_the_look" });
+    if(this.commonService.deploy_details.theme_colors && this.commonService.deploy_details.theme_colors.primary)
+      this.themeColorExists = true;
+    if(this.commonService.ys_features.indexOf('testimonials') !== -1)
+      this.layoutTypes.push({ name: "Testimonial", value: "testimonial" });
+    if(this.commonService.ys_features.indexOf('shopping_assistant') !== -1)
+      this.layoutTypes.push({ name: "Shopping Assistant", value: "shopping_assistant" });
+    if(this.commonService.ys_features.indexOf('blogs') !== -1)
+      this.layoutTypes.push({ name: "Blogs", value: "blogs" });
+    if(this.commonService.ys_features.indexOf('shop_the_look') !== -1)
+      this.layoutTypes.push({ name: "Shop the Look", value: "shop_the_look" });
+    // if(this.commonService.store_details?.package_info?.category!='genie')
+    if(this.commonService.master_token)
+      this.layoutTypes.push({ name: "Video Section", value: "video_section" });
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {
       if(result.status) {
