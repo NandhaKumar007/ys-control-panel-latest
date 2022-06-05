@@ -85,7 +85,7 @@ export class SidebarService {
           routePermissionList.push("addons");
         }
         if(ysFeatures.indexOf('product_filters')!=-1) {
-          prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
+          prodExtraList.push({ name: 'Product Tags', state: '/product-extras/product-tags', type: 'link' });
           routePermissionList.push("tags");
         }
         if(ysFeatures.indexOf('foot_note')!=-1) {
@@ -101,6 +101,8 @@ export class SidebarService {
           routePermissionList.push("faq");
         }
         if(this.commonService.store_details?.package_info?.category!='genie') {
+          prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
+          routePermissionList.push("image_tag");
           prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
           routePermissionList.push("product_taxonomy");
         }
@@ -389,7 +391,7 @@ export class SidebarService {
         routePermissionList.push("addons");
       }
       if(ysFeatures.indexOf('product_filters')!=-1 && subuserFeatures.indexOf('product_filters')!=-1) {
-        prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
+        prodExtraList.push({ name: 'Product Tags', state: '/product-extras/product-tags', type: 'link' });
         routePermissionList.push("tags");
       }
       if(ysFeatures.indexOf('foot_note')!=-1 && subuserFeatures.indexOf('foot_note')!=-1) {
@@ -683,7 +685,7 @@ export class SidebarService {
         routePermissionList.push("addons");
       }
       if(ysFeatures.indexOf('product_filters')!=-1 && this.commonService.vendor_features.indexOf('product_filters')!=-1) {
-        prodExtraList.push({ name: 'Tags', state: '/product-extras/tags', type: 'link' });
+        prodExtraList.push({ name: 'Product Tags', state: '/product-extras/product-tags', type: 'link' });
         routePermissionList.push("tags");
       }
       if(ysFeatures.indexOf('foot_note')!=-1 && this.commonService.vendor_features.indexOf('foot_note')!=-1) {

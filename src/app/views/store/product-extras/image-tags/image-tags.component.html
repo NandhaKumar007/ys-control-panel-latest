@@ -1,0 +1,212 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Image Tags</h1>
+        <ul>
+          <li>Create and edit your image tags</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button type="button" class="btn btn-primary" (click)="onEditAutoTags(autoTagModal);">
+          Auto Tags
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <button *ngIf="list?.length<10" type="button" class="btn btn-primary" (click)="tagForm = { form_type: 'add', rank: maxRank+1 }; modalService.open(tagModal);">
+          Add New Tag
+        </button>
+      </div>
+      <!-- search box -->
+      <div class="col-md-6 mt-sm-15">
+        <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA LIST -->
+  <div *ngIf="list?.length" class="list-horizontal">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+          <!-- SINGLE LIST ITEM -->
+          <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+            <div class="d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <!-- OTHER DATA -->
+                  <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, tagModal);">
+                      <span class="black-outline-txt">Edit</span>
+                    </button>
+                    <button *ngIf="x.status!='active'" class="btn btn-wide blue-outline-btn w-md-100 mr-3"
+                      (click)="tagForm=x; modalService.open(statusModal, { centered: true });">
+                      <span class="blue-outline-txt">Enable</span>
+                    </button>
+                    <button *ngIf="x.status=='active'" class="btn btn-wide orng-outline-btn w-md-100 mr-3"
+                      (click)="tagForm=x; modalService.open(statusModal, { centered: true });">
+                      <span class="orng-outline-txt">Disable</span>
+                    </button>
+                    <button class="btn orng-outline-btn w-md-100" (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display. Add a new tag to start filtering your products.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TAG MODAL -->
+<ng-template #tagModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ (tagForm.form_type=='add')? 'New Tag': tagForm.name }}
+    </h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="tagForm.name" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Rank</label>
+            <input type="number" name="rank" class="form-control" min="1" [(ngModel)]="tagForm.rank"
+            max="{{(tagForm.form_type=='add')? maxRank+1: maxRank}}" appNumberOnly required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="tagForm.errorMsg">
+        <p class="text-danger">{{ tagForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">
+        {{ (tagForm.form_type=='add')? 'Add': 'Update' }}
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to {{tagForm.status=='active'? 'disable': 'enable'}} the <span
+    class="txt-grdint-highlight">"{{tagForm.name}}"</span> tag?</strong></p>
+    <div *ngIf="tagForm.errorMsg">
+      <p class="text-danger">{{ tagForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onUpdateStatus(tagForm);" class="btn btn-wide btn-primary">Yes</button>
+  </div>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to permanently delete the <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span> Tag?</strong></p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- AUTO TAG MODAL -->
+<ng-template #autoTagModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Auto Tags</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateAutoTags();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label>Tag Position</label>
+            <select name="tag_position" class="form-control select-arrow" [(ngModel)]="autoTagForm.position" required>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+        </div>
+        <hr class="mt-2 mb-3">
+        <div class="row" *ngFor="let x of autoTagForm.auto_tags; let i=index;">
+          <div class="col-md-4 form-group mt-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="selected{{i}}" [(ngModel)]="x.selected">
+              <span>{{x.display}}</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="x.selected">
+            <div class="col-md-4 form-group mb-3">
+              <label>Tag Name</label>
+              <input type="text" name="tag_name{{i}}" class="form-control" [(ngModel)]="x.name" required />
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label>Rank</label>
+              <input type="number" name="tag_rank{{i}}" class="form-control" [(ngModel)]="x.rank" min="1" max="3" required />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="autoTagForm.errorMsg">
+        <p class="text-danger">{{ autoTagForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>

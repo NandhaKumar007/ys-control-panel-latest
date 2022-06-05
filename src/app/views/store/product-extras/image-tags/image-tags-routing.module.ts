@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TagComponent } from './tag.component';
+import { ImageTagsComponent } from './image-tags.component';
 
-const routes: Routes = [{ path: '', component: TagComponent}];
+const routes: Routes = [{ path: "", component: ImageTagsComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 
-export class TagRoutingModule { }
+export class ImageTagsRoutingModule { }

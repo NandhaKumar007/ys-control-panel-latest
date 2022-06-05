@@ -6,12 +6,13 @@ import { ProductExtrasApiService } from '../product-extras-api.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
-  selector: 'app-tag',
-  templateUrl: './tag.component.html',
-  styleUrls: ['./tag.component.scss'],
+  selector: 'app-product-tags',
+  templateUrl: './product-tags.component.html',
+  styleUrls: ['./product-tags.component.scss'],
   animations: [SharedAnimations]
 })
-export class TagComponent implements OnInit {
+
+export class ProductTagsComponent implements OnInit {
 
   page = 1; pageSize = 10;
 	list: any = []; maxRank: any = 0;

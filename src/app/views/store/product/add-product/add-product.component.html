@@ -653,7 +653,7 @@
                 <!-- #Availability -->
 
                 <!-- Apply Image Tags -->
-                <!-- <div [ngClass]="productForm.badge_status? 'card p-3 mb-3': ''">
+                <div *ngIf="imgTagList?.length" [ngClass]="productForm.badge_status? 'card p-3 mb-3': ''">
                   <div class="row">
                     <div class="col-md-12 form-group mb-3">
                       <label class="checkbox checkbox-primary">
@@ -663,13 +663,16 @@
                       </label>
                     </div>
                   </div>
-                  <div class="row ml-3" *ngIf="productForm.badge_status">
-                    <div class="col-md-6 form-group mb-3">
-                      <tag-input class="w-100" name="badges" id="badges" [(ngModel)]="productForm.badges" placeholder=""
-                      [secondaryPlaceholder]="'Enter tags separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
+                  <div *ngIf="productForm.badge_status" class="row ml-3">
+                    <div class="col-lg-3 col-md-4 form-group mb-3" *ngFor="let x of imgTagList | orderAsc:'rank'; let i=index;">
+                      <label class="checkbox checkbox-success">
+                        <input class="form-check-input" type="checkbox" name="img_badge_checked{{i}}" [(ngModel)]="x.checked">
+                        <span>{{x.name}}</span>
+                        <span class="checkmark"></span>
+                      </label>
                     </div>
                   </div>
-                </div> -->
+                </div>
                 <!-- #Apply Image Tags -->
               </div>
             </div>

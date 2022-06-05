@@ -5,11 +5,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
-import { CustomerApiService } from '../../../../services/customer-api.service';
 import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { CommonService } from '../../../../services/common.service';
-import { AccountService } from '../../account/account.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -26,7 +24,7 @@ export class AddProductComponent implements OnInit {
   pageLoader: boolean; btnLoader: boolean;
   categoryList = this.commonService.catalog_list;
   addonList: any; tagList: any; noteList: any; taxRates: any;  colorList: any; amenityList: any;
-  sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any;
+  sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any; imgTagList: any;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
   image_count: number = environment.default_img_count;
@@ -38,8 +36,7 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
-    private peApi: ProductExtrasApiService, public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService,
-    private deployApi: DeploymentService, private accountApi: AccountService
+    private peApi: ProductExtrasApiService, public commonService: CommonService, private atp: AmazingTimePickerService, private deployApi: DeploymentService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -90,6 +87,7 @@ export class AddProductComponent implements OnInit {
           this.amenityList = result.data.amenities.filter(obj => obj.status=='active');
           this.faqList = result.data.faq_list.filter(obj => obj.status=='active');
           this.noteList = result.data.footnote_list;
+          this.imgTagList = result.data.img_tag_list;
           this.sizeCharts = result.data.size_chart.filter(obj => obj.status=='active');
           // for vendor login
           if(this.commonService.store_details?.login_type=='vendor') this.onChangeVendor(this.commonService.vendor_details._id);
@@ -234,11 +232,11 @@ export class AddProductComponent implements OnInit {
     if(!this.productForm.image_tag_status) {
       this.productForm.image_list.forEach(obj => { delete obj.tag; });
     }
-    // image tags
+    // img badges
+    this.productForm.badge_list = [];
     if(this.productForm.badge_status) {
-      this.productForm.badge_list = [];
-      this.productForm.badges.forEach(object => {
-        this.productForm.badge_list.push(object.value);
+      this.imgTagList.forEach(obj => {
+        if(obj.checked) this.productForm.badge_list.push(obj._id);
       });
     }
     // add product

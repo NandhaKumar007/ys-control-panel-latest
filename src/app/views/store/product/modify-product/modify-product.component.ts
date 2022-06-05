@@ -5,11 +5,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { ImageCropperComponent, CropperSettings } from 'ngx-img-cropper';
 import { StoreApiService } from '../../../../services/store-api.service';
-import { CustomerApiService } from '../../../../services/customer-api.service';
 import { DeploymentService } from '../../deployment/deployment.service';
 import { environment } from '../../../../../environments/environment';
 import { CommonService } from '../../../../services/common.service';
-import { AccountService } from '../../account/account.service';
 import { ProductExtrasApiService } from '../../product-extras/product-extras-api.service';
 
 @Component({
@@ -25,8 +23,8 @@ export class ModifyProductComponent implements OnInit {
   productForm: any; step_num: any;
   pageLoader: boolean; btnLoader: boolean;
   categoryList: any = []; intForm: any = {};
-  addonList: any; tagList: any; noteList: any; taxRates: any; taxonomyList: any;
-  sizeCharts: any; faqList: any; aiStyleList: any; colorList: any; amenityList: any;
+  addonList: any; tagList: any; noteList: any; taxRates: any;  colorList: any; amenityList: any;
+  sizeCharts: any; faqList: any; taxonomyList: any; aiStyleList: any; imgTagList: any;
   imgBaseUrl = environment.img_baseurl; addonCheckedCount: any = 0;
   cropperSettings: CropperSettings; imageIndex: any;
   imgWidth: any; imgHeight: any; primary_tax: any;
@@ -39,8 +37,7 @@ export class ModifyProductComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService,
-    private peApi: ProductExtrasApiService, public commonService: CommonService, private customerApi: CustomerApiService, private atp: AmazingTimePickerService,
-    private deployApi: DeploymentService, private accountApi: AccountService
+    private peApi: ProductExtrasApiService, public commonService: CommonService, private atp: AmazingTimePickerService, private deployApi: DeploymentService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
@@ -71,6 +68,7 @@ export class ModifyProductComponent implements OnInit {
           let tempTagList = result.data.tag_list.filter(obj => obj.status=='active');
           let tempFaqList = result.data.faq_list.filter(obj => obj.status=='active');
           let tempNoteList = result.data.footnote_list;
+          this.imgTagList = result.data.img_tag_list;
           // common features
           if(this.commonService.ys_features.indexOf('tax_rates')!=-1) {
             this.taxRates = result.data.tax_rates.filter(obj => obj.status=='active');
@@ -102,9 +100,8 @@ export class ModifyProductComponent implements OnInit {
               // image tags
               if(this.productForm.badge_list?.length) {
                 this.productForm.badge_status = true;
-                this.productForm.badges = [];
-                this.productForm.badge_list.forEach(element => {
-                  this.productForm.badges.push({value:element , display:element});
+                this.imgTagList.forEach(el => {
+                  if(this.productForm.badge_list.indexOf(el._id)!=-1) el.checked = true;
                 });
               }
               // vendor
@@ -300,11 +297,11 @@ export class ModifyProductComponent implements OnInit {
         variant_status: this.productForm.variant_status, variant_types: this.productForm.variant_types, variant_list: this.productForm.variant_list
       };
     }
-    // image tags
+    // img badges
+    this.productForm.badge_list = [];
     if(this.productForm.badge_status) {
-      this.productForm.badge_list = [];
-      this.productForm.badges.forEach(object => {
-        this.productForm.badge_list.push(object.value);
+      this.imgTagList.forEach(obj => {
+        if(obj.checked) this.productForm.badge_list.push(obj._id);
       });
     }
     // update details
