@@ -42,12 +42,12 @@
       </div>
       <div class="col-md-3 form-group mb-3">
         <label>Price</label>
-        <input type="text" name="addon_price" class="form-control" [(ngModel)]="addonForm.price" #price="ngModel" appNumberOnly
+        <input type="tel" name="addon_price" class="form-control" [(ngModel)]="addonForm.price" #price="ngModel" appNumberOnly
           required />
       </div>
       <div class="col-md-3 form-group mb-3">
         <label>Min Stock Requirement</label>
-        <input type="text" name="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel"
+        <input type="tel" name="min_stock" class="form-control" [(ngModel)]="addonForm.min_stock" #min_stock="ngModel"
           appNumberOnly required />
       </div>
       <div class="col-md-2 form-group mb-3">
@@ -208,7 +208,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Extra Stock Requirement</label>
-                  <input type="text" name="additional_qty{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.additional_qty" #additional_qty="ngModel"
+                  <input type="tel" name="additional_qty{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.additional_qty" #additional_qty="ngModel"
                     appNumberOnly required />
                 </div>
               </div>

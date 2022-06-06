@@ -130,18 +130,18 @@
           <div class="col-md-6 form-group mb-3">
             <label *ngIf="taxForm.home_country!='India'">Tax</label>
             <label *ngIf="taxForm.home_country=='India'">IGST</label>
-            <input type="text" name="igst" class="form-control" [(ngModel)]="taxForm.igst" appNumberOnly required />
+            <input type="tel" name="igst" class="form-control" [(ngModel)]="taxForm.igst" appNumberOnly required />
             <label class="delivery-days">%</label>
           </div>
           <ng-container *ngIf="taxForm.home_country=='India'">
             <div class="col-md-6 form-group mb-3">
               <label>SGST</label>
-              <input type="text" name="sgst" class="form-control" [(ngModel)]="taxForm.sgst" appNumberOnly required />
+              <input type="tel" name="sgst" class="form-control" [(ngModel)]="taxForm.sgst" appNumberOnly required />
               <label class="delivery-days">%</label>
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>CGST</label>
-              <input type="text" name="cgst" class="form-control" [(ngModel)]="taxForm.cgst" appNumberOnly required />
+              <input type="tel" name="cgst" class="form-control" [(ngModel)]="taxForm.cgst" appNumberOnly required />
               <label class="delivery-days">%</label>
             </div>
             <div class="col-md-6 form-group mb-3">

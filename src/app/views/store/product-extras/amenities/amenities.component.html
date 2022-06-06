@@ -114,10 +114,8 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Rank</label>
-            <input *ngIf="amenityForm.form_type=='add'" type="number" name="rank" class="form-control"
-            [(ngModel)]="amenityForm.rank" min="1"max="{{maxRank+1}}" appNumberOnly required />
-            <input *ngIf="amenityForm.form_type!='add'" type="number" name="rank" class="form-control"
-            [(ngModel)]="amenityForm.rank" min="1"max="{{maxRank}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="amenityForm.rank" min="1"
+            max="{{ (amenityForm.form_type=='add')? maxRank+1: maxRank }}" appNumberOnly required />
           </div>
         </div>
       </div>

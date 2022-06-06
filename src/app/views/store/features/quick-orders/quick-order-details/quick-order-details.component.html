@@ -153,7 +153,7 @@
                   </div>
                   <div class="mb-3">
                     <label>Discount {{ (orderForm.disc_config.type=='percentage')? '(%)': 'amount' }}</label>
-                    <input type="text" name="disc_value" (input)="changeDiscValue();" [(ngModel)]="orderForm.disc_config.value" class="form-control" required appNumberOnly />
+                    <input type="tel" name="disc_value" (input)="changeDiscValue();" [(ngModel)]="orderForm.disc_config.value" class="form-control" required appNumberOnly />
                   </div>
                 </div>
               </div>

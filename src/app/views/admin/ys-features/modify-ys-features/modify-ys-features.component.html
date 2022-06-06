@@ -52,7 +52,7 @@
                   <div class="row">
                     <div *ngFor="let y of x.currency_list; let j=index;" class="col-md-2 form-group mb-1">
                       <label>Cost per Month ({{y.base}})</label>
-                      <input type="text" name="price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" appNumberOnly required />
+                      <input type="tel" name="price{{i+1}}{{j+1}}" class="form-control" [(ngModel)]="y.price" #price="ngModel" appNumberOnly required />
                     </div>
                   </div>
                 </div>
@@ -74,7 +74,7 @@
               <div class="row">
                 <div *ngFor="let cur of discountCurrencyList; let k=index;" class="col-md-2 form-group mb-3">
                   <label>Discount Value ({{cur.base}})</label>
-                  <input type="text" name="disc_amount{{k}}" class="form-control" [(ngModel)]="cur.price" #disc_amount="ngModel" appNumberOnly required />
+                  <input type="tel" name="disc_amount{{k}}" class="form-control" [(ngModel)]="cur.price" #disc_amount="ngModel" appNumberOnly required />
                 </div>
               </div>
             </div>

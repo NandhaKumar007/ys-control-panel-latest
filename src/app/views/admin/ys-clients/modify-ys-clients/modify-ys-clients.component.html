@@ -83,7 +83,7 @@
                     </div>
                     <div class="flex-column w-55 w-sm-100">
                       <label>Mobile</label>
-                      <input type="text" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" appNumberOnly required />
+                      <input type="tel" name="mobile" class="form-control" [(ngModel)]="clientForm.company_details.mobile" #mobile="ngModel" appNumberOnly required />
                     </div>
                   </div>
                 </div>
@@ -188,7 +188,7 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Credits</label>
-              <input type="text" name="credit" class="form-control" [(ngModel)]="clientForm.package_details.credit" #credit="ngModel" required appNumberOnly />
+              <input type="tel" name="credit" class="form-control" [(ngModel)]="clientForm.package_details.credit" #credit="ngModel" required appNumberOnly />
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Expiry Date</label>
@@ -205,7 +205,7 @@
             </div>
             <div *ngIf="clientForm.package_details.disc_status" class="col-md-6 form-group mb-3">
               <label>Discount per month ({{clientForm.currency_types.country_code}})</label>
-              <input type="text" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" appNumberOnly required />
+              <input type="tel" name="disc_amount" class="form-control" [(ngModel)]="clientForm.package_details.disc_amount" #disc_amount="ngModel" appNumberOnly required />
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@
             <div class="col-md-4 form-group mb-3">
               <label *ngIf="!clientForm.dp_wallet_details.charge_type">Value</label>
               <label *ngIf="clientForm.dp_wallet_details.charge_type">Value in {{ clientForm.dp_wallet_details.charge_type | titlecase }}</label>
-              <input type="text" name="wallet_charge_value" class="form-control" [(ngModel)]="clientForm.dp_wallet_details.charge_value" #wallet_charge_value="ngModel" appNumberOnly required />
+              <input type="tel" name="wallet_charge_value" class="form-control" [(ngModel)]="clientForm.dp_wallet_details.charge_value" #wallet_charge_value="ngModel" appNumberOnly required />
             </div>
           </div>
         </div>

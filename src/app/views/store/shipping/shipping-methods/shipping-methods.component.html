@@ -215,7 +215,7 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Shipping Charge</label>
-              <input type="text" name="shipping_price" class="form-control" [(ngModel)]="shippingForm.shipping_price" appNumberOnly required />
+              <input type="tel" name="shipping_price" class="form-control" [(ngModel)]="shippingForm.shipping_price" appNumberOnly required />
             </div>
           </ng-container>
           <div class="col-md-3 mt-4 form-group mb-3">
@@ -233,7 +233,7 @@
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Order above</label>
-              <input type="text" name="minimum_price" class="form-control" [(ngModel)]="shippingForm.minimum_price" appNumberOnly />
+              <input type="tel" name="minimum_price" class="form-control" [(ngModel)]="shippingForm.minimum_price" appNumberOnly />
             </div>
           </ng-container>
           <!-- DP Integration -->

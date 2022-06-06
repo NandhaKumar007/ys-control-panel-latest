@@ -70,12 +70,12 @@
         <ng-container *ngIf="!productForm.variant_types.length">
           <div class="col-md-6 form-group mb-3">
             <label>Selling Price</label>
-            <input type="text" name="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
+            <input type="tel" name="selling_price" class="form-control" [(ngModel)]="productForm.selling_price" #selling_price="ngModel"
               (input)="discountCalc(productForm)" appNumberOnly required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Stock</label>
-            <input type="text" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly required />
+            <input type="tel" name="stock" class="form-control" [(ngModel)]="productForm.stock" #stock="ngModel" appNumberOnly required />
           </div>
         </ng-container>
       </div>
@@ -115,7 +115,7 @@
                   </div>
                   <div *ngIf="commonService.store_details?.package_details?.package_id==configData.premium_package_id" class="col-md-3 form-group mb-3">
                     <label>Shipping Weight for 1 {{productForm.unit}} (in Kg optional)</label>
-                    <input type="text" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly />
+                    <input type="tel" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly />
                   </div>
                   <div class="col-md-3 form-group mb-3">
                     <label>Rank</label>
@@ -186,14 +186,14 @@
                             <div class="col-md-6 form-group mb-3">
                               <div class="card card-in-card p-3">
                                 <label>Discount (in %)</label>
-                                <input type="text" name="disc_percentage" class="form-control" [(ngModel)]="productForm.disc_percentage"
+                                <input type="tel" name="disc_percentage" class="form-control" [(ngModel)]="productForm.disc_percentage"
                                   #disc_percentage="ngModel" (input)="discountCalc(productForm)" appNumberOnly />
                               </div>
                             </div>
                             <div *ngIf="!productForm.variant_types.length" class="col-md-6 form-group mb-3">
                               <div class="card card-in-card p-3">
                                 <label>Price after Discount</label>
-                                <input type="text" name="discounted_price" class="form-control" [(ngModel)]="productForm.discounted_price"
+                                <input type="tel" name="discounted_price" class="form-control" [(ngModel)]="productForm.discounted_price"
                                   #discounted_price="ngModel" appNumberOnly required />
                               </div>
                             </div>
@@ -299,18 +299,17 @@
                           </div>
                           <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
                             <label>Selling Price</label>
-                            <input type="text" name="selling_price{{i}}" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
+                            <input type="tel" name="selling_price{{i}}" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
                               (input)="discountCalc(productForm)" appNumberOnly required />
                           </div>
                           <div *ngIf="productForm.disc_status" class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
                             <label>Price after Discount</label>
-                            <input type="text" name="discounted_price{{i}}" class="form-control" [(ngModel)]="x.discounted_price"
+                            <input type="tel" name="discounted_price{{i}}" class="form-control" [(ngModel)]="x.discounted_price"
                               #discounted_price="ngModel" appNumberOnly required />
                           </div>
                           <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
                             <label>Stock</label>
-                            <input type="text" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly
-                              required />
+                            <input type="tel" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly required />
                           </div>
                         </div>
                       </div>

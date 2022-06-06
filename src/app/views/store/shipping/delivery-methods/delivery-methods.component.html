@@ -108,7 +108,7 @@
             </div>
             <div class="col-md-4 form-group mb-2">
               <label>Additional Days To Display</label>
-              <input type="text" name="following_days{{i}}" class="form-control" [(ngModel)]="x.following_days" #following_days="ngModel" appNumberOnly required />
+              <input type="tel" name="following_days{{i}}" class="form-control" [(ngModel)]="x.following_days" #following_days="ngModel" appNumberOnly required />
               <label class="delivery-days">Days</label>
             </div>
             <div class="col-md-4 d-flex align-self-center form-group mt-4 mb-2">
@@ -163,7 +163,7 @@
                         <div class="row">
                           <div class="col-md-4 form-group mt-2 mb-3">
                             <label>Delay in {{y.delay_type}}s</label>
-                            <input type="text" name="delay_duration{{i}}{{j}}" class="form-control" [(ngModel)]="y.delay_duration" appNumberOnly required />
+                            <input type="tel" name="delay_duration{{i}}{{j}}" class="form-control" [(ngModel)]="y.delay_duration" appNumberOnly required />
                           </div>
                           <div *ngIf="y.delay_type=='day'" class="col-md-4 form-group mt-2 mb-3">
                             <label>Last Order Time</label>
@@ -206,7 +206,7 @@
                             </div>
                             <div class="col-md-3 d-flex align-self-center flex-column form-group mt-2 mb-2">
                               <label>Price</label>
-                              <input type="text" name="price{{i}}{{j}}{{k}}" class="form-control" [(ngModel)]='z.price' [disabled]="!z.slot_checked" appNumberOnly required />
+                              <input type="tel" name="price{{i}}{{j}}{{k}}" class="form-control" [(ngModel)]='z.price' [disabled]="!z.slot_checked" appNumberOnly required />
                             </div>
                           </div>
                         </div>

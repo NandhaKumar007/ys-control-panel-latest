@@ -464,12 +464,12 @@
                 <div class="card card-in-card p-3">
                   <div class="mb-3">
                     <label>Discount (%)</label>
-                    <input type="text" name="disc_percentage" (input)="changeDisc();"
+                    <input type="tel" name="disc_percentage" (input)="changeDisc();"
                       [(ngModel)]="orderForm.manual_discount.percentage" class="form-control" required appNumberOnly />
                   </div>
                   <div class="mb-3">
                     <label>Discount amount</label>
-                    <input type="text" name="discount_amount" (input)="changeDiscPrice();"
+                    <input type="tel" name="discount_amount" (input)="changeDiscPrice();"
                       [(ngModel)]="orderForm.manual_discount.amount" class="form-control" required appNumberOnly />
                   </div>
                 </div>

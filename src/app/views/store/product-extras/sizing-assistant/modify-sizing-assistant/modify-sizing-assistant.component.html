@@ -108,7 +108,7 @@
               <div class="card card-in-card p-3 mb-3">
                 <div *ngFor="let opt of z.list; let l=index;" class="form-group">
                   <label>{{opt.name}} ({{sizingDetails.unit}})</label>
-                  <input type="text" name="mm_list_option{{i+1}}{{j+1}}{{k+1}}{{l+1}}" class="form-control" [(ngModel)]="opt.value" appNumberOnly
+                  <input type="tel" name="mm_list_option{{i+1}}{{j+1}}{{k+1}}{{l+1}}" class="form-control" [(ngModel)]="opt.value" appNumberOnly
                     required />
                 </div>
               </div>

@@ -116,10 +116,8 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Rank</label>
-            <input *ngIf="locForm.form_type=='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="locForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
-            <input *ngIf="locForm.form_type!='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="locForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="locForm.rank" #rank="ngModel" min="1"
+            max="{{ (locForm.form_type=='add')? maxRank+1: maxRank }}" appNumberOnly required />
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Contact Person Name</label>
@@ -173,12 +171,12 @@
           <ng-container *ngIf="commonService.store_details?.type=='restaurant_based'">
             <div class="col-md-6 form-group mb-3">
               <label>Latitude</label>
-              <input type="text" name="latitude" class="form-control" [(ngModel)]="locForm.lat" #latitude="ngModel"
+              <input type="tel" name="latitude" class="form-control" [(ngModel)]="locForm.lat" #latitude="ngModel"
                 appNumberOnly required />
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>Longitude</label>
-              <input type="text" name="longitude" class="form-control" [(ngModel)]="locForm.lng" #longitude="ngModel"
+              <input type="tel" name="longitude" class="form-control" [(ngModel)]="locForm.lng" #longitude="ngModel"
                 appNumberOnly required />
             </div>
           </ng-container>

@@ -1013,12 +1013,12 @@
           <div *ngIf="app_setting.packaging_charges.type=='percentage'" class="col-md-6 form-group mb-3"></div>
           <div class="col-md-6 form-group mb-3">
             <label>Charges {{ app_setting.packaging_charges.type=='amount'? '(incl. of Taxes)': ''}}</label>
-            <input type="text" name="charge" class="form-control" [(ngModel)]="app_setting.packaging_charges.value" appNumberOnly required />
+            <input type="tel" name="charge" class="form-control" [(ngModel)]="app_setting.packaging_charges.value" appNumberOnly required />
             <label class="delivery-days" [innerHTML]="app_setting.packaging_charges.type=='percentage'? '%': commonService.store_currency.html_code"></label>
           </div>
           <div *ngIf="app_setting.packaging_charges.type=='percentage'" class="col-md-6 form-group mb-3">
             <label>Min Charge (incl. of Taxes)</label>
-            <input type="text" name="min_package_amt" class="form-control" [(ngModel)]="app_setting.packaging_charges.min_package_amt" appNumberOnly required />
+            <input type="tel" name="min_package_amt" class="form-control" [(ngModel)]="app_setting.packaging_charges.min_package_amt" appNumberOnly required />
           </div>
         </div>
       </div>

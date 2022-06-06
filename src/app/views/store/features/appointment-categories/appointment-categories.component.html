@@ -121,10 +121,8 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Rank</label>
-            <input *ngIf="catForm?.form_type=='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="catForm.rank" #rank="ngModel" min="1" max="{{list.length+1}}" appNumberOnly required />
-            <input *ngIf="catForm?.form_type!='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="catForm.rank" #rank="ngModel" min="1" max="{{list.length}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="catForm.rank" #rank="ngModel" min="1"
+            max="{{ (catForm?.form_type=='add')? list.length+1: list.length }}" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Description</label>

@@ -1612,7 +1612,7 @@
           </div>
           <div *ngIf="order_details.order_type!='pickup'" class="col-md-12 form-group mb-3">
             <label>Delivery Cost</label>
-            <input type="text" name="shipping_price" class="form-control"
+            <input type="tel" name="shipping_price" class="form-control"
               [(ngModel)]="editForm.shipping_method.shipping_price" #shipping_price="ngModel" appNumberOnly required />
           </div>
         </div>
@@ -1625,7 +1625,7 @@
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Shipping Cost</label>
-            <input type="text" name="shipping_price" class="form-control"
+            <input type="tel" name="shipping_price" class="form-control"
               [(ngModel)]="editForm.shipping_method.shipping_price" #shipping_price="ngModel" appNumberOnly required />
           </div>
           <div class="col-md-12 form-group mb-3">
@@ -1958,7 +1958,7 @@
           <div *ngFor="let x of customizationForm.mm_sets[mmIndex].list; let i=index;"
             class="col-md-12 form-group mb-3">
             <label>{{x.name}}</label>
-            <input type="text" id="value{{mmIndex}}{{i}}" name="value{{mmIndex}}{{i}}" [(ngModel)]="x.value"
+            <input type="tel" id="value{{mmIndex}}{{i}}" name="value{{mmIndex}}{{i}}" [(ngModel)]="x.value"
               #value="ngModel" class="form-control" appNumberOnly required />
           </div>
         </div>
@@ -2793,7 +2793,7 @@
           <div *ngIf="groupForm.dispatched_on || groupForm.dispatched_status" class="col-md-12 form-group mb-3">
             <label>{{ (order_details.shipping_method?.delivery_method)? 'Delivery': 'Shipping' }} Cost (for your
               reference)</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="groupForm.price" #price="ngModel"
+            <input type="tel" name="price" class="form-control" [(ngModel)]="groupForm.price" #price="ngModel"
               appNumberOnly required />
           </div>
         </div>

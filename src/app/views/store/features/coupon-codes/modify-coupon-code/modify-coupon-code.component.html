@@ -102,7 +102,7 @@
             </label>
             <div *ngIf="offerForm.discount_type!='buy_x_get_y'" class="form-group mb-3">
               <label>Discount Value</label>
-              <input type="text" name="discount_value" class="form-control" [(ngModel)]="offerForm.discount_value" #discount_value="ngModel"
+              <input type="tel" name="discount_value" class="form-control" [(ngModel)]="offerForm.discount_value" #discount_value="ngModel"
                 appNumberOnly required />
               <label class="delivery-days" [innerHTML]="offerForm.discount_type=='percentage'? '%': commonService.store_currency.html_code"></label>
             </div>
@@ -116,7 +116,7 @@
                 </label>
               </div>
               <div *ngIf="offerForm.restrict_discount" class="form-group mb-3 mt-2">
-                <input type="text" name="discount_upto" class="form-control" [(ngModel)]="offerForm.discount_upto" #discount_upto="ngModel"
+                <input type="tel" name="discount_upto" class="form-control" [(ngModel)]="offerForm.discount_upto" #discount_upto="ngModel"
                   appNumberOnly required />
                 <label class="delivery-days" style="top: 9px;" [innerHTML]="commonService.store_currency.html_code"></label>
               </div>

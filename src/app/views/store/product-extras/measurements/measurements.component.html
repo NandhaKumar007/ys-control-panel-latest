@@ -159,7 +159,7 @@
                   <option *ngFor="let x of commonService.default_units;" [ngValue]="x.value">{{x.name}}</option>
                 </select>
                 <label class="mt-2">Max Measurement Value</label>
-                <input type="text" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value"
+                <input type="tel" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value"
                   #max_value="ngModel" appNumberOnly required />
               </div>
             </div>
@@ -202,21 +202,21 @@
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>From ({{z.unit}})</label>
-                            <input type="text" name="mm_from{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="mm_from{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.mm_from" #mm_from="ngModel" appNumberOnly required />
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>To ({{z.unit}})</label>
-                            <input type="text" name="mm_to{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="mm_to{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.mm_to" #mm_to="ngModel" appNumberOnly required />
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>Extra Stock Requirement</label>
-                            <input type="text" name="additional_qty{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="additional_qty{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.additional_qty" #additional_qty="ngModel" appNumberOnly required />
                           </div>
                         </div>
@@ -316,7 +316,7 @@
                   <option *ngFor="let x of commonService.default_units;" [ngValue]="x.value">{{x.name}}</option>
                 </select>
                 <label class="mt-2">Max Measurement Value</label>
-                <input type="text" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value"
+                <input type="tel" name="max_value{{i}}" class="form-control" [(ngModel)]="x.max_value"
                   #max_value="ngModel" appNumberOnly required />
               </div>
             </div>
@@ -359,21 +359,21 @@
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>From ({{z.unit}})</label>
-                            <input type="text" name="mm_from{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="mm_from{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.mm_from" #mm_from="ngModel" appNumberOnly required />
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>To ({{z.unit}})</label>
-                            <input type="text" name="mm_to{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="mm_to{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.mm_to" #mm_to="ngModel" appNumberOnly required />
                           </div>
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
                             <label>Extra Stock Requirement</label>
-                            <input type="text" name="additional_qty{{i+1}}{{j+1}}{{k+1}}" class="form-control"
+                            <input type="tel" name="additional_qty{{i+1}}{{j+1}}{{k+1}}" class="form-control"
                               [(ngModel)]="z.additional_qty" #additional_qty="ngModel" appNumberOnly required />
                           </div>
                         </div>

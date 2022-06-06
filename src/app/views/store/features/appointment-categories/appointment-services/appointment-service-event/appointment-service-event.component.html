@@ -50,7 +50,7 @@
               </div>
               <div class="col-md-6 form-group mb-3">
                 <label>Price</label>
-                <input type="text" name="price" class="form-control" [(ngModel)]="serviceForm.price" #price="ngModel" appNumberOnly required />
+                <input type="tel" name="price" class="form-control" [(ngModel)]="serviceForm.price" #price="ngModel" appNumberOnly required />
               </div>
               
               <div class="col-md-6 form-group mb-3">
@@ -59,15 +59,15 @@
               </div>
               <div class="col-md-12 form-group mb-3">
                 <label>Service Duration (Minutes)</label>
-                <input type="text" name="service_duration" class="form-control" [(ngModel)]="serviceForm.service_duration" #service_duration="ngModel" appNumberOnly required />
+                <input type="tel" name="service_duration" class="form-control" [(ngModel)]="serviceForm.service_duration" #service_duration="ngModel" appNumberOnly required />
               </div>
               <div class="col-md-12 form-group mb-3">
                 <label>Number of Concurrent Services</label>
-                <input type="text" name="no_of_concurrent_services" class="form-control" [(ngModel)]="serviceForm.no_of_concurrent_services" #no_of_concurrent_services="ngModel" appNumberOnly required />
+                <input type="tel" name="no_of_concurrent_services" class="form-control" [(ngModel)]="serviceForm.no_of_concurrent_services" #no_of_concurrent_services="ngModel" appNumberOnly required />
               </div>
               <div class="col-md-12 form-group mb-3">
                 <label>Upcoming Days</label>
-                <input type="text" name="upcoming_days" class="form-control" [(ngModel)]="serviceForm.upcoming_days" #upcoming_days="ngModel" appNumberOnly required />
+                <input type="tel" name="upcoming_days" class="form-control" [(ngModel)]="serviceForm.upcoming_days" #upcoming_days="ngModel" appNumberOnly required />
               </div>
             </div>
           </div>

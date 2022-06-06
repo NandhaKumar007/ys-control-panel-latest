@@ -133,10 +133,8 @@
           </div>
           <div class="col-md-4 form-group mb-3">
             <label>Rank</label>
-            <input *ngIf="gcForm?.form_type=='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length+1}}" appNumberOnly required />
-            <input *ngIf="gcForm?.form_type!='add'" type="number" name="rank" class="form-control"
-              [(ngModel)]="gcForm.rank" #rank="ngModel" min="1" max="{{list.length}}" appNumberOnly required />
+            <input type="number" name="rank" class="form-control" [(ngModel)]="gcForm.rank" #rank="ngModel" min="1"
+            max="{{ (gcForm?.form_type=='add')? list.length+1: list.length }}" appNumberOnly required />
           </div>
           <div *ngIf="gcForm?.form_type!='add'" class="col-md-12 form-group mb-3">
             <label>Page URL - {{commonService.store_details?.base_url}}/gift-cards/{{gcForm.page_url}}</label>
@@ -166,17 +164,17 @@
           </div>
           <div *ngIf="gcForm.price_type=='fixed'" class="col-md-12 form-group mb-3">
             <label>Price</label>
-            <input type="text" name="price" class="form-control" [(ngModel)]="gcForm.price" #price="ngModel"
+            <input type="tel" name="price" class="form-control" [(ngModel)]="gcForm.price" #price="ngModel"
               appNumberOnly required />
           </div>
           <div *ngIf="gcForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
             <label>Minimum Price Limit</label>
-            <input type="text" name="min_price" class="form-control" [(ngModel)]="gcForm.min_price" #min_price="ngModel"
+            <input type="tel" name="min_price" class="form-control" [(ngModel)]="gcForm.min_price" #min_price="ngModel"
               appNumberOnly required />
           </div>
           <div *ngIf="gcForm.price_type=='flexible'" class="col-md-6 form-group mb-3">
             <label>Maximum Price Limit</label>
-            <input type="text" name="max_price" class="form-control" [(ngModel)]="gcForm.max_price" #max_price="ngModel"
+            <input type="tel" name="max_price" class="form-control" [(ngModel)]="gcForm.max_price" #max_price="ngModel"
               appNumberOnly required />
           </div>
         </div>
@@ -245,12 +243,12 @@
           <ng-container *ngIf="settingForm.price_range_status && settingForm.price_range">
             <div class="col-md-6 form-group mb-3">
               <label>From</label>
-              <input type="text" name="from" class="form-control" [(ngModel)]="settingForm.price_range.from"
+              <input type="tel" name="from" class="form-control" [(ngModel)]="settingForm.price_range.from"
                 #from="ngModel" appNumberOnly required />
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>To</label>
-              <input type="text" name="to" class="form-control" [(ngModel)]="settingForm.price_range.to" #to="ngModel"
+              <input type="tel" name="to" class="form-control" [(ngModel)]="settingForm.price_range.to" #to="ngModel"
                 appNumberOnly required />
             </div>
           </ng-container>

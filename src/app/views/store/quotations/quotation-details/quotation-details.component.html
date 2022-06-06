@@ -335,7 +335,7 @@
     <div class="modal-body">
       <div class="col-md-6 form-group mb-3">
         <label>Shipping Cost</label>
-        <input type="text" name="shipping_cost" [(ngModel)]="editForm.shipping_cost" #shipping_cost="ngModel" class="form-control" appNumberOnly required />
+        <input type="tel" name="shipping_cost" [(ngModel)]="editForm.shipping_cost" #shipping_cost="ngModel" class="form-control" appNumberOnly required />
       </div>
       <div class="col-md-12 list-item p-0">
         <div *ngFor="let x of editForm.item_list; let i=index;" class="card o-hidden mb-4 d-flex flex-row">
@@ -363,11 +363,11 @@
                 <div class="row">
                   <div class="col-md-12 form-group mb-3">
                     <label>Discounted Price</label>
-                    <input type="text" name="revised_final_price{{i}}" [(ngModel)]="x.revised_final_price" #revised_final_price="ngModel" class="form-control" appNumberOnly required />
+                    <input type="tel" name="revised_final_price{{i}}" [(ngModel)]="x.revised_final_price" #revised_final_price="ngModel" class="form-control" appNumberOnly required />
                   </div>
                   <div *ngIf="x.unit!='Pcs' && x.revised_addon_price>0" class="col-md-12 form-group mb-3">
                     <label>Addon Price</label>
-                    <input type="text" name="revised_addon_price{{i}}" [(ngModel)]="x.revised_addon_price" #revised_addon_price="ngModel" class="form-control" appNumberOnly required />
+                    <input type="tel" name="revised_addon_price{{i}}" [(ngModel)]="x.revised_addon_price" #revised_addon_price="ngModel" class="form-control" appNumberOnly required />
                   </div>
                 </div>
               </div>
