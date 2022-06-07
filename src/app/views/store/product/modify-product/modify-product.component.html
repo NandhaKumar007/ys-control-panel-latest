@@ -9,7 +9,7 @@
         <h1>{{productForm.name}}</h1>
         <ul>
           <li *ngIf="step_num==1">Edit your product details</li>
-          <li *ngIf="step_num==2">Edit your product's appearance</li>
+          <li *ngIf="step_num==2">Recommended Image Resolution - {{imgWidth}} x {{imgHeight}} Pixels</li>
           <li *ngIf="step_num==3">Link your product to catalogs</li>
         </ul>
       </div>
@@ -742,14 +742,6 @@
 
     <!-- STEP 2 -->
     <form *ngIf="commonService.vendor_features.indexOf('update_product_stock_only')==-1 && step_num==2" autocomplete="off" (ngSubmit)="onUpdateImages();" ngNativeValidate>
-      <!-- Cropper -->
-      <div class="row">
-        <div align="center" class="col-md-12">
-          <p>{{imgWidth}} x {{imgHeight}} pixels @72ppi</p>
-          <img-cropper class="image-cropper" #cropper [image]="productForm.image_list[imageIndex]" [settings]="cropperSettings"></img-cropper>
-        </div>
-      </div>
-      <div class="separator-breadcrumb border-top mt-3"></div>
       <!-- Image Tag -->
       <ng-container *ngIf="commonService.ys_features.indexOf('variant_image_tag')!=-1 && productForm.variant_types?.length">
         <div class="row">
@@ -769,7 +761,6 @@
             </div>
           </div>
         </div>
-        <div class="separator-breadcrumb border-top mt-3"></div>
       </ng-container>
       <!-- Image List -->
       <div class="row">
@@ -785,7 +776,7 @@
               </div>
               <img *ngIf="x.image && x.img_change" [src]="x.image" height="150" width="auto">
               <img *ngIf="x.image && !x.img_change" [src]="imgBaseUrl+x.image" height="150" width="auto">
-              <input type="file" name="image{{i}}" style="display: none;" (change)="fileChangeListener(i, $event, cropper)" accept="image/jpeg, image/png" />
+              <input type="file" name="prodImage{{i+1}}" id="prodImage{{i+1}}" style="display: none;" (change)="imgIndex=i+1; imgType='product'; fileChangeListener('prodImage'+(i+1), $event);" accept="image/jpeg, image/png" />
             </label>
             <div class="mt-1" align="left">
               <label>Image Label</label>
@@ -811,9 +802,12 @@
           </div>
         </div>
         <div *ngIf="image_count > productForm.image_list.length" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mb-3 z-i-0">
-          <div class="add-another-opt w-100" (click)="productForm.image_list.push({});">
-            <p>ADD ANOTHER IMAGE</p>
-          </div>
+          <label class="w-100">
+            <div class="add-another-opt">
+              <input type="file" name="prodImage" id="prodImage" style="display: none;" (change)="imgIndex=0; imgType='product'; fileChangeListener('prodImage', $event);" accept="image/jpeg, image/png" />
+              <p>ADD ANOTHER IMAGE</p>
+            </div>
+          </label>
         </div>
       </div>
       <!-- Image Tag Pro -->
@@ -835,7 +829,7 @@
                         </div>
                         <img *ngIf="y.image && y.img_change" [src]="y.image" height="150" width="auto">
                         <img *ngIf="y.image && !y.img_change" [src]="imgBaseUrl+y.image" height="150" width="auto">
-                        <input type="file" name="image{{i+1}}{{j+1}}" style="display: none;" (change)="variantFileChangeListener(i, j, $event);" accept="image/jpeg, image/png" />
+                        <input type="file" name="varImage{{i+1}}{{j+1}}" id="varImage{{i+1}}{{j+1}}" style="display: none;" (change)="varIndex=i; imgIndex=j+1; imgType='variant'; fileChangeListener('varImage'+(i+1)+(j+1), $event);" accept="image/jpeg, image/png" />
                       </label>
                       <div class="mt-1" align="left">
                         <label>Image Label</label>
@@ -849,9 +843,12 @@
                   </div>
                 </ng-container>
                 <div *ngIf="!x.image_list?.length || x.image_list?.length<3" align="center" class="col-md-6 col-lg-4 d-flex align-items-center form-group mt-3 mb-3 z-i-0">
-                  <div class="add-another-opt w-100" (click)="x.image_list?.length? x.image_list.push({}): x.image_list=[{}];">
-                    <p>ADD {{ x.image_list?.length? 'ANOTHER': 'NEW' }} IMAGE</p>
-                  </div>
+                  <label class="w-100">
+                    <div class="add-another-opt">
+                      <input type="file" name="varImage{{i+1}}" id="varImage{{i+1}}" style="display: none;" (change)="varIndex=i; imgIndex=0; imgType='variant'; fileChangeListener('varImage'+(i+1), $event);" accept="image/jpeg, image/png" />
+                      <p>ADD {{ x.image_list?.length? 'ANOTHER': 'NEW' }} IMAGE</p>
+                    </div>
+                  </label>
                 </div>
               </div>
             </div>
@@ -865,7 +862,7 @@
           <div align="center" class="col-md-6 col-lg-4 d-flex form-group mb-3">
             <div class="card w-100 p-3 mt-3 mb-3">
               <ng-container *ngIf="productForm?.video_details?.image">
-                <span (click)="productForm.video_details={}; clearIdValue('videoSrc');" class="material-icons item-close absolute-item-close float-right"
+                <span (click)="productForm.video_details={};" class="material-icons item-close absolute-item-close float-right"
                   aria-hidden="true">close</span>
               </ng-container>
               <label>
@@ -875,8 +872,7 @@
                 </div>
                 <img *ngIf="productForm?.video_details?.image && productForm?.video_details?.img_change" [src]="productForm.video_details.image" height="150" width="auto">
                 <img *ngIf="productForm?.video_details?.image && !productForm?.video_details?.img_change" [src]="imgBaseUrl+productForm.video_details.image" height="150" width="auto">
-                <input type="file" id="videoSrc" name="video_img" style="display: none;" (change)="videoFileChangeListener($event)" accept="image/jpeg, image/png"
-                />
+                <input type="file" id="videoSrc" name="videoSrc" style="display: none;" (change)="imgType='video'; fileChangeListener('videoSrc', $event);" accept="image/jpeg, image/png" />
               </label>
               <div class="mt-1" align="left">
                 <label>Product Video Source ID</label>
@@ -1113,4 +1109,37 @@
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- IMAGE MODAL -->
+<a style="display: none;" id="imageModal" (click)="cropStatus=false; modalService.open(imageModal);"></a>
+<ng-template #imageModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Set Image</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row" align="center">
+      <div [hidden]="!cropStatus" class="col-md-12">
+        <p>{{imgWidth}} x {{imgHeight}} pixels @72ppi</p>
+        <img-cropper class="image-cropper" #cropper [image]="croppedImage" [settings]="cropperSettings"></img-cropper>
+      </div>
+      <div *ngIf="!cropStatus && selectedImage" class="col-md-12">
+        <img [src]="selectedImage" height="150" width="auto">
+      </div>
+      <div class="col-md-12 mt-3">
+        <p *ngIf="!cropStatus" (click)="cropStatus=true; onCrop(cropper);">
+          <span class="material-icons-outlined cursor">crop</span>
+        </p>
+        <p *ngIf="cropStatus" (click)="cropStatus=false;">
+          <span class="material-icons-outlined cursor">undo</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">Cancel</span>
+    </button>
+    <button type="button" (click)="saveImage(); modal.dismiss('Cross click');" class="btn btn-wide btn-primary">Save</button>
+  </div>
 </ng-template>

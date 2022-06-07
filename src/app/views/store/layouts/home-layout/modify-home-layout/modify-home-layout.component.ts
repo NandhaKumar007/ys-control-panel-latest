@@ -21,7 +21,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
     { name: "Bottom Left", value: "b_l" }, { name: "Bottom Center", value: "b_c" }, { name: "Bottom Right", value: "b_r" }
   ];
   grid_details: any = {}; shopping_assist_config: any;
-  fileList: FormData; fileLimitInKB: number = 1024; videoLimitInKB: number = 5120;
+  fileList: FormData; fileLimitInKB: number = 500; videoLimitInKB: number = 5120;
 
   constructor(
     private router: Router, private activeRoute: ActivatedRoute, private api: StoreApiService, public commonService: CommonService

@@ -32,6 +32,8 @@ export class ModifyProductComponent implements OnInit {
   selectedVariantOptions: any []; selectedVariantIndex: number;
   configData: any= environment.config_data; brochForm: any = {};
   catSearch: string; productFeatures: any; vendorAdmin: boolean;
+  selectedImage: any; croppedImage: any = {}; cropStatus: boolean;
+  varIndex: number; imgIndex: number; resizeForm: any = {}; imgType: string;
 
   @ViewChild('cropper', {static: false}) cropper: ImageCropperComponent;
 
@@ -41,7 +43,7 @@ export class ModifyProductComponent implements OnInit {
   ) {
     config.backdrop = 'static'; config.keyboard = false;
     let resolution = this.commonService.store_details.additional_features.cropper_resolution.split("x");
-    this.imgWidth = resolution[0]; this.imgHeight = resolution[1];
+    this.imgWidth = parseFloat(resolution[0]); this.imgHeight = parseFloat(resolution[1]);
     this.cropperSettings = new CropperSettings();
     this.cropperSettings.croppedWidth = this.imgWidth; this.cropperSettings.croppedHeight = this.imgHeight;
     this.cropperSettings.canvasWidth = this.imgWidth/3; this.cropperSettings.canvasHeight = this.imgHeight/3;
@@ -525,37 +527,80 @@ export class ModifyProductComponent implements OnInit {
     });
   }
 
-  fileChangeListener(index, $event, cropper: ImageCropperComponent) {
-    this.imageIndex = index;
-    this.productForm.image_list[index].img_change = true;
-    let tempImage = new Image();
-    let file:File = $event.target.files[0];
-    let myReader:FileReader = new FileReader();
-    myReader.onloadend = function (loadEvent: any) {
-      tempImage.src = loadEvent.target.result;
-      cropper.setImage(tempImage);
-    };
-    myReader.readAsDataURL(file);
-  }
-  variantFileChangeListener(parentIndex, childIndex, event) {
+  fileChangeListener(elemName, event) {
+    delete this.selectedImage;
+    this.croppedImage = {}; this.resizeForm = {};
     if(event.target.files && event.target.files[0]) {
-      let reader = new FileReader();
-      reader.onload = (event: ProgressEvent) => {
-        this.productForm.variant_list[parentIndex].image_list[childIndex].image = (<FileReader>event.target).result;
-        this.productForm.variant_list[parentIndex].image_list[childIndex].img_change = true;
-      }
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  }
-  videoFileChangeListener(event) {
-    if(event.target.files && event.target.files[0]) {
-      let myReader:FileReader = new FileReader();
+      let sizekb = event.target.files[0].size/1024;
+      let myReader: FileReader = new FileReader();
       myReader.onload = (event: ProgressEvent) => {
-        this.productForm.video_details.image = (<FileReader>event.target).result;
-        this.productForm.video_details.img_change = true;
-      }
+        this.croppedImage.original = (<FileReader>event.target).result;
+        this.selectedImage = (<FileReader>event.target).result;
+        let imgTag: any = new Image();
+        imgTag.src = (<FileReader>event.target).result;
+        imgTag.onload = () => {
+          this.resizeForm.width = imgTag.width;
+          this.resizeForm.height = imgTag.height;
+          this.imgAlgorithm(sizekb);
+        }
+      };
       myReader.readAsDataURL(event.target.files[0]);
+      document.getElementById('imageModal').click();
+      let el: any = document.getElementById(elemName);
+      if(el) el.value = "";
     }
+  }
+  onCrop(cropper: ImageCropperComponent) {
+    let tempImage = new Image();
+    tempImage.src = this.croppedImage.original;
+    cropper.setImage(tempImage);
+  }
+  saveImage() {
+    let objData: any = { img_change: true };
+    if(this.cropStatus) objData.image = this.croppedImage?.image;
+    else {
+      objData.resize_config = this.resizeForm;
+      objData.image = this.selectedImage;
+    }
+    // set image
+    if(this.imgType=='product') {
+      if(this.imgIndex) this.productForm.image_list[this.imgIndex-1] = objData;
+      else this.productForm.image_list.push(objData);
+    }
+    else if(this.imgType=='video') {
+      this.productForm.video_details = objData;
+    }
+    else if(this.imgType=='variant') {
+      if(this.imgIndex) this.productForm.variant_list[this.varIndex].image_list[this.imgIndex-1] = objData;
+      else this.productForm.variant_list[this.varIndex].image_list.push(objData);
+    }
+  }
+  imgAlgorithm(sizekb) {
+    let ratio = this.resizeForm.height/this.resizeForm.width;
+    let customValue = (sizekb/(this.resizeForm.width*this.resizeForm.height))*100000;
+    let compression = 97.005769-(0.399058*customValue);
+    this.resizeForm.quality = parseFloat(compression.toFixed(0));
+    if(this.resizeForm.width === this.resizeForm.height) {
+      this.resizeForm.crop_width = this.imgWidth;
+      this.resizeForm.crop_height = this.imgWidth;
+    }
+    else if(this.resizeForm.width > this.resizeForm.height) {
+      this.resizeForm.crop_width = this.imgWidth;
+      this.resizeForm.crop_height = this.imgWidth/this.resizeForm.width*this.resizeForm.height;
+    }
+    else if(this.resizeForm.width < this.resizeForm.height) {
+      if(ratio <= 1.177) {
+        this.resizeForm.crop_width = this.imgWidth;
+        this.resizeForm.crop_height = this.imgWidth/this.resizeForm.width*this.resizeForm.height;
+      }
+      else {
+        this.resizeForm.crop_width = this.imgHeight/this.resizeForm.height*this.resizeForm.width;
+        this.resizeForm.crop_height = this.imgHeight; 
+      }
+    }
+    else console.log("ratio", ratio);
+    this.resizeForm.crop_width = parseFloat(this.resizeForm.crop_width.toFixed(0));
+    this.resizeForm.crop_height = parseFloat(this.resizeForm.crop_height.toFixed(0));
   }
 
   selectAllAddons(value) {
@@ -720,11 +765,6 @@ export class ModifyProductComponent implements OnInit {
       });
     });
     this.existVariantList = this.productForm.variant_list;
-  }
-
-  clearIdValue(idName) {
-    let el: any = document.getElementById(idName);
-    el.value = "";
   }
 
   timePicker(i, j, variable) {
