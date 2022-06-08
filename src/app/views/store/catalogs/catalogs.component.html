@@ -47,12 +47,12 @@
                 <div
                   class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <!-- OTHER DATA -->
-                  <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
-                  <p class="w-30 w-sm-100 m-b-0">{{x._id}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{x.name}}<br>{{x._id}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{x.product_count}} {{ (x.product_count>1)? 'products': 'product' }}</p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-                    <!-- <button class="btn btn-wide blue-outline-btn w-md-100 mr-3" routerLink="/catalogs/{{x._id}}">
-                <span class="blue-outline-txt">View Products</span>
-              </button> -->
+                    <button class="btn btn-wide blue-outline-btn w-md-100 mr-3" (click)="commonService.selected_catalog=x._id;" routerLink="/products">
+                      <span class="blue-outline-txt">View Products</span>
+                    </button>
                     <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, editModal);">
                       <span class="black-outline-txt">Edit</span>
                     </button>

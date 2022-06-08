@@ -370,7 +370,21 @@
           </div>
         </div>
       </div>
-
+      
+      <div *ngIf="commonService.ys_features.indexOf('giftcard')==-1" class="col-lg-4 col-md-6 col-sm-6"></div>
+      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+        <div class="card card-icon w-100 mb-4">
+          <div class="card-body text-center">
+            <i class="material-icons">monetization_on</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Net Sales</p>
+            <p class="line-height-1 text-title text-18 mt-2 mb-0">
+              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+              <span *ngIf="!preLoader">{{order_details?.total_revenue | number : '1.0-0'}}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- gift card -->
       <ng-container *ngIf="commonService.ys_features.indexOf('giftcard')!=-1">
         <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
           <div class="card card-icon w-100 mb-4">
@@ -380,21 +394,6 @@
               <p class="line-height-1 text-title text-18 mt-2 mb-0">
                 <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
                 <span *ngIf="!preLoader">{{order_details?.gc_list?.length}}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-          <div class="card card-icon w-100 mb-4">
-            <div class="card-body text-center">
-              <i class="material-icons">all_out</i>
-              <p class="text-muted text-gradient mt-2 mb-2">Average GC Value</p>
-              <p class="line-height-1 text-title text-18 mt-2 mb-0">
-                <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-                <span *ngIf="!preLoader && order_details?.gc_list?.length">
-                  {{ (order_details?.gc_total_sales / order_details?.gc_list?.length).toFixed(0) | number : '1.0-0' }}
-                </span>
-                <span *ngIf="!preLoader && !order_details?.gc_list?.length">0</span>
               </p>
             </div>
           </div>
@@ -412,7 +411,6 @@
           </div>
         </div>
       </ng-container>
-
     </div>
   </div>
 
@@ -467,13 +465,6 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Payment Pending</td>
-                  <td class="font-weight-bold" style="color: #f56725;">
-                    <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-                    <span *ngIf="!preLoader">{{order_details?.pending_orders}}</span>
-                  </td>
-                </tr>
-                <tr>
                   <td>Completed</td>
                   <td class="font-weight-bold" style="color: #d83967;">
                     <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
@@ -485,6 +476,13 @@
                   <td class="font-weight-bold" style="color: #a9a9a9;">
                     <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
                     <span *ngIf="!preLoader">{{order_details?.cancelled_orders}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Payment Pending</td>
+                  <td class="font-weight-bold" style="color: #f56725;">
+                    <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+                    <span *ngIf="!preLoader">{{order_details?.pending_orders}}</span>
                   </td>
                 </tr>
               </tbody>

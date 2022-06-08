@@ -54,6 +54,10 @@ export class ProductComponent implements OnInit {
 
   ngOnInit() {
     this.pageLoader = true; this.page = 1; this.list = [];
+    if(this.commonService.selected_catalog) {
+      this.filterForm.category_id = this.commonService.selected_catalog;
+      delete this.commonService.selected_catalog;
+    }
     if(this.commonService.vendor_details._id) this.filterForm.vendor_id = this.commonService.vendor_details._id;
     if(this.commonService.product_page_attr) {
       let pageInfo = this.commonService.product_page_attr;
