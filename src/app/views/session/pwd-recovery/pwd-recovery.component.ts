@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { ApiService } from '../../../services/api.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-pwd-recovery',
@@ -15,7 +16,7 @@ export class PwdRecoveryComponent implements OnInit {
   pwdForm: any; params: any; pageLoader: boolean;
   loading: boolean; loadingText: string;
   recoveryStatus: boolean; responseData: string;
-  constructor(private activeRoute: ActivatedRoute, private router: Router, private api: ApiService) { }
+  constructor(private activeRoute: ActivatedRoute, private api: ApiService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
@@ -44,11 +45,7 @@ export class PwdRecoveryComponent implements OnInit {
           this.loading = false;
           this.recoveryStatus = result.status;
           this.responseData = result.message;
-          if(result.status) {
-            localStorage.clear();
-            sessionStorage.clear();
-            this.router.navigate(['/session/signin']);
-          }
+          if(result.status) this.commonService.signOut('/session/signin');
           else console.log("response", result);
         });
       }

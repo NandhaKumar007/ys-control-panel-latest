@@ -181,23 +181,16 @@
         </div>
         <hr class="mt-2 mb-3">
         <div class="row" *ngFor="let x of autoTagForm.auto_tags; let i=index;">
-          <div class="col-md-4 form-group mt-3">
+          <div class="col-md-4 form-group mt-1">
             <label class="checkbox checkbox-primary">
-              <input class="form-check-input" type="checkbox" name="selected{{i}}" [(ngModel)]="x.selected">
+              <input class="form-check-input" type="checkbox" name="selected{{i}}" [disabled]="x.type=='sold_out'" [(ngModel)]="x.selected">
               <span>{{x.display}}</span>
               <span class="checkmark"></span>
             </label>
           </div>
-          <ng-container *ngIf="x.selected">
-            <div class="col-md-4 form-group mb-3">
-              <label>Tag Name</label>
-              <input type="text" name="tag_name{{i}}" class="form-control" [(ngModel)]="x.name" required />
-            </div>
-            <div class="col-md-4 form-group mb-3">
-              <label>Rank</label>
-              <input type="number" name="tag_rank{{i}}" class="form-control" [(ngModel)]="x.rank" min="1" max="3" required />
-            </div>
-          </ng-container>
+          <div *ngIf="x.selected" class="col-md-8 form-group mb-3">
+            <input type="text" name="tag_name{{i}}" class="form-control" [(ngModel)]="x.name" required />
+          </div>
         </div>
       </div>
       <div *ngIf="autoTagForm.errorMsg">

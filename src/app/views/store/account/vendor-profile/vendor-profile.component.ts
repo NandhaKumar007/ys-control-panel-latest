@@ -53,7 +53,7 @@ export class VendorProfileComponent implements OnInit {
       this.pwdForm.submit = false;
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.commonService.signOut('/session/signin/vendor');
+        this.commonService.signOut('/vendor/signin/'+this.commonService.vendor_login_info?.name);
       }
       else {
 				this.pwdForm.errorMsg = result.message;

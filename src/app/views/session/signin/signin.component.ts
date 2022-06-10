@@ -33,7 +33,7 @@ export class SigninComponent implements OnInit {
       this.commonService.store_token = localStorage.getItem("store_token");
       this.restoreStoreLogin();
     }
-    else localStorage.clear();
+    else this.commonService.clearData();
   }
 
   signin() {

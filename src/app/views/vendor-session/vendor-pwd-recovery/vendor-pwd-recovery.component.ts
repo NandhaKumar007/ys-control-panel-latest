@@ -45,11 +45,7 @@ export class VendorPwdRecoveryComponent implements OnInit {
           this.loading = false;
           this.recoveryStatus = result.status;
           this.responseData = result.message;
-          if(result.status) {
-            localStorage.clear();
-            sessionStorage.clear();
-            this.router.navigate(['/vendor/signin/'+this.commonService.vendor_login_info?.name]);
-          }
+          if(result.status) this.commonService.signOut('/vendor/signin/'+this.commonService.vendor_login_info?.name);
           else console.log("response", result);
         });
       }

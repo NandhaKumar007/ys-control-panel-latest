@@ -334,7 +334,9 @@
             </div>
             <div class="col-md-6">
               <label>IFSC Code</label>
-              <input type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" pattern=".{11,11}" required title="Invalid Code" maxlength="11" required />
+              <input *ngIf="commonService.store_details?.payout_gateway" type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code"
+              pattern=".{11,11}" required title="Invalid Code" maxlength="11" required />
+              <input *ngIf="!commonService.store_details?.payout_gateway" type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" required />
             </div>
             <div class="col-md-6">
               <label>Account No</label>

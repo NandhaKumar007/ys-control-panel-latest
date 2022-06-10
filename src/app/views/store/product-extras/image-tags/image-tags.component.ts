@@ -21,9 +21,9 @@ export class ImageTagsComponent implements OnInit {
   autoTagForm: any = {
     position: 'left',
     auto_tags: [
-      { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival', rank: 1 },
-      { type: 'on_sale', display: 'On Sale', name: 'On Sale', rank: 2 },
-      { type: 'sold_out', display: 'Sold Out', name: 'Sold Out', rank: 3 }
+      { type: 'sold_out', display: 'Sold Out', name: 'Sold Out' },
+      { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival' },
+      { type: 'on_sale', display: 'On Sale', name: 'On Sale' }
     ]
   };
 
@@ -121,25 +121,21 @@ export class ImageTagsComponent implements OnInit {
     delete this.autoTagForm.errorMsg;
     if(this.imgTagConfig?.position) this.autoTagForm.position = this.imgTagConfig?.position;
     if(this.imgTagConfig?.auto_tags) {
-      this.autoTagForm.auto_tags.forEach((el, index) => {
+      this.autoTagForm.auto_tags.forEach(el => {
         delete el.selected;
-        el.rank = index+1;
-        let tIndex = this.imgTagConfig.auto_tags.findIndex(obj => obj.type==el.type);
-        if(tIndex!=-1) {
+        if(this.imgTagConfig.auto_tags[el.type]) {
           el.selected = true;
-          el.name = this.imgTagConfig.auto_tags[tIndex].name;
-          el.rank = tIndex+1;
+          el.name = this.imgTagConfig.auto_tags[el.type];
         }
       });
     }
-    this.autoTagForm.auto_tags.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1))
-    this.modalService.open(modalName, {size: 'lg'});
+    this.modalService.open(modalName);
   }
 
   onUpdateAutoTags() {
-    let autoTags = [];
-    this.autoTagForm.auto_tags.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1)).forEach(el => {
-      if(el.selected) autoTags.push({ type: el.type, name: el.name });
+    let autoTags = {};
+    this.autoTagForm.auto_tags.forEach(el => {
+      if(el.selected) autoTags[el.type] = el.name;
     });
     this.api.UPDATE_AUTO_IMG_TAG({ position: this.autoTagForm.position, auto_tags: autoTags }).subscribe((result) => {
       if(result.status) {

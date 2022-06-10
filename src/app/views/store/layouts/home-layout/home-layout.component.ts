@@ -57,8 +57,7 @@ export class HomeLayoutComponent implements OnInit {
       this.layoutTypes.push({ name: "Blogs", value: "blogs" });
     if(this.commonService.ys_features.indexOf('shop_the_look') !== -1)
       this.layoutTypes.push({ name: "Shop the Look", value: "shop_the_look" });
-    // if(this.commonService.store_details?.package_info?.category!='genie')
-    if(this.commonService.master_token)
+    if(this.commonService.store_details?.package_info?.category!='genie')
       this.layoutTypes.push({ name: "Video Section", value: "video_section" });
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {

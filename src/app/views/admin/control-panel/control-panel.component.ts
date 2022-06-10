@@ -44,7 +44,7 @@ export class ControlPanelComponent implements OnInit {
         this.loading = false; this.loadingText = "";
         if(result.status) {
           let masterToken = localStorage.getItem("master_token");
-          localStorage.clear(); sessionStorage.clear();
+          this.commonService.clearData();
           this.commonService.master_token = masterToken;
           this.commonService.store_token = result.token;
           localStorage.setItem("master_token", this.commonService.master_token);
