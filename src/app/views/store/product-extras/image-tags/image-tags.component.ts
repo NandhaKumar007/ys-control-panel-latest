@@ -17,15 +17,12 @@ export class ImageTagsComponent implements OnInit {
   page=1; pageSize = 10; 
   maxRank: any = 0; search_bar: string;
 	tagForm: any; deleteForm: any;
-  imgTagConfig: any = {}; list: any = [];
-  autoTagForm: any = {
-    position: 'left',
-    auto_tags: [
-      { type: 'sold_out', display: 'Sold Out', name: 'Sold Out' },
-      { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival' },
-      { type: 'on_sale', display: 'On Sale', name: 'On Sale' }
-    ]
-  };
+  storeAutoTags: any = []; list: any = [];
+  default_tags: any = [
+    { type: 'sold_out', display: 'Sold Out', name: 'Sold Out', rank: -2, status: 'inactive' },
+    { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival', rank: -1, status: 'inactive' },
+    { type: 'on_sale', display: 'On Sale', name: 'On Sale', rank: 0, status: 'inactive' }
+  ];
 
   constructor(public modalService: NgbModal, public commonService: CommonService, private api: ProductExtrasApiService) { }
 
@@ -33,13 +30,24 @@ export class ImageTagsComponent implements OnInit {
     this.pageLoader = true;
     this.api.IMGTAG_LIST().subscribe((result) => {
       setTimeout(() => { this.pageLoader = false; }, 500);
-      if(result.status) {
-        this.list = result.list;
-        this.maxRank = result.list.length;
-        if(result.config) this.imgTagConfig = result.config;
-      }
+      if(result.status) this.setList(result);
       else console.log("response",result);
 		});
+  }
+
+  setList(result) {
+    this.list = [];
+    this.storeAutoTags = result.auto_tags;
+    this.default_tags.forEach(el => {
+      let tIndex = this.storeAutoTags.findIndex(obj => obj.type==el.type);
+      if(tIndex!=-1) {
+        el.name = this.storeAutoTags[tIndex].name;
+        el.status = this.storeAutoTags[tIndex].status;
+      }
+      this.list.push(el);
+    });
+    result.list.forEach(obj => { this.list.push(obj); });
+    this.maxRank = result.list.length;
   }
 
   onSubmit() {
@@ -47,9 +55,7 @@ export class ImageTagsComponent implements OnInit {
       this.api.ADD_IMGTAG(this.tagForm).subscribe((result) => {
         if(result.status) {
           document.getElementById('closeModal').click();
-          this.list = result.list;
-          this.maxRank = result.list.length;
-          if(result.config) this.imgTagConfig = result.config;
+          this.setList(result);
         }
         else {
           this.tagForm.errorMsg = result.message;
@@ -58,12 +64,47 @@ export class ImageTagsComponent implements OnInit {
       });
     }
     else {
-      this.api.UPDATE_IMGTAG(this.tagForm).subscribe((result) => {
+      if(this.tagForm.type) {
+        let tIndex = this.storeAutoTags.findIndex(el => el.type==this.tagForm.type);
+        if(tIndex!=-1) this.storeAutoTags[tIndex].name = this.tagForm.name;
+        else this.storeAutoTags.push({ type: this.tagForm.type, name: this.tagForm.name, status: 'inactive' });
+        this.api.UPDATE_AUTO_IMG_TAG({ auto_tags: this.storeAutoTags }).subscribe((result) => {
+          if(result.status) {
+            document.getElementById('closeModal').click();
+            this.setList(result);
+          }
+          else {
+            console.log("response", result);
+            this.tagForm.errorMsg = result.message;
+          }
+        });
+      }
+      else {
+        this.api.UPDATE_IMGTAG(this.tagForm).subscribe((result) => {
+          if(result.status) {
+            document.getElementById('closeModal').click();
+            this.setList(result);
+          }
+          else {
+            console.log("response", result);
+            this.tagForm.errorMsg = result.message;
+          }
+        });
+      }
+    }
+  }
+
+  onUpdateStatus(x) {
+    let newStatus = 'active';
+    if(x.status=='active') newStatus = 'inactive';
+    if(x.type) {
+      let tIndex = this.storeAutoTags.findIndex(el => el.type==x.type);
+      if(tIndex!=-1) this.storeAutoTags[tIndex].status = newStatus;
+      else this.storeAutoTags.push({ type: x.type, name: x.name, status: newStatus });
+      this.api.UPDATE_AUTO_IMG_TAG({ auto_tags: this.storeAutoTags }).subscribe((result) => {
         if(result.status) {
           document.getElementById('closeModal').click();
-          this.list = result.list;
-          this.maxRank = result.list.length;
-          if(result.config) this.imgTagConfig = result.config;
+          this.setList(result);
         }
         else {
           console.log("response", result);
@@ -71,27 +112,23 @@ export class ImageTagsComponent implements OnInit {
         }
       });
     }
-  }
-
-  onUpdateStatus(x) {
-    let sendData: any = {};
-    for(let key in x) {
-      if(x.hasOwnProperty(key)) sendData[key] = x[key];
+    else {
+      let sendData: any = {};
+      for(let key in x) {
+        if(x.hasOwnProperty(key)) sendData[key] = x[key];
+      }
+      sendData.status = newStatus;
+      this.api.UPDATE_IMGTAG(sendData).subscribe((result) => {
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.setList(result);
+        }
+        else {
+          console.log("response", result);
+          this.tagForm.errorMsg = result.message;
+        }
+      });
     }
-    sendData.status = 'active';
-    if(x.status=='active') sendData.status = 'inactive';
-    this.api.UPDATE_IMGTAG(sendData).subscribe((result) => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = result.list.length;
-        if(result.config) this.imgTagConfig = result.config;
-      }
-      else {
-        console.log("response", result);
-        this.tagForm.errorMsg = result.message;
-      }
-    });
   }
 
   onEdit(x, modalName) {
@@ -106,47 +143,11 @@ export class ImageTagsComponent implements OnInit {
     this.api.DELETE_IMGTAG(this.deleteForm).subscribe((result) => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = result.list.length;
-        if(result.config) this.imgTagConfig = result.config;
+        this.setList(result);
       }
       else {
         console.log("response", result);
         this.deleteForm.errorMsg = result.message;
-      }
-    });
-  }
-
-  onEditAutoTags(modalName) {
-    delete this.autoTagForm.errorMsg;
-    if(this.imgTagConfig?.position) this.autoTagForm.position = this.imgTagConfig?.position;
-    if(this.imgTagConfig?.auto_tags) {
-      this.autoTagForm.auto_tags.forEach(el => {
-        delete el.selected;
-        if(this.imgTagConfig.auto_tags[el.type]) {
-          el.selected = true;
-          el.name = this.imgTagConfig.auto_tags[el.type];
-        }
-      });
-    }
-    this.modalService.open(modalName);
-  }
-
-  onUpdateAutoTags() {
-    let autoTags = {};
-    this.autoTagForm.auto_tags.forEach(el => {
-      if(el.selected) autoTags[el.type] = el.name;
-    });
-    this.api.UPDATE_AUTO_IMG_TAG({ position: this.autoTagForm.position, auto_tags: autoTags }).subscribe((result) => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = result.list.length;
-        if(result.config) this.imgTagConfig = result.config;
-      }
-      else {
-        console.log("response", result);
-        this.autoTagForm.errorMsg = result.message;
       }
     });
   }

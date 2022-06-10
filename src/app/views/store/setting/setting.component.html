@@ -458,6 +458,15 @@
             <label>Gift Wrapping Charges</label>
             <input type="tel" name="gift_wrapping_charges" class="form-control" [(ngModel)]="app_setting.gift_wrapping_charges" #gift_wrapping_charges="ngModel" appNumberOnly required />
           </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Image Tag Position</label>
+            <select name="tag_position" class="form-control select-arrow" [(ngModel)]="app_setting.tag_position" required>
+              <option value="t_l">Top Left</option>
+              <option value="t_r">Top Right</option>
+              <option value="b_l">Bottom Left</option>
+              <option value="b_r">Bottom Right</option>
+            </select>
+          </div>
         </div>
       </div>
       <div *ngIf="app_setting.errorMsg"><p class="text-danger">{{ app_setting.errorMsg }}</p></div>
