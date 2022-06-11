@@ -18,7 +18,7 @@ export class ImageTagsComponent implements OnInit {
   maxRank: any = 0; search_bar: string;
 	tagForm: any; deleteForm: any;
   storeAutoTags: any = []; list: any = [];
-  default_tags: any = [
+  defaultTags: any = [
     { type: 'sold_out', display: 'Sold Out', name: 'Sold Out', rank: -2, status: 'inactive' },
     { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival', rank: -1, status: 'inactive' },
     { type: 'on_sale', display: 'On Sale', name: 'On Sale', rank: 0, status: 'inactive' }
@@ -38,7 +38,7 @@ export class ImageTagsComponent implements OnInit {
   setList(result) {
     this.list = [];
     this.storeAutoTags = result.auto_tags;
-    this.default_tags.forEach(el => {
+    this.defaultTags.forEach(el => {
       let tIndex = this.storeAutoTags.findIndex(obj => obj.type==el.type);
       if(tIndex!=-1) {
         el.name = this.storeAutoTags[tIndex].name;

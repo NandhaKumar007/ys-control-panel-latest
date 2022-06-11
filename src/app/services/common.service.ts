@@ -77,6 +77,10 @@ export class CommonService {
         { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" },
         { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }, { value: "600 x 600 pixels @72ppi" }
       ]
+    },
+    {
+      type: "grid_12", name: "Grid 12", icon: "assets/images/grid/Grid-12.png", status: "enabled",
+      resolutions: [{ value: "1080 x 1140 pixels @72ppi" }, { value: "510 x 540 pixels @72ppi" }, { value: "510 x 540 pixels @72ppi" }, { value: "510 x 540 pixels @72ppi" }, { value: "510 x 540 pixels @72ppi" }]
     }
   ];
   blog_grid_list: any = [
