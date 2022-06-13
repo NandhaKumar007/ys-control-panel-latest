@@ -18,15 +18,18 @@ export class ImageTagsComponent implements OnInit {
   maxRank: any = 0; search_bar: string;
 	tagForm: any; deleteForm: any;
   storeAutoTags: any = []; list: any = [];
-  defaultTags: any = [
-    { type: 'sold_out', display: 'Sold Out', name: 'Sold Out', rank: -2, status: 'inactive' },
-    { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival', rank: -1, status: 'inactive' },
-    { type: 'on_sale', display: 'On Sale', name: 'On Sale', rank: 0, status: 'inactive' }
-  ];
+  defaultTags: any = [];
 
   constructor(public modalService: NgbModal, public commonService: CommonService, private api: ProductExtrasApiService) { }
 
   ngOnInit(): void {
+    if(this.commonService.store_details?.additional_features?.disp_all_products) {
+      this.defaultTags.push({ type: 'sold_out', display: 'Sold Out', name: 'Sold Out', rank: -2, status: 'inactive' });
+    }
+    this.defaultTags.push(
+      { type: 'new_arrival', display: 'New Arrival', name: 'New Arrival', rank: -1, status: 'inactive' },
+      { type: 'on_sale', display: 'On Sale', name: 'On Sale', rank: 0, status: 'inactive' }
+    );
     this.pageLoader = true;
     this.api.IMGTAG_LIST().subscribe((result) => {
       setTimeout(() => { this.pageLoader = false; }, 500);

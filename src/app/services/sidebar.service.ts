@@ -100,9 +100,9 @@ export class SidebarService {
           prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
           routePermissionList.push("faq");
         }
+        prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
+        routePermissionList.push("image_tag");
         if(this.commonService.store_details?.package_info?.category!='genie') {
-          prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
-          routePermissionList.push("image_tag");
           prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
           routePermissionList.push("product_taxonomy");
         }

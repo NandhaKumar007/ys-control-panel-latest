@@ -98,6 +98,24 @@ export class AdminApiService {
     return this.http.patch<any>(environment.ws_url+'/admin/features', x, httpOptions);
   }
 
+  // promotions
+  PROMOTION_LIST() {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.get<any>(environment.ws_url+'/admin/promotions', httpOptions);
+  }
+  ADD_PROMOTION(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.post<any>(environment.ws_url+'/admin/promotions', x, httpOptions);
+  }
+  UPDATE_PROMOTION(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.put<any>(environment.ws_url+'/admin/promotions', x, httpOptions); 
+  }
+  DELETE_PROMOTION(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/admin/promotions', x, httpOptions);
+  }
+
   // subscribers
   SUBSCRIBER_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('master_token') }) };
