@@ -509,7 +509,7 @@
                             [ladda]="courierForm.btnLoader">Create Order in {{vendor.shipping_info?.dp_name}}</button>
                           </div>
                           <!-- cancel order -->
-                          <div *ngIf="vendor?.order_status!='cancelled'" class="col-md-12">
+                          <div *ngIf="!params?.coupon_id && params?.type=='live' && vendor?.existing_status!='delivered'" class="col-md-12">
                             <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
                             (click)="cancelVendorOrder(vendor, cancelVendorModal);" class="btn gray-btn w-100 mtb-10">
                               <span class="gray-btn-txt">Cancel Order</span>
@@ -1279,7 +1279,7 @@
         <!-- # Create new item group -->
 
         <!-- cancel order -->
-        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive' && !order_details.vendor_list?.length" type="button"
+        <button *ngIf="!params?.coupon_id && params?.type=='live' && order_details.existing_status!='delivered' && !order_details.vendor_list?.length" type="button"
           (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
           class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
@@ -1502,7 +1502,7 @@
         </form>
 
         <!-- cancel order -->
-        <button *ngIf="!params?.coupon_id && params?.type!='cancelled' && params?.type!='view' && params?.type!='inactive'" type="button"
+        <button *ngIf="!params?.coupon_id && params?.type=='live' && vendorInfo.existing_status!='delivered'" type="button"
         (click)="cancelVendorOrder(vendorInfo, cancelVendorModal);" class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
         </button>

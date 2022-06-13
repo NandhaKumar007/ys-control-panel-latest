@@ -318,8 +318,8 @@
       <ng-container *ngIf="params?.type=='confirmed'">
         <button *ngIf="!order_details.order_id" (click)="orderForm={}; modalService.open(createOrderModal);"
         type="button" class="btn btn-success w-100 mtb-10">Create Order</button>
-        <button *ngIf="order_details.order_id" routerLink="/orders/product/view/all/{{order_details.order_id}}"
-        type="button" class="btn btn-success w-100 mtb-10">View Order</button>
+        <!-- <button *ngIf="order_details.order_id" routerLink="/orders/product/view/all/{{order_details.order_id}}"
+        type="button" class="btn btn-success w-100 mtb-10">View Order</button> -->
       </ng-container>
 
     </div>

@@ -158,6 +158,6 @@ html [type="button"], .btn[type="button"] {
     @keyframes btn-glow-#{$name} {
         0% { box-shadow: 0 0 0 .4em darken(#545454, 10%), 0 0 0 .1em darken(#545454, 10%); transform:rotate(360deg); }
         50% { border-top-color: #ffffff;}
-        100% { box-shadow: 0 0 0 .4em darken(#545454, 10%), 0 0 0 3.6em transparent; }
+        100% { box-shadow: 0 0 0 .4em darken(#545454, 10%), 0 0 0 1.5em transparent; }
     }
 }

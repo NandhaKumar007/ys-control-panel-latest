@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { ApiService } from '../../../../services/api.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
@@ -16,7 +17,15 @@ export class VendorsDashboardComponent implements OnInit {
   };
 	chartPie: any; chartLine: any; filterForm: any;
 
-  constructor(public datepipe: DatePipe, public commonService: CommonService) { }
+  constructor(public datepipe: DatePipe, public commonService: CommonService, private api: ApiService) {
+    if(!localStorage.getItem("country_list")) {
+      this.api.COUNTRIES_LIST().subscribe(result => {
+        this.commonService.country_list = [];
+        if(result.status) this.commonService.country_list = result.list;
+        this.commonService.updateLocalData('country_list', this.commonService.country_list);
+      });
+    }
+  }
 
   ngOnInit() {
     this.filterForm = { type: 'today', from_date: new Date(), to_date: new Date() };

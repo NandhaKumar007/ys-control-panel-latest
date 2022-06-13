@@ -53,13 +53,28 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
           this.order_details = result.data;
-          if(!this.order_details.billing_address) this.order_details.billing_address = this.order_details.shipping_address;
+          if(this.params.type=='inactive' && this.order_details.status!='inactive') this.commonService.goBack();
+          if(!this.order_details.vendor_list?.length) {
+            if(this.params.type=='live') {
+              if(this.order_details.order_status=='delivered' || this.order_details.order_status=='cancelled')
+                this.commonService.goBack();
+            }
+            else {
+              if(this.order_details.order_status!=this.params.type) this.commonService.goBack();
+            }
+          }
+          // item list
           if(this.commonService.store_details._id==environment.config_data.uru_id) {
             this.processItemListExcludeTax(this.order_details.item_list).then((respData) => {
               this.itemList = respData;
             });
           }
           else this.itemList = this.order_details.item_list;
+          // address
+          if(!this.order_details.billing_address) this.order_details.billing_address = this.order_details.shipping_address;
+          if(this.order_details.shipping_address) this.onGetAddrDetails(this.order_details.shipping_address);
+          if(this.order_details.billing_address) this.onGetAddrDetails(this.order_details.billing_address);
+          // order status
           this.order_details.existing_status = this.order_details.order_status;
           if(this.order_details.existing_status=='placed') this.order_details.order_status='confirmed';
           if(this.order_details.existing_status=='confirmed') {
@@ -88,6 +103,7 @@ export class ProductOrderDetailsComponent implements OnInit {
             else if(this.params.type=='delivered' || this.params.type=='cancelled') {
               this.order_details.vendor_list = this.order_details.vendor_list.filter(el => el.order_status==this.params.type);
             }
+            if(!this.order_details.vendor_list?.length) this.commonService.goBack();
             if(this.commonService.store_details.login_type!='vendor') {
               this.order_details.vendor_list.forEach(element => {
                 element.existing_status = element.order_status;
@@ -111,6 +127,7 @@ export class ProductOrderDetailsComponent implements OnInit {
               }
             }
           }
+          // partial fulfillment
           else if(this.order_details.order_type=='delivery' && this.commonService.ys_features.indexOf('partial_fulfillment')!=-1) {
             let itemIndexList = [];
             this.order_details.item_groups.forEach(obj => {
@@ -134,9 +151,6 @@ export class ProductOrderDetailsComponent implements OnInit {
             }
             else this.itemList = this.remaining_items;
           }
-          // address
-          if(this.order_details.shipping_address) this.onGetAddrDetails(this.order_details.shipping_address);
-          if(this.order_details.billing_address) this.onGetAddrDetails(this.order_details.billing_address);
         }
         else console.log("response", result);
         setTimeout(() => { this.pageLoader = false; }, 500);
@@ -505,32 +519,41 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
   }
   onEditVendorShipping(x, modalName) {
-    this.editForm = { formType: 'vendor', shipping_method: {} };
-    for(let key in x) {
-      if(x.hasOwnProperty(key) && key!='shipping_method') this.editForm[key] = x[key];
-    }
-    let shippingMethod = x.shipping_method;
-    for(let key in shippingMethod) {
-      if(shippingMethod.hasOwnProperty(key)) this.editForm.shipping_method[key] = shippingMethod[key];
-    }
-    this.modalService.open(modalName);
+    this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
+      if(result.status) {
+        let orderData = result.data;
+        let vIndex = orderData.vendor_list.findIndex(obj => obj.vendor_id==x.vendor_id);
+        if(vIndex != -1) {
+          this.editForm = orderData.vendor_list[vIndex];
+          this.editForm.formType = 'vendor';
+          this.modalService.open(modalName);
+        }
+        else console.log("Invalid vendor");
+      }
+      else console.log("response", result);
+    });
   }
 
   onUpdateShippingDetails() {
     if(this.editForm.formType=='vendor') {
       this.editForm._id = this.order_details._id;
+      let tempGrandTotal = this.editForm.grand_total - this.editForm.shipping_cost;
+      this.editForm.shipping_cost = parseFloat(this.editForm.shipping_method.shipping_price);
+      this.editForm.grand_total = tempGrandTotal+this.editForm.shipping_cost;
+      this.editForm.final_price = this.editForm.grand_total-parseFloat(this.editForm.discount_amount);
+      if(this.editForm.final_price < 0) this.editForm.final_price = 0;
       this.onUpdate(this.editForm);
     }
     else {
-      this.editForm.shipping_cost = this.editForm.shipping_method.shipping_price;
-      this.editForm.grand_total = parseFloat(this.editForm.sub_total)+parseFloat(this.editForm.shipping_cost);
-      if(this.editForm.grand_total > this.editForm.discount_amount)
-        this.editForm.final_price = parseFloat(this.editForm.grand_total)-parseFloat(this.editForm.discount_amount);
-      else this.editForm.final_price = 0;
+      let tempGrandTotal = this.editForm.grand_total - this.editForm.shipping_cost;
+      this.editForm.shipping_cost = parseFloat(this.editForm.shipping_method.shipping_price);
+      this.editForm.grand_total = tempGrandTotal+this.editForm.shipping_cost;
+      this.editForm.final_price = this.editForm.grand_total-parseFloat(this.editForm.discount_amount);
+      if(this.editForm.final_price < 0) this.editForm.final_price = 0;
       let sendData = {
         _id: this.order_details._id, shipping_method: this.editForm.shipping_method, shipping_cost: this.editForm.shipping_cost,
         grand_total: this.editForm.grand_total, final_price: this.editForm.final_price
-      }
+      };
       this.onUpdate(sendData);
     }
   }
