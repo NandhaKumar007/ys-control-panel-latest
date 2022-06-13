@@ -34,6 +34,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
   courierData: any = {}; itemInfo: any = {};
+  tax_rates: any = [];
   // temp
   destList: any = []; selectedVendor: any;
 
@@ -617,46 +618,113 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   onViewInvoice(modalName) {
     this.invoice_details = this.order_details;
-    this.invoice_order_list = [];
-    this.processItemList(this.invoice_details.item_list).then((respData) => {
-      this.invoice_order_list = respData;
-    });
-    this.modalService.open(modalName, { size: 'lg' });
+    this.invoice_details.loader = true;
+    if(!this.tax_rates?.length) {
+      this.extrasApi.TAX_LIST().subscribe(result => {
+        if(result.status) this.tax_rates = result.list;
+        this.invoiceCont(modalName);
+      });
+    }
+    else this.invoiceCont(modalName);
   }
   onViewVendorInvoice(x, modalName) {
     this.invoice_details = x;
-    if(this.order_details.invoice_number) this.invoice_details.invoice_number = this.order_details.invoice_number;
+    this.invoice_details.loader = true;
+    if(!this.invoice_details.invoice_number) this.invoice_details.invoice_number = this.order_details.invoice_number;
     this.invoice_details.created_on = this.order_details.created_on;
     this.invoice_details.currency_type = this.order_details.currency_type;
     this.invoice_details.billing_address = this.order_details.billing_address;
     this.invoice_details.shipping_address = this.order_details.shipping_address;
     this.invoice_details.payment_details = this.order_details.payment_details;
     this.invoice_details.item_list = this.order_details.item_list.filter(obj => obj.vendor_id==x.vendor_id);
-    this.invoice_order_list = [];
-    this.processItemList(this.invoice_details.item_list).then((respData) => {
-      this.invoice_order_list = respData;
-    });
-    this.modalService.open(modalName, { size: 'lg' });
+    if(!this.tax_rates?.length) {
+      this.extrasApi.TAX_LIST().subscribe(result => {
+        if(result.status) this.tax_rates = result.list;
+        this.invoiceCont(modalName);
+      });
+    }
+    else this.invoiceCont(modalName);
   }
-  processItemList(itemList) {
+  invoiceCont(modalName) {
+    delete this.invoice_details.loader;
+    this.invoice_order_list = [];
+    if(this.invoice_details.order_type=='pickup') this.invoice_details.billing_address = this.invoice_details.shipping_address;
+    let countryInr = this.invoice_details.currency_type.country_inr_value;
+    this.invoice_details.sub_total = (this.invoice_details.sub_total/countryInr).toFixed(2);
+    this.invoice_details.gift_wrapper = (this.invoice_details.gift_wrapper/countryInr).toFixed(2);
+    this.invoice_details.packaging_charges = (this.invoice_details.packaging_charges/countryInr).toFixed(2);
+    this.invoice_details.shipping_cost = (this.invoice_details.shipping_cost/countryInr).toFixed(2);
+    this.invoice_details.cod_charges = (this.invoice_details.cod_charges/countryInr).toFixed(2);
+    this.invoice_details.discount_amount = (this.invoice_details.discount_amount/countryInr).toFixed(2);
+    this.invoice_details.final_price = (this.invoice_details.final_price/countryInr).toFixed(2);
+    this.processItemList(this.invoice_details.item_list, countryInr).then((respData) => {
+      this.invoice_order_list = respData;
+      for(let set of this.invoice_order_list) {
+        if(set.tax_details) {
+          set.temp_sub_total = (this.findBaseAmount(set.sub_total, set.tax_details)/countryInr).toFixed(2);
+          set.temp_igst = (this.findTaxAmount( set.sub_total, set.tax_details.igst, set.tax_details.igst )/countryInr).toFixed(2);
+          if(set.tax_details.sgst) set.temp_sgst = (this.findTaxAmount( set.sub_total, set.tax_details.sgst, ((set.tax_details.sgst*1)+(set.tax_details.cgst*1)) )/countryInr).toFixed(2);
+          if(set.tax_details.cgst) set.temp_cgst = (this.findTaxAmount( set.sub_total, set.tax_details.cgst, ((set.tax_details.sgst*1)+(set.tax_details.cgst*1)) )/countryInr).toFixed(2);
+        }
+      }
+      this.modalService.open(modalName, { size: 'lg' });
+    });
+  }
+
+  processItemList(itemList, countryInr) {
     return new Promise((resolve, reject) => {
       let orderList: any = [];
       for(let item of itemList)
       {
-        if(item.hsn_code) this.hsncode_exist = true;
         let itemFinalPrice = item.final_price * item.quantity;
         if(item.unit!="Pcs") { itemFinalPrice += item.addon_price; }
-        let taxIndex = orderList.findIndex(obj => obj.taxrate_id==item.taxrate_id);
-        if(taxIndex!=-1) {
-          orderList[taxIndex].item_list.push(item);
-          orderList[taxIndex].sub_total += itemFinalPrice;
+        // get tax info
+        delete item.tax_details;
+        let trIndex = this.tax_rates.findIndex(obj => obj._id==item.taxrate_id);
+        if(trIndex!=-1) item.tax_details = this.tax_rates[trIndex];
+        if(item.taxrate_id && item.tax_details) {
+          // find tax exists in order list
+          let taxIndex = orderList.findIndex(obj => obj.taxrate_id==item.taxrate_id);
+          if(taxIndex!=-1) {
+            let itemBaseAmt = this.findBaseAmount(itemFinalPrice, orderList[taxIndex].tax_details);
+            item.temp_final_price = (itemBaseAmt/countryInr).toFixed(2);
+            orderList[taxIndex].item_list.push(item);
+            orderList[taxIndex].sub_total += itemFinalPrice;
+          }
+          else {
+            let itemBaseAmt = this.findBaseAmount(itemFinalPrice, item.tax_details);
+            item.temp_final_price = (itemBaseAmt/countryInr).toFixed(2);
+            orderList.push({ taxrate_id: item.taxrate_id, tax_details: item.tax_details, item_list: [item], sub_total: itemFinalPrice });
+          }
         }
         else {
-          orderList.push({ taxrate_id: item.taxrate_id, tax_details: item.tax_details, item_list: [item], sub_total: itemFinalPrice });
+          let itemBaseAmt = this.findBaseAmount(itemFinalPrice, null);
+          item.temp_final_price = (itemBaseAmt/countryInr).toFixed(2);
+          orderList.push({ item_list: [item], sub_total: itemFinalPrice });
         }
       }
       resolve(orderList);
     });
+  }
+  findBaseAmount(amount, taxDetails) {
+    if(taxDetails) {
+      if(this.invoice_details.billing_address.country==taxDetails.home_country && this.invoice_details.billing_address.state==taxDetails.home_state) {
+        let totalPercentage = 100+parseFloat(taxDetails.sgst)+parseFloat(taxDetails.cgst);
+        let onePercentAmount = amount/totalPercentage;
+        return (onePercentAmount*100);
+      }
+      else {
+        let totalPercentage = 100+parseFloat(taxDetails.igst);
+        let onePercentAmount = amount/totalPercentage;
+        return (onePercentAmount*100);
+      }
+    }
+    else return amount;
+  }
+  findTaxAmount(amount, tax, totalTax) {
+    let totalPercentage = 100+parseFloat(totalTax);
+    let onePercentAmount = amount/totalPercentage;
+    return (onePercentAmount*tax);
   }
 
   // update
@@ -857,28 +925,6 @@ export class ProductOrderDetailsComponent implements OnInit {
         });
       });
     }
-  }
-
-  findBaseAmount(amount, taxDetails) {
-    if(taxDetails) {
-      if(this.order_details.billing_address.country==taxDetails.home_country && this.order_details.billing_address.state==taxDetails.home_state) {
-        let totalPercentage = 100+parseFloat(taxDetails.sgst)+parseFloat(taxDetails.cgst);
-        let onePercentAmount = amount/totalPercentage;
-        return (onePercentAmount*100);
-      }
-      else {
-        let totalPercentage = 100+parseFloat(taxDetails.igst);
-        let onePercentAmount = amount/totalPercentage;
-        return (onePercentAmount*100);
-      }
-    }
-    else return amount;
-  }
-
-  findTaxAmount(amount, tax, totalTax) {
-    let totalPercentage = 100+parseFloat(totalTax);
-    let onePercentAmount = amount/totalPercentage;
-    return (onePercentAmount*tax);
   }
 
   transformHtml(string) {
