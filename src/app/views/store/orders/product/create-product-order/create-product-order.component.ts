@@ -894,13 +894,6 @@ export class CreateProductOrderComponent implements OnInit {
         this.productDetails.addon_list = resp;
       });
     }
-    // tax rates
-    if(this.productDetails.taxrate_id) {
-      let taxRates = this.product_features.tax_rates;
-      let taxIndex = taxRates.findIndex(obj => obj._id==this.productDetails.taxrate_id);
-      if(taxIndex!=-1) this.productDetails.tax_details = taxRates[taxIndex];
-      else delete this.productDetails.taxrate_id;
-    }
   }
   // CUSTOMIZATION
   buildAddonList(addonList, overallmmList) {
@@ -1323,10 +1316,7 @@ export class CreateProductOrderComponent implements OnInit {
         productDetails.variant_types.push({ name: element.name, value: element.value });
       });
     }
-    if(x.taxrate_id) {
-      productDetails.taxrate_id = x.taxrate_id;
-      productDetails.tax_details = x.tax_details;
-    }
+    if(x.taxrate_id) productDetails.taxrate_id = x.taxrate_id;
     productDetails.seo_status = x.seo_status;
     productDetails.seo_details = x.seo_details;
     productDetails.image = x.image;

@@ -2524,33 +2524,45 @@
                           </p>
                         </td>
                       </tr>
-                      <ng-container
-                        *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
-                        <tr>
+                      <!-- India -->
+                      <ng-container *ngIf="commonService?.store_details?.country=='India'">
+                        <ng-container *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
+                          <tr>
+                            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
+                              <p>SGST ({{order?.tax_details?.sgst}}%)</p>
+                            </td>
+                            <td align="right" class="p-10">
+                              <p
+                                [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.sgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
+                              <p>CGST ({{order?.tax_details?.cgst}}%)</p>
+                            </td>
+                            <td align="right" class="p-10">
+                              <p
+                                [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.cgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
+                              </p>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <tr *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state">
                           <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                            <p>SGST ({{order?.tax_details?.sgst}}%)</p>
+                            <p>IGST ({{order?.tax_details?.igst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
                             <p
-                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.sgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
-                            </p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                            <p>CGST ({{order?.tax_details?.cgst}}%)</p>
-                          </td>
-                          <td align="right" class="p-10">
-                            <p
-                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.cgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
+                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount(order.sub_total, order.tax_details.igst, order.tax_details.igst))">
                             </p>
                           </td>
                         </tr>
                       </ng-container>
-                      <tr
-                        *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state">
+                      <!-- Except India -->
+                      <tr *ngIf="commonService?.store_details?.country!='India'">
                         <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                          <p>IGST ({{order?.tax_details?.igst}}%)</p>
+                          <p>{{order?.tax_details?.name}}</p>
                         </td>
                         <td align="right" class="p-10">
                           <p

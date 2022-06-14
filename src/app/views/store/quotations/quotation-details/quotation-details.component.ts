@@ -231,48 +231,6 @@ export class QuotationDetailsComponent implements OnInit {
     }
   }
 
-  processItemList(itemList) {
-    return new Promise((resolve, reject) => {
-      let orderList: any = [];
-      for(let item of itemList)
-      {
-        let itemFinalPrice = item.final_price * item.quantity;
-        if(item.unit!="Pcs") { itemFinalPrice += item.addon_price; }
-        let taxIndex = orderList.findIndex(obj => obj.taxrate_id==item.taxrate_id);
-        if(taxIndex!=-1) {
-          orderList[taxIndex].item_list.push(item);
-          orderList[taxIndex].sub_total += itemFinalPrice;
-        }
-        else {
-          orderList.push({ taxrate_id: item.taxrate_id, tax_details: item.tax_details, item_list: [item], sub_total: itemFinalPrice });
-        }
-      }
-      resolve(orderList);
-    });
-  }
-
-  findBaseAmount(amount, taxDetails) {
-    if(taxDetails) {
-      if(this.invoice_details.billing_address.country==taxDetails.home_country && this.invoice_details.billing_address.state==taxDetails.home_state) {
-        let totalPercentage = 100+parseFloat(taxDetails.sgst)+parseFloat(taxDetails.cgst);
-        let onePercentAmount = amount/totalPercentage;
-        return (onePercentAmount*100);
-      }
-      else {
-        let totalPercentage = 100+parseFloat(taxDetails.igst);
-        let onePercentAmount = amount/totalPercentage;
-        return (onePercentAmount*100);
-      }
-    }
-    else return amount;
-  }
-
-  findTaxAmount(amount, tax, totalTax) {
-    let totalPercentage = 100+parseFloat(totalTax);
-    let onePercentAmount = amount/totalPercentage;
-    return (onePercentAmount*tax);
-  }
-
   transformHtml(string) {
     return string.replace(new RegExp('\n', 'g'), "<br />");
   }
