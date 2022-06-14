@@ -352,7 +352,10 @@ export class AddProductComponent implements OnInit {
     }
     else if(this.imgType=='variant') {
       if(this.imgIndex) this.productForm.variant_list[this.varIndex].image_list[this.imgIndex-1] = objData;
-      else this.productForm.variant_list[this.varIndex].image_list.push(objData);
+      else {
+        if(!this.productForm.variant_list[this.varIndex].image_list) this.productForm.variant_list[this.varIndex].image_list = [];
+        this.productForm.variant_list[this.varIndex].image_list.push(objData);
+      }
     }
   }
   imgAlgorithm(sizekb) {
