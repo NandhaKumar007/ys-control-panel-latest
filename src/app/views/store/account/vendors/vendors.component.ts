@@ -36,6 +36,7 @@ export class VendorsComponent implements OnInit {
   state_list: any = [];
   reg_address_fields: any = [];
   pick_address_fields: any = [];
+  invForm: any = {};
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
@@ -147,6 +148,36 @@ export class VendorsComponent implements OnInit {
         }
       });
     }
+  }
+
+  onOpenInvoiceModal(modalName) {
+    this.invForm = { vendor_inv_status: false, vendor_inv_config: {} };
+    this.deployService.DEPLOY_DETAILS(this.commonService.store_details?._id).subscribe(result => {
+      if(result.status) {
+        let deployDetails = result.data;
+        if(deployDetails?.vendor_inv_status) this.invForm.vendor_inv_status = deployDetails.vendor_inv_status;
+        if(deployDetails?.vendor_inv_config) this.invForm.vendor_inv_config = deployDetails.vendor_inv_config;
+        this.modalService.open(modalName, {size: 'lg'});
+      }
+      else console.log("response", result);
+    });
+  }
+  onUpdateInvoiceConfig() {
+    this.invForm.submit = true;
+    this.invForm.store_id = this.commonService.store_details._id;
+    this.deployService.UPDATE_DEPLOY_DETAILS(this.invForm).subscribe(result => {
+      this.invForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.commonService.deploy_details = result.data;
+        delete this.commonService.deploy_details.deploy_stages;
+        this.commonService.updateLocalData('deploy_details', this.commonService.deploy_details);
+      }
+      else {
+        this.invForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // EDIT

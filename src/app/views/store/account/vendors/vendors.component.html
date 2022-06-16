@@ -12,6 +12,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button type="button" (click)="onOpenInvoiceModal(invoiceModal);" class="btn btn-primary mr-3">Invoice Setting</button>
         <button type="button" (click)="onOpencmsnModal(commissionModal);" class="btn btn-primary mr-3">Commission Setting</button>
         <button (click)="onAddModal(vendorModal);" type="button" class="btn btn-primary">Add New Vendor</button>
       </div>
@@ -680,6 +681,53 @@
         <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- INVOICE -->
+<ng-template #invoiceModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Invoice Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateInvoiceConfig();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="vendor_inv_status" [(ngModel)]="invForm.vendor_inv_status" #vendor_inv_status="ngModel">
+              <span>Enable Invoice</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="invForm.vendor_inv_status && invForm.vendor_inv_config">
+            <div class="col-md-4 form-group mb-3">
+              <label>Prefix</label>
+              <input type="text" name="inv_prefix" class="form-control" [(ngModel)]="invForm.vendor_inv_config.prefix" #inv_prefix="ngModel" />
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label>Upcoming Invoice Number</label>
+              <input type="tel" name="next_invoice_no" class="form-control" [(ngModel)]="invForm.vendor_inv_config.next_invoice_no" #next_invoice_no="ngModel" required appNumberOnly />
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label>Suffix</label>
+              <input type="text" name="inv_suffix" class="form-control" [(ngModel)]="invForm.vendor_inv_config.suffix" #inv_suffix="ngModel" />
+            </div>
+            <div class="col-md-4 form-group mb-3">
+              <label>Min digit</label>
+              <input type="tel" name="inv_min_digit" class="form-control" [(ngModel)]="invForm.vendor_inv_config.min_digit" #inv_min_digit="ngModel" required appNumberOnly />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="invForm.errorMsg"><p class="text-danger">{{ invForm.errorMsg }}</p></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="invForm.submit" [ladda]="invForm.submit">Update</button>
     </div>
   </form>
 </ng-template>

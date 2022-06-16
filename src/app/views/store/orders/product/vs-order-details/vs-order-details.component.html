@@ -9,7 +9,7 @@
       <div class="col-8">
         <h1>#{{ vendorOrderDetails.order_number }}</h1>
         <ul>
-          <li>View and manage your order</li>
+          <li>View your settlement information</li>
         </ul>
       </div>
       <div class="col-4 z-i-0" align="right">
@@ -171,7 +171,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{vendorOrderDetails.settlement_info?.order_total | currency: commonService.store_currency?.country_code}}
+                    {{settlement_info?.order_total | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -185,7 +185,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    - {{vendorOrderDetails.settlement_info?.items_cmsn | currency: commonService.store_currency?.country_code}}
+                    - {{settlement_info?.items_cmsn | currency: commonService.store_currency?.country_code}}
                   </p>
                 </div>
               </div>
@@ -201,31 +201,31 @@
                   </p>
                 </div>
               </div>
-              <ng-container *ngIf="vendorOrderDetails.settlement_info?.pg_charges>0">
+              <ng-container *ngIf="settlement_info?.pg_charges>0">
                 <div class="col-6">
                   <div class="box-card card-head">
-                    <p>Payment Gateway Charges ({{vendorOrderDetails.settlement_info?.pg_in_pct}}%)</p>
+                    <p>Payment Gateway Charges ({{settlement_info?.pg_in_pct}}%)</p>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      - {{vendorOrderDetails.settlement_info.pg_charges | currency: commonService.store_currency?.country_code}}
+                      - {{settlement_info.pg_charges | currency: commonService.store_currency?.country_code}}
                     </p>
                   </div>
                 </div>
               </ng-container>
               <div class="col-12"><hr class="mt-3"></div>
-              <ng-container *ngIf="vendorOrderDetails.settlement_info?.cmsn_tax>0">
+              <ng-container *ngIf="settlement_info?.cmsn_tax>0">
                 <div class="col-6">
                   <div class="box-card card-head">
-                    <p>Tax on Commission ({{vendorOrderDetails.settlement_info.tax_in_pct}}%)</p>
+                    <p>Tax on Commission ({{settlement_info.tax_in_pct}}%)</p>
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="box-card">
                     <p class="pull-right text-right">
-                      - {{vendorOrderDetails.settlement_info.cmsn_tax | currency: commonService.store_currency?.country_code}}
+                      - {{settlement_info.cmsn_tax | currency: commonService.store_currency?.country_code}}
                     </p>
                   </div>
                 </div>
@@ -238,7 +238,7 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{ vendorOrderDetails.settlement_info?.settlement_amt | currency: commonService.store_currency?.country_code }}
+                    {{ settlement_info?.settlement_amt | currency: commonService.store_currency?.country_code }}
                   </p>
                 </div>
               </div>
@@ -250,11 +250,11 @@
               <div class="col-6">
                 <div class="box-card">
                   <p class="pull-right text-right">
-                    {{ vendorOrderDetails.settlement_on | date: "dd MMM y"}}
+                    {{ settlement_info?.settlement_on | date: "dd MMM y"}}
                   </p>
                 </div>
               </div>
-              <div *ngIf="vendorOrderDetails.settlement_info?.status!='paid' && commonService.store_details?.login_type=='admin'" class="col-12">
+              <div *ngIf="settlement_info?.status!='paid' && commonService.store_details?.login_type=='admin'" class="col-12">
                 <button type="button" class="btn blue-outline-btn w-100 mtb-10"
                 (click)="errorMsg=null; btnLoader=false; modalService.open(markPaidModal, { centered: true });">
                   <span class="blue-outline-txt">Mark as Paid</span>
@@ -269,7 +269,7 @@
         </div>
         <div class="card order-summary-details mtb-10">
           <div class="row mtb-10">
-            <ng-container *ngIf="order_details?.created_on">
+            <ng-container *ngIf="settlement_info?.created_on">
               <div class="col-5">
                 <div class="box-card card-head">
                   <p>Placed on</p>
@@ -277,7 +277,7 @@
               </div>
               <div class="col-7">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{ order_details.created_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="pull-right text-right">{{ settlement_info.created_on | date: "dd MMM y hh:mm a"}}</p>
                 </div>
               </div>
             </ng-container>
@@ -317,7 +317,7 @@
                 </div>
               </div>
             </ng-container>
-            <ng-container *ngIf="vendorOrderDetails?.settled_on">
+            <ng-container *ngIf="settlement_info?.settled_on">
               <div class="col-5">
                 <div class="box-card card-head">
                   <p>Settled on</p>
@@ -325,7 +325,7 @@
               </div>
               <div class="col-7">
                 <div class="box-card">
-                  <p class="pull-right text-right">{{ vendorOrderDetails.settled_on | date: "dd MMM y hh:mm a"}}</p>
+                  <p class="pull-right text-right">{{ settlement_info.settled_on | date: "dd MMM y hh:mm a"}}</p>
                 </div>
               </div>
             </ng-container>
@@ -372,7 +372,7 @@
   <div class="modal-body">
     <p>
       <strong>Are you sure you want to mark this amount as PAID
-        <span class="text-danger">"#{{vendorOrderDetails.order_number}}"</span>?
+        <span class="text-danger">"#{{ (settlement_info.invoice_number)? settlement_info.invoice_number: settlement_info.order_number }}"</span>?
       </strong>
     </p>
     <div *ngIf="errorMsg">

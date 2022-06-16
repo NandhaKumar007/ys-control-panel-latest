@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'appointments', loadChildren: () => import('./appointments/appointments.module').then(m => m.AppointmentsModule), canActivate: [PermissionGuard], data: { name: "appointments" } },
 
   { path: 'settlement', loadChildren: () => import('./product/vendor-settlement/vendor-settlement.module').then(m => m.VendorSettlementModule), canActivate: [PermissionGuard], data: { name: "vendor_settlement" } },
-  { path: 'settlement/:order_id/:vendor_id', loadChildren: () => import('./product/vs-order-details/vs-order-details.module').then(m => m.VsOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "vendor_settlement" } }
+  { path: 'settlement/:id', loadChildren: () => import('./product/vs-order-details/vs-order-details.module').then(m => m.VsOrderDetailsModule), canActivate: [PermissionGuard], data: { name: "vendor_settlement" } }
 ];
 
 @NgModule({

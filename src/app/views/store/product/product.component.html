@@ -129,7 +129,7 @@
           <div *ngFor="let x of list; let i = index;" class="list-item data-list-card col-md-12" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
             <div class="product-list-card only-product-list-card">
               <div class="row m-0">
-                <div class="col-4 col-sm-4 col-md-2">
+                <div class="col-4 col-sm-4 col-md-2" style="min-height:120px;">
                   <img class="only-product-image" [src]="imgBaseUrl+x.image_list[0].image" alt="">
                 </div>
                 <div class="col-6 col-sm-6 col-md-7">

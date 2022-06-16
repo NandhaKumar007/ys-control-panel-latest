@@ -45,17 +45,10 @@ export class VendorSettlementComponent implements OnInit {
       this.pageLoader = true;
       this.api.SETTLEMENT_ORDERS(this.filterForm).subscribe(result => {
         if(result.status) {
-          let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-          orderList.forEach(obj => {
-            obj.vendor_id = obj.vendor_list.vendor_id;
-            obj.order_number = obj.vendor_list.order_number;
-            obj.settlement_on = obj.vendor_list.settlement_on;
-            obj.order_total = obj.vendor_list.settlement_info?.order_total;
-            obj.settlement_amt = obj.vendor_list.settlement_info?.settlement_amt;
-            obj.settlement_status = obj.vendor_list.settlement_info?.status;
+          this.list = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+          this.list.forEach(obj => {
             let vendorIndex = this.commonService.vendor_list.findIndex(el => el._id==obj.vendor_id);
             if(vendorIndex!=-1) obj.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.brand;
-            this.list.push(obj);
           });
         }
         else console.log("response", result);

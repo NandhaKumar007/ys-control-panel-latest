@@ -13,7 +13,7 @@ import { environment } from '../../../../../../environments/environment';
 
 export class VsOrderDetailsComponent implements OnInit {
 
-  params: any = {}; order_details: any = {};
+  settlement_info: any = {};
   pageLoader: boolean; itemList: any = [];
   vendorOrderDetails: any = {}; vendorInfo: any = {};
   imgBaseUrl = environment.img_baseurl;
@@ -29,22 +29,21 @@ export class VsOrderDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.activeRoute.params.subscribe((params: Params) => {
-      this.params = params; this.pageLoader = true;
+      this.pageLoader = true;
       // order details
-      this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
+      this.api.SETTLEMENT_ORDERS({ _id: params.id }).subscribe(result => {
         if(result.status) {
-          this.order_details = result.data;
-          this.itemList = this.order_details.item_list.filter(obj => obj.vendor_id==this.params.vendor_id);
+          this.settlement_info = result.data;
+          this.vendorOrderDetails = result.data.orderDetails;
+          this.itemList = result.data.item_list;
           this.itemList.forEach(item => {
             if(item.item_status!='c_confirmed') {
               this.subTotal += (item.final_price*item.quantity);
               if(item.unit!="Pcs") { this.subTotal += item.addon_price; }
             }
           });
-          let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.params.vendor_id);
-          if(vendorIndex!=-1) this.vendorOrderDetails = this.order_details.vendor_list[vendorIndex];
           // vendor details
-          let vIndex = this.commonService.vendor_list.findIndex(el => el._id==this.params.vendor_id);
+          let vIndex = this.commonService.vendor_list.findIndex(el => el._id==this.settlement_info.vendor_id);
           if(vIndex!=-1) this.vendorInfo = this.commonService.vendor_list[vIndex];
         }
         else console.log("response", result);
@@ -55,11 +54,7 @@ export class VsOrderDetailsComponent implements OnInit {
 
   onMarkPaid() {
     this.btnLoader = true; delete this.errorMsg;
-    let formData = {
-      _id: this.params.order_id, vendor_id: this.params.vendor_id,
-      data_set: { 'vendor_list.$.settlement_info.status': 'paid', 'vendor_list.$.settled_on': new Date() }
-    };
-    this.api.UPDATE_ORDER_DETAILS(formData).subscribe(result => {
+    this.api.UPDATE_SETTLEMENT_ORDER({ _id: this.settlement_info._id, status: 'paid', settled_on: new Date() }).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
         document.getElementById('closeModal').click();

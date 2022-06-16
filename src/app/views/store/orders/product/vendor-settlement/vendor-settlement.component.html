@@ -77,15 +77,14 @@
                   <p class="w-30 w-sm-100 m-b-0">{{x.order_total | currency: commonService.store_currency?.country_code}}</p>
                   <p class="w-30 w-sm-100 m-b-0">{{x.settlement_amt | currency: commonService.store_currency?.country_code}}</p>
                   <p class="w-30 w-sm-100 m-b-0">
-                    <span *ngIf="x.settlement_status" class="badge" [ngClass]="{
-                      'badge-warning badge-green': x.settlement_status=='paid',
-                      'badge-warning badge-blue': x.settlement_status=='pending',
-                      'badge-primary badge-red': x.settlement_status=='failed'
-                    }">{{ x.settlement_status | titlecase }}</span>
+                    <span *ngIf="x.status" class="badge" [ngClass]="{
+                      'badge-warning badge-green': x.status=='paid',
+                      'badge-warning badge-blue': x.status=='pending',
+                      'badge-primary badge-red': x.status=='failed'
+                    }">{{ x.status | titlecase }}</span>
                   </p>
                   <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
-                    <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();"
-                      routerLink="/orders/settlement/{{x._id}}/{{x.vendor_id}}">
+                    <a class="btn btn-wide black-outline-btn w-100 mr-3" (click)="capturePageData();" routerLink="/orders/settlement/{{x._id}}">
                       <span class="black-outline-txt">View</span>
                     </a>
                   </p>

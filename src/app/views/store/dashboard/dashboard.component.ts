@@ -178,6 +178,7 @@ export class DashboardComponent implements OnInit {
   };
   whatsNewStep: number = 1;
   totalWhatsNewScreen: number = Object.keys(this.whats_new_list).length;
+  promotions: any = [];
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: ApiService,
@@ -243,6 +244,7 @@ export class DashboardComponent implements OnInit {
       this.storeApi.DASHBOARD(formData).subscribe(result => {
         setTimeout(() => { this.preLoader = false; }, 500);
         if(result.status) {
+          this.promotions = result.promotions;
           this.order_details.products = result.data.products;
           this.order_details.order_list = result.data.order_list;
           this.order_details.order_list.forEach(element => {
