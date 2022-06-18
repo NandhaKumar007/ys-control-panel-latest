@@ -1,0 +1,169 @@
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb">
+    <h1>Courier Partners</h1>
+    <ul>
+      <li>Manage your prioritize delivery Partners</li>
+    </ul>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <button type="button" class="btn btn-primary" (click)="cpForm = { form_type: 'add' }; modalService.open(cpModal);">
+          Add New
+        </button>
+      </div>
+      <!-- search box -->
+      <div class="col-md-6 mt-sm-15">
+        <div class="form-group">
+          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- DATA LIST -->
+
+  <div *ngIf="list?.length" class="list-horizontal">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+          <!-- SINGLE LIST ITEM -->
+          <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index"
+            class="col-md-12 p-0 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+            <div class="d-flex flex-row">
+              <div class="flex-grow-1 pl-2 d-flex">
+                <div
+                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <!-- OTHER DATA -->
+                  <p class="w-30 w-sm-100 m-b-0">{{x.name}}</p>
+                  <p class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, cpModal);">
+                      <span class="black-outline-txt">Edit</span>
+                    </button>
+                    <button *ngIf="x.status!='active'" class="btn btn-wide blue-outline-btn w-md-100 mr-3"
+                      (click)="cpForm=x; modalService.open(statusModal, { centered: true });">
+                      <span class="blue-outline-txt">Enable</span>
+                    </button>
+                    <button *ngIf="x.status=='active'" class="btn btn-wide orng-outline-btn w-md-100 mr-3"
+                      (click)="cpForm=x; modalService.open(statusModal, { centered: true });">
+                      <span class="orng-outline-txt">Disable</span>
+                    </button>
+                    <button class="btn orng-outline-btn w-md-100"
+                      (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display. Catalogs help you segregate your products better.</p>
+    </div>
+  </div>
+</div>
+
+<!-- COURIER PARTNER MODAL -->
+<ng-template #cpModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ (cpForm.form_type=='add')? 'Add New': 'Update' }}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onSubmit()" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Type</label>
+            <select name="name" class="form-control select-arrow" [(ngModel)]="cpForm.name" required>
+              <option value="">-- Select --</option>
+              <option value="Delhivery">Delhivery</option>
+            </select>
+          </div>
+          <!-- Delhivery -->
+          <ng-container *ngIf="cpForm.name=='Delhivery'">
+            <div class="col-md-12 form-group mb-3">
+              <label>Mode</label>
+              <select name="mode" class="form-control select-arrow" [(ngModel)]="cpForm.mode" required>
+                <option value="test">Test</option>
+                <option value="live">Live</option>
+              </select>
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Token</label>
+              <input type="text" name="dp_token" class="form-control" [(ngModel)]="cpForm.token" required />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="cpForm.errorMsg">
+        <p class="text-danger">{{ cpForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="cpForm.submit" [ladda]="cpForm.submit">
+        {{ (cpForm.form_type=='add')? 'Add': 'Update' }}
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to {{cpForm.status=='active'? 'disable': 'enable'}} the <span
+    class="txt-grdint-highlight">"{{cpForm.name}}"</span> tag?</strong></p>
+    <div *ngIf="cpForm.errorMsg">
+      <p class="text-danger">{{ cpForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-wide btn-primary ladda-button m-1"
+    [disabled]="cpForm.submit" [ladda]="cpForm.submit">Yes</button>
+  </div>
+</ng-template>
+
+<!-- DELETE MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to remove <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span>?</strong></p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn ladda-button m-1"
+    [disabled]="deleteForm.submit" [ladda]="deleteForm.submit">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>

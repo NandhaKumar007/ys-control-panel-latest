@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
@@ -35,7 +36,7 @@ export class ProductComponent implements OnInit {
   categoryList: any = [{_id: 'all', name: "All Products"}, {_id: 'unlink', name: "Unlinked Products"}]; vendorList: any = [];
 
   constructor(
-    config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService,
+    config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private deployApi: DeploymentService, private datePipe: DatePipe,
     private router: Router, private excelService: ExcelService, public commonService: CommonService, private extraApi: ProductExtrasApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
@@ -211,6 +212,7 @@ export class ProductComponent implements OnInit {
       sendData['Price'] = productList[i].discounted_price;
       sendData['Stock'] = productList[i].stock;
       sendData['URL'] = this.commonService.store_details.base_url+'/product/'+productList[i].seo_details.page_url;
+      sendData['Created On'] = this.datePipe.transform(productList[i].created_on, 'dd MMM y hh:mm a');
       sendData['Description'] = productList[i].description;
       sendData['Category'] = await this.processArrayList('category', overallCategoryList, productList[i].category_id);
       sendData['Image'] = await this.processArrayList('image', overallCategoryList, productList[i].image_list);

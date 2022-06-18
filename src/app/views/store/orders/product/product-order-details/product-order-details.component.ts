@@ -84,7 +84,7 @@ export class ProductOrderDetailsComponent implements OnInit {
           }
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
           // shipping info
-          if(this.order_details.order_type=='delivery') {
+          if(this.order_details.order_type!='pickup') {
             if(this.order_details.vendor_list?.length) {
               this.order_details.vendor_list.forEach(ven => {
                 let shipIndex = this.commonService.shipping_list.findIndex(obj => obj._id==ven.shipping_method._id);

@@ -328,6 +328,10 @@ export class SidebarService {
           settingList.push({ icon: 'local_atm', name: 'Tax Rates', state: '/product-extras/tax-rates', type: 'link' });
           routePermissionList.push("tax_rates");
         }
+        if(this.commonService.master_token && ysFeatures.indexOf('courier_partners')!=-1) {
+          settingList.push({ icon: 'contact_mail', name: 'Courier Partners', state: '/courier-partners', type: 'link' });
+          routePermissionList.push("courier_partners");
+        }
         if(ysFeatures.indexOf('time_based_delivery')!=-1) {
           settingList.push({ icon: 'hourglass_top', name: 'Delivery Methods', state: '/shipping/delivery-methods', type: 'link' });
           routePermissionList.push("delivery_methods");
