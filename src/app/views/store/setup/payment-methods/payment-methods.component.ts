@@ -21,7 +21,7 @@ export class PaymentMethodsComponent implements OnInit {
 	payForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
   eventTrigger: any;
-  basic_payments: any = ["COD", "Gpay", "Bank Payment"];
+  basic_payments: any = ["COD"];
 
 	constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,
@@ -155,21 +155,27 @@ export class PaymentMethodsComponent implements OnInit {
     }
   }
   onUpdate() {
-    let formData = this.structureFormData();
-    this.api.UPDATE_PAYMENT(formData).subscribe(result => {
-      this.updateDeployStatus();
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = this.list.length;
-        this.commonService.payment_list = this.list;
-        this.commonService.updateLocalData('payment_list', this.list);
-      }
-      else {
-        this.payForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
+    if(this.basic_payments.indexOf(this.payForm.name)==-1 && this.commonService.store_details?.package_details?.package_id==environment.config_data.free_package_id) {
+      document.getElementById('closeModal').click();
+      document.getElementById("openCommonUpgradeModal").click();
+    }
+    else {
+      let formData = this.structureFormData();
+      this.api.UPDATE_PAYMENT(formData).subscribe(result => {
+        this.updateDeployStatus();
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.list = result.list;
+          this.maxRank = this.list.length;
+          this.commonService.payment_list = this.list;
+          this.commonService.updateLocalData('payment_list', this.list);
+        }
+        else {
+          this.payForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
   }
 
   // STATUS
@@ -191,22 +197,28 @@ export class PaymentMethodsComponent implements OnInit {
     }
   }
   onUpdateStatus() {
-    if(this.payForm.status=='active') this.payForm.status = 'inactive';
-    else this.payForm.status = 'active';
-    this.api.UPDATE_PAYMENT(this.payForm).subscribe(result => {
-      this.updateDeployStatus();
-			if(result.status) {
-        document.getElementById('closeModal').click();
-        this.list = result.list;
-        this.maxRank = this.list.length;
-        this.commonService.payment_list = this.list;
-        this.commonService.updateLocalData('payment_list', this.list);
-      }
-      else {
-        this.payForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-		});
+    if(this.basic_payments.indexOf(this.payForm.name)==-1 && this.commonService.store_details?.package_details?.package_id==environment.config_data.free_package_id) {
+      document.getElementById('closeModal').click();
+      document.getElementById("openCommonUpgradeModal").click();
+    }
+    else {
+      if(this.payForm.status=='active') this.payForm.status = 'inactive';
+      else this.payForm.status = 'active';
+      this.api.UPDATE_PAYMENT(this.payForm).subscribe(result => {
+        this.updateDeployStatus();
+        if(result.status) {
+          document.getElementById('closeModal').click();
+          this.list = result.list;
+          this.maxRank = this.list.length;
+          this.commonService.payment_list = this.list;
+          this.commonService.updateLocalData('payment_list', this.list);
+        }
+        else {
+          this.payForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
   }
 
   // DELETE

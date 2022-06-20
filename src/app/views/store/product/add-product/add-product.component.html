@@ -109,15 +109,15 @@
                     <label>{{ (configData.stone_acres_id==commonService.store_details._id)? 'Location': 'Brand (optional)' }}</label>
                     <input type="text" name="brand" class="form-control" [(ngModel)]="productForm.brand" #brand="ngModel" />
                   </div>
-                  <div class="col-md-3 form-group mb-3">
+                  <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="col-md-3 form-group mb-3">
                     <label>HSN Code (optional)</label>
                     <input type="text" name="hsn_code" class="form-control" [(ngModel)]="productForm.hsn_code" #hsn_code="ngModel" />
                   </div>
-                  <div *ngIf="commonService.store_details?.package_details?.package_id==configData.premium_package_id" class="col-md-3 form-group mb-3">
+                  <div class="col-md-3 form-group mb-3">
                     <label>Shipping Weight for 1 {{productForm.unit}} (in Kg optional)</label>
                     <input type="tel" name="weight" class="form-control" [(ngModel)]="productForm.weight" #weight="ngModel" appNumberOnly />
                   </div>
-                  <div class="col-md-3 form-group mb-3">
+                  <div *ngIf="commonService.store_details?.package_info?.category!='genie'" class="col-md-3 form-group mb-3">
                     <label>Rank</label>
                     <input type="number" name="rank" class="form-control" [(ngModel)]="productForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
                   </div>
@@ -205,116 +205,117 @@
                 </div>
           
                 <!-- variants -->
-                <div [ngClass]="productForm.variant_status? 'card p-3 mb-3': ''">
+                <div *ngIf="commonService.ys_features.indexOf('limited_product_variants')==-1" [ngClass]="productForm.variant_status? 'card p-3 mb-3': ''">
                   <div class="row">
                     <div class="form-group mb-3 col-md-12">
                       <label class="checkbox checkbox-primary">
-                        <input class="form-check-input" type="checkbox" name="variant_status" [(ngModel)]="productForm.variant_status" (change)="onChangeVariant(productForm.variant_status);"
-                          #variant_status="ngModel">
+                        <input class="form-check-input" type="checkbox" name="variant_status" [(ngModel)]="productForm.variant_status" (change)="onChangeVariant(productForm.variant_status);" >
                         <span>Apply Variants</span>
                         <span class="checkmark"></span>
                       </label>
                     </div>
                   </div>
           
-                  <div class="row ml-3" *ngFor="let x of productForm.variant_types; let i=index">
-                    <div class="col-md-12 mb-3">
-                      <div class="card card-in-card p-3">
-                        <ng-container>
-                          <span (click)="onRemoveVariantType(productForm, i);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
-                        </ng-container>
-                        <div class="row">
-                          <div class="col-md-4 form-group mb-3">
-                            <label>{{ (x?.variant_names=='custom_name')? 'Name': 'Select Name' }}</label>
-                            <select *ngIf="x.variant_names!='custom_name'" name="variant_names{{i}}" class="form-control" (change)="changeVariantNameSelect(x);" [(ngModel)]="x.variant_names" required>
-                              <option value="Size">Size</option>
-                              <option value="Colour">Colour</option>
-                              <ng-container *ngIf="configData.stone_acres_id==commonService.store_details._id">
-                                <option value="Type">Type</option>
-                                <option value="sqft">sqft</option>
-                              </ng-container>
-                              <option value="custom_name">Custom Name</option>
-                            </select>
-                            <input *ngIf="x.variant_names=='custom_name'" type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" (focusout)="onCreateVariantList(productForm.variant_types)" required />
-                          </div>
-                          <div *ngIf="commonService.ys_features.indexOf('variant_colors')==-1 || commonService.colorNames.indexOf(x.name)==-1" class="col-md-8 form-group mb-3">
-                            <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
-                              [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);"
-                              required></tag-input>
-                          </div>
-                          <div *ngIf="commonService.ys_features.indexOf('variant_colors')!=-1 && commonService.colorNames.indexOf(x.name)!=-1" class="col-md-8 form-group mb-3">
-                            <div class="custom-tag-list-wrapper">
-                              <span *ngFor="let opt of x.options; let m=index;" class="custom-tag-list mr-1">
-                                <span class="color-chips">
-                                  {{opt.display}}
-                                  <span (click)="x.options.splice(m, 1); onCreateVariantList(productForm.variant_types);" class="chip-close material-icons">close</span>
+                  <ng-container *ngIf="commonService.ys_features.indexOf('limited_product_variants')==-1 && productForm.variant_status">
+                    <div class="row ml-3" *ngFor="let x of productForm.variant_types; let i=index">
+                      <div class="col-md-12 mb-3">
+                        <div class="card card-in-card p-3">
+                          <ng-container>
+                            <span (click)="onRemoveVariantType(productForm, i);" class="material-icons item-close absolute-item-close float-right " aria-hidden="true">close</span>
+                          </ng-container>
+                          <div class="row">
+                            <div class="col-md-4 form-group mb-3">
+                              <label>{{ (x?.variant_names=='custom_name')? 'Name': 'Select Name' }}</label>
+                              <select *ngIf="x.variant_names!='custom_name'" name="variant_names{{i}}" class="form-control" (change)="changeVariantNameSelect(x);" [(ngModel)]="x.variant_names" required>
+                                <option value="Size">Size</option>
+                                <option value="Colour">Colour</option>
+                                <ng-container *ngIf="configData.stone_acres_id==commonService.store_details._id">
+                                  <option value="Type">Type</option>
+                                  <option value="sqft">sqft</option>
+                                </ng-container>
+                                <option value="custom_name">Custom Name</option>
+                              </select>
+                              <input *ngIf="x.variant_names=='custom_name'" type="text" name="name{{i}}" class="form-control" [(ngModel)]="x.name" (focusout)="onCreateVariantList(productForm.variant_types)" required />
+                            </div>
+                            <div *ngIf="commonService.ys_features.indexOf('variant_colors')==-1 || commonService.colorNames.indexOf(x.name)==-1" class="col-md-8 form-group mb-3">
+                              <tag-input class="w-100" name="options{{i}}" id="options" [(ngModel)]="x.options" #options="ngModel" placeholder="" [secondaryPlaceholder]="'Enter options separated by commas'"
+                                [separatorKeyCodes]="[188]" (onRemove)="onCreateVariantList(productForm.variant_types);" (onTextChange)="onCreateVariantList(productForm.variant_types);"
+                                required></tag-input>
+                            </div>
+                            <div *ngIf="commonService.ys_features.indexOf('variant_colors')!=-1 && commonService.colorNames.indexOf(x.name)!=-1" class="col-md-8 form-group mb-3">
+                              <div class="custom-tag-list-wrapper">
+                                <span *ngFor="let opt of x.options; let m=index;" class="custom-tag-list mr-1">
+                                  <span class="color-chips">
+                                    {{opt.display}}
+                                    <span (click)="x.options.splice(m, 1); onCreateVariantList(productForm.variant_types);" class="chip-close material-icons">close</span>
+                                  </span>
                                 </span>
-                              </span>
-                            </div>
-                            <div class="pt-3">
-                              <button type="button" (click)="selectedVariantIndex=i; onAddColorOptions(colorModal);" class="btn btn-wide btn-primary">
-                                Add Options
-                              </button>
+                              </div>
+                              <div class="pt-3">
+                                <button type="button" (click)="selectedVariantIndex=i; onAddColorOptions(colorModal);" class="btn btn-wide btn-primary">
+                                  Add Options
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-          
-                  <div class="rrow ml-3 mt-3" *ngIf="productForm.variant_status && productForm.variant_types.length < 3">
-                    <div class="col-md-12">
-                      <p class="primary-color" (click)="productForm.variant_types.push({ options: [] });">
-                        <b>ADD ANOTHER VARIANT</b>
-                      </p>
+            
+                    <div class="row ml-3 mt-3" *ngIf="productForm.variant_types.length < 3">
+                      <div class="col-md-12">
+                        <p class="primary-color" (click)="productForm.variant_types.push({ options: [] });">
+                          <b>ADD ANOTHER VARIANT</b>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-          
-                  <div class="row ml-3" *ngIf="productForm.variant_status">
-                    <div *ngFor="let x of productForm.variant_list; let i=index;" class="col-md-6 mb-3">
-                      <div class="card card-in-card p-3">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <p>
-                              <span *ngIf="x.variants[0]">
-                                <span style="color:#29bc94;">{{ x.variants[0] }}</span>
-                              </span>
-                              <span *ngIf="x.variants[1]"> |
-                                <span style="color:#763eaf;">{{ x.variants[1] }}</span>
-                              </span>
-                              <span *ngIf="x.variants[2]"> |
-                                <span style="color:#ff9517;">{{ x.variants[2] }}</span>
-                              </span>
-                            </p>
-                          </div>
-                          <div *ngIf="taxRates.length" class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
-                            <label>Tax Rates</label>
-                            <select name="taxrate_id{{i}}" class="form-control" [(ngModel)]="x.taxrate_id" #taxrate_id="ngModel" required>
-                              <option *ngFor="let tax of taxRates;" [ngValue]="tax._id">{{tax.name}}</option>
-                            </select>
-                          </div>
-                          <div class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
-                            <label>SKU</label>
-                            <input type="text" name="sku{{i}}" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" required />
-                          </div>
-                          <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
-                            <label>Selling Price</label>
-                            <input type="tel" name="selling_price{{i}}" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
-                              (input)="discountCalc(productForm)" appNumberOnly required />
-                          </div>
-                          <div *ngIf="productForm.disc_status" class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
-                            <label>Price after Discount</label>
-                            <input type="tel" name="discounted_price{{i}}" class="form-control" [(ngModel)]="x.discounted_price"
-                              #discounted_price="ngModel" appNumberOnly required />
-                          </div>
-                          <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
-                            <label>Stock</label>
-                            <input type="tel" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly required />
+            
+                    <div class="row ml-3">
+                      <div *ngFor="let x of productForm.variant_list; let i=index;" class="col-md-6 mb-3">
+                        <div class="card card-in-card p-3">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <p>
+                                <span *ngIf="x.variants[0]">
+                                  <span style="color:#29bc94;">{{ x.variants[0] }}</span>
+                                </span>
+                                <span *ngIf="x.variants[1]"> |
+                                  <span style="color:#763eaf;">{{ x.variants[1] }}</span>
+                                </span>
+                                <span *ngIf="x.variants[2]"> |
+                                  <span style="color:#ff9517;">{{ x.variants[2] }}</span>
+                                </span>
+                              </p>
+                            </div>
+                            <div *ngIf="taxRates.length" class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
+                              <label>Tax Rates</label>
+                              <select name="taxrate_id{{i}}" class="form-control" [(ngModel)]="x.taxrate_id" #taxrate_id="ngModel" required>
+                                <option *ngFor="let tax of taxRates;" [ngValue]="tax._id">{{tax.name}}</option>
+                              </select>
+                            </div>
+                            <div class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
+                              <label>SKU</label>
+                              <input type="text" name="sku{{i}}" class="form-control" [(ngModel)]="x.sku" #sku="ngModel" required />
+                            </div>
+                            <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
+                              <label>Selling Price</label>
+                              <input type="tel" name="selling_price{{i}}" class="form-control" [(ngModel)]="x.selling_price" #selling_price="ngModel"
+                                (input)="discountCalc(productForm)" appNumberOnly required />
+                            </div>
+                            <div *ngIf="productForm.disc_status" class="col-md-3 form-group mb-3 d-flex flex-column justify-content-between">
+                              <label>Price after Discount</label>
+                              <input type="tel" name="discounted_price{{i}}" class="form-control" [(ngModel)]="x.discounted_price"
+                                #discounted_price="ngModel" appNumberOnly required />
+                            </div>
+                            <div class="form-group mb-3 d-flex flex-column justify-content-between" [ngClass]="productForm.disc_status? 'col-md-2': 'col-md-3'">
+                              <label>Stock</label>
+                              <input type="tel" name="stock{{i}}" class="form-control" [(ngModel)]="x.stock" #stock="ngModel" appNumberOnly required />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </ng-container>
                 </div>
                 <!-- #Variants -->
           

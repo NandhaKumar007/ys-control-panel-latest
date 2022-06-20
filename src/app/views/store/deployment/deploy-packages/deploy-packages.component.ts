@@ -17,7 +17,7 @@ export class DeployPackagesComponent implements OnInit {
 
   pageLoader: boolean; packageList: any = [];
   selectedIndex = 0; packageForm: any = {};
-  paymentTypes: any = [];
+  paymentTypes: any = []; subscribeMonth: number = 1;
   environment: any = environment; freePlan: string;
   razorpayOptions: any = {
     customer_email: this.commonService.store_details.email,
@@ -95,7 +95,7 @@ export class DeployPackagesComponent implements OnInit {
       "multi-vendor-premium-plus": "Product Rating and Reviews"
     },
     {
-      "free": "UPI & Bank Transfer",
+      "free": "Manage Homepage",
       "essential": "Payment Gateway",
       "professional": "Facebook Pixel",
 
@@ -283,18 +283,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Sub domain",
+        "name": "Sub Domain",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Start your eCommerce store without a domain"
-      },
-      {
-        "name": "UPI & Bank Transfer",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Receive payments directly to your account with 0% processing fee"
       },
       {
         "name": "Desktop Access",
@@ -311,25 +304,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Collect TAX's applicable on your sale from your customers"
       },
       {
-        "name": "Store pickup",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Give your customer the option to pick-up from your store"
-      },
-      {
-        "name": "Theme colour",
+        "name": "Theme Colour",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Change the theme colour of your website"
-      },
-      {
-        "name": "Product Variants",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Add multiple combinations of product variants like size, colour, etc.."
       },
       {
         "name": "Category/Catalog",
@@ -346,25 +325,11 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Set shipping charges for your orders"
       },
       {
-        "name": "Contact Form Leads",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Get enquires form your cusotmer and convert it into sales"
-      },
-      {
         "name": "Store Controls",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Manage your business with quick on/off controls"
-      },
-      {
-        "name": "Browser Push Notificatons",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Keep your customer updated with regular push notifications"
       },
       {
         "name": "Invoice Generator",
@@ -381,13 +346,6 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "SSL is a security protocol that creates an encrypted link between a web server and a web browser"
       },
       {
-        "name": "Custom Size Chart",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Present measurements for product sizes available on sale"
-      },
-      {
         "name": "App Store Access",
         "free": true,
         "essential": true,
@@ -395,24 +353,72 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Access to our wide collection of apps"
       },
       {
-        "name": "Sales Report",
-        "free": true,
-        "essential": true,
-        "professional": true,
-        "help_content": "Export of sales data"
-      },
-      {
-        "name": "Layout editor",
+        "name": "Manage Homepage",
         "free": true,
         "essential": true,
         "professional": true,
         "help_content": "Change the banners and segment image to best portray your brand"
       },
       {
+        "name": "Cash On Delivery",
+        "free": true,
+        "essential": true,
+        "professional": true,
+        "help_content": "Process order payments via CoD"
+      },
+      {
+        "name": "UPI & Bank Transfer",
+        "essential": true,
+        "professional": true,
+        "help_content": "Receive payments directly to your account with 0% processing fee"
+      },
+      {
+        "name": "Store Pickup",
+        "essential": true,
+        "professional": true,
+        "help_content": "Give your customer the option to pick-up from your store"
+      },
+      {
+        "name": "Product Variants",
+        "essential": true,
+        "professional": true,
+        "help_content": "Add multiple combinations of product variants like size, colour, etc.."
+      },
+      {
+        "name": "Contact Form Leads",
+        "essential": true,
+        "professional": true,
+        "help_content": "Get enquires form your cusotmer and convert it into sales"
+      },
+      {
+        "name": "Browser Push Notifications",
+        "essential": true,
+        "professional": true,
+        "help_content": "Keep your customer updated with regular push notifications"
+      },
+      {
+        "name": "Custom Size Chart",
+        "essential": true,
+        "professional": true,
+        "help_content": "Present measurements for product sizes available on sale"
+      },
+      {
+        "name": "Sales Report",
+        "essential": true,
+        "professional": true,
+        "help_content": "Export of sales data"
+      },
+      {
+        "name": "Layout Editor",
+        "essential": true,
+        "professional": true,
+        "help_content": "Edit or add new segments to the homepage of your website"
+      },
+      {
         "name": "Discount Codes",
         "essential": true,
         "professional": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
+        "help_content": "Run powerfull campaigns to boost your sale"
       },
       {
         "name": "Product Search",
@@ -457,7 +463,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "View your customer database with contact information"
       },
       {
-        "name": "Advanced discount options",
+        "name": "Advanced Discount Options",
         "essential": true,
         "professional": true,
         "help_content": "Automated discount codes to boost your sale"
@@ -473,22 +479,22 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Already have your own domain, you can link it to your account"
       },
       {
-        "name": "Google search console",
+        "name": "Google Search Console",
         "professional": true,
         "help_content": "Helps google list your website and improve SEO"
       },
       {
-        "name": "Facebook domain verification",
+        "name": "Facebook Domain Verification",
         "professional": true,
         "help_content": "Domain Verification provides a way for you to claim ownership of your domain in Business Manager"
       },
       {
-        "name": "Google Adwords conversion tracking",
+        "name": "Google Adwords Conversion Tracking",
         "professional": true,
         "help_content": "Conversion tracking shows you what happens after a customer interacts with your ads"
       },
       {
-        "name": "Google Shopping ads",
+        "name": "Google Shopping Ads",
         "professional": true,
         "help_content": "Google shopping ads appear at the top of search results when you use search terms that indicate you're shopping for a specific product."
       },
@@ -503,9 +509,9 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "A code for your website that lets you measure, optimise and build audiences for your advertising campaigns"
       },
       {
-        "name": "Pincode/distance based delivery",
+        "name": "Pincode/Distance Based Delivery",
         "professional": true,
-        "help_content": "Filter out non-servicible areas based on delivery pincodes"
+        "help_content": "Filter out non-serviceable areas based on delivery pincodes"
       },
       {
         "name": "Basic SEO Editor",
@@ -528,12 +534,12 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Advanced discount options",
+        "name": "Advanced Discount Options",
         "lite": true,
         "starter": true,
         "growth": true,
         "premium": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
+        "help_content": "Run powerfull campaigns to boost your sale"
       },
       {
         "name": "Dashboard",
@@ -718,7 +724,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
       },
       {
-        "name": "Browser Push Notificatons",
+        "name": "Browser Push Notifications",
         "starter": true,
         "growth": true,
         "premium": true,
@@ -811,10 +817,10 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Advanced discount options",
+        "name": "Advanced Discount Options",
         "b2b-growth": true,
         "b2b-premium": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
+        "help_content": "Run powerfull campaigns to boost your sale"
       },
       {
         "name": "Dashboard",
@@ -955,7 +961,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
       },
       {
-        "name": "Browser Push Notificatons",
+        "name": "Browser Push Notifications",
         "b2b-growth": true,
         "b2b-premium": true,
         "help_content": "Keep your customer updated with regular push notifications"
@@ -1065,10 +1071,10 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Advanced discount options",
+        "name": "Advanced Discount Options",
         "service-starter": true,
         "service-growth": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
+        "help_content": "Run powerfull campaigns to boost your sale"
       },
       {
         "name": "Dashboard",
@@ -1209,7 +1215,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
       },
       {
-        "name": "Browser Push Notificatons",
+        "name": "Browser Push Notifications",
         "service-starter": true,
         "service-growth": true,
         "help_content": "Keep your customer updated with regular push notifications"
@@ -1311,10 +1317,10 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "No limit on the total number of products"
       },
       {
-        "name": "Advanced discount options",
+        "name": "Advanced Discount Options",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
-        "help_content": "Run powerfull campaingns to boost your sale"
+        "help_content": "Run powerfull campaigns to boost your sale"
       },
       {
         "name": "Dashboard",
@@ -1455,7 +1461,7 @@ export class DeployPackagesComponent implements OnInit {
         "help_content": "Reinforce brand trust by uploading custom testimonials with photos"
       },
       {
-        "name": "Browser Push Notificatons",
+        "name": "Browser Push Notifications",
         "multi-vendor-premium": true,
         "multi-vendor-premium-plus": true,
         "help_content": "Keep your customer updated with regular push notifications"
@@ -1978,6 +1984,7 @@ export class DeployPackagesComponent implements OnInit {
       }
     ];
     if(this.commonService.store_details?.package_info?.category=='genie') {
+      this.subscribeMonth = 6;
       this.support_service = genieSupportService;
       this.all_features = genieAllFeatures;
       this.mobile_top_features = genieMobileTopFeatures;
@@ -2011,7 +2018,7 @@ export class DeployPackagesComponent implements OnInit {
     this.packageForm.submit = false;
     if(this.freePlan==x._id) this.modalService.open(modalName, { centered: true });
     else {
-      let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
+      let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: this.subscribeMonth };
       this.api.PURCHASE_PLAN(formData).subscribe(result => {
         if(result.status) {
           this.paymentData = result.data;
@@ -2025,7 +2032,7 @@ export class DeployPackagesComponent implements OnInit {
   onSunscribeDefaultPlan(x) {
     this.packageForm.submit = true;
     this.packageForm = x;
-    let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: 1 };
+    let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: this.subscribeMonth };
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
         // store details
@@ -2049,7 +2056,7 @@ export class DeployPackagesComponent implements OnInit {
     this.packageForm.submit = true;
     let formData = {
       store_id: this.commonService.store_details._id, package_id: this.packageForm._id,
-      month: 1, payment_details: { name: x.name }
+      month: this.subscribeMonth, payment_details: { name: x.name }
     };
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
@@ -2074,7 +2081,7 @@ export class DeployPackagesComponent implements OnInit {
   }
 
   onChangePlan(x, modalName) {
-    this.api.CHANGE_PLAN({ store_id: this.commonService.store_details._id, package_id: x._id, month: 1 }).subscribe(result => {
+    this.api.CHANGE_PLAN({ store_id: this.commonService.store_details._id, package_id: x._id, month: this.subscribeMonth }).subscribe(result => {
       if(result.status) {
         this.upgradeData = result.data;
         this.paymentData = result.payment_data;
@@ -2089,7 +2096,7 @@ export class DeployPackagesComponent implements OnInit {
   onUpgrade(x) {
     this.upgradeData.submit = true;
     let formData = {
-      store_id: this.commonService.store_details._id, package_id: this.upgradeData.package_details._id, month: 1,
+      store_id: this.commonService.store_details._id, package_id: this.upgradeData.package_details._id, month: this.subscribeMonth,
       payment_details: { name: x.name }, upgrade_apps: this.upgradeData.upgrade_apps
     };
     this.api.CHANGE_PLAN(formData).subscribe(result => {

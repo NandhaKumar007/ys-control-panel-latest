@@ -100,8 +100,10 @@ export class SidebarService {
           prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
           routePermissionList.push("faq");
         }
-        prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
-        routePermissionList.push("image_tag");
+        if(ysFeatures.indexOf('image_label')!=-1) {
+          prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
+          routePermissionList.push("image_tag");
+        }
         if(this.commonService.store_details?.package_info?.category!='genie') {
           prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
           routePermissionList.push("product_taxonomy");
@@ -351,12 +353,13 @@ export class SidebarService {
         );
         this.sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
         // my account
-        routePermissionList.push("deployment", "app_store", "billing", "branches");
+        routePermissionList.push("deployment", "app_store", "billing");
         let accountList: IChildItem[] = [];
-        accountList.push(
-          { icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' },
-          { icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' }
-        );
+        accountList.push({ icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' });
+        if(ysFeatures.indexOf('store_pickup')!=-1) {
+          accountList.push({ icon: 'store', name: 'Branches', state: '/account/branches', type: 'link' });
+          routePermissionList.push("branches");
+        }
         if(ysFeatures.indexOf('1_staff')!=-1 || ysFeatures.indexOf('5_staff')!=-1 || ysFeatures.indexOf('10_staff')!=-1 || ysFeatures.indexOf('20_staff')!=-1) {
           accountList.push({ icon: 'supervised_user_circle', name: 'Users', state: '/account/users', type: 'link' });
           routePermissionList.push("sub_users");

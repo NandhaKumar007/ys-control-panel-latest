@@ -839,7 +839,7 @@ tag-input {
   transition: all 0.5s ease;
   &:hover,
   &:active,
-  &:focus {
+  &:focus, .active {
     color: $primary-btn-hvr-txt !important;
     background-color: $primary-btn-hvr-bg !important;
     border-color: $primary-btn-hvr-bdr !important;

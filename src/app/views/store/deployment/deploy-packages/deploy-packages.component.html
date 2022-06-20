@@ -18,6 +18,12 @@
 
   <!-- desktop -->
   <section class="pricing-section-wrapper desktop-pricing-table">
+    <div *ngIf="commonService.store_details?.package_info?.category=='genie'" class="row">
+      <div class="col-md-12" align="center">
+        <button class="btn btn-primary mr-3" [ngClass]="(subscribeMonth==6)? 'active': ''" (click)="subscribeMonth=6;">6 Months</button>
+        <button class="btn btn-primary" [ngClass]="(subscribeMonth==12)? 'active': ''" (click)="subscribeMonth=12;">12 Months</button>
+      </div>
+    </div>
     <!-- pricing heads-->
     <div class="card pricing-table-card-wrapper p-3 mt-4">
       <div class="row">
@@ -75,15 +81,15 @@
             <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
-                  <p *ngIf="x.keyword!='free'" class="m-0">
+                  <p class="m-0">
                     <span class="complete-strike" *ngIf="x.currency_types[commonService.store_currency?.country_code]?.selling_amount != x.currency_types[commonService.store_currency?.country_code]?.amount">
-                      {{x.currency_types[commonService.store_currency?.country_code]?.selling_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                      {{(x.currency_types[commonService.store_currency?.country_code]?.selling_amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                     </span>
-                    {{x.currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                    {{(x.currency_types[commonService.store_currency?.country_code]?.amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                   </p>
-                  <p *ngIf="x.keyword=='free'" class="m-0">
+                  <!-- <p class="m-0">
                     {{0 | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
-                  </p>
+                  </p> -->
                 </div>
               </div>
             </div>
@@ -313,6 +319,12 @@
 
   <!-- mobile -->
   <section class="pricing-section-wrapper mobile-pricing-table">
+    <div *ngIf="commonService.store_details?.package_info?.category=='genie'" class="row mb-3">
+      <div class="col-md-12" align="center">
+        <button class="btn btn-primary mr-3" [ngClass]="(subscribeMonth==6)? 'active': ''" (click)="subscribeMonth=6;">6 Months</button>
+        <button class="btn btn-primary" [ngClass]="(subscribeMonth==12)? 'active': ''" (click)="subscribeMonth=12;">12 Months</button>
+      </div>
+    </div>
     <ul class="nav nav-tabs sticky-pricing-nav d-flex justify-content-center">
       <li *ngFor="let x of packageList; let i=index;" class="nav-item" [ngStyle]="{'width.%': (packageList.length===1)? '100':(packageList.length===2)? '50': '33.33'}">
         <a class="nav-link text-center" (click)="selectedIndex=i;" [ngClass]="i===selectedIndex? 'active': ''">{{x.disp_name}}</a>
@@ -357,15 +369,15 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p *ngIf="packageList[selectedIndex].keyword!='free'" class="m-0">
+                <p class="m-0">
                   <span class="complete-strike mr-1" *ngIf="packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount != packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount">
-                    {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                    {{(packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                   </span>
-                  {{packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                  {{(packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                 </p>
-                <p *ngIf="packageList[selectedIndex].keyword=='free'" class="m-0">
+                <!-- <p *ngIf="packageList[selectedIndex].keyword=='free'" class="m-0">
                   {{0 | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
-                </p>
+                </p> -->
               </div>
             </div>
             <!-- Transaction Fee -->

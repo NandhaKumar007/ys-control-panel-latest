@@ -237,7 +237,7 @@
             </div>
           </ng-container>
           <!-- DP Integration -->
-          <!-- <ng-container *ngIf="commonService.master_token"> -->
+          <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')!=-1">
             <div class="col-md-12 border-top mt-1 mb-3"></div>
             <div class="col-md-12 form-group mb-3">
               <label class="checkbox checkbox-primary">
@@ -273,7 +273,7 @@
                 </div>
               </ng-container>
             </ng-container>
-          <!-- </ng-container> -->
+          </ng-container>
         </div>
       </div>
       <div *ngIf="shippingForm.errorMsg">
