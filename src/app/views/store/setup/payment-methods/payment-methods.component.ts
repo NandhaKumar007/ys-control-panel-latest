@@ -22,6 +22,7 @@ export class PaymentMethodsComponent implements OnInit {
   pageLoader: boolean; search_bar: string;
   eventTrigger: any;
   basic_payments: any = ["COD"];
+  env: any = environment;
 
 	constructor(
     config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: SetupService,

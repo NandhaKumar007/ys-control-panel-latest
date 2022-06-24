@@ -219,7 +219,7 @@
             <div class="col-md-12">
               <b class="add-another mt-2 mb-3">WEBHOOK SETUP</b>
               <p style="word-break: break-all;"><strong>Webhook URL:</strong>
-                https://yourstore.io/api/store_details/razorpay_webhook/{{commonService.store_details._id}}</p>
+                {{env.ws_url}}/store_details/razorpay_webhook/{{commonService.store_details._id}}</p>
               <p><strong>Secret:</strong> {{commonService.store_details._id}}</p>
               <p><strong>Active Events:</strong> order.paid</p>
             </div>
@@ -326,7 +326,7 @@
             <div class="col-md-12 mt-3">
               <p><strong class="add-another">Domain Name:</strong> {{ commonService.store_details?.base_url }}</p>
               <p><strong class="add-another">Authorization Callback URL:</strong>
-                https://yourstore.io/api/store_details/foloosi_payment/{{commonService.store_details._id}}</p>
+                {{env.ws_url}}/store_details/foloosi_payment/{{commonService.store_details._id}}</p>
             </div>
           </ng-container>
           <!-- gpay -->

@@ -3,6 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { AdminApiService } from '../../../services/admin-api.service';
 import { CommonService } from '../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-ys-payments',
@@ -17,6 +18,7 @@ export class YsPaymentsComponent implements OnInit {
   page = 1; pageSize = 10; scrollPos: number = 0;
   filterForm: any = { type: 'all', from_date: new Date(), to_date: new Date() };
   list: any = []; params: any = {};
+  env: any = environment;
 
   constructor(private activeRoute: ActivatedRoute, private api: AdminApiService, public commonService: CommonService) {
     let startDate = new Date(new Date().setHours(0,0,0,0));

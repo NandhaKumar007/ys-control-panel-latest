@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../../services/api.service';
 import { CommonService } from '../../../../services/common.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-vendor-auth-layout',
@@ -37,7 +38,7 @@ export class VendorAuthLayoutComponent implements OnInit {
   getDomainInfo(storeName) {
     this.api.DOMAIN_INFO(storeName).subscribe(result => {
       if(result.status) {
-        let storeLogo = "https://yourstore.io/api/uploads/"+result.data._id+"/logo.png?v="+new Date().valueOf();
+        let storeLogo = environment.img_baseurl+"uploads/"+result.data._id+"/logo.png?v="+new Date().valueOf();
         let bgColor = result.data.theme_colors.primary;
         if(result.data.theme_colors.vendor_bg) bgColor = result.data.theme_colors.vendor_bg;
         let vInfo = { id: result.data._id, name: result.data.sub_domain, logo: storeLogo, bg_color: bgColor };
