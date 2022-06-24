@@ -51,7 +51,7 @@ export class SettingComponent implements OnInit {
   curr_date: any = new Date();
   imgBaseUrl = environment.img_baseurl;
   configData: any= environment.config_data;
-  btnLoader: boolean;
+  btnLoader: boolean; invoiceNum: string;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService,
@@ -220,6 +220,7 @@ export class SettingComponent implements OnInit {
     this.api.STORE_DETAILS().subscribe((result) => {
       if(result.status) {
         this.app_setting = { invoice_status: result.data.invoice_status, invoice_config: result.data.invoice_config };
+        this.invoiceNumFormat();
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
@@ -463,6 +464,10 @@ export class SettingComponent implements OnInit {
       else if(this.app_setting?.announcebar_config?.content.includes("TIMER "))
         this.app_setting.announcebar_config.content = this.app_setting.announcebar_config.content.replace("TIMER ", "");
     }
+  }
+
+  invoiceNumFormat() {
+    this.invoiceNum = String(this.app_setting.invoice_config.next_invoice_no).padStart(this.app_setting.invoice_config.min_digit, '0');
   }
 
   fileChangeListener(event) {

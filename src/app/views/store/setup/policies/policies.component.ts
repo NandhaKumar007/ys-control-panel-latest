@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SetupService } from '../setup.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-policies',
@@ -13,7 +14,7 @@ export class PoliciesComponent implements OnInit {
   params: any; pageLoader: boolean;
   formData: any = {}; editForm: any = {};
 
-  constructor(private activeRoute: ActivatedRoute, private api: SetupService) { }
+  constructor(private activeRoute: ActivatedRoute, private api: SetupService, public commonService: CommonService) { }
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe((params: Params) => {

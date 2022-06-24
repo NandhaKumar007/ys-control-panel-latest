@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SetupService } from '../setup.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-contact-page',
@@ -12,7 +13,7 @@ export class ContactPageComponent implements OnInit {
   pageLoader: boolean;
   formData: any = {}; editForm: any = {};
 
-  constructor(private api: SetupService) { }
+  constructor(private api: SetupService, public commonService: CommonService) { }
 
   ngOnInit(): void {
     this.pageLoader = true; delete this.editForm;

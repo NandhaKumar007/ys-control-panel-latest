@@ -62,7 +62,7 @@ export class AddProductComponent implements OnInit {
       this.maxRank = params.rank;
       this.step_num = 1; this.btnLoader = false; this.pageLoader = true;
       this.productForm = {
-        rank: this.maxRank, image_list: [{}], variant_types: [], seo_details: {}, unit: 'Pcs',
+        rank: this.maxRank, image_list: [], variant_types: [], seo_details: {}, unit: 'Pcs',
         allow_cod: true, video_details: {}, available_days: [
           { code: 0, day: "Sunday", active: false, opening_hrs: [] }, { code: 1, day: "Monday", active: false, opening_hrs: [] },
           { code: 2, day: "Tuesday", active: false, opening_hrs: [] }, { code: 3, day: "Wednesday", active: false, opening_hrs: [] },
@@ -241,6 +241,7 @@ export class AddProductComponent implements OnInit {
         if(obj.checked) this.productForm.badge_list.push(obj._id);
       });
     }
+    if(!this.productForm.image_list.length) this.productForm.image_list = [{}];
     // add product
     this.api.ADD_PRODUCT(this.productForm).subscribe(result => {
       this.updateDeployStatus();

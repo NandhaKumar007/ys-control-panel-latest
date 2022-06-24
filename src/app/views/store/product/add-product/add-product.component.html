@@ -732,7 +732,7 @@
             </label>
             <div class="mt-1" align="left">
               <label>Image Label</label>
-              <input type="text" name="title{{i}}" class="form-control" [(ngModel)]="x.title" #title="ngModel" />
+              <input type="text" name="title{{i}}" class="form-control" [(ngModel)]="x.title" #title="ngModel" maxlength="15" />
             </div>
             <div *ngIf="commonService.ys_features.indexOf('advanced_seo')!=-1" class="mt-1" align="left">
               <label>Image Alt Name</label>
@@ -757,7 +757,7 @@
           <label class="w-100">
             <div class="add-another-opt">
               <input type="file" name="prodImage" id="prodImage" style="display: none;" (change)="imgIndex=0; imgType='product'; fileChangeListener('prodImage', $event);" accept="image/jpeg, image/png" />
-              <p>ADD ANOTHER IMAGE</p>
+              <p>ADD {{ productForm.image_list?.length? 'ANOTHER': 'NEW' }} IMAGE</p>
             </div>
           </label>
         </div>

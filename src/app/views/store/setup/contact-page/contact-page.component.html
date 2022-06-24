@@ -6,7 +6,11 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-9">
-        <h1>Contact Page</h1>
+        <h1>Contact Page
+          <a [href]="commonService.store_details?.base_url+'/contact-us'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
         <ul>
           <li>manage your contact page details</li>
         </ul>

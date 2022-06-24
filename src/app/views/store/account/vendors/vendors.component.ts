@@ -36,7 +36,7 @@ export class VendorsComponent implements OnInit {
   state_list: any = [];
   reg_address_fields: any = [];
   pick_address_fields: any = [];
-  invForm: any = {};
+  invForm: any = {}; invoiceNum: string;
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
@@ -157,6 +157,7 @@ export class VendorsComponent implements OnInit {
         let deployDetails = result.data;
         if(deployDetails?.vendor_inv_status) this.invForm.vendor_inv_status = deployDetails.vendor_inv_status;
         if(deployDetails?.vendor_inv_config) this.invForm.vendor_inv_config = deployDetails.vendor_inv_config;
+        this.invoiceNumFormat();
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
@@ -337,6 +338,10 @@ export class VendorsComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  invoiceNumFormat() {
+    this.invoiceNum = String(this.invForm.vendor_inv_config.next_invoice_no).padStart(this.invForm.vendor_inv_config.min_digit, '0');
   }
 
   fileChangeListener(event) {

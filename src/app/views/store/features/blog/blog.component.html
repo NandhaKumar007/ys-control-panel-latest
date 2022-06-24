@@ -6,7 +6,11 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-8">
-        <h1>Blog</h1>
+        <h1>Blog
+          <a [href]="commonService.store_details?.base_url+'/blogs'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
         <ul><li>Add and edit blogs</li></ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">

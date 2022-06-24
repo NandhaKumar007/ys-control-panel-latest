@@ -694,7 +694,7 @@
     <div class="modal-body">
       <div class="form-group">
         <div class="row">
-          <div class="form-group mb-3 col-md-12">
+          <div class="form-group mb-3 col-md-8">
             <label class="checkbox checkbox-primary">
               <input class="form-check-input" type="checkbox" name="vendor_inv_status" [(ngModel)]="invForm.vendor_inv_status" #vendor_inv_status="ngModel">
               <span>Enable Invoice</span>
@@ -702,13 +702,16 @@
             </label>
           </div>
           <ng-container *ngIf="invForm.vendor_inv_status && invForm.vendor_inv_config">
+            <div class="col-md-4 form-group mb-2">
+              <b>{{invForm.vendor_inv_config.prefix+invoiceNum+invForm.vendor_inv_config.suffix}}</b>
+            </div>
             <div class="col-md-4 form-group mb-3">
               <label>Prefix</label>
               <input type="text" name="inv_prefix" class="form-control" [(ngModel)]="invForm.vendor_inv_config.prefix" #inv_prefix="ngModel" />
             </div>
             <div class="col-md-4 form-group mb-3">
               <label>Upcoming Invoice Number</label>
-              <input type="tel" name="next_invoice_no" class="form-control" [(ngModel)]="invForm.vendor_inv_config.next_invoice_no" #next_invoice_no="ngModel" required appNumberOnly />
+              <input type="tel" name="next_invoice_no" class="form-control" [(ngModel)]="invForm.vendor_inv_config.next_invoice_no" (ngModelChange)="invoiceNumFormat();" required appNumberOnly />
             </div>
             <div class="col-md-4 form-group mb-3">
               <label>Suffix</label>
@@ -716,7 +719,7 @@
             </div>
             <div class="col-md-4 form-group mb-3">
               <label>Min digit</label>
-              <input type="tel" name="inv_min_digit" class="form-control" [(ngModel)]="invForm.vendor_inv_config.min_digit" #inv_min_digit="ngModel" required appNumberOnly />
+              <input type="tel" name="inv_min_digit" class="form-control" [(ngModel)]="invForm.vendor_inv_config.min_digit" (ngModelChange)="invoiceNumFormat();" required appNumberOnly />
             </div>
           </ng-container>
         </div>

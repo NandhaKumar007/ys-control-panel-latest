@@ -6,10 +6,26 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-9">
-        <h1 *ngIf="params?.type=='privacy'">Privacy Policy</h1>
-        <h1 *ngIf="params?.type=='shipping'">Shipping Policy</h1>
-        <h1 *ngIf="params?.type=='cancellation'">Cancellation Policy</h1>
-        <h1 *ngIf="params?.type=='terms-conditions'">Terms and Conditions</h1>
+        <h1 *ngIf="params?.type=='privacy'">Privacy Policy
+          <a [href]="commonService.store_details?.base_url+'/privacy-policy'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
+        <h1 *ngIf="params?.type=='shipping'">Shipping Policy
+          <a [href]="commonService.store_details?.base_url+'/shipping-policy'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
+        <h1 *ngIf="params?.type=='cancellation'">Cancellation Policy
+          <a [href]="commonService.store_details?.base_url+'/cancellation-policy'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
+        <h1 *ngIf="params?.type=='terms-conditions'">Terms and Conditions
+          <a [href]="commonService.store_details?.base_url+'/terms-and-conditions'" target="_blank">
+            <i class="material-icons-outlined ml-2" style="font-size: 18px;">open_in_new</i>
+          </a>
+        </h1>
         <ul>
           <li *ngIf="params?.type=='privacy'">View and manage your privacy policy</li>
           <li *ngIf="params?.type=='shipping'">View and manage your shipping policy</li>

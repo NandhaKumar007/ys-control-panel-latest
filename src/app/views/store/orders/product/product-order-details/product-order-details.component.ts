@@ -61,7 +61,8 @@ export class ProductOrderDetailsComponent implements OnInit {
                 this.commonService.goBack();
             }
             else {
-              if(this.order_details.order_status!=this.params.type) this.commonService.goBack();
+              if(this.params.type!='inactive' && this.order_details.order_status!=this.params.type)
+                this.commonService.goBack();
             }
           }
           // item list
