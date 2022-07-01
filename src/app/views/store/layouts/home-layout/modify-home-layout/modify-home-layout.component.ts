@@ -81,7 +81,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
       this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1, content_status: true, content_details: {} });
     }
     else {
-      this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1 });
+      this.layoutDetails.image_list.push({ rank: this.layoutDetails.image_list.length+1, points_list: [] });
     }
   }
 

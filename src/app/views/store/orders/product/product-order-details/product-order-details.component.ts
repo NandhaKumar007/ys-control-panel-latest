@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrderService } from '../../order.service';
 import { AccountService } from '../../../account/account.service';
+import { CustomerApiService } from '../../../../../services/customer-api.service';
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
@@ -40,7 +41,8 @@ export class ProductOrderDetailsComponent implements OnInit {
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private activeRoute: ActivatedRoute, private accApi: AccountService,
-    private router: Router, private api: OrderService, public commonService: CommonService, private extrasApi: ProductExtrasApiService
+    private router: Router, private api: OrderService, public commonService: CommonService, private extrasApi: ProductExtrasApiService,
+    private customerApi: CustomerApiService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -851,6 +853,21 @@ export class ProductOrderDetailsComponent implements OnInit {
       else {
         this.groupForm.submit = false;
         this.groupForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+
+  onUpdateCustomerNote() {
+    this.editForm.submit = true;
+    this.customerApi.UPDATE_CUSTOMER(this.editForm).subscribe(result => {
+      this.editForm.submit = false;
+      if(result.status) {
+        document.getElementById("closeModal").click();
+        this.ngOnInit();
+      }
+      else {
+        this.editForm.errorMsg = result.message;
         console.log("response", result);
       }
     });

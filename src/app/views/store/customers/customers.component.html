@@ -60,7 +60,7 @@
                     <div class="btn-group w-md-100">
                       <!-- orders -->
                       <div
-                        *ngIf="commonService.store_details?.type=='order_based' || commonService.store_details?.type=='restaurant_based'"
+                        *ngIf="commonService.store_details?.type=='order_based' || commonService.store_details?.type=='restaurant_based' || commonService.store_details?.type=='multi_vendor'"
                         class="btn-group w-md-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                         <button class="btn btn-wide btn-primary w-md-100" ngbDropdownToggle>View Orders</button>
                         <div class="dropdown-menu" ngbDropdownMenu>

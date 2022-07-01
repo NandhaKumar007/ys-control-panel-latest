@@ -74,8 +74,29 @@
       </div>
     </div>
 
+    <!-- note -->
+    <ng-container *ngIf="customerDetails.notes">
+      <div class="col-md-12 mt-3">
+        <p class="add-another x-close mb-0">NOTE</p>
+      </div>
+      <div *ngIf="customerDetails.notes" class="data-list-card-wrapper mt-1">
+        <div class="data-list-card-inner">
+          <div class="row m-0">
+            <div class="col-md-12 list-item data-list-card p-0">
+              <div class="d-flex flex-row">
+                <div class="flex-grow-1 d-flex">
+                  <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                    <p class="mb-0">{{customerDetails.notes}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
-    <div class="col-md-12 mb-3 border-top"></div>
+    <div class="col-md-12 mt-3 mb-3 border-top"></div>
     <!-- address -->
     <div class="col-md-12">
       <div class="row">
@@ -197,18 +218,20 @@
           <div class="input-group">
             <div class="input-group-prepend flex-column w-40 w-sm-100 mr-3 c-sm-m-0 c-sm-mb-3">
               <label>Dial Code</label>
-              <select name="dial_code" class="form-control" [(ngModel)]="editForm.dial_code" #dial_code="ngModel"
-                required>
+              <select name="dial_code" class="form-control" [(ngModel)]="editForm.dial_code" #dial_code="ngModel" >
                 <option *ngFor="let x of commonService.country_list | orderAsc: 'dial_code';" [ngValue]="x.dial_code">
                   {{x.dial_code}}</option>
               </select>
             </div>
             <div class="flex-column w-55 w-sm-100">
               <label>Mobile</label>
-              <input type="tel" name="mobile" [(ngModel)]="editForm.mobile" #mobile="ngModel" class="form-control"
-              appNumberOnly required />
+              <input type="tel" name="mobile" [(ngModel)]="editForm.mobile" #mobile="ngModel" class="form-control" appNumberOnly />
             </div>
           </div>
+        </div>
+        <div class="col-md-12 form-group mb-3">
+          <label>Note</label>
+          <textarea class="form-control" rows="3" aria-label="With textarea" name="notes" [(ngModel)]="editForm.notes"></textarea>
         </div>
       </div>
       <div *ngIf="editForm.errorMsg">

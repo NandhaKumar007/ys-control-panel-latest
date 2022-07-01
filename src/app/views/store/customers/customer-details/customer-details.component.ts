@@ -57,7 +57,10 @@ export class CustomerDetailsComponent implements OnInit {
   // EDIT CUSTOMER
   onEditCustomer(x, modalName) {
     this.btnLoader = false;
-    this.editForm = { _id: x._id, name: x.name, email: x.email, dial_code: x.dial_code, mobile: x.mobile };
+    this.editForm = { _id: x._id, name: x.name, email: x.email };
+    if(x.dial_code) this.editForm.dial_code = x.dial_code;
+    if(x.mobile) this.editForm.mobile = x.mobile;
+    if(x.notes) this.editForm.notes = x.notes;
     this.modalService.open(modalName);
   }
   onUpdateCustomer() {
