@@ -81,7 +81,20 @@
             <div *ngFor="let x of packageList;" class="d-flex pricing-col p-0" [ngClass]="{ 'col-md-12': packageList.length===1, 'col-md-6': packageList.length===2, 'col-md-4': packageList.length===3 }">
               <div class="pricing-col-inner w-100">
                 <div class="">
-                  <p class="m-0">
+                  <!-- Genie -->
+                  <ng-container *ngIf="commonService.store_details?.package_info?.category=='genie' && commonService.store_currency?.country_code=='INR'">
+                    <p class="m-0">
+                      <span class="complete-strike" *ngIf="tempGenieSellingPrice[x._id][subscribeMonth] != tempGeniePrice[x._id][subscribeMonth]">
+                        {{tempGenieSellingPrice[x._id][subscribeMonth] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                      </span>
+                      {{tempGeniePrice[x._id][subscribeMonth] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                    </p>
+                    <p *ngIf="tempGenieMonthPrice[x._id]>0">
+                      {{tempGenieMonthPrice[x._id] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month
+                    </p>
+                  </ng-container>
+                  <!-- !Genie -->
+                  <p *ngIf="commonService.store_details?.package_info?.category!='genie' || commonService.store_currency?.country_code!='INR'" class="m-0">
                     <span class="complete-strike" *ngIf="x.currency_types[commonService.store_currency?.country_code]?.selling_amount != x.currency_types[commonService.store_currency?.country_code]?.amount">
                       {{(x.currency_types[commonService.store_currency?.country_code]?.selling_amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                     </span>
@@ -369,7 +382,20 @@
             </div>
             <div class="col-6 p-0">
               <div class="m_pricing-col-inner m-pricing-r">
-                <p class="m-0">
+                <!-- Genie -->
+                <ng-container *ngIf="commonService.store_details?.package_info?.category=='genie' && commonService.store_currency?.country_code=='INR'">
+                  <p class="m-0">
+                    <span class="complete-strike mr-1" *ngIf="tempGenieSellingPrice[packageList[selectedIndex]._id][subscribeMonth] != tempGeniePrice[packageList[selectedIndex]._id][subscribeMonth]">
+                      {{tempGenieSellingPrice[packageList[selectedIndex]._id][subscribeMonth] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                    </span>
+                    {{tempGeniePrice[packageList[selectedIndex]._id][subscribeMonth] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                  </p>
+                  <p *ngIf="tempGenieMonthPrice[packageList[selectedIndex]._id]>0">
+                    {{tempGenieMonthPrice[packageList[selectedIndex]._id] | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}/month
+                  </p>
+                </ng-container>
+                <!-- !Genie -->
+                <p *ngIf="commonService.store_details?.package_info?.category!='genie' || commonService.store_currency?.country_code!='INR'" class="m-0">
                   <span class="complete-strike mr-1" *ngIf="packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount != packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.amount">
                     {{(packageList[selectedIndex].currency_types[commonService.store_currency?.country_code]?.selling_amount * this.subscribeMonth) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
                   </span>
@@ -597,7 +623,12 @@
                 <p class="mb-0">Subscription Charges</p>
               </div>
               <div class="col-3 d-flex justify-content-end">
-                <p class="mb-0">{{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</p>
+                <p *ngIf="commonService.store_details?.package_info?.category=='genie' && commonService.store_currency?.country_code=='INR'" class="mb-0">
+                  {{paymentData.package_details?.price | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                </p>
+                <p *ngIf="commonService.store_details?.package_info?.category!='genie' || commonService.store_currency?.country_code!='INR'" class="mb-0">
+                  {{(paymentData.package_details?.price*paymentData.package_details?.month) | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}
+                </p>
               </div>
             </div>
             <div *ngIf="paymentData?.discount>0" class="row m-0">

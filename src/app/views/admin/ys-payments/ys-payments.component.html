@@ -70,7 +70,7 @@
                   <p class="w-20 w-md-100 m-b-0">{{x.created_on | date: "dd MMM y hh:mm a"}}</p>
                   <p class="c-w-15 w-md-100 m-b-0">{{x.amount | currency: x.currency_type?.country_code}}</p>
                   <div class="mr-2 c-w-15 w-md-100 d-lg-block item-actions c-m-md-0">
-                    <a href="{{env.img_baseurl}}uploads/{{x.store_id}}/invoices/{{x.invoice_number}}.pdf" target="_blank" class="btn orng-outline-btn w-md-100">
+                    <a href="{{env.img_baseurl}}uploads/{{x.store_id}}/invoices/{{x._id}}.pdf" target="_blank" class="btn orng-outline-btn w-md-100">
                       <span class="orng-outline-txt">Invoice</span>
                     </a>
                   </div>

@@ -124,6 +124,11 @@ export class PaymentMethodsComponent implements OnInit {
       else if(x.name=='Fatoorah' || x.name=='Flutterwave') {
         this.payForm.token = x.config.token;
       }
+      else if(x.name=='Billbox') {
+        this.payForm.app_id = x.config.app_id;
+        this.payForm.app_ref = x.config.app_ref;
+        this.payForm.secret = x.config.secret;
+      }
       else if(x.name=='Telr') {
         this.payForm.key = x.config.key;
         this.payForm.ivp_store = x.config.ivp_store;
@@ -300,6 +305,10 @@ export class PaymentMethodsComponent implements OnInit {
     else if(paymentData.name=='Fatoorah' || paymentData.name=='Flutterwave') {
       paymentData.mode = this.payForm.mode;
       paymentData.config = { token: this.payForm.token };
+    }
+    else if(paymentData.name=='Billbox') {
+      paymentData.mode = this.payForm.mode;
+      paymentData.config = { app_id: this.payForm.app_id, app_ref: this.payForm.app_ref, secret: this.payForm.secret };
     }
     else if(paymentData.name=='Telr') {
       paymentData.mode = this.payForm.mode;

@@ -620,15 +620,21 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   onViewInvoice(modalName) {
-    this.invoice_details = this.order_details;
-    this.invoice_details.loader = true;
-    if(!this.tax_rates?.length) {
-      this.extrasApi.TAX_LIST().subscribe(result => {
-        if(result.status) this.tax_rates = result.list;
-        this.invoiceCont(modalName);
-      });
-    }
-    else this.invoiceCont(modalName);
+    this.invoice_details = { loader: true };
+    this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
+      if(result.status) {
+        this.invoice_details = result.data;
+        this.invoice_details.loader = true;
+        if(!this.tax_rates?.length) {
+          this.extrasApi.TAX_LIST().subscribe(result => {
+            if(result.status) this.tax_rates = result.list;
+            this.invoiceCont(modalName);
+          });
+        }
+        else this.invoiceCont(modalName);
+      }
+      else console.log("response", result);
+    });
   }
   onViewVendorInvoice(x, modalName) {
     this.invoice_details = x;

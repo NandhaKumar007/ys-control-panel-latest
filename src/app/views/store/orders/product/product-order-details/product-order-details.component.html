@@ -2590,22 +2590,7 @@
                 <p>Subtotal</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p *ngIf="tax_config?.tax <= 0"
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total)">
-                </p>
-                <p *ngIf="tax_config?.tax > 0"
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.sub_total_wo_tax)">
-                </p>
-              </td>
-            </tr>
-            <tr class="invoice-total" *ngIf="tax_config?.tax > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>{{ tax_config?.name }} ({{tax_config.tax}}%)</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.tax_amount)">
-                </p>
+                <p>{{invoice_details?.sub_total}}</p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.gift_wrapper > 0">
@@ -2613,9 +2598,7 @@
                 <p>Gift Wrapping</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.gift_wrapper)">
-                </p>
+                <p>{{invoice_details?.gift_wrapper}}</p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.packaging_charges > 0">
@@ -2623,9 +2606,7 @@
                 <p>Packaging Charges</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.packaging_charges)">
-                </p>
+                <p>{{invoice_details?.packaging_charges}}</p>
               </td>
             </tr>
             <tr *ngIf="invoice_details.order_type!='pickup'" class="invoice-total">
@@ -2633,9 +2614,7 @@
                 <p>Shipping and Handling</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.shipping_cost)">
-                </p>
+                <p>{{invoice_details?.shipping_cost}}</p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.cod_charges > 0">
@@ -2643,9 +2622,7 @@
                 <p>COD Charges</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.cod_charges)">
-                </p>
+                <p>{{invoice_details?.cod_charges}}</p>
               </td>
             </tr>
             <tr class="invoice-total" *ngIf="invoice_details?.discount_amount > 0">
@@ -2654,8 +2631,7 @@
               </td>
               <td align="right" class="p-10" style="width: 20%;">
                 <p class="d-inline-block ml-1">-
-                  <span
-                    [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.discount_amount)"></span>
+                  <span>{{invoice_details?.discount_amount}}</span>
                 </p>
               </td>
             </tr>
@@ -2664,9 +2640,7 @@
                 <h5 class="m-0">Grand Total</h5>
               </td>
               <td class="p-10" align="right" style="width: 20%;">
-                <h5 class="m-0"
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.final_price)">
-                </h5>
+                <h5 class="m-0">{{invoice_details?.final_price}}</h5>
               </td>
             </tr>
           </table>

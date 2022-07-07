@@ -136,6 +136,33 @@ export class DeployPackagesComponent implements OnInit {
     },
   ];
   @ViewChild('razorpayForm', {static: false}) razorpayForm: ElementRef;
+  tempGenieSellingPrice: any = {
+    "5f4cd131573e9a1e680239f1": {
+      "1": 0, "6": 0, "12": 0
+    },
+    "620650bfc3357e26783c47ad": {
+      "1": 499, "6": 2999, "12": 5999
+    },
+    "620650fbc3357e26783c47ae": {
+      "1": 999, "6": 5999, "12": 11999
+    }
+  };
+  tempGeniePrice: any = {
+    "5f4cd131573e9a1e680239f1": {
+      "1": 0, "6": 0, "12": 0
+    },
+    "620650bfc3357e26783c47ad": {
+      "1": 199, "6": 999, "12": 1999
+    },
+    "620650fbc3357e26783c47ae": {
+      "1": 499, "6": 2499, "12": 4999
+    }
+  };
+  tempGenieMonthPrice: any = {
+    "5f4cd131573e9a1e680239f1": 0,
+    "620650bfc3357e26783c47ad": 167,
+    "620650fbc3357e26783c47ae": 417
+  };
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, public commonService: CommonService, private api: DeploymentService,
@@ -2033,6 +2060,7 @@ export class DeployPackagesComponent implements OnInit {
     this.packageForm.submit = true;
     this.packageForm = x;
     let formData = { store_id: this.commonService.store_details._id, package_id: this.packageForm._id, month: this.subscribeMonth };
+    if(this.packageForm._id=="5f4cd131573e9a1e680239f1") formData.month = 1;
     this.api.PURCHASE_PLAN(formData).subscribe(result => {
       if(result.status) {
         // store details
@@ -2099,6 +2127,7 @@ export class DeployPackagesComponent implements OnInit {
       store_id: this.commonService.store_details._id, package_id: this.upgradeData.package_details._id, month: this.subscribeMonth,
       payment_details: { name: x.name }, upgrade_apps: this.upgradeData.upgrade_apps
     };
+    if(this.packageForm._id=="5f4cd131573e9a1e680239f1") formData.month = 1;
     this.api.CHANGE_PLAN(formData).subscribe(result => {
       if(result.status) {
         if(result.data) {
