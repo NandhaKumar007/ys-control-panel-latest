@@ -44,9 +44,6 @@ export class HomeLayoutComponent implements OnInit {
     private api: StoreApiService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
-  }
-
-  ngOnInit() {
     if(this.commonService.deploy_details.theme_colors && this.commonService.deploy_details.theme_colors.primary)
       this.themeColorExists = true;
     if(this.commonService.ys_features.indexOf('testimonials') !== -1)
@@ -57,8 +54,13 @@ export class HomeLayoutComponent implements OnInit {
       this.layoutTypes.push({ name: "Blogs", value: "blogs" });
     if(this.commonService.ys_features.indexOf('shop_the_look') !== -1)
       this.layoutTypes.push({ name: "Shop the Look", value: "shop_the_look" });
-    if(this.commonService.store_details?.package_info?.category!='genie')
+    if(this.commonService.store_details?.package_info?.category!='genie') {
       this.layoutTypes.push({ name: "Video Section", value: "video_section" });
+      this.layoutTypes.push({ name: "Highlights", value: "highlights" });
+    }
+  }
+
+  ngOnInit() {
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {
       if(result.status) {

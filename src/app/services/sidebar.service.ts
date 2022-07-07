@@ -251,11 +251,8 @@ export class SidebarService {
         routePermissionList.push("home_layout", "policies", "contact_page", "footer_content");
         let wdList: IChildItem[] = [{ name: 'Home Page', state: '/layouts/home', type: 'link' }];
         if(this.commonService.store_details?.package_info?.category!='genie') {
-          wdList.push(
-            { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
-            // { name: 'Product Page', state: '/layouts/product', type: 'link' }
-          );
-          routePermissionList.push("catalog_layout", "product_layout");
+          wdList.push({ name: 'Catalog Page', state: '/layouts/catalog', type: 'link' });
+          routePermissionList.push("catalog_layout");
         }
         let webList: IChildItem[] = [
           { name: 'Website Design', type: 'dropDown', icon: 'format_paint', sub: wdList }
@@ -556,11 +553,10 @@ export class SidebarService {
           name: 'Website Design', type: 'dropDown', icon: 'format_paint',
           sub: [
             { name: 'Home Page', state: '/layouts/home', type: 'link' },
-            { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' },
-            // { name: 'Product Page', state: '/layouts/product', type: 'link' }
+            { name: 'Catalog Page', state: '/layouts/catalog', type: 'link' }
           ]
         });
-        routePermissionList.push("home_layout", "catalog_layout", "product_layout");
+        routePermissionList.push("home_layout", "catalog_layout");
       }
       if(ysFeatures.indexOf('single_menu')!=-1 || ysFeatures.indexOf('multi_menu')!=-1) {
         if(subuserFeatures.indexOf('menu')!=-1) {

@@ -164,7 +164,7 @@
               <option value="featured_products">/featured-products</option>
             </select>
           </div>
-          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible' && addForm.type!='secondary'">
+          <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible' && addForm.type!='secondary' && addForm.type!='highlights'">
             <div *ngIf="addForm.type=='blogs' || addForm.type=='featured_product'" class="col-md-6 form-group mb-3">
               <label>Type</label>
               <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="addForm.blogs_type" (change)="addForm.type=='blogs'? addForm.section_grid_type=commonService.blog_grid_list[0].type: '';" required>
@@ -302,7 +302,7 @@
               <option value="featured_products">/featured-products</option>
             </select>
           </div>
-          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible' && editForm.type!='secondary'">
+          <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible' && editForm.type!='secondary' && editForm.type!='highlights'">
             <div *ngIf="editForm.type=='blogs' || editForm.type=='featured_product'" class="col-md-6 form-group mb-3">
               <label>Type</label>
               <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="editForm.blogs_type" (change)="editForm.type=='blogs'? editForm.section_grid_type=commonService.blog_grid_list[0].type: '';" required>
