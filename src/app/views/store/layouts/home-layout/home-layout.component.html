@@ -45,7 +45,7 @@
       <div class="data-list-card-inner">
         <div class="row m-0">
 
-          <div *ngFor="let x of list | orderAsc:'rank' | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+          <div *ngFor="let x of list | fieldSearch:'name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
           class="col-md-12 list-item data-list-card" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
           <div class="d-flex flex-row">
             <div class="flex-grow-1 pl-2 d-flex">
@@ -60,28 +60,18 @@
                   </span>
                 </p>
                 <div class="w-30 m-0 text-muted text-small w-md-100 d-lg-block item-actions" align="center">
-                  <div
-                    *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product' && x.type!='blogs' && x.type!='flexible'"
-                    class="product-btn-group btn-group w-md-100 mr-3">
+                  <div class="product-btn-group btn-group w-md-100 mr-3">
                     <div class="btn-group w-100" ngbDropdown role="group" aria-label="Select all" placement="left">
                       <button class="btn black-outline-btn w-md-100" ngbDropdownToggle>
-                        <span class="black-outline-txt">
-                          Edit
-                        </span>
+                        <span class="black-outline-txt">Edit</span>
                       </button>
                       <div class="dropdown-menu" ngbDropdownMenu>
                         <button class="dropdown-item" (click)="onEditDetails(x, editModal);">Details</button>
-                        <button class="dropdown-item" routerLink="/layouts/home/{{x._id}}">Images</button>
+                        <button *ngIf="x.type!='featured_product' && x.type!='multiple_featured_product' && x.type!='blogs' && x.type!='flexible' && x.type!='instagram'"
+                        class="dropdown-item" routerLink="/layouts/home/{{x._id}}">Images</button>
                       </div>
                     </div>
                   </div>
-                  <button
-                    *ngIf="x.type=='featured_product' || x.type=='multiple_featured_product' || x.type=='blogs' || x.type=='flexible'"
-                    class="btn black-outline-btn w-md-100 mr-3" (click)="onEditDetails(x, editModal);">
-                    <span class="black-outline-txt">
-                      Edit
-                    </span>
-                  </button>
                   <button class="btn orng-outline-btn w-md-100" [disabled]="x.type=='primary_slider'"
                     (click)="deleteForm = x; modalService.open(deleteModal, { centered: true });">
                     <span class="orng-outline-txt">Remove</span>
@@ -128,15 +118,13 @@
         <div class="row">
           <div class="col-md-12 form-group mb-3">
             <label>Type</label>
-            <select name="type" class="form-control select-arrow" [(ngModel)]="addForm.type"
-              (change)="addForm.multitab_list=[{}]; addForm.type=='section'? addForm.section_grid_type=commonService.grid_list[0].type: ''"
-              required>
+            <select name="type" class="form-control select-arrow" [(ngModel)]="addForm.type" (change)="onChangeType(addForm.type);" required>
               <option [ngValue]="x.value" *ngFor="let x of layoutTypes | slice:1:20;">{{x.name}}</option>
             </select>
           </div>
           <div *ngIf="addForm.type=='section'" class="col-md-12 form-group mt-2 mb-3">
             <div>
-              <ng-container *ngFor="let x of commonService.grid_list | fieldSearch:'status':'enabled'; let i=index;">
+              <ng-container *ngFor="let x of gridList | fieldSearch:'status':'enabled'; let i=index;">
                 <label class="radio radio-primary display-inline-b mr-5 mb-3">
                   <input type="radio" name="section_grid_type" [value]="x.type"
                     [checked]="x.type==addForm.section_grid_type" (change)="addForm.section_grid_type=x.type;">
@@ -146,11 +134,11 @@
               </ng-container>
             </div>
           </div>
-          <div class="col-md-8 form-group mb-3">
+          <div class="form-group mb-3" [ngClass]="(addForm.type=='highlights')? 'col-md-12': 'col-md-6'">
             <label>Title</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="addForm.name" #name="ngModel" required />
           </div>
-          <div class="col-md-4 form-group mb-3">
+          <div *ngIf="addForm.type!='highlights'" class="col-md-6 form-group mb-3">
             <label>Rank</label>
             <input type="number" name="rank" class="form-control" [(ngModel)]="addForm.rank" #rank="ngModel" min="1" max="{{maxRank+1}}" appNumberOnly required />
           </div>
@@ -164,15 +152,28 @@
               <option value="featured_products">/featured-products</option>
             </select>
           </div>
+          <ng-container *ngIf="addForm.type=='instagram' && addForm.insta_config">
+            <div class="col-md-12 form-group mb-3">
+              <label>Token</label>
+              <input type="text" name="insta_token" class="form-control" [(ngModel)]="addForm.insta_config.token" required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="allow_desc" [(ngModel)]="addForm.insta_config.allow_desc" >
+                <span>Display Description</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </ng-container>
           <ng-container *ngIf="addForm.type!='primary_slider' && addForm.type!='slider' && addForm.type!='flexible' && addForm.type!='secondary' && addForm.type!='highlights'">
-            <div *ngIf="addForm.type=='blogs' || addForm.type=='featured_product'" class="col-md-6 form-group mb-3">
+            <div *ngIf="addForm.type=='blogs' || addForm.type=='featured_product' || addForm.type=='instagram'" class="col-md-6 form-group mb-3">
               <label>Type</label>
-              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="addForm.blogs_type" (change)="addForm.type=='blogs'? addForm.section_grid_type=commonService.blog_grid_list[0].type: '';" required>
+              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="addForm.blogs_type" (change)="(addForm.type=='blogs' || addForm.type=='instagram')? addForm.section_grid_type=gridList[0].type: '';" required>
                 <option value="grid">Grid</option>
                 <option value="slider">Slider</option>
               </select>
             </div>
-            <div class="form-group mb-3" [ngClass]="(addForm.type=='blogs' || addForm.type=='featured_product')? 'col-md-6': 'col-md-12'">
+            <div class="form-group mb-3" [ngClass]="(addForm.type=='blogs' || addForm.type=='featured_product' || addForm.type=='instagram')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="addForm.heading" #heading="ngModel" />
             </div>
@@ -181,9 +182,9 @@
               <textarea class="form-control" aria-label="With textarea" name="sub_heading"
                 [(ngModel)]="addForm.sub_heading" #sub_heading="ngModel"></textarea>
             </div>
-            <div *ngIf="addForm.type=='blogs' && addForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
+            <div *ngIf="addForm.type!='featured_product' && addForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
               <div>
-                <ng-container *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
+                <ng-container *ngFor="let x of gridList | fieldSearch:'status':'enabled'; let i=index;">
                   <label class="radio radio-primary display-inline-b mr-5 mb-3">
                     <input type="radio" name="section_grid_type" [value]="x.type" [checked]="x.type==addForm.section_grid_type" (change)="addForm.section_grid_type=x.type;">
                     <span class="d-flex flex-column"><img [src]="x.icon">{{x.name}}</span>
@@ -272,22 +273,20 @@
               <span class="checkmark"></span>
             </label>
           </div>
-          <div class="form-group mb-3"
-            [ngClass]="(editForm.type=='section' && editForm.section_grid_type)? 'col-md-8': 'col-md-12'">
+          <div class="form-group mb-3" [ngClass]="(editForm.type=='section' && editForm.section_grid_type)? 'col-md-6': 'col-md-12'">
             <label>Type</label>
             <input type="text" name="dup_type" class="form-control" [(ngModel)]="editForm.dup_type" #dup_type="ngModel"
               readonly />
           </div>
-          <div *ngIf="editForm.type=='section' && editForm.section_grid_type" class="col-md-4 form-group mb-3">
+          <div *ngIf="editForm.type=='section' && editForm.section_grid_type" class="col-md-6 form-group mb-3">
             <label>Grid Type</label>
-            <input type="text" name="dup_grid_type" class="form-control" [(ngModel)]="editForm.dup_grid_type"
-              #dup_grid_type="ngModel" readonly />
+            <input type="text" name="dup_grid_type" class="form-control" [(ngModel)]="editForm.dup_grid_type" #dup_grid_type="ngModel" readonly />
           </div>
-          <div class="col-md-8 form-group mb-3">
+          <div class="form-group mb-3" [ngClass]="(editForm.type=='highlights' || editForm.type=='primary_slider')? 'col-md-12': 'col-md-6'">
             <label>Title</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="editForm.name" #name="ngModel" required />
           </div>
-          <div class="col-md-4 form-group mb-3">
+          <div *ngIf="editForm.type!='primary_slider' && editForm.type!='highlights'" class="col-md-6 form-group mb-3">
             <label>Rank</label>
             <input type="number" name="rank" class="form-control" [(ngModel)]="editForm.rank" #rank="ngModel" min="1" max="{{maxRank}}" appNumberOnly required />
           </div>
@@ -302,15 +301,28 @@
               <option value="featured_products">/featured-products</option>
             </select>
           </div>
+          <ng-container *ngIf="editForm.type=='instagram' && editForm.insta_config">
+            <div class="col-md-12 form-group mb-3">
+              <label>Token</label>
+              <input type="text" name="insta_token" class="form-control" [(ngModel)]="editForm.insta_config.token" required />
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="allow_desc" [(ngModel)]="editForm.insta_config.allow_desc" >
+                <span>Display Description</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </ng-container>
           <ng-container *ngIf="editForm.type!='primary_slider' && editForm.type!='slider' && editForm.type!='flexible' && editForm.type!='secondary' && editForm.type!='highlights'">
-            <div *ngIf="editForm.type=='blogs' || editForm.type=='featured_product'" class="col-md-6 form-group mb-3">
+            <div *ngIf="editForm.type=='blogs' || editForm.type=='featured_product' || editForm.type=='instagram'" class="col-md-6 form-group mb-3">
               <label>Type</label>
-              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="editForm.blogs_type" (change)="editForm.type=='blogs'? editForm.section_grid_type=commonService.blog_grid_list[0].type: '';" required>
+              <select name="blogs_type" class="form-control select-arrow" [(ngModel)]="editForm.blogs_type" (change)="(editForm.type=='blogs' || editForm.type=='instagram')? editForm.section_grid_type=gridList[0].type: '';" required>
                 <option value="grid">Grid</option>
                 <option value="slider">Slider</option>
               </select>
             </div>
-            <div class="form-group mb-3" [ngClass]="(editForm.type=='blogs' || editForm.type=='featured_product')? 'col-md-6': 'col-md-12'">
+            <div class="form-group mb-3" [ngClass]="(editForm.type=='blogs' || editForm.type=='featured_product' || editForm.type=='instagram')? 'col-md-6': 'col-md-12'">
               <label>Heading</label>
               <input type="text" name="heading" class="form-control" [(ngModel)]="editForm.heading" #heading="ngModel" />
             </div>
@@ -319,10 +331,9 @@
               <textarea class="form-control" aria-label="With textarea" name="sub_heading"
                 [(ngModel)]="editForm.sub_heading" #sub_heading="ngModel"></textarea>
             </div>
-            <div *ngIf="editForm.type=='blogs' && editForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
+            <div *ngIf="editForm.type!='featured_product' && editForm.blogs_type=='grid'" class="col-md-12 form-group mt-2 mb-3">
               <div>
-                <ng-container
-                  *ngFor="let x of commonService.blog_grid_list | fieldSearch:'status':'enabled'; let i=index;">
+                <ng-container *ngFor="let x of gridList | fieldSearch:'status':'enabled'; let i=index;">
                   <label class="radio radio-primary display-inline-b mr-5 mb-3">
                     <input type="radio" name="section_grid_type" [value]="x.type"
                       [checked]="x.type==editForm.section_grid_type" (change)="editForm.section_grid_type=x.type;">

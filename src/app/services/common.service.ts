@@ -88,6 +88,13 @@ export class CommonService {
     { type: "grid_2", name: "Grid 2", icon: "assets/images/grid/Grid-3.png", status: "enabled" },
     { type: "grid_3", name: "Grid 3", icon: "assets/images/grid/Grid-5.png", status: "enabled" }
   ];
+  insta_grid_list: any = [
+    { type: "grid_1", name: "Grid 1", icon: "assets/images/grid/Grid-3.png", status: "enabled" },
+    { type: "grid_2", name: "Grid 2", icon: "assets/images/grid/Grid-4.png", status: "enabled" },
+    { type: "grid_3", name: "Grid 3", icon: "assets/images/grid/Grid-11.png", status: "enabled" },
+    { type: "grid_4", name: "Grid 4", icon: "assets/images/grid/Grid-5.png", status: "enabled" },
+    { type: "grid_5", name: "Grid 5", icon: "assets/images/grid/Grid-6.png", status: "enabled" }
+  ];
   default_units: any = [
     { name: "Inches", value: "inches" },
     { name: "Cms", value: "cms" }

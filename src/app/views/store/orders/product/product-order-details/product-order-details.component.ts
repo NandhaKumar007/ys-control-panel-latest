@@ -7,7 +7,8 @@ import { CustomerApiService } from '../../../../../services/customer-api.service
 import { ProductExtrasApiService } from '../../../product-extras/product-extras-api.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
-import ghanaDestinations from '../../../../../../assets/json/ghana-local-destinations.json';
+import ghanaDomesDestinations from '../../../../../../assets/json/ghana-domes-destinations.json';
+import ghanaInterDestinations from '../../../../../../assets/json/ghana-inter-destinations.json';
 
 @Component({
   selector: 'app-product-order-details',
@@ -48,7 +49,6 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.destList = ghanaDestinations;
     this.activeRoute.params.subscribe((params: Params) => {
       this.params = params; this.courierForm = {}; this.hsncode_exist = false; this.selected_vendor = {};
       this.remaining_items = []; this.pageLoader = true; this.btnLoader = false; this.errorMsg = null;
@@ -76,7 +76,13 @@ export class ProductOrderDetailsComponent implements OnInit {
           else this.itemList = this.order_details.item_list;
           // address
           if(!this.order_details.billing_address) this.order_details.billing_address = this.order_details.shipping_address;
-          if(this.order_details.shipping_address) this.onGetAddrDetails(this.order_details.shipping_address);
+          if(this.order_details.shipping_address) {
+            this.onGetAddrDetails(this.order_details.shipping_address);
+            this.destList = ghanaInterDestinations;
+            if(this.commonService.store_details?.country==this.order_details.shipping_address?.country) {
+              this.destList = ghanaDomesDestinations;
+            }
+          }
           if(this.order_details.billing_address) this.onGetAddrDetails(this.order_details.billing_address);
           // order status
           this.order_details.existing_status = this.order_details.order_status;

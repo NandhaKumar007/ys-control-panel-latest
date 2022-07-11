@@ -129,7 +129,7 @@
         <!-- #Testimonial Content -->
 
         <!-- Content -->
-        <div *ngIf="layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
+        <div *ngIf="layoutDetails?.type=='highlights' || layoutDetails?.type=='secondary' || layoutDetails?.type=='primary_slider' || layoutDetails?.type=='slider' || layoutDetails?.type=='section' || layoutDetails?.type=='featured_section' || layoutDetails?.type=='multiple_highlighted_section'" class="col-md-12 col-lg-6 d-flex justify-content-center align-items-center form-group mb-3">
           <div class="card w-100 p-3 mb-3">
             <div *ngIf="layoutDetails?.type!='multiple_highlighted_section'" class="row">
               <div class="col-md-12 form-group mb-3">
@@ -167,19 +167,21 @@
                   <label>Title</label>
                   <input type="text" name="heading{{i}}" class="form-control" [(ngModel)]="x.content_details.heading" maxlength="16" #heading="ngModel" required />
                 </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label>Text Color</label>
-                  <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                  </select>
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label>Position</label>
-                  <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
-                    <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
-                  </select>
-                </div>
+                <ng-container *ngIf="layoutDetails?.type!='highlights'">
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Text Color</label>
+                    <select name="text_color{{i}}" class="form-control select-arrow" [(ngModel)]="x.content_details.text_color" #text_color="ngModel" required>
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12 form-group mb-3">
+                    <label>Position</label>
+                    <select name="position{{i}}" class="form-control select-arrow" [(ngModel)]="x.position" #position="ngModel" required>
+                      <option [ngValue]="x.value" *ngFor="let x of positionList">{{x.name}}</option>
+                    </select>
+                  </div>
+                </ng-container>
               </ng-container>
             </div>
           </div>

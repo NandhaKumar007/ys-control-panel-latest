@@ -38,6 +38,7 @@ export class HomeLayoutComponent implements OnInit {
     { type: "category", disp_name: "Catalog" }
   ];
   themeColorExists: boolean; configData: any = environment.config_data;
+  gridList: any = [];
 
   constructor(
     private router: Router, config: NgbModalConfig, public modalService: NgbModal,
@@ -57,6 +58,7 @@ export class HomeLayoutComponent implements OnInit {
     if(this.commonService.store_details?.package_info?.category!='genie') {
       this.layoutTypes.push({ name: "Video Section", value: "video_section" });
       this.layoutTypes.push({ name: "Highlights", value: "highlights" });
+      this.layoutTypes.push({ name: "Instagram", value: "instagram" });
     }
   }
 
@@ -64,7 +66,11 @@ export class HomeLayoutComponent implements OnInit {
     this.pageLoader = true;
     this.api.LAYOUT_LIST().subscribe(result => {
       if(result.status) {
-        this.list = result.list;
+        result.list = result.list.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
+        this.list = result.list.filter(el => el.type=='highlights');
+        result.list.forEach(obj => {
+          if(obj.type!='highlights') this.list.push(obj);
+        });
         this.maxRank = this.list.length;
       }
       else console.log("response", result);
@@ -109,6 +115,8 @@ export class HomeLayoutComponent implements OnInit {
         if(this.editForm.section_grid_type) {
           this.editForm.dup_grid_type = this.findGridType(this.editForm.section_grid_type);
         }
+        if(this.editForm.type=='instagram') this.gridList = this.commonService.insta_grid_list;
+        else if(this.editForm.type=='blogs') this.gridList = this.commonService.blog_grid_list;
 				this.modalService.open(modalName, {size: 'lg'});
 			}
 			else console.log("response", result);
@@ -180,6 +188,19 @@ export class HomeLayoutComponent implements OnInit {
     let index = this.commonService.grid_list.findIndex(obj => obj.type==type);
     if(index!=-1) return this.commonService.grid_list[index].name;
     else return "";
+  }
+
+  onChangeType(x) {
+    this.addForm.multitab_list = [{}];
+    if(x=='section') {
+      this.gridList = this.commonService.grid_list;
+      this.addForm.section_grid_type = this.gridList[0].type;
+    }
+    else if(x=='instagram') {
+      this.addForm.insta_config = {};
+      this.gridList = this.commonService.insta_grid_list;
+    }
+    else if(x=='blogs') this.gridList = this.commonService.blog_grid_list;
   }
 
 }
