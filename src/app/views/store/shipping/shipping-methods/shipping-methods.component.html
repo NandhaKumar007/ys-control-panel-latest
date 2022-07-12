@@ -25,7 +25,7 @@
         (click)="shippingForm={ shipping_type: 'Domestic', name: 'Domestic Shipping', delivery_time: '2 to 5 days', formType: 'add', dp_name: '', dp_config: {} }; modalService.open(shippingModal, {size: 'lg'});">Add New</button>
       </div>
       <!-- search box -->
-      <div class="col-md-6 mt-sm-15">
+      <div *ngIf="!commonService.vendor_list?.length" class="col-md-6 mt-sm-15">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>
@@ -35,7 +35,7 @@
   <div *ngIf="list?.length || commonService.vendor_list?.length" class="list-horizontal">
 
     <!-- Vendor List -->
-    <div *ngFor="let vendor of commonService.vendor_list; let i=index;" class="card p-3 mb-3">
+    <div *ngFor="let vendor of commonService.vendor_list | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;" class="card p-3 mb-3">
       <div class="row mb-3">
         <div class="col-12">
           <h4>{{vendor.company_details?.brand}}</h4>
@@ -54,25 +54,9 @@
                         <p class="w-20 w-md-30 m-b-0">{{x.name}}</p>
                         <p class="w-20 w-md-30 m-b-0">{{x.shipping_type}}</p>
                         <p class="w-20 w-md-30 m-b-0">{{x.tracking_link}}</p>
-                        <!-- <p class="w-10 w-md-100 m-b-0">
-                          <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.delivery_time}}</ng-container>
-                          <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
-                        </p>
-                        <p class="w-10 w-md-100 m-b-0">
-                          <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.shipping_price |
-                            currency:commonService.store_currency?.country_code}}</ng-container>
-                          <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
-                        </p>
-                        <p class="w-10 w-md-100 m-b-0">
-                          <ng-container *ngIf="x.free_shipping">Above {{x.minimum_price |
-                            currency:commonService.store_currency?.country_code}}</ng-container>
-                          <ng-container *ngIf="!x.free_shipping">No</ng-container>
-                        </p> -->
                         <p class="m-0 text-muted text-small w-15 w-md-100 d-lg-block item-actions">
                           <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x._id, shippingModal)">
-                            <span class="black-outline-txt">
-                              Edit
-                            </span>
+                            <span class="black-outline-txt">Edit</span>
                           </button>
                           <button (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
                           class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
@@ -116,25 +100,9 @@
                     <p class="w-20 w-md-30 m-b-0">{{x.name}}</p>
                     <p class="w-20 w-md-30 m-b-0">{{x.shipping_type}}</p>
                     <p class="w-20 w-md-30 m-b-0">{{x.tracking_link}}</p>
-                    <!-- <p class="w-10 w-md-100 m-b-0">
-                      <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.delivery_time}}</ng-container>
-                      <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
-                    </p>
-                    <p class="w-10 w-md-100 m-b-0">
-                      <ng-container *ngIf="!x.domes_zone_status && !x.inter_zone_status">{{x.shipping_price |
-                        currency:commonService.store_currency?.country_code}}</ng-container>
-                      <ng-container *ngIf="x.domes_zone_status || x.inter_zone_status">Refer excel sheet</ng-container>
-                    </p>
-                    <p class="w-10 w-md-100 m-b-0">
-                      <ng-container *ngIf="x.free_shipping">Above {{x.minimum_price |
-                        currency:commonService.store_currency?.country_code}}</ng-container>
-                      <ng-container *ngIf="!x.free_shipping">No</ng-container>
-                    </p> -->
                     <p class="m-0 text-muted text-small w-15 w-md-100 d-lg-block item-actions">
                       <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x._id, shippingModal)">
-                        <span class="black-outline-txt">
-                          Edit
-                        </span>
+                        <span class="black-outline-txt">Edit</span>
                       </button>
                       <button (click)="deleteForm=x; deleteForm.exist_status=x.status; modalService.open(statusModal, { centered: true });"
                       class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.status=='active')? 'btn-outline-danger': 'btn-outline-success mr-3'">
@@ -150,15 +118,15 @@
           </div>
         </div>
       </div>
-
-      <!-- PAGINATION CONTROL -->
-      <div class="row">
-        <div class="col-md-12 mt-3">
-          <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
-            maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
-        </div>
-      </div>
     </ng-container>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="!list?.length && !commonService.vendor_list?.length" class="row">

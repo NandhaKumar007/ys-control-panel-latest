@@ -37,6 +37,7 @@ export class VendorsComponent implements OnInit {
   reg_address_fields: any = [];
   pick_address_fields: any = [];
   invForm: any = {}; invoiceNum: string;
+  shippingPriceConfig: any = { price: 100, free_above: 499 };
 
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: AccountService,
@@ -55,6 +56,8 @@ export class VendorsComponent implements OnInit {
       this.permissionList.push({ keyword: "faq", name: "FAQ", sub_list: [] });
     if(this.commonService.ys_features.indexOf('size_chart') != -1)
       this.permissionList.push({ keyword: "size_chart", name: "Size Chart", sub_list: [] });
+    if(this.commonService.store_details.additional_features?.shipping_price_config)
+      this.shippingPriceConfig = this.commonService.store_details.additional_features?.shipping_price_config;
   }
 
   ngOnInit() {
