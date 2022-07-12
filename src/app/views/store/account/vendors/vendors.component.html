@@ -223,7 +223,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label>Shipping Preferences</label>
-              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type" [disabled]="vendorForm.status=='active'">
+              <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.shipping_type" [disabled]="vendorForm.status=='active'" required>
                 <option value="">-- Select --</option>
                 <option value="free">Willing to provide free shipping on all orders</option>
                 <option value="free_above">Willing to provide free shipping on orders above {{shippingPriceConfig?.free_above | currency:commonService.store_currency?.country_code:'symbol':'1.0'}}</option>
@@ -232,7 +232,7 @@
             </div>
             <div class="col-md-6">
               <label>Are all the products made in {{commonService.store_details?.country}}?</label>
-              <select name="made_in_home_country" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.made_in_home_country">
+              <select name="made_in_home_country" class="form-control select-arrow" [(ngModel)]="vendorForm.company_details.made_in_home_country" required>
                 <option value="">-- Select --</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>

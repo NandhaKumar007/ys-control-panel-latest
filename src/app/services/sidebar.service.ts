@@ -191,7 +191,7 @@ export class SidebarService {
             if(inactiveOrders.length>1) orderList.push({ name: 'Failed Payments', type: 'dropDown', icon: 'error_outline', sub:inactiveOrders });
             else orderList.push({ icon: 'error_outline', name: 'Failed Payments', state: '/orders/inactive-orders', type: 'link' });
             // vendor settlement
-            if(this.commonService.master_token && ysFeatures.indexOf('vendors')!=-1) {
+            if(ysFeatures.indexOf('vendors')!=-1) {
               orderList.push({ icon: 'paid', name: 'Settlement Orders', state: '/orders/settlement', type: 'link' });
               routePermissionList.push("vendor_settlement");
             }
