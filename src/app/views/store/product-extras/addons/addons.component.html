@@ -13,8 +13,7 @@
       </div>
 
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <a *ngIf="vendor_id || commonService.ys_features.indexOf('vendors')==-1 || commonService.store_details?.login_type=='vendor'" type="button" class="btn btn-primary mr-3"
-        routerLink="{{ (vendor_id)? '/product-extras/addons/add/'+(maxRank+1)+'/'+vendor_id: '/product-extras/addons/add/'+(maxRank+1) }}">
+        <a type="button" class="btn btn-primary mr-3" routerLink="{{ (vendor_id)? '/product-extras/addons/add/'+(maxRank+1)+'/'+vendor_id: '/product-extras/addons/add/'+(maxRank+1) }}">
           Add New Add-On
         </a>
         <button type="button" class="btn btn-primary" (click)="openBtnModal(btnSettingModal);">Button Setting</button>

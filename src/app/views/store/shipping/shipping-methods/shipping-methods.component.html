@@ -149,7 +149,7 @@
           <ng-container *ngIf="commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')!=-1">
             <div class="col-md-6 form-group mb-3">
               <label>Vendor</label>
-              <select name="vendor_id" class="form-control" [(ngModel)]="shippingForm.vendor_id" required>
+              <select name="vendor_id" class="form-control" [(ngModel)]="shippingForm.vendor_id" [disabled]="shippingForm.formType!='add'" required>
                 <option *ngFor="let x of commonService.vendor_list;" [ngValue]="x._id">{{x.company_details?.brand}}</option>
               </select>
             </div>
@@ -157,7 +157,7 @@
           </ng-container>
           <div class="col-md-6 mb-3">
             <label>Shipping Type</label>
-            <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="shippingForm.shipping_type" [disabled]="shippingForm.formType!='add'">
+            <select name="shipping_type" class="form-control select-arrow" [(ngModel)]="shippingForm.shipping_type" required [disabled]="shippingForm.formType!='add'">
               <option value="Domestic">Domestic</option>
               <option *ngIf="commonService.ys_features.indexOf('domestic_shipping')==-1" value="International">International</option>
             </select>

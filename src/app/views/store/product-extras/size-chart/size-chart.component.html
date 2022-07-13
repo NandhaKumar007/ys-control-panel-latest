@@ -13,7 +13,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <a *ngIf="vendor_id || commonService.ys_features.indexOf('vendors')==-1 || commonService.store_details?.login_type=='vendor'" type="button" class="btn btn-primary"
+        <a type="button" class="btn btn-primary"
         routerLink="{{ (vendor_id)? '/product-extras/size-chart/create/'+vendor_id: '/product-extras/size-chart/create' }}">Add New Chart</a>
       </div>
     </div>

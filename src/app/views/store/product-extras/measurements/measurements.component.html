@@ -12,7 +12,7 @@
         </ul>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
-        <button *ngIf="vendor_id || commonService.ys_features.indexOf('vendors')==-1 || commonService.store_details?.login_type=='vendor'" type="button" class="btn btn-primary"
+        <button type="button" class="btn btn-primary"
         (click)="btnLoader=false; addForm={ rank: maxRank+1, units: [{}], list: [{ conditions: [] }] }; modalService.open(addModal, { size: 'lg'});">
           Add New Measurement Set
         </button>

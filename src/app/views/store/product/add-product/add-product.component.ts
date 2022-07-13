@@ -292,10 +292,7 @@ export class AddProductComponent implements OnInit {
     this.addonList = vInfo.addon_list.filter(obj => obj.status=='active');
     this.faqList = vInfo.faq_list.filter(el => el.status=='active');
     this.sizeCharts = vInfo.size_chart.filter(el => el.status=='active');
-    // foot notes
-    this.noteList = [];
-    vInfo.footnote_list.forEach(el => { this.noteList.push(el); });
-    this.productFeatures.footnote_list.forEach(el => { this.noteList.push(el); });
+    this.noteList = vInfo.footnote_list;
     // product tags
     this.tagList = [];
     this.productFeatures.tag_list.filter(obj => obj.status=='active').forEach(obj => {

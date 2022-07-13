@@ -496,9 +496,7 @@ export class ModifyProductComponent implements OnInit {
     let tempFaqList = vInfo.faq_list.filter(el => el.status=='active');
     this.sizeCharts = vInfo.size_chart.filter(el => el.status=='active');
     // foot notes
-    let tempNoteList = [];
-    vInfo.footnote_list.forEach(el => { tempNoteList.push(el); });
-    this.productFeatures.footnote_list.forEach(el => { tempNoteList.push(el); });
+    let tempNoteList = vInfo.footnote_list;
     if(this.productForm.footnote_list.length) {
       this.productForm.note_status = true;
       this.footNoteListModify(tempNoteList, this.productForm.footnote_list).then((list) => {

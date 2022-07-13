@@ -278,6 +278,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.errorMsg = null;
     this.btnLoader = false;
     this.vendorInfo = x;
+    delete this.vendorInfo.errorMsg;
     this.vendorInfo.item_list = this.itemList.filter(obj => obj.vendor_id==x.vendor_id);
     this.vendorInfo.item_list.forEach(obj => { delete obj.item_checked; });
     delete this.vendorInfo.cancel_reason;

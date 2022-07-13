@@ -2212,7 +2212,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" (click)="modalService.open(confirmCancelVendorModal, { centered: true });" class="btn btn-wide black-outline-btn">
+    <button type="button" (click)="vendorInfo.errorMsg=null; modalService.open(confirmCancelVendorModal, { centered: true });" class="btn btn-wide black-outline-btn">
       <span class="black-outline-txt">Approve</span>
     </button>
     <button type="button" (click)="vendorInfo.request_type='reject'; onCancelVendorOrder();"
