@@ -160,6 +160,7 @@ export class CommonService {
   subuser_permissions: any = {};
   vendor_details: any = {};
 
+  courier_partners: any = [];
   user_list: any = [];
   shipping_list: any = [];
   vendor_list: any = [];
@@ -205,6 +206,8 @@ export class CommonService {
     if(localStorage.getItem('archive_list')) this.archive_list = this.decryptData(localStorage.getItem("archive_list"));
     if(localStorage.getItem('aistyle_list')) this.aistyle_list = this.decryptData(localStorage.getItem("aistyle_list"));
     if(localStorage.getItem('vendor_list')) this.vendor_list = this.decryptData(localStorage.getItem("vendor_list"));
+    if(localStorage.getItem('courier_partners')) this.courier_partners = this.decryptData(localStorage.getItem("courier_partners"));
+    if(localStorage.getItem('user_list')) this.user_list = this.decryptData(localStorage.getItem("user_list"));
     if(localStorage.getItem('shipping_list')) this.shipping_list = this.decryptData(localStorage.getItem("shipping_list"));
     if(localStorage.getItem('catalog_list')) this.catalog_list = this.decryptData(localStorage.getItem("catalog_list"));
     if(localStorage.getItem('payment_list')) this.payment_list = this.decryptData(localStorage.getItem("payment_list"));

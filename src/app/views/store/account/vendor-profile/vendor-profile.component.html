@@ -20,6 +20,11 @@
   <div class="row">
     <div class="col-md-6 col-lg-6 d-flex">
       <div class="card setting-card w-100 p-3">
+        <div class="row mb-2">
+          <div class="col-12 d-flex justify-content-end align-items-center">
+            <i (click)="onEdit(vendorModal);" class="material-icons edit-icon">edit</i>
+          </div>
+        </div>
         <div class="card card-in-card p-3 mb-3">
           <h5 class="mb-3">CONTACT INFORMATION</h5>
           <div class="ml-3">
@@ -67,6 +72,189 @@
   </div>
 
 </div>
+
+<!-- vendor details modal -->
+<ng-template #vendorModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{vendorForm.email}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdate();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Contact Person Name</label>
+            <input type="text" name="contact_person" class="form-control" [(ngModel)]="vendorForm.contact_person" required />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Mobile</label>
+            <input type="text" name="mobile" class="form-control" [(ngModel)]="vendorForm.mobile" required />
+          </div>
+          <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.payout_contact_id" class="col-md-12 mb-3">
+            <label class="checkbox checkbox-success">
+              <input class="form-check-input" type="checkbox" name="update_contact" [(ngModel)]="vendorForm.update_contact">
+              <b>Update Contact Information in RazorpayX</b>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <hr class="mt-0 mb-3">
+        <div class="col-md-12">
+          <h6>STORE DETAILS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Instagram Page URL</label>
+              <input type="text" name="instagram" class="form-control" [(ngModel)]="vendorForm.company_details.instagram" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Website URL (if available)</label>
+              <input type="text" name="website" class="form-control" [(ngModel)]="vendorForm.company_details.website" />
+            </div>
+            <ng-container *ngIf="commonService.store_details?.country=='India'">
+              <div class="col-md-6 mb-3">
+                <label>GST No</label>
+                <input type="text" name="gst_no" class="form-control" [(ngModel)]="vendorForm.company_details.gst_no" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>PAN No</label>
+                <input type="text" name="pan_no" class="form-control" [(ngModel)]="vendorForm.company_details.pan_no" />
+              </div>
+            </ng-container>
+            <div *ngIf="commonService.store_details?.country!='India'" class="col-md-6 mb-3">
+              <label>TIN No</label>
+              <input type="text" name="tin_no" class="form-control" [(ngModel)]="vendorForm.company_details.tin_no" />
+            </div>
+          </div>
+        </div>
+        <!-- registered address -->
+        <div class="col-md-12 mt-3">
+          <h6>REGISTERED ADDRESS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Country</label>
+              <input type="text" name="r_country" class="form-control" [(ngModel)]="vendorForm.registered_address.country" readonly required />
+            </div>
+            <ng-container *ngFor="let field of reg_address_fields; let j=index;">
+              <ng-container *ngIf="field.keyword=='state'">
+                <!-- if state list exist -->
+                <div *ngIf="state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <select class="form-control" name="r_field{{j}}" [(ngModel)]="field.value" required>
+                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <!-- if not state list exist -->
+                <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <input class="form-control" type="text" name="r_field{{j}}" [(ngModel)]="field.value" required>
+                </div>
+              </ng-container>
+              <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
+                <label>{{field.label}}</label>
+                <input class="form-control" type="text" name="r_field{{j}}" [(ngModel)]="field.value" required>
+              </div>
+            </ng-container>
+            <div class="col-md-12 mb-3">
+              <label>Complete Address</label>
+              <textarea name="r_address" [(ngModel)]="vendorForm.registered_address.address" class="form-control" required></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- pickup address -->
+        <div class="col-md-12 mt-3">
+          <h6>PICKUP ADDRESS</h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Country</label>
+              <input type="text" name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" readonly required />
+            </div>
+            <ng-container *ngFor="let field of pick_address_fields; let j=index;">
+              <ng-container *ngIf="field.keyword=='state'">
+                <!-- if state list exist -->
+                <div *ngIf="state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <select class="form-control" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                  </select>
+                </div>
+                <!-- if not state list exist -->
+                <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+                  <label>{{field.label}}</label>
+                  <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                </div>
+              </ng-container>
+              <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
+                <label>{{field.label}}</label>
+                <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+              </div>
+            </ng-container>
+            <div class="col-md-12 mb-3">
+              <label>Complete Address</label>
+              <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- bank details -->
+        <div class="col-md-12 mt-3">
+          <h6>BANK DETAILS
+            <span *ngIf="vendorForm.bank_details?.payout_account_id">- {{vendorForm.bank_details.payout_account_id}}</span>
+          </h6>
+        </div>
+        <div class="card">
+          <div class="row card-body">
+            <div class="col-md-6 mb-3">
+              <label>Beneficiary Name</label>
+              <input type="text" name="beneficiary_name" class="form-control" [(ngModel)]="vendorForm.bank_details.beneficiary" required />
+            </div>
+            <div class="col-md-6 mb-3"></div>
+            <div class="col-md-6 mb-3">
+              <label>Bank Name</label>
+              <input type="text" name="bank_name" class="form-control" [(ngModel)]="vendorForm.bank_details.name" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Branch</label>
+              <input type="text" name="branch" class="form-control" [(ngModel)]="vendorForm.bank_details.branch" required />
+            </div>
+            <div class="col-md-6">
+              <label>IFSC Code</label>
+              <input *ngIf="commonService.store_details?.payout_gateway" type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code"
+              pattern=".{11,11}" required title="Invalid Code" maxlength="11" required />
+              <input *ngIf="!commonService.store_details?.payout_gateway" type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" required />
+            </div>
+            <div class="col-md-6">
+              <label>Account No</label>
+              <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no" required />
+            </div>
+            <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.bank_details?.payout_account_id" class="col-md-12 mt-3">
+              <label class="checkbox checkbox-success">
+                <input class="form-check-input" type="checkbox" name="update_bank" [(ngModel)]="vendorForm.update_bank">
+                <b>Update Bank Details in RazorpayX</b>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="vendorForm.errorMsg">
+        <p class="text-danger">{{ vendorForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+       <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="vendorForm.submit" [ladda]="vendorForm.submit">
+        Update
+      </button>
+    </div>
+  </form>
+</ng-template>
 
 <!-- change pwd modal -->
 <ng-template #changePwdModal let-modal>

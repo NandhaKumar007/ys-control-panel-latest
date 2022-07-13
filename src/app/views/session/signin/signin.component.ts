@@ -115,6 +115,20 @@ export class SigninComponent implements OnInit {
             });
           }
           else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+          // store features
+          this.commonService.user_list = []; this.commonService.courier_partners = [];
+          this.commonService.updateLocalData('user_list', this.commonService.user_list);
+          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+          this.storeApi.STORE_FEATURES().subscribe(result => {
+            if(result.status) {
+              result.data.sub_users.filter(obj => obj.status=='active').forEach(obj => {
+                this.commonService.user_list.push({ _id: obj._id, name: obj.name });
+              });
+              this.commonService.courier_partners = result.data.courier_partners.filter(obj => obj.status=='active');
+              this.commonService.updateLocalData('user_list', this.commonService.user_list);
+              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+            }
+          });
           // sub-user features
           if(!result.subuser_features) result.subuser_features = [];
           this.commonService.subuser_features = result.subuser_features;
@@ -233,6 +247,20 @@ export class SigninComponent implements OnInit {
           });
         }
         else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
+        // store features
+        this.commonService.user_list = []; this.commonService.courier_partners = [];
+        this.commonService.updateLocalData('user_list', this.commonService.user_list);
+        this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+        this.storeApi.STORE_FEATURES().subscribe(result => {
+          if(result.status) {
+            result.data.sub_users.filter(obj => obj.status=='active').forEach(obj => {
+              this.commonService.user_list.push({ _id: obj._id, name: obj.name });
+            });
+            this.commonService.courier_partners = result.data.courier_partners.filter(obj => obj.status=='active');
+            this.commonService.updateLocalData('user_list', this.commonService.user_list);
+            this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+          }
+        });
         // sub-user features
         if(!result.subuser_features) result.subuser_features = [];
         this.commonService.subuser_features = result.subuser_features;

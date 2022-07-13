@@ -36,7 +36,7 @@ export class SubUsersComponent implements OnInit {
     if(this.commonService.ys_features.indexOf('20_plus_staff')!=-1) this.subUserLimit = 100;
     this.pageLoader = true;
     this.api.SUBUSER_LIST().subscribe(result => {
-      if(result.status) this.list = result.list;
+      if(result.status) this.setUserList(result);
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
@@ -50,7 +50,7 @@ export class SubUsersComponent implements OnInit {
       this.btnLoader = false;
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
+        this.setUserList(result);
       }
       else {
 				this.addForm.errorMsg = result.message;
@@ -96,7 +96,7 @@ export class SubUsersComponent implements OnInit {
     this.api.UPDATE_SUBUSER(this.editForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
+        this.setUserList(result);
       }
       else {
 				this.editForm.errorMsg = result.message;
@@ -110,13 +110,22 @@ export class SubUsersComponent implements OnInit {
     this.api.DELETE_SUBUSER(this.deleteForm).subscribe(result => {
       if(result.status) {
         document.getElementById('closeModal').click();
-        this.list = result.list;
+        this.setUserList(result);
       }
       else {
 				this.deleteForm.errorMsg = result.message;
         console.log("response", result);
       }
 		});
+  }
+
+  setUserList(result) {
+    this.list = result.list;
+    this.commonService.user_list = [];
+    result.list.filter(obj => obj.status=='active').forEach(obj => {
+      this.commonService.user_list.push({ _id: obj._id, name: obj.name });
+    });
+    this.commonService.updateLocalData('user_list', this.commonService.user_list);
   }
 
   // UPDATE PWD

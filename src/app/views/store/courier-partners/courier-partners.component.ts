@@ -26,7 +26,7 @@ export class CourierPartnersComponent implements OnInit {
   ngOnInit() {
     this.pageLoader = true;
     this.storeApi.CP_LIST().subscribe(result => {
-      if(result.status) this.list = result.list;
+      if(result.status) this.setCpList(result);
       else console.log("response", result);
       setTimeout(() => { this.pageLoader = false; }, 500);
     });
@@ -38,7 +38,7 @@ export class CourierPartnersComponent implements OnInit {
       this.storeApi.ADD_CP(this.cpForm).subscribe(result => {
         this.cpForm.submit = false;
         if(result.status) {
-          this.list = result.list;
+          this.setCpList(result);
           document.getElementById('closeModal').click();
         }
         else {
@@ -51,7 +51,7 @@ export class CourierPartnersComponent implements OnInit {
       this.storeApi.UPDATE_CP(this.cpForm).subscribe(result => {
         this.cpForm.submit = false;
         if(result.status) {
-          this.list = result.list;
+          this.setCpList(result);
           document.getElementById('closeModal').click();
         }
         else {
@@ -86,7 +86,7 @@ export class CourierPartnersComponent implements OnInit {
     this.storeApi.UPDATE_CP(sendData).subscribe(result => {
       this.cpForm.submit = false;
       if(result.status) {
-        this.list = result.list;
+        this.setCpList(result);
         document.getElementById('closeModal').click();
       }
       else {
@@ -100,7 +100,7 @@ export class CourierPartnersComponent implements OnInit {
   onDelete() {
     this.storeApi.DELETE_CP(this.deleteForm).subscribe(result => {
       if(result.status) {
-        this.list = result.list;
+        this.setCpList(result);
         document.getElementById('closeModal').click();
       }
       else {
@@ -108,6 +108,12 @@ export class CourierPartnersComponent implements OnInit {
         console.log("response", result);
       }
     });
+  }
+
+  setCpList(result) {
+    this.list = result.list;
+    this.commonService.courier_partners = result.list.filter(obj => obj.status=='active');
+    this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
   }
 
 }
