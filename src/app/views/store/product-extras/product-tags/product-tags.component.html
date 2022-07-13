@@ -3,20 +3,35 @@
 </div>
 
 <div *ngIf="!pageLoader">
-  <div class="breadcrumb">
-    <h1>Product Tags</h1>
-    <ul>
-      <li>Filter your products efficiently</li>
-    </ul>
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Product Tags</h1>
+        <ul>
+          <li>Filter your products efficiently</li>
+        </ul>
+      </div>
+      <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <button *ngIf="!vendor_id" type="button" class="btn btn-primary"
+        (click)="tagForm = { rank: maxRank+1, form_type: 'add', option_list: [{}] }; modalService.open(tagModal, { size: 'lg'});">
+          Add New Tag
+        </button>
+      </div>
+    </div>
   </div>
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="top-filter-sec">
     <div class="row mb-4">
-      <div class="col-md-6">
-        <button *ngIf="commonService.store_details?.login_type!='vendor'" type="button" class="btn btn-primary"
-        (click)="onAdd(tagModal);">Add New Tag</button>
-      </div>
+      <ng-container *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type!='vendor'">
+        <div class="col-md-3 col-6">
+          <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="vendor_id" (change)="ngOnInit();">
+            <option value="">-- Select vendor --</option>
+            <option value="{{x._id}}" *ngFor="let x of commonService.vendor_list;">{{x.company_details?.brand}}</option>
+          </select>
+        </div>
+        <div class="col-md-3"></div>
+      </ng-container>
       <!-- search box -->
       <div *ngIf="list?.length" class="col-md-6 mt-sm-15">
         <div class="form-group">
@@ -50,10 +65,7 @@
                       <p class="w-sm-100 m-b-0">{{x._id}}</p>
                     </div>
                     <div class="col-md-2 d-flex align-items-center">
-                      <p *ngIf="commonService.ys_features.indexOf('vendors')==-1" class="m-0 text-muted text-small w-sm-100 m-b-0">
-                        {{x.option_list?.length}} Options
-                      </p>
-                      <p *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type=='vendor'" class="m-0 text-muted text-small w-sm-100 m-b-0">
+                      <p class="m-0 text-muted text-small w-sm-100 m-b-0">
                         {{x.option_list?.length}} Options
                       </p>
                     </div>

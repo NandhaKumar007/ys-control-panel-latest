@@ -18,12 +18,14 @@ export class ProductTagsComponent implements OnInit {
 	list: any = []; maxRank: any = 0;
   tagForm: any; deleteForm: any;
   pageLoader: boolean; search_bar: string;
+  vendor_id: string = "";
   
   constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
   ngOnInit() {
+    if(this.commonService.store_details?.login_type=='vendor') this.vendor_id = this.commonService.vendor_details?._id;
     this.pageLoader = true;
     this.api.TAG_LIST().subscribe(result => {
 			if(result.status) {
@@ -36,12 +38,6 @@ export class ProductTagsComponent implements OnInit {
 		});
   }
 
-  onAdd(modalName) {
-    this.tagForm = { rank: this.maxRank+1, form_type: 'add', option_list: [{}] };
-    if(this.commonService.ys_features.indexOf('vendors')!=-1) this.tagForm.option_list = [];
-    this.modalService.open(modalName, { size: 'lg'});
-  }
-
   // EDIT
   onEdit(x, modalName) {
     this.api.TAG_LIST().subscribe(result => {
@@ -51,12 +47,12 @@ export class ProductTagsComponent implements OnInit {
           this.tagForm = result.list[index];
           this.tagForm.form_type = 'edit';
           this.tagForm.prev_rank = this.tagForm.rank;
-          if(this.commonService.store_details?.login_type=='vendor') {
-            this.tagForm.option_list = [{}];
-            let vIndex = this.tagForm.vendor_list?.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
+          if(this.vendor_id) {
+            let vIndex = this.tagForm.vendor_list?.findIndex(obj => obj.vendor_id==this.vendor_id);
             if(vIndex!=-1) this.tagForm.option_list = this.tagForm.vendor_list[vIndex].option_list;
+            else this.tagForm.option_list = [{}];
           }
-          else if(this.commonService.ys_features.indexOf('vendors')!=-1) this.tagForm.option_list = [];
+          if(!this.tagForm.option_list?.length) this.tagForm.option_list = [{}];
           this.modalService.open(modalName, {size: 'lg'});
         }
         else console.log("Invalid tag");
@@ -74,6 +70,7 @@ export class ProductTagsComponent implements OnInit {
           document.getElementById('closeModal').click();
           this.list = result.list;
           this.maxRank = this.list.length;
+          this.filterVendorTags();
         }
         else {
           this.tagForm.errorMsg = result.message;
@@ -82,6 +79,7 @@ export class ProductTagsComponent implements OnInit {
       });
     }
     else {
+      if(this.vendor_id) this.tagForm.vendor_id = this.vendor_id;
       this.api.UPDATE_TAG(this.tagForm).subscribe(result => {
         this.tagForm.submit = false;
         if(result.status) {
@@ -107,6 +105,7 @@ export class ProductTagsComponent implements OnInit {
         document.getElementById('closeModal').click();
         this.list = result.list;
 				this.maxRank = this.list.length;
+        this.filterVendorTags();
       }
       else {
 				this.deleteForm.errorMsg = result.message;
@@ -116,10 +115,10 @@ export class ProductTagsComponent implements OnInit {
   }
 
   filterVendorTags() {
-    if(this.commonService.store_details?.login_type=='vendor') {
+    if(this.vendor_id) {
       this.list.forEach(el => {
         el.option_list = [];
-        let vIndex = el.vendor_list?.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
+        let vIndex = el.vendor_list?.findIndex(obj => obj.vendor_id==this.vendor_id);
         if(vIndex!=-1) el.option_list = el.vendor_list[vIndex].option_list;
       });
     }
