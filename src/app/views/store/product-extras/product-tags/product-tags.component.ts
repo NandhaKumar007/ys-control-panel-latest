@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TitleCasePipe } from '@angular/common';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductExtrasApiService } from '../product-extras-api.service';
@@ -20,7 +21,7 @@ export class ProductTagsComponent implements OnInit {
   pageLoader: boolean; search_bar: string;
   vendor_id: string = "";
   
-  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService) {
+  constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private api: ProductExtrasApiService, public commonService: CommonService, private titleCase: TitleCasePipe) {
     config.backdrop = 'static'; config.keyboard = false;
   }
 
@@ -63,6 +64,9 @@ export class ProductTagsComponent implements OnInit {
 
   onSubmit() {
     this.tagForm.submit = true;
+    this.tagForm.option_list.forEach(el => {
+      el.name = this.titleCase.transform(el.name);
+    });
     if(this.tagForm.form_type=='add') {
       this.api.ADD_TAG(this.tagForm).subscribe(result => {
         this.tagForm.submit = false;

@@ -262,7 +262,7 @@
             </div>
           </div>
           <div class="col-md-12 form-group mb-3">
-            <label>Redirect To https://yourstore.io/login{{pwdForm.redirect}}</label>
+            <label>Redirect To {{baseUrl+pwdForm.redirect}}</label>
             <input type="text" name="redirect" class="form-control" [(ngModel)]="pwdForm.redirect" />
           </div>
         </div>

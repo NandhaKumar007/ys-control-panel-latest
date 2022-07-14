@@ -19,6 +19,7 @@ export class YsClientsComponent implements OnInit {
   page = 1; pageSize = 10; search_bar: string;
   pageLoader: boolean; parent_list: any = []; list: any = [];
   imgBaseUrl = environment.img_baseurl; buildForm: any = {};
+  baseUrl = environment.base_url;
   filterForm = { list_type: 'active', expiry_day: '15', day_type: 'eq', inactive_day: '3' };
   pwdForm: any = {}; deleteForm: any = {}; settingForm: any = {};
   verNum: any = new Date().getFullYear()+''+new Date().getMonth()+''+new Date().getDate()+''+new Date().getHours();

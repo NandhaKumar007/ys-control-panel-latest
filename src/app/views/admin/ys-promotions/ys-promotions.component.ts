@@ -16,6 +16,7 @@ export class YsPromotionsComponent implements OnInit {
   
   pageLoader: boolean; search_bar: string;
   imgBaseUrl = environment.img_baseurl;
+  baseUrl = environment.base_url;
   pageSize = 10; page = 1;
   list:any=[];
   proForm: any = {}; deleteForm: any = {};

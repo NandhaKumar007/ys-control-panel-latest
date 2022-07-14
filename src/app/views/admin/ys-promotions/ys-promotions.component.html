@@ -209,7 +209,7 @@
               </label>
             </div>
             <div class="col-md-12 form-group mb-3">
-              <label *ngIf="proForm.rd_type=='internal'">https://yourstore.io/login{{proForm.rd_to}}</label>
+              <label *ngIf="proForm.rd_type=='internal'">{{baseUrl+proForm.rd_to}}</label>
               <label *ngIf="proForm.rd_type=='external'">Redirect To</label>
               <input type="text" name="rd_to" class="form-control" [(ngModel)]="proForm.rd_to" required />
             </div>

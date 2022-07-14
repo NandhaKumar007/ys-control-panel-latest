@@ -26,7 +26,7 @@
       <ng-container *ngIf="commonService.ys_features.indexOf('vendors')!=-1 && commonService.store_details?.login_type!='vendor'">
         <div class="col-md-3 col-6">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="vendor_id" (change)="ngOnInit();">
-            <option value="">-- Select vendor --</option>
+            <option value="">-- All vendors --</option>
             <option value="{{x._id}}" *ngFor="let x of commonService.vendor_list;">{{x.company_details?.brand}}</option>
           </select>
         </div>

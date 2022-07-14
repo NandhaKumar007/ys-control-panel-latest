@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,7 +24,7 @@ import { environment } from '../environments/environment';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
-    DatePipe,
+    DatePipe, TitleCasePipe,
     { provide: HTTP_INTERCEPTORS, useClass: UserInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
