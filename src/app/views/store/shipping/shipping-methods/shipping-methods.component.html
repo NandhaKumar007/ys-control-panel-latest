@@ -168,7 +168,7 @@
           </div>
           <div class="col-md-6 form-group mb-3">
             <label>Tracking Link</label>
-            <input type="text" name="tracking_link" class="form-control" [(ngModel)]="shippingForm.tracking_link" required [readOnly]="shippingForm.dp_name && shippingForm.dp_status" />
+            <input type="text" name="tracking_link" class="form-control" [(ngModel)]="shippingForm.tracking_link" required />
           </div>
           <ng-container *ngIf="!shippingForm.domes_zone_status && !shippingForm.inter_zone_status">
             <div class="col-md-6 form-group mb-3">
@@ -203,44 +203,6 @@
               <label>Order above</label>
               <input type="tel" name="minimum_price" class="form-control" [(ngModel)]="shippingForm.minimum_price" appNumberOnly />
             </div>
-          </ng-container>
-          <!-- DP Integration -->
-          <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')!=-1">
-            <div class="col-md-12 border-top mt-1 mb-3"></div>
-            <div class="col-md-12 form-group mb-3">
-              <label class="checkbox checkbox-primary">
-                <input class="form-check-input" type="checkbox" name="dp_status" [(ngModel)]="shippingForm.dp_status">
-                <span>Enable Delivery Partner Integration</span><span class="checkmark"></span>
-              </label>
-            </div>
-            <ng-container *ngIf="shippingForm.dp_status">
-              <div class="col-md-6 form-group mb-3">
-                <label>Type</label>
-                <select name="dp_name" class="form-control select-arrow" (change)="onChangeCP();" [(ngModel)]="shippingForm.dp_name" required>
-                  <option value="">-- Select --</option>
-                  <option value="Delhivery">Delhivery</option>
-                </select>
-              </div>
-              <div class="col-md-6"></div>
-              <!-- Delhivery -->
-              <ng-container *ngIf="shippingForm.dp_name=='Delhivery'">
-                <div class="col-md-6 form-group mb-3">
-                  <label>Mode</label>
-                  <select name="mode" class="form-control select-arrow" [(ngModel)]="shippingForm.dp_config.mode" required>
-                    <option value="test">Test</option>
-                    <option value="live">Live</option>
-                  </select>
-                </div>
-                <div class="col-md-6 form-group mb-3">
-                  <label>Pickup ID</label>
-                  <input type="text" name="pickup_id" class="form-control" [(ngModel)]="shippingForm.dp_config.pickup_id" required />
-                </div>
-                <div class="col-md-12 form-group mb-3">
-                  <label>Token</label>
-                  <input type="text" name="dp_token" class="form-control" [(ngModel)]="shippingForm.dp_config.token" required />
-                </div>
-              </ng-container>
-            </ng-container>
           </ng-container>
         </div>
       </div>

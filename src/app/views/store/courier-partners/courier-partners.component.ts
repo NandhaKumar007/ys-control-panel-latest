@@ -68,6 +68,7 @@ export class CourierPartnersComponent implements OnInit {
       if(result.status) {
         this.cpForm = result.data;
         this.cpForm.form_type = 'edit';
+        if(!this.cpForm.metadata) this.cpForm.metadata = {};
         this.modalService.open(modalName);
       }
       else console.log("response", result);

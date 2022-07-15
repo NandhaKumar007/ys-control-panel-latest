@@ -14,7 +14,7 @@
   <div class="top-filter-sec">
     <div class="row mb-4">
       <div class="col-md-6">
-        <button type="button" class="btn btn-primary" (click)="cpForm = { form_type: 'add' }; modalService.open(cpModal);">
+        <button type="button" class="btn btn-primary" (click)="cpForm = { form_type: 'add', metadata: {} }; modalService.open(cpModal);">
           Add New
         </button>
       </div>
@@ -112,6 +112,10 @@
             <div class="col-md-12 form-group mb-3">
               <label>Token</label>
               <input type="text" name="dp_token" class="form-control" [(ngModel)]="cpForm.token" required />
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Pickup ID</label>
+              <input type="text" name="pickup_id" class="form-control" [(ngModel)]="cpForm.metadata.pickup_id" required />
             </div>
           </ng-container>
         </div>

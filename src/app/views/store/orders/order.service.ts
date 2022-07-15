@@ -89,16 +89,25 @@ export class OrderService {
   }
 
   // courier partners
+  CP_ORDER_DETAILS(type, wbn, vendorId) {
+    let params = 'type='+type+'&wbn='+wbn;
+    if(vendorId) params = params+'&vendor_id='+vendorId;
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.get<any>(environment.ws_url+'/store/courier_partner?'+params, httpOptions);
+  }
   CREATE_CP_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
   }
-  ORDER_PACKING_SLIP(orderId, vendorId) {
+  CANCEL_CP_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    let reqUrl = environment.ws_url+'/store/courier_partner?order_id='+orderId;
-    if(vendorId) { reqUrl += '&vendor_id='+vendorId; }
-    return this.http.get<any>(reqUrl, httpOptions);
+    return this.http.patch<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
   }
+  CP_ORDER_PICKUP_REQUEST(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/courier_partner/pickup_request', x, httpOptions);
+  }
+  
   DELHIVERY_UPDATE_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.put<any>(environment.ws_url+'/store/courier_partner/delhivery', x, httpOptions);

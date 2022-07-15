@@ -36,7 +36,8 @@ export class ProductOrderDetailsComponent implements OnInit {
   tax_config: any = { tax: 0 }; itemList: any = [];
   groupForm: any; remaining_items: any = [];
   courierData: any = {}; itemInfo: any = {};
-  tax_rates: any = [];
+  tax_rates: any = []; addedCourier: any = { name: 'Others' };
+  slip_details: any = {};
   // temp
   destList: any = []; selectedVendor: any;
 
@@ -197,12 +198,46 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   // courier partner
-  createCpOrder() {
-    this.courierForm.btnLoader = true;
-    this.api.CREATE_CP_ORDER({ _id: this.order_details._id }).subscribe(result => {
+  createCpOrder(vendorId) {
+    this.courierForm.submit = true;
+    this.courierForm.order_id = this.order_details._id;
+    if(vendorId) this.courierForm.vendor_id = vendorId;
+    this.api.CREATE_CP_ORDER(this.courierForm).subscribe(result => {
+      this.courierForm.submit = false;
       if(result.status) this.ngOnInit();
       else {
-        this.courierForm.btnLoader = false;
+        this.courierForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
+  }
+  getCpOrderDetails(modalName) {
+    this.api.CP_ORDER_DETAILS(this.courierForm.type, this.courierForm.wbn, this.courierForm.vendor_id).subscribe(result => {
+      if(result.status) {
+        this.slip_details = result.data.packages[0];
+        this.slip_details.order_number = this.courierForm.order_number;
+        this.slip_details.product_list = this.slip_details.prd.split(',');
+        this.slip_details.seller_name = this.commonService.store_details?.name;
+        this.slip_details.seller_addr = this.commonService.store_details?.company_details?.address;
+        if(result.vendor_details) {
+          this.slip_details.seller_name = result.vendor_details.company_details?.name;
+          this.slip_details.seller_addr = result.vendor_details.pickup_address?.address;
+        }
+        this.modalService.open(modalName, {size: 'lg'});
+      }
+      else console.log("response", result);
+    });
+  }
+  cancelCpOrder() {
+    this.courierForm.submit = true;
+    this.courierForm.order_id = this.order_details._id;
+    this.api.CANCEL_CP_ORDER(this.courierForm).subscribe(result => {
+      this.courierForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
         this.courierForm.errorMsg = result.message;
         console.log("response", result);
       }
@@ -224,55 +259,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
   }
 
-  cancelCourierPartner(modalName) {
-    this.courierForm = { type: 'Others' };
-    let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
-    if(cpIndex!=-1) this.courierForm.type = this.order_details.cp_orders[cpIndex].name;
-    this.modalService.open(modalName, { centered: true });
-  }
-  confirmCancelCourierPartner() {
-    this.courierForm.btnLoader = true;
-    if(this.courierForm.type=='Delhivery') {
-      this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: true }).subscribe(result => {
-        this.courierForm.btnLoader = false;
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.ngOnInit();
-        }
-        else {
-          this.courierForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-    else if(this.courierForm.type=='Dunzo') {
-      this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, form_data: { cancellation_reason: this.courierForm.cancel_reason } }).subscribe(result => {
-        this.courierForm.btnLoader = false;
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.ngOnInit();
-        }
-        else {
-          this.courierForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-    else {
-      let sendData = { _id: this.order_details._id, cp_status: false, "shipping_method.name": "", "shipping_method.tracking_number": "", "shipping_method.tracking_link": "" };
-      this.api.UPDATE_ORDER_DETAILS(sendData).subscribe(result => {
-        this.courierForm.btnLoader = false;
-        if(result.status) {
-          document.getElementById('closeModal').click();
-          this.ngOnInit();
-        }
-        else {
-          this.courierForm.errorMsg = result.message;
-          console.log("response", result);
-        }
-      });
-    }
-  }
+  
 
   cancelVendorOrder(x, modalName) {
     this.errorMsg = null;
@@ -388,26 +375,8 @@ export class ProductOrderDetailsComponent implements OnInit {
     this.api.CANCEL_ORDER({ _id: this.order_details._id }).subscribe(result => {
       this.btnLoader = false;
       if(result.status) {
-        // cancel courier partner
-        let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
-        if(this.order_details.existing_status=='confirmed' && cpIndex!=-1) {
-          if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
-            this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: true }).subscribe(result => {
-              document.getElementById('closeModal').click();
-              this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
-            });
-          }
-          else if(this.order_details.cp_orders[cpIndex].name=='Dunzo') {
-            this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, form_data: { cancellation_reason: 'Order cancelled' } }).subscribe(result => {
-              document.getElementById('closeModal').click();
-              this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
-            });
-          }
-        }
-        else {
-          document.getElementById('closeModal').click();
-          this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
-        }
+        document.getElementById('closeModal').click();
+        this.router.navigate(["/orders/product/cancelled/"+this.params.customer_id]);
       }
       else {
         this.errorMsg = result.message;
@@ -429,27 +398,9 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.api.CANCEL_ORDER(formData).subscribe(result => {
         this.btnLoader = false;
         if(result.status) {
-          // cancel courier partner
-          // let cpIndex = this.vendorInfo.cp_orders.findIndex(obj => obj.status=='active');
-          // if(this.vendorInfo.existing_status=='confirmed' && cpIndex!=-1) {
-          //   if(this.vendorInfo.cp_orders[cpIndex].name=='Delhivery') {
-          //     this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, vendor_id: this.vendorInfo.vendor_id, cancellation: true }).subscribe(result => {
-          //       document.getElementById('closeModal').click();
-          //       this.ngOnInit();
-          //     });
-          //   }
-          //   else if(this.vendorInfo.cp_orders[cpIndex].name=='Dunzo') {
-          //     this.api.CANCEL_DUNZO_ORDER({ _id: this.order_details._id, vendor_id: this.vendorInfo.vendor_id, form_data: { cancellation_reason: 'Order cancelled' } }).subscribe(result => {
-          //       document.getElementById('closeModal').click();
-          //       this.ngOnInit();
-          //     });
-          //   }
-          // }
-          // else {
-            if(document.getElementById('closeConfirmModal')) document.getElementById('closeConfirmModal').click();
-            document.getElementById('closeModal').click();
-            this.ngOnInit();
-          // }
+          if(document.getElementById('closeConfirmModal')) document.getElementById('closeConfirmModal').click();
+          document.getElementById('closeModal').click();
+          this.ngOnInit();
         }
         else {
           this.vendorInfo.errorMsg = result.message;
@@ -529,11 +480,11 @@ export class ProductOrderDetailsComponent implements OnInit {
       }
     });
   }
-  onEditVendorShipping(x, modalName) {
+  onEditVendorShipping(vendorId, modalName) {
     this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
       if(result.status) {
         let orderData = result.data;
-        let vIndex = orderData.vendor_list.findIndex(obj => obj.vendor_id==x.vendor_id);
+        let vIndex = orderData.vendor_list.findIndex(obj => obj.vendor_id==vendorId);
         if(vIndex != -1) {
           this.editForm = orderData.vendor_list[vIndex];
           this.editForm.formType = 'vendor';

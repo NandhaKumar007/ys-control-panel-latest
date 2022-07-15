@@ -344,7 +344,7 @@
               <div class="order-section">
                 <div class="pb-2">
                   <p class="sec-desc" style="display: inline-block;">Shipping Details</p>
-                  <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEditVendorShipping(vendor, shippingModal);" class="material-icons edit-icon">edit</i>
+                  <i *ngIf="!params?.coupon_id && params?.type!='inactive'" style="float:right;" (click)="onEditVendorShipping(vendor.vendor_id, shippingModal);" class="material-icons edit-icon">edit</i>
                 </div>
                 <div class="col-md-12 list-item p-0">
                   <div class="card mb-4 d-flex flex-column">
@@ -362,17 +362,53 @@
                         <p class="w-30 w-sm-100 m-b-0">{{vendor.shipping_method?.delivery_time}}</p>
                       </div>
                     </div>
-                    <div class="flex-grow-1 pl-2 d-flex">
-                      <div
-                        class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                        <p *ngIf="vendor?.shipping_method?.tracking_number" style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
-                          <a href="{{vendor.shipping_method?.tracking_link}}" target="_blank">{{vendor.shipping_method.tracking_number}}</a>
+                    <div *ngIf="vendor?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
+                      <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
+                          {{vendor.shipping_method.tracking_number}}
                         </p>
                         <p class="w-70 w-sm-100 m-b-0">{{vendor.shipping_method?.tracking_link}}</p>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- courier partner details -->
+                <ng-container *ngFor="let x of vendor.cp_orders;">
+                  <ng-container *ngIf="vendor.cp_status && x.status=='active'">
+                    <div class="pb-2">
+                      <p class="sec-desc" style="display: inline-block;">Delivery Partner Details</p>
+                    </div>
+                    <div class="col-md-12 list-item p-0">
+                      <div class="card mb-4 d-flex flex-column">
+                        <div class="flex-grow-1 pl-2 d-flex">
+                          <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                            <p class="w-30 w-sm-100 m-b-0">{{x?.name}}</p>
+                            <p class="w-30 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                            <p class="w-30 w-sm-100 m-b-0">
+                              {{vendor?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- btn section -->
+                        <div *ngIf="vendor?.existing_status=='placed' || vendor?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
+                          <div class="card-body" style="padding-top: 0px;">
+                            <ng-container *ngIf="x?.name=='Delhivery'">
+                              <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendor.order_number, vendor_id: vendor.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
+                                Cancel Order
+                              </button>
+                              <button type="button" (click)="courierForm={ type: x.name, wbn: x.order_id, order_number: vendor.order_number, vendor_id: vendor.vendor_id }; getCpOrderDetails(packageSlipModal);" class="btn btn-primary mr-3">
+                                Packing Slip
+                              </button>
+                            </ng-container>
+                            <a [href]="vendor.shipping_method?.tracking_link" target="_blank" class="btn btn-primary">
+                              Track Order
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
               </div>
               <!-- order information -->
               <div class="order-section">
@@ -382,18 +418,69 @@
                 <div class="col-md-12 card">
                   <div class="row card-body">
                     <div class="col-md-5">
-                      <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
-                        <div class="row">
-                          <!-- tracking details -->
-                          <ng-container *ngIf="params?.type=='live' && vendor.order_status=='dispatched' && !vendor.shipping_method.delivery_method && !vendor.shipping_info?.dp_status">
+                      <!-- courier partner -->
+                      <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendor?.cp_status && vendor.order_status=='dispatched'"
+                      (ngSubmit)="createCpOrder(vendor.vendor_id);" autocomplete="off" ngNativeValidate>
+                        <div class="row mb-3">
+                          <div class="col-md-12 form-group mb-3 summary-section">
+                            <label>Delivery Partners</label>
+                            <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="courierForm.selected_cp" (change)="courierForm.errorMsg='';" required>
+                              <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
+                              <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
+                            </select>
+                          </div>
+                          <ng-container *ngIf="courierForm.selected_cp=='Dunzo'">
+                            <div class="col-md-12 form-group mb-3 summary-section">
+                              <label>Special Instructions</label>
+                              <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                            </div>
+                            <div *ngIf="order_details.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
+                              <label class="checkbox checkbox-primary">
+                                <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
+                                <span>Enable Scheduled Delivery</span>
+                                <span class="checkmark"></span>
+                              </label>
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="courierForm.selected_cp=='Others'">
+                            <div class="col-md-12 form-group mb-3 summary-section">
+                              <label>Courier Name</label>
+                              <input type="text" name="tracker_name" class="form-control" [(ngModel)]="courierForm.name" required />
+                            </div>
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Tracking Number</label>
-                              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="vendor.shipping_method.tracking_number" required />
+                              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="courierForm.tracking_number" required />
                             </div>
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Tracking Link</label>
-                              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="vendor.shipping_method.tracking_link" required />
+                              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link" required />
                             </div>
+                          </ng-container>
+                          <div class="col-md-12">
+                            <div *ngIf="courierForm?.errorMsg">
+                              <p class="text-danger mb-3">{{ courierForm.errorMsg }}</p>
+                            </div>
+                            <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.submit" [ladda]="courierForm.submit">
+                              {{ courierForm.selected_cp=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                      <!-- order status -->
+                      <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; vendorInfo=vendor; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
+                        <div class="row">
+                          <!-- tracking details -->
+                          <ng-container *ngIf="params?.type=='live' && vendor.order_status=='dispatched' && !vendor.shipping_method.delivery_method">
+                            <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')==-1 || !commonService.courier_partners.length">
+                              <div class="col-md-12 form-group mb-3 summary-section">
+                                <label>Tracking Number</label>
+                                <input type="text" name="tracking_number" class="form-control" [(ngModel)]="vendor.shipping_method.tracking_number" required />
+                              </div>
+                              <div class="col-md-12 form-group mb-3 summary-section">
+                                <label>Tracking Link</label>
+                                <input type="text" name="tracking_link" class="form-control" [(ngModel)]="vendor.shipping_method.tracking_link" required />
+                              </div>
+                            </ng-container>
                           </ng-container>
                           <div class="col-5">
                             <div class="box-card card-head">
@@ -494,28 +581,12 @@
                                 Check and Set Delivery Partner
                               </button>
                             </div>
-                            <!-- GHANA -->
-                            <ng-container *ngFor="let x of vendor.cp_orders;">
-                              <div class="col-md-12" *ngIf="vendor.cp_status && x.name=='Ghana' && x.status=='active'">
-                                <div class="card p-3 mb-3">
-                                  <div class="d-flex flex-column justify-content-between flex-lg-row">
-                                    <p class="w-40 w-sm-100 m-b-0">{{x?.order_id}}</p>
-                                    <p class="w-30 w-sm-100 m-b-0">{{vendor?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </ng-container>
                             <!-- # TEMP CODE # -->
                             <div class="col-md-12">
                               <button [disabled]="vendor.order_status=='delivered' && !vendor?.dispatched_on"
                               type="submit" class="btn btn-primary w-100">Update Status</button>
                             </div>
                           </ng-container>
-                          <!-- courier partner -->
-                          <div class="col-md-12" *ngIf="params?.type=='live' && vendor.existing_status=='confirmed' && !vendor.shipping_method.delivery_method && vendor.shipping_info?.dp_status && !vendorInfo.cp_status">
-                            <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
-                            [ladda]="courierForm.btnLoader">Create Order in {{vendor.shipping_info?.dp_name}}</button>
-                          </div>
                           <!-- cancel order -->
                           <div *ngIf="!params?.coupon_id && params?.type=='live' && vendor?.existing_status!='delivered'" class="col-md-12">
                             <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
@@ -736,6 +807,22 @@
                   </div>
                 </div>
               </div>
+              <!-- courier partner details -->
+              <ng-container *ngFor="let x of order_details.cp_orders;">
+                <div *ngIf="order_details.cp_status && x.status=='active'" class="col-md-12 list-item p-0">
+                  <div class="card mb-4 d-flex flex-column">
+                    <div class="flex-grow-1 pl-2 d-flex">
+                      <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                        <p class="w-30 w-sm-100 m-b-0">{{x?.name}}</p>
+                        <p class="w-30 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                        <p class="w-30 w-sm-100 m-b-0">
+                          {{order_details?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </ng-container>
@@ -1142,6 +1229,62 @@
           </div>
         </div>
 
+        <!-- courier partner -->
+        <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !order_details?.cp_status && order_details.order_status=='dispatched'"
+          (ngSubmit)="createCpOrder('');" autocomplete="off" ngNativeValidate>
+          <div class="order-summary-header">
+            <p class="sec-desc">Delivery Partner</p>
+          </div>
+          <div class="card order-summary-details mtb-10">
+            <div class="row mtb-10">
+              <div class="col-md-12 form-group mb-3 summary-section">
+                <label>Delivery Partners</label>
+                <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="courierForm.selected_cp" (change)="courierForm.errorMsg='';" required>
+                  <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
+                  <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
+                </select>
+              </div>
+              <ng-container *ngIf="courierForm.selected_cp=='Dunzo'">
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Special Instructions</label>
+                  <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                </div>
+                <div *ngIf="order_details.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
+                  <label class="checkbox checkbox-primary">
+                    <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
+                    <span>Enable Scheduled Delivery</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="courierForm.selected_cp=='Others'">
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Courier Name</label>
+                  <input type="text" name="tracker_name" class="form-control" [(ngModel)]="courierForm.name" required />
+                </div>
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Tracking Number</label>
+                  <input type="text" name="tracking_number" class="form-control"
+                    [(ngModel)]="courierForm.tracking_number" required />
+                </div>
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Tracking Link</label>
+                  <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link"
+                    required />
+                </div>
+              </ng-container>
+              <div class="col-md-12">
+                <div *ngIf="courierForm?.errorMsg">
+                  <p class="text-danger mb-3">{{ courierForm.errorMsg }}</p>
+                </div>
+                <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.submit"
+                  [ladda]="courierForm.submit">
+                  {{ courierForm.selected_cp=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
         <!-- order status -->
         <ng-container *ngIf="!order_details.vendor_list?.length">
           <div *ngIf="params?.type!='inactive'" class="order-summary-header">
@@ -1151,17 +1294,17 @@
             <div class="card order-summary-details mtb-10">
               <div class="row mtb-10">
                 <!-- tracking details -->
-                <ng-container *ngIf="params?.type=='live' && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method && !order_details.shipping_info?.dp_status">
-                  <div class="col-md-12 form-group mb-3 summary-section">
-                    <label>Tracking Number</label>
-                    <input type="text" name="tracking_number" class="form-control"
-                      [(ngModel)]="order_details.shipping_method.tracking_number" #tracking_number="ngModel" required />
-                  </div>
-                  <div class="col-md-12 form-group mb-3 summary-section">
-                    <label>Tracking Link</label>
-                    <input type="text" name="tracking_link" class="form-control"
-                      [(ngModel)]="order_details.shipping_method.tracking_link" #tracking_link="ngModel" required />
-                  </div>
+                <ng-container *ngIf="params?.type=='live' && order_details.order_status=='dispatched' && !order_details.shipping_method.delivery_method">
+                  <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')==-1 || !commonService.courier_partners.length">
+                    <div class="col-md-12 form-group mb-3 summary-section">
+                      <label>Tracking Number</label>
+                      <input type="text" name="tracking_number" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_number" required />
+                    </div>
+                    <div class="col-md-12 form-group mb-3 summary-section">
+                      <label>Tracking Link</label>
+                      <input type="text" name="tracking_link" class="form-control" [(ngModel)]="order_details.shipping_method.tracking_link" required />
+                    </div>
+                  </ng-container>
                 </ng-container>
                 <!-- existing order status -->
                 <ng-container *ngIf="order_details?.created_on">
@@ -1260,13 +1403,13 @@
                   </div>
                 </ng-container>
                 <!-- courier partner -->
-                <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status && !order_details.cp_status">
+                <!-- <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status && !order_details.cp_status">
                   <button type="button" (click)="createCpOrder();" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
                   [ladda]="courierForm.btnLoader">Create Order in {{order_details.shipping_info?.dp_name}}</button>
                 </div>
                 <div class="col-md-12" align="center" *ngIf="courierForm.errorMsg">
                   <p class="text-danger mt-2 mb-0">{{ courierForm.errorMsg }}</p>
-                </div>
+                </div> -->
               </div>
             </div>
           </form>
@@ -1507,11 +1650,6 @@
                   </div>
                 </ng-container>
               </ng-container>
-              <!-- courier partner -->
-              <div class="col-md-12" *ngIf="params?.type=='live' && vendorInfo.existing_status=='confirmed' && !vendorInfo.shipping_method.delivery_method && vendorInfo.shipping_info?.dp_status && !vendorInfo.cp_status">
-                <button type="button" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
-                [ladda]="courierForm.btnLoader">Create Order in {{vendorInfo.shipping_info?.dp_name}}</button>
-              </div>
             </div>
           </div>
         </form>
@@ -1569,7 +1707,7 @@
   </form>
 </ng-template>
 
-<!-- update delivery partner -->
+<!-- TEMP CODE --- update delivery partner -->
 <ng-template #deliveryPartnerModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Set Delivery Partner - {{selectedVendor?.order_number}}</h4>
@@ -1636,7 +1774,7 @@
           <div class="col-md-12 form-group mb-3">
             <label>Carrier Name</label>
             <input type="text" name="name" class="form-control" [(ngModel)]="editForm.shipping_method.name"
-              #name="ngModel" [readonly]="order_details?.cp_status" required />
+              #name="ngModel" [readonly]="editForm.cp_status" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Shipping Cost</label>
@@ -1652,7 +1790,7 @@
             <label>Tracking Number</label>
             <input type="text" name="tracking_number" class="form-control"
               [(ngModel)]="editForm.shipping_method.tracking_number" #tracking_number="ngModel"
-              [readonly]="order_details?.cp_status" required />
+              [readonly]="editForm.cp_status" required />
           </div>
           <div class="col-md-12 form-group mb-3">
             <label>Tracking Link</label>
@@ -1667,13 +1805,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel');">
-        <span class="black-outline-txt">Close</span>
-      </button>
-      <button type="button" *ngIf="order_details?.cp_status && order_details?.existing_status=='confirmed'"
-        class="btn btn-wide orng-outline-btn ladda-button"
-        (click)="modal.dismiss('cancel'); cancelCourierPartner(confirmCourierCancelModal);"
-        [disabled]="editForm.btnLoader" [ladda]="editForm.btnLoader">
-        <span class="orng-outline-txt">Cancel Courier</span>
+        <span class="black-outline-txt">Cancel</span>
       </button>
       <button type="submit" class="btn btn-wide btn-primary">Update</button>
     </div>
@@ -2241,13 +2373,13 @@
   </div>
 </ng-template>
 
-<!-- Confirm Courier Cancel -->
-<ng-template #confirmCourierCancelModal let-modal>
-  <form autocomplete="off" (ngSubmit)="confirmCancelCourierPartner();" ngNativeValidate>
+<!-- Cancel Courier -->
+<ng-template #cancelCourierModal let-modal>
+  <form autocomplete="off" (ngSubmit)="cancelCpOrder();" ngNativeValidate>
     <div class="modal-body">
       <p>
         <strong>Are you sure you want to cancel the
-          <span *ngIf="courierForm.type!='Others'" class="text-danger">"{{courierForm.type}}"</span> courier?</strong>
+          <span class="text-danger">"{{courierForm.type}}"</span> order for <span class="text-danger">"{{courierForm.order_number}}"</span>?</strong>
       </p>
       <div *ngIf="courierForm.type=='Dunzo'" class="row">
         <div class="col-md-12 form-group">
@@ -2264,8 +2396,8 @@
       <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
         <span class="black-outline-txt">Cancel</span>
       </button>
-      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="courierForm.btnLoader"
-        [ladda]="courierForm.btnLoader">Ok</button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="courierForm.submit"
+        [ladda]="courierForm.submit">Ok</button>
     </div>
   </form>
 </ng-template>
@@ -2883,4 +3015,118 @@
         [ladda]="editForm.submit">Update</button>
     </div>
   </form>
+</ng-template>
+
+<!-- package slip -->
+<ng-template #packageSlipModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{slip_details?.order_number}}</h4>
+    <p class="m-close-btn m-1">
+      <a (click)="modal.dismiss('Cross click');">CLOSE</a>
+    </p>
+  </div>
+  <div id="packageSlipPdf" class="modal-body">
+      <table class="table table-bordered mb-0 modal-table" align="center">
+        <tr>
+        <td colspan="3" class="pad-0">
+          <table class="w-100">
+            <tr>
+              <td align="center" width="50%" class="border-ltb0">
+                <div class="d-flex justify-content-center align-items-center"><img src="assets/images/delhivery-left.png" class="img-fluid deli_img1"></div>
+              </td>
+              <td width="50%"  class="border-rtb0">
+                <div class="d-flex justify-content-center align-items-center"><img src="assets/images/delhivery-right.png" class="img-fluid deli_img2"></div>
+              </td>
+            </tr>
+          </table>
+        </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <div class="d-flex justify-content-center align-items-center"><img src="{{slip_details?.barcode}}" class="img-fluid"></div>
+            <div class="row m-0">
+              <div class="col-8 pl-0">
+                <p class="mb-0">{{slip_details?.pin}}</p>
+              </div>
+              <div class="col-4 pr-0 d-flex justify-content-end">
+                <p class="mb-0"><b>DUM/WLT</b></p>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <p class="mb-0">
+              <b>Shipping Address:</b><br>
+              <b>{{slip_details?.name}}</b><br>
+              {{slip_details?.address}}<br>
+              {{slip_details?.destination}}<br>
+              PIN:{{slip_details?.pin}}
+            </p>
+          </td>
+          <td>
+            <p class="mb-0" align="center" style="font-weight:600">
+              <span>{{slip_details?.pt}}</span><br>
+              <span>{{slip_details?.rs | currency: commonService.store_currency?.country_code}}</span><br>
+              <span>Express</span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td width="60%">
+            <p class="mb-0">Seller: {{slip_details.seller_name}}</p>
+            <p class="mb-0">Address: {{slip_details.seller_addr}}</p>
+          </td>
+          <td colspan="2" width="40%">
+            <p class="mb-0" align="center">&nbsp;</p>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <p class="mb-0">Product</p>
+          </th>
+          <th>
+            <p class="mb-0">Price</p>
+          </th>
+          <th>
+            <p class="mb-0">Total</p>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <p class="mb-0" *ngFor="let x of slip_details.product_list">{{x}}</p>
+          </td>
+          <td>
+            <p class="mb-0 py-3">{{slip_details?.rs | currency: commonService.store_currency?.country_code}}</p>
+          </td>
+          <td>
+            <p class="mb-0">{{slip_details?.rs | currency: commonService.store_currency?.country_code}}</p>
+          </td>
+        </tr>
+        <tr class="total-b">
+          <td>
+            <p class="mb-0 py-3">Total</p>
+          </td>
+          <td>
+            <p class="mb-0">{{slip_details?.rs | currency: commonService.store_currency?.country_code}}</p>
+          </td>
+          <td>
+            <p class="mb-0">{{slip_details?.rs | currency: commonService.store_currency?.country_code}}</p>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <div class="d-flex justify-content-center align-items-center"><img src="{{slip_details?.oid_barcode}}" class="img-fluid deli_img2"></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <p class="mb-0">Return Address: {{slip_details.seller_addr}}</p>
+          </td>
+        </tr>
+      </table>
+  </div>
+  <!-- <div class="modal-footer">
+    <button class="btn btn-wide btn-primary" (click)="generatePDF('packageSlipPdf', slip_details?.order_number+'-packing-slip');">Save as pdf</button>
+  </div> -->
 </ng-template>

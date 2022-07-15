@@ -65,7 +65,7 @@ export class ProductTagsComponent implements OnInit {
   onSubmit() {
     this.tagForm.submit = true;
     this.tagForm.option_list.forEach(el => {
-      el.name = this.titleCase.transform(el.name);
+      el.name = this.titleCase.transform(el.name.trim());
     });
     if(this.tagForm.form_type=='add') {
       this.api.ADD_TAG(this.tagForm).subscribe(result => {
