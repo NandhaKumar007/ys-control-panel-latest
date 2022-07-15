@@ -78,8 +78,6 @@ export class ShippingMethodsComponent implements OnInit {
       if(result.status) {
         this.shippingForm = result.data;
         this.shippingForm.formType = 'update';
-        if(!this.shippingForm.dp_config) this.shippingForm.dp_config = {};
-        if(!this.shippingForm.dp_name) this.shippingForm.dp_name = "";
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
@@ -125,13 +123,6 @@ export class ShippingMethodsComponent implements OnInit {
           this.commonService.updateLocalData("deploy_stages", this.commonService.deploy_stages);
         }
       });
-    }
-  }
-
-  onChangeCP() {
-    if(this.shippingForm.dp_name) {
-      let dIndex = this.deliveryPartners.findIndex(obj => obj.name==this.shippingForm.dp_name);
-      if(dIndex!=-1) this.shippingForm.tracking_link = this.deliveryPartners[dIndex].tracking_link;
     }
   }
 

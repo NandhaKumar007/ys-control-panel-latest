@@ -116,9 +116,7 @@ export class SigninComponent implements OnInit {
           }
           else this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           // store features
-          this.commonService.user_list = []; this.commonService.courier_partners = [];
-          this.commonService.updateLocalData('user_list', this.commonService.user_list);
-          this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+          this.commonService.user_list = [];
           this.storeApi.STORE_FEATURES().subscribe(result => {
             if(result.status) {
               result.data.sub_users.filter(obj => obj.status=='active').forEach(obj => {
@@ -133,9 +131,6 @@ export class SigninComponent implements OnInit {
           if(!result.subuser_features) result.subuser_features = [];
           this.commonService.subuser_features = result.subuser_features;
           this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
-          // vendor features
-          this.commonService.vendor_features = [];
-          this.commonService.updateLocalData('vendor_features', this.commonService.vendor_features);
           this.sidebar.BUILD_CATEGORY_LIST();
           if(result.data.last_login) {
             if(sessionStorage.getItem("redirect_url")) {

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { StoreApiService } from '../../../services/store-api.service';
 import { ApiService } from '../../../services/api.service';
 import { CommonService } from '../../../services/common.service';
-import { ShippingService } from '../../store/shipping/shipping.service';
 import { SidebarService } from '../../../services/sidebar.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class VendorSigninComponent implements OnInit {
 
   constructor(
     public commonService: CommonService, public router: Router, private api: ApiService,
-    private sidebar: SidebarService, private shipService: ShippingService
+    private sidebar: SidebarService, private storeApi: StoreApiService
   ) { }
 
   ngOnInit(): void {
@@ -91,18 +91,13 @@ export class VendorSigninComponent implements OnInit {
             });
           }
           this.commonService.updateLocalData('ys_features', this.commonService.ys_features);
-          // sub-user features
-          if(!result.subuser_features) result.subuser_features = [];
-          this.commonService.subuser_features = result.subuser_features;
-          this.commonService.updateLocalData('subuser_features', this.commonService.subuser_features);
-          // shipping methods
-          this.commonService.shipping_list = [];
-          this.shipService.VENDOR_SHIPPING_LIST(this.commonService.vendor_details._id).subscribe(result => {
-            if(result.status) this.commonService.shipping_list = result.list.filter(obj => obj.status=='active');
-            this.commonService.updateLocalData('shipping_list', this.commonService.shipping_list);
+          // store features
+          this.storeApi.STORE_FEATURES().subscribe(result => {
+            if(result.status) {
+              this.commonService.courier_partners = result.data.courier_partners.filter(obj => obj.status=='active');
+              this.commonService.updateLocalData('courier_partners', this.commonService.courier_partners);
+            }
           });
-          this.commonService.vendor_list = [];
-          this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
           this.sidebar.BUILD_CATEGORY_LIST();
           this.router.navigateByUrl('/vendor-dashboard');
         }

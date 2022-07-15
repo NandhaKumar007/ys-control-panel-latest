@@ -22,7 +22,7 @@
     <div class="row mb-4">
       <div class="col-6">
         <button type="button" class="btn btn-primary"
-        (click)="shippingForm={ shipping_type: 'Domestic', name: 'Domestic Shipping', delivery_time: '2 to 5 days', formType: 'add', dp_name: '', dp_config: {} }; modalService.open(shippingModal, {size: 'lg'});">Add New</button>
+        (click)="shippingForm={ shipping_type: 'Domestic', name: 'Domestic Shipping', delivery_time: '2 to 5 days', formType: 'add' }; modalService.open(shippingModal, {size: 'lg'});">Add New</button>
       </div>
       <!-- search box -->
       <div *ngIf="!commonService.vendor_list?.length" class="col-md-6 mt-sm-15">

@@ -30,7 +30,8 @@
         <div class="order-section mtb-10">
           <div class="pb-2">
           <p class="sec-desc" style="display: inline-block;">Customer Details</p>
-          <i *ngIf="order_details.order_by!='guest'" style="float:right;" (click)="editForm = { _id: order_details.customerDetails[0]?._id, notes: order_details.customerDetails[0]?.notes}; modalService.open(editCustomerNote);" class="material-icons edit-icon">edit</i>
+          <i *ngIf="commonService.store_details?.login_type!='vendor' && order_details.order_by!='guest'" style="float:right;" class="material-icons edit-icon"
+          (click)="editForm = { _id: order_details.customerDetails[0]?._id, notes: order_details.customerDetails[0]?.notes}; modalService.open(editCustomerNote);">edit</i>
           </div>
           <div class="col-md-12 list-item p-0 mtb-10">
             <div class="card mb-4 d-flex flex-column">
@@ -426,7 +427,7 @@
                             <label>Delivery Partners</label>
                             <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="courierForm.selected_cp" (change)="courierForm.errorMsg='';" required>
                               <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
-                              <option *ngIf="!order_details.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
+                              <option *ngIf="!vendor.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
                             </select>
                           </div>
                           <ng-container *ngIf="courierForm.selected_cp=='Dunzo'">
@@ -434,7 +435,7 @@
                               <label>Special Instructions</label>
                               <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
                             </div>
-                            <div *ngIf="order_details.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
+                            <div *ngIf="vendor.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
                               <label class="checkbox checkbox-primary">
                                 <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
                                 <span>Enable Scheduled Delivery</span>
@@ -749,7 +750,7 @@
               </div>
             </div>
           </div>
-          <!-- shipping & delivery details -->
+          <!-- admin shipping details -->
           <ng-container *ngIf="!order_details.vendor_list?.length">
             <div class="order-section">
               <div class="pb-2">
@@ -767,24 +768,20 @@
                   <div class="flex-grow-1 pl-2 d-flex">
                     <div
                       class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.name? order_details.shipping_method?.name: 'NA'}}</p>
                       <p class="w-30 w-sm-100 m-b-0">
-                        {{order_details.shipping_method?.name? order_details.shipping_method?.name: 'NA'}}</p>
-                      <p class="w-30 w-sm-100 m-b-0">
-                        <span
-                          *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
-                          | currency:commonService.store_currency?.country_code }}</span>
+                        <span *ngIf="order_details?.shipping_method?.shipping_price>0">
+                          {{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}
+                        </span>
                         <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
                       </p>
                       <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
                     </div>
                   </div>
-                  <div class="flex-grow-1 pl-2 d-flex">
-                    <div
-                      class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                      <p *ngIf="order_details?.shipping_method?.tracking_number" style="width: 37% !important;"
-                        class="w-30 w-sm-100 m-b-0">
-                        <a href="{{order_details.shipping_method?.tracking_link}}"
-                          target="_blank">{{order_details.shipping_method.tracking_number}}</a>
+                  <div *ngIf="order_details?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
+                    <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
+                        {{order_details.shipping_method.tracking_number}}
                       </p>
                       <p class="w-70 w-sm-100 m-b-0">{{order_details.shipping_method?.tracking_link}}</p>
                     </div>
@@ -798,9 +795,9 @@
                       <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_date}}</p>
                       <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.delivery_time}}</p>
                       <p *ngIf="order_details.order_type=='delivery'" class="w-30 w-sm-100 m-b-0">
-                        <span
-                          *ngIf="order_details?.shipping_method?.shipping_price>0">{{order_details.shipping_method?.shipping_price
-                          | currency:commonService.store_currency?.country_code }}</span>
+                        <span *ngIf="order_details?.shipping_method?.shipping_price>0">
+                          {{order_details.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}
+                        </span>
                         <span *ngIf="order_details?.shipping_method?.shipping_price==0">FREE</span>
                       </p>
                     </div>
@@ -809,24 +806,46 @@
               </div>
               <!-- courier partner details -->
               <ng-container *ngFor="let x of order_details.cp_orders;">
-                <div *ngIf="order_details.cp_status && x.status=='active'" class="col-md-12 list-item p-0">
-                  <div class="card mb-4 d-flex flex-column">
-                    <div class="flex-grow-1 pl-2 d-flex">
-                      <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                        <p class="w-30 w-sm-100 m-b-0">{{x?.name}}</p>
-                        <p class="w-30 w-sm-100 m-b-0">{{x?.order_id}}</p>
-                        <p class="w-30 w-sm-100 m-b-0">
-                          {{order_details?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}
-                        </p>
+                <ng-container *ngIf="order_details.cp_status && x.status=='active'">
+                  <div class="pb-2">
+                    <p class="sec-desc" style="display: inline-block;">Delivery Partner Details</p>
+                  </div>
+                  <div class="col-md-12 list-item p-0">
+                    <div class="card mb-4 d-flex flex-column">
+                      <div class="flex-grow-1 pl-2 d-flex">
+                        <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                          <p class="w-30 w-sm-100 m-b-0">{{x?.name}}</p>
+                          <p class="w-30 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                          <p class="w-30 w-sm-100 m-b-0">
+                            {{order_details?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}
+                          </p>
+                        </div>
+                      </div>
+                      <!-- btn section -->
+                      <div *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
+                        <div class="card-body" style="padding-top: 0px;">
+                          <ng-container *ngIf="x?.name=='Delhivery'">
+                            <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: order_details.order_number }; modalService.open(cancelCourierModal, { centered: true });">
+                              Cancel Order
+                            </button>
+                            <button type="button" (click)="courierForm={ type: x.name, wbn: x.order_id, order_number: order_details.order_number }; getCpOrderDetails(packageSlipModal);" class="btn btn-primary mr-3">
+                              Packing Slip
+                            </button>
+                          </ng-container>
+                          <a [href]="order_details.shipping_method?.tracking_link" target="_blank" class="btn btn-primary">
+                            Track Order
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </ng-container>
               </ng-container>
             </div>
           </ng-container>
+          <!-- ## admin shipping details ## -->
         </ng-container>
-        <!-- vendor shipping details -->
+        <!-- vendor shipping details (for vendor login) -->
         <div *ngIf="commonService.store_details?.login_type=='vendor' && vendorInfo?.shipping_method" class="order-section">
           <div class="pb-2">
             <p class="sec-desc" style="display: inline-block;">Shipping Details</p>
@@ -834,33 +853,67 @@
           <div class="col-md-12 list-item p-0">
             <div class="card mb-4 d-flex flex-column">
               <div class="flex-grow-1 pl-2 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
                   <p class="w-30 w-sm-100 m-b-0">
                     {{vendorInfo.shipping_method?.name? vendorInfo.shipping_method?.name: 'NA'}}</p>
                   <p class="w-30 w-sm-100 m-b-0">
-                    <span
-                      *ngIf="vendorInfo?.shipping_method?.shipping_price>0">{{vendorInfo.shipping_method?.shipping_price
-                      | currency:commonService.store_currency?.country_code }}</span>
+                    <span *ngIf="vendorInfo?.shipping_method?.shipping_price>0">
+                      {{vendorInfo.shipping_method?.shipping_price | currency:commonService.store_currency?.country_code }}
+                    </span>
                     <span *ngIf="vendorInfo?.shipping_method?.shipping_price==0">FREE</span>
                   </p>
                   <p class="w-30 w-sm-100 m-b-0">{{vendorInfo.shipping_method?.delivery_time}}</p>
                 </div>
               </div>
-              <div class="flex-grow-1 pl-2 d-flex">
-                <div
-                  class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p *ngIf="vendorInfo?.shipping_method?.tracking_number" style="width: 37% !important;"
-                    class="w-30 w-sm-100 m-b-0">
-                    <a href="{{vendorInfo.shipping_method?.tracking_link}}"
-                      target="_blank">{{vendorInfo.shipping_method.tracking_number}}</a>
+              <div *ngIf="vendorInfo?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
+                <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                  <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
+                    {{vendorInfo.shipping_method.tracking_number}}
                   </p>
                   <p class="w-70 w-sm-100 m-b-0">{{vendorInfo.shipping_method?.tracking_link}}</p>
                 </div>
               </div>
             </div>
           </div>
+          <!-- courier partner details -->
+          <ng-container *ngFor="let x of vendorInfo.cp_orders;">
+            <ng-container *ngIf="vendorInfo.cp_status && x.status=='active'">
+              <div class="pb-2">
+                <p class="sec-desc" style="display: inline-block;">Delivery Partner Details</p>
+              </div>
+              <div class="col-md-12 list-item p-0">
+                <div class="card mb-4 d-flex flex-column">
+                  <div class="flex-grow-1 pl-2 d-flex">
+                    <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
+                      <p class="w-30 w-sm-100 m-b-0">{{x?.name}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">{{x?.order_id}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">
+                        {{vendorInfo?.shipping_method?.dp_charges | currency:commonService.store_currency?.country_code}}
+                      </p>
+                    </div>
+                  </div>
+                  <!-- btn section -->
+                  <div *ngIf="vendorInfo?.existing_status=='placed' || vendorInfo?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
+                    <div class="card-body" style="padding-top: 0px;">
+                      <ng-container *ngIf="x?.name=='Delhivery'">
+                        <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendorInfo.order_number, vendor_id: vendorInfo.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
+                          Cancel Order
+                        </button>
+                        <button type="button" (click)="courierForm={ type: x.name, wbn: x.order_id, order_number: vendorInfo.order_number, vendor_id: vendorInfo.vendor_id }; getCpOrderDetails(packageSlipModal);" class="btn btn-primary mr-3">
+                          Packing Slip
+                        </button>
+                      </ng-container>
+                      <a [href]="vendorInfo.shipping_method?.tracking_link" target="_blank" class="btn btn-primary">
+                        Track Order
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
+        <!-- ## vendor shipping details (for vendor login) ## -->
         <!-- order note -->
         <div class="order-section">
           <div class="pb-2">
@@ -1115,7 +1168,7 @@
           </div>
         </div>
       </div>
-      <!-- not vendor login -->
+      <!-- admin login -->
       <div class="col-lg-3" *ngIf="commonService.store_details?.login_type!='vendor'">
         <!-- order summary -->
         <div class="summary-section mtb-10">
@@ -1402,14 +1455,6 @@
                     </button>
                   </div>
                 </ng-container>
-                <!-- courier partner -->
-                <!-- <div class="col-md-12" *ngIf="params?.type=='live' && order_details.existing_status=='confirmed' && !order_details.shipping_method.delivery_method && order_details.shipping_info?.dp_status && !order_details.cp_status">
-                  <button type="button" (click)="createCpOrder();" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.btnLoader"
-                  [ladda]="courierForm.btnLoader">Create Order in {{order_details.shipping_info?.dp_name}}</button>
-                </div>
-                <div class="col-md-12" align="center" *ngIf="courierForm.errorMsg">
-                  <p class="text-danger mt-2 mb-0">{{ courierForm.errorMsg }}</p>
-                </div> -->
               </div>
             </div>
           </form>
@@ -1541,21 +1586,69 @@
         <div class="order-summary-header">
           <p class="sec-desc">Order Status</p>
         </div>
-        <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
-          <div class="card order-summary-details mtb-10">
+        <div class="card order-summary-details mtb-10">
+          <!-- courier partner -->
+          <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendorInfo?.cp_status && vendorInfo.order_status=='dispatched'"
+          (ngSubmit)="createCpOrder(vendorInfo.vendor_id);" autocomplete="off" ngNativeValidate>
             <div class="row mtb-10">
-              <!-- tracking details -->
-              <ng-container *ngIf="params?.type=='live' && vendorInfo.order_status=='dispatched' && !vendorInfo.shipping_method.delivery_method && !vendorInfo.shipping_info?.dp_status">
+              <div class="col-md-12 form-group mb-3 summary-section">
+                <label>Delivery Partners</label>
+                <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="courierForm.selected_cp" (change)="courierForm.errorMsg='';" required>
+                  <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
+                  <option *ngIf="!vendorInfo.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
+                </select>
+              </div>
+              <ng-container *ngIf="courierForm.selected_cp=='Dunzo'">
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Special Instructions</label>
+                  <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                </div>
+                <div *ngIf="vendorInfo.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
+                  <label class="checkbox checkbox-primary">
+                    <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
+                    <span>Enable Scheduled Delivery</span>
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="courierForm.selected_cp=='Others'">
+                <div class="col-md-12 form-group mb-3 summary-section">
+                  <label>Courier Name</label>
+                  <input type="text" name="tracker_name" class="form-control" [(ngModel)]="courierForm.name" required />
+                </div>
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Tracking Number</label>
-                  <input type="text" name="tracking_number" class="form-control"
-                    [(ngModel)]="vendorInfo.shipping_method.tracking_number" #tracking_number="ngModel" required />
+                  <input type="text" name="tracking_number" class="form-control" [(ngModel)]="courierForm.tracking_number" required />
                 </div>
                 <div class="col-md-12 form-group mb-3 summary-section">
                   <label>Tracking Link</label>
-                  <input type="text" name="tracking_link" class="form-control"
-                    [(ngModel)]="vendorInfo.shipping_method.tracking_link" #tracking_link="ngModel" required />
+                  <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link" required />
                 </div>
+              </ng-container>
+              <div class="col-md-12">
+                <div *ngIf="courierForm?.errorMsg">
+                  <p class="text-danger mb-3">{{ courierForm.errorMsg }}</p>
+                </div>
+                <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.submit" [ladda]="courierForm.submit">
+                  {{ courierForm.selected_cp=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
+                </button>
+              </div>
+            </div>
+          </form>
+          <form autocomplete="off" (ngSubmit)="errorMsg=null; btnLoader=false; modalService.open(updateVendorStatusModal, { centered: true });" ngNativeValidate>
+            <div class="row mtb-10">
+              <!-- tracking details -->
+              <ng-container *ngIf="params?.type=='live' && vendorInfo.order_status=='dispatched' && !vendorInfo.shipping_method.delivery_method">
+                <ng-container *ngIf="commonService.ys_features.indexOf('courier_partners')==-1 || !commonService.courier_partners.length">
+                  <div class="col-md-12 form-group mb-3 summary-section">
+                    <label>Tracking Number</label>
+                    <input type="text" name="tracking_number" class="form-control" [(ngModel)]="vendorInfo.shipping_method.tracking_number" required />
+                  </div>
+                  <div class="col-md-12 form-group mb-3 summary-section">
+                    <label>Tracking Link</label>
+                    <input type="text" name="tracking_link" class="form-control" [(ngModel)]="vendorInfo.shipping_method.tracking_link" required />
+                  </div>
+                </ng-container>
               </ng-container>
               <!-- existing order status -->
               <ng-container *ngIf="order_details?.created_on">
@@ -1651,8 +1744,8 @@
                 </ng-container>
               </ng-container>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
 
         <!-- cancel order -->
         <button *ngIf="!params?.coupon_id && params?.type=='live' && vendorInfo.existing_status!='delivered'" type="button"
