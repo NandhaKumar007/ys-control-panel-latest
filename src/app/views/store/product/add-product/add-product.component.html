@@ -320,7 +320,7 @@
                 <!-- #Variants -->
           
                 <!-- Addons -->
-                <div *ngIf="commonService.ys_features.indexOf('addons')!=-1" [ngClass]="productForm.addon_status? 'card p-3 mb-3': ''">
+                <div *ngIf="commonService.ys_features.indexOf('addons')!=-1 && addonList.length" [ngClass]="productForm.addon_status? 'card p-3 mb-3': ''">
                   <div class="row">
                     <div class="col-md-12 form-group mb-3">
                       <label class="checkbox checkbox-primary">

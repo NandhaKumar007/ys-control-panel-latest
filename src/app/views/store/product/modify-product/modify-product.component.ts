@@ -487,7 +487,7 @@ export class ModifyProductComponent implements OnInit {
       if(result.status) this.setVendorInfo(result.data);
       else {
         console.log("response", result);
-        this.addonList = []; this.faqList = []; this.sizeCharts = []; this.tagList = [];
+        this.addonList = []; this.faqList = []; this.sizeCharts = []; this.noteList = []; this.tagList = [];
       }
     });
   }
