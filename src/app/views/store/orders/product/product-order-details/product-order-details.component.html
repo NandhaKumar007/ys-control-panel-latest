@@ -2601,13 +2601,11 @@
       <button type="button" class="btn btn-wide black-outline-btn mr-3" (click)="modal.dismiss('Cross click');">
         <span class="black-outline-txt">Close</span>
       </button>
-      <button kendo-button class="btn btn-wide btn-primary" (click)="pdf.saveAs('customization.pdf')">Save as pdf</button>
+      <button class="btn btn-wide btn-primary" (click)="generatePDF('customizationPdf', 'customization.pdf');">Save as pdf</button>
     </p>
   </div>
-  <div class="modal-body modal-scroll slim-scroll ml-3 mr-3">
-    <kendo-pdf-export #pdf paperSize="A4" margin="2cm" forcePageBreak=".d_measure">
-      <app-customization-details></app-customization-details>
-    </kendo-pdf-export>
+  <div class="modal-body modal-scroll slim-scroll ml-3 mr-3" id="customizationPdf">
+    <app-customization-details></app-customization-details>
   </div>
 </ng-template>
 
@@ -2619,183 +2617,170 @@
       <a (click)="modal.dismiss('Cross click');">CLOSE</a>
     </p>
   </div>
-  <div class="modal-body modal-scroll slim-scroll mr-3 ml-3">
-    <kendo-pdf-export #invoicePdf paperSize="A4" margin="1cm" class="row">
-      <div class="row">
-        <div class="col-md-12" align="center">
-          <h5><u>INVOICE</u></h5>
-        </div>
-        <div class="col-md-6">
+  <div class="modal-body modal-scroll slim-scroll mr-3 ml-3" id="orderInvoice">
+    <div class="row">
+      <div class="col-md-12" align="center">
+        <h5><u>INVOICE</u></h5>
+      </div>
+      <div class="col-md-6">
+        <tr>
+          <td>
+            <p>Order ID</p>
+          </td>
+          <td>
+            <p>: #{{invoice_details.order_number}}</p>
+          </td>
+        </tr>
+      </div>
+      <div *ngIf="invoice_details.invoice_number" class="col-md-6">
+        <div class="invoice-no mr-3">
           <tr>
             <td>
-              <p>Order ID</p>
+              <p>Invoice No</p>
             </td>
             <td>
-              <p>: #{{invoice_details.order_number}}</p>
+              <p>: {{invoice_details.invoice_number}}</p>
             </td>
           </tr>
         </div>
-        <div *ngIf="invoice_details.invoice_number" class="col-md-6">
-          <div class="invoice-no mr-3">
-            <tr>
-              <td>
-                <p>Invoice No</p>
-              </td>
-              <td>
-                <p>: {{invoice_details.invoice_number}}</p>
-              </td>
-            </tr>
-          </div>
+      </div>
+      <div class="col-md-6">
+        <div [ngClass]="(!invoice_details.invoice_number)? 'invoice-no mr-3': ''">
+          <tr>
+            <td>
+              <p>Order Date</p>
+            </td>
+            <td>
+              <p>: {{invoice_details.created_on | date: "dd MMM y"}}</p>
+            </td>
+          </tr>
         </div>
-        <div class="col-md-6">
-          <div [ngClass]="(!invoice_details.invoice_number)? 'invoice-no mr-3': ''">
-            <tr>
-              <td>
-                <p>Order Date</p>
-              </td>
-              <td>
-                <p>: {{invoice_details.created_on | date: "dd MMM y"}}</p>
-              </td>
-            </tr>
-          </div>
-        </div>
-        <!-- address section -->
-        <div class="col-12">
-          <div class="row">
-            <div *ngIf="invoice_details.order_type!='pickup'" class="col-md-6 flex m-info-head flex-col">
-              <div class="w-100 flex gray-bg">
-                <h4>Billing Information</h4>
-              </div>
-              <div class="p-10">
-                <p>{{invoice_details.billing_address?.name}}</p>
-                <p>
-                  {{invoice_details.billing_address?.address}}, {{invoice_details.billing_address?.city}},
-                  {{invoice_details.billing_address?.state}}
-                  {{invoice_details.billing_address?.pincode}} {{invoice_details.billing_address?.country}}
-                </p>
-                <p>T: {{invoice_details.billing_address?.dial_code}} {{invoice_details.billing_address?.mobile}}</p>
-              </div>
+      </div>
+      <!-- address section -->
+      <div class="col-12">
+        <div class="row">
+          <div *ngIf="invoice_details.order_type!='pickup'" class="col-md-6 flex m-info-head flex-col">
+            <div class="w-100 flex gray-bg">
+              <h4>Billing Information</h4>
             </div>
-            <div class="col-md-6 flex m-info-head flex-col">
-              <div class="w-100 flex gray-bg">
-                <h4>{{ (invoice_details.order_type!='pickup')? 'Shipping': 'Pickup' }} Information</h4>
-              </div>
-              <div class="p-10">
-                <p>{{invoice_details.shipping_address?.name}}</p>
-                <p>
-                  {{invoice_details.shipping_address?.address}}, {{invoice_details.shipping_address?.city}},
-                  {{invoice_details.shipping_address?.state}}
-                  {{invoice_details.shipping_address?.pincode}} {{invoice_details.shipping_address?.country}}
-                </p>
-                <p>T: {{invoice_details.shipping_address?.dial_code}} {{invoice_details.shipping_address?.mobile}}</p>
-              </div>
+            <div class="p-10">
+              <p>{{invoice_details.billing_address?.name}}</p>
+              <p>
+                {{invoice_details.billing_address?.address}}, {{invoice_details.billing_address?.city}},
+                {{invoice_details.billing_address?.state}}
+                {{invoice_details.billing_address?.pincode}} {{invoice_details.billing_address?.country}}
+              </p>
+              <p>T: {{invoice_details.billing_address?.dial_code}} {{invoice_details.billing_address?.mobile}}</p>
+            </div>
+          </div>
+          <div class="col-md-6 flex m-info-head flex-col">
+            <div class="w-100 flex gray-bg">
+              <h4>{{ (invoice_details.order_type!='pickup')? 'Shipping': 'Pickup' }} Information</h4>
+            </div>
+            <div class="p-10">
+              <p>{{invoice_details.shipping_address?.name}}</p>
+              <p>
+                {{invoice_details.shipping_address?.address}}, {{invoice_details.shipping_address?.city}},
+                {{invoice_details.shipping_address?.state}}
+                {{invoice_details.shipping_address?.pincode}} {{invoice_details.shipping_address?.country}}
+              </p>
+              <p>T: {{invoice_details.shipping_address?.dial_code}} {{invoice_details.shipping_address?.mobile}}</p>
             </div>
           </div>
         </div>
-        <!-- payment section -->
-        <div *ngIf="invoice_details?.payment_details" class="col-12 m-t-10">
-          <div class=" ptb-10">
-            <h4>Payment Method: {{invoice_details.payment_details?.name}}</h4>
-          </div>
+      </div>
+      <!-- payment section -->
+      <div *ngIf="invoice_details?.payment_details" class="col-12 m-t-10">
+        <div class=" ptb-10">
+          <h4>Payment Method: {{invoice_details.payment_details?.name}}</h4>
         </div>
-        <!-- item section -->
-        <div class="col-md-12">
+      </div>
+      <!-- item section -->
+      <div class="col-md-12">
 
-          <table class="w-100">
-            <tr>
-              <td class="p-10 gray-bg invoice-font-size-head py-4" align="left"
-                [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">Item</td>
-              <td class="p-10 gray-bg invoice-font-size-head py-4" align="left" style="width: 20%;">SKU</td>
-              <td *ngIf="hsncode_exist" class="p-10 gray-bg invoice-font-size-head py-4" align="left"
-                style="width: 20%;">HSN Code</td>
-              <td class="p-10 gray-bg invoice-font-size-head py-4" [attr.align]="hsncode_exist? 'left': 'right'"
-                [ngStyle]="{'width.%': hsncode_exist? '10': '20' }">Qty.</td>
-              <td class="p-10 gray-bg invoice-font-size-head py-4" align="right" style="width: 20%;">Subtotal</td>
-            </tr>
+        <table class="w-100">
+          <tr>
+            <td class="p-10 gray-bg invoice-font-size-head py-4" align="left"
+              [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">Item</td>
+            <td class="p-10 gray-bg invoice-font-size-head py-4" align="left" style="width: 20%;">SKU</td>
+            <td *ngIf="hsncode_exist" class="p-10 gray-bg invoice-font-size-head py-4" align="left"
+              style="width: 20%;">HSN Code</td>
+            <td class="p-10 gray-bg invoice-font-size-head py-4" [attr.align]="hsncode_exist? 'left': 'right'"
+              [ngStyle]="{'width.%': hsncode_exist? '10': '20' }">Qty.</td>
+            <td class="p-10 gray-bg invoice-font-size-head py-4" align="right" style="width: 20%;">Subtotal</td>
+          </tr>
 
-            <tr>
-              <td colspan="5">
-                <div class="invoice-details">
-                  <table *ngFor="let order of invoice_order_list;" class="w-100 invoice-border">
+          <tr>
+            <td colspan="5">
+              <div class="invoice-details">
+                <table *ngFor="let order of invoice_order_list;" class="w-100 invoice-border">
 
-                    <tr *ngFor="let x of order.item_list;">
-                      <td class="p-10 invoice-font-size" align="left"
-                        [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">
-                        <p>{{x.name}}</p>
-                        <ng-container *ngIf="x.variant_status">
-                          <p *ngFor="let y of x.variant_types; let j=index;">
-                            <strong>{{y.name}}</strong>: {{y.value}}
-                          </p>
-                        </ng-container>
-                        <ng-container *ngIf="x.addon_status && x.selected_addon">
-                          <p class="invoice-addon">
-                            <strong>Addons</strong>: {{x.selected_addon?.name}}
-                          </p>
-                        </ng-container>
+                  <tr *ngFor="let x of order.item_list;">
+                    <td class="p-10 invoice-font-size" align="left"
+                      [ngStyle]="{'width.%': hsncode_exist? '30': '40' }">
+                      <p>{{x.name}}</p>
+                      <ng-container *ngIf="x.variant_status">
+                        <p *ngFor="let y of x.variant_types; let j=index;">
+                          <strong>{{y.name}}</strong>: {{y.value}}
+                        </p>
+                      </ng-container>
+                      <ng-container *ngIf="x.addon_status && x.selected_addon">
+                        <p class="invoice-addon">
+                          <strong>Addons</strong>: {{x.selected_addon?.name}}
+                        </p>
+                      </ng-container>
+                    </td>
+                    <td class="p-10 invoice-font-size" align="left" style="width: 20%;">{{x.sku}}</td>
+                    <td *ngIf="hsncode_exist" class="p-10 invoice-font-size" align="left" style="width: 20%;">
+                      {{ x.hsn_code? x.hsn_code: 'NA' }}</td>
+                    <td class="p-10 invoice-font-size" [attr.align]="hsncode_exist? 'left': 'right'"
+                      [ngStyle]="{'width.%': hsncode_exist? '10': '20' }">{{x.quantity}}</td>
+                    <td class="p-10 invoice-font-size " align="right" style="width: 20%;">
+                      <span *ngIf="x.unit=='Pcs'"
+                        [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount((x.final_price*x.quantity), order.tax_details))"></span>
+                      <span *ngIf="x.unit!='Pcs'"
+                        [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(((x.final_price*x.quantity)+x.addon_price), order.tax_details))"></span>
+                    </td>
+                  </tr>
+
+                  <ng-container *ngIf="order.tax_details">
+                    <tr>
+                      <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
+                        <p>Item total</p>
                       </td>
-                      <td class="p-10 invoice-font-size" align="left" style="width: 20%;">{{x.sku}}</td>
-                      <td *ngIf="hsncode_exist" class="p-10 invoice-font-size" align="left" style="width: 20%;">
-                        {{ x.hsn_code? x.hsn_code: 'NA' }}</td>
-                      <td class="p-10 invoice-font-size" [attr.align]="hsncode_exist? 'left': 'right'"
-                        [ngStyle]="{'width.%': hsncode_exist? '10': '20' }">{{x.quantity}}</td>
-                      <td class="p-10 invoice-font-size " align="right" style="width: 20%;">
-                        <span *ngIf="x.unit=='Pcs'"
-                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount((x.final_price*x.quantity), order.tax_details))"></span>
-                        <span *ngIf="x.unit!='Pcs'"
-                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(((x.final_price*x.quantity)+x.addon_price), order.tax_details))"></span>
+                      <td align="right" class="p-10">
+                        <p
+                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(order.sub_total, order.tax_details))">
+                        </p>
                       </td>
                     </tr>
-
-                    <ng-container *ngIf="order.tax_details">
-                      <tr>
-                        <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                          <p>Item total</p>
-                        </td>
-                        <td align="right" class="p-10">
-                          <p
-                            [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(order.sub_total, order.tax_details))">
-                          </p>
-                        </td>
-                      </tr>
-                      <!-- India -->
-                      <ng-container *ngIf="commonService?.store_details?.country=='India'">
-                        <ng-container *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
-                          <tr>
-                            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                              <p>SGST ({{order?.tax_details?.sgst}}%)</p>
-                            </td>
-                            <td align="right" class="p-10">
-                              <p
-                                [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.sgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
-                              </p>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                              <p>CGST ({{order?.tax_details?.cgst}}%)</p>
-                            </td>
-                            <td align="right" class="p-10">
-                              <p
-                                [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.cgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
-                              </p>
-                            </td>
-                          </tr>
-                        </ng-container>
-                        <tr *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state">
+                    <!-- India -->
+                    <ng-container *ngIf="commonService?.store_details?.country=='India'">
+                      <ng-container *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
+                        <tr>
                           <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                            <p>IGST ({{order?.tax_details?.igst}}%)</p>
+                            <p>SGST ({{order?.tax_details?.sgst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
                             <p
-                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount(order.sub_total, order.tax_details.igst, order.tax_details.igst))">
+                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.sgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
+                            </p>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
+                            <p>CGST ({{order?.tax_details?.cgst}}%)</p>
+                          </td>
+                          <td align="right" class="p-10">
+                            <p
+                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.cgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
                             </p>
                           </td>
                         </tr>
                       </ng-container>
-                      <!-- Except India -->
-                      <tr *ngIf="commonService?.store_details?.country!='India'">
+                      <tr *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state">
                         <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
-                          <p>{{order?.tax_details?.name}}</p>
+                          <p>IGST ({{order?.tax_details?.igst}}%)</p>
                         </td>
                         <td align="right" class="p-10">
                           <p
@@ -2804,100 +2789,109 @@
                         </td>
                       </tr>
                     </ng-container>
+                    <!-- Except India -->
+                    <tr *ngIf="commonService?.store_details?.country!='India'">
+                      <td [attr.colspan]="hsncode_exist? '4': '3'" align="right">
+                        <p>{{order?.tax_details?.name}}</p>
+                      </td>
+                      <td align="right" class="p-10">
+                        <p
+                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount(order.sub_total, order.tax_details.igst, order.tax_details.igst))">
+                        </p>
+                      </td>
+                    </tr>
+                  </ng-container>
 
-                  </table>
-                </div>
-              </td>
-            </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
 
-            <tr class="invoice-total">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>Subtotal</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p>{{invoice_details?.sub_total}}</p>
-              </td>
-            </tr>
-            <tr class="invoice-total" *ngIf="invoice_details?.gift_wrapper > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>Gift Wrapping</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p>{{invoice_details?.gift_wrapper}}</p>
-              </td>
-            </tr>
-            <tr class="invoice-total" *ngIf="invoice_details?.packaging_charges > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>Packaging Charges</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p>{{invoice_details?.packaging_charges}}</p>
-              </td>
-            </tr>
-            <tr *ngIf="invoice_details.order_type!='pickup'" class="invoice-total">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>Shipping and Handling</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p>{{invoice_details?.shipping_cost}}</p>
-              </td>
-            </tr>
-            <tr class="invoice-total" *ngIf="invoice_details?.cod_charges > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>COD Charges</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p>{{invoice_details?.cod_charges}}</p>
-              </td>
-            </tr>
-            <tr class="invoice-total" *ngIf="invoice_details?.discount_amount > 0">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <p>Discount</p>
-              </td>
-              <td align="right" class="p-10" style="width: 20%;">
-                <p class="d-inline-block ml-1">-
-                  <span>{{invoice_details?.discount_amount}}</span>
-                </p>
-              </td>
-            </tr>
-            <tr class="invoice-total grand-total invoice-border">
-              <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
-                <h5 class="m-0">Grand Total</h5>
-              </td>
-              <td class="p-10" align="right" style="width: 20%;">
-                <h5 class="m-0">{{invoice_details?.final_price}}</h5>
-              </td>
-            </tr>
-          </table>
-
-        </div>
-
-        <div class="col-md-12 mt-1">
-          <p class="mt-2 mb-0" align="left"><b>Note:</b> The above prices are in <b>{{
-              invoice_details?.currency_type?.country_code }}</b></p>
-        </div>
-
-        <div class="col-md-12">
-          <div class="invoice-footer-details mt-2 mb-2">
-            <p class="invoice-store-name">{{commonService.store_details?.name}}</p>
-            <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">
-              {{commonService.store_details?.gst_no}}</p>
-          </div>
-        </div>
-
-        <div class="col-md-12">
-          <p class="mt-2 mb-0" align="center">This is a computer generated invoice that does not require a signature.
-          </p>
-        </div>
+          <tr class="invoice-total">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>Subtotal</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p>{{invoice_details?.sub_total}}</p>
+            </td>
+          </tr>
+          <tr class="invoice-total" *ngIf="invoice_details?.gift_wrapper > 0">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>Gift Wrapping</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p>{{invoice_details?.gift_wrapper}}</p>
+            </td>
+          </tr>
+          <tr class="invoice-total" *ngIf="invoice_details?.packaging_charges > 0">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>Packaging Charges</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p>{{invoice_details?.packaging_charges}}</p>
+            </td>
+          </tr>
+          <tr *ngIf="invoice_details.order_type!='pickup'" class="invoice-total">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>Shipping and Handling</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p>{{invoice_details?.shipping_cost}}</p>
+            </td>
+          </tr>
+          <tr class="invoice-total" *ngIf="invoice_details?.cod_charges > 0">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>COD Charges</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p>{{invoice_details?.cod_charges}}</p>
+            </td>
+          </tr>
+          <tr class="invoice-total" *ngIf="invoice_details?.discount_amount > 0">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <p>Discount</p>
+            </td>
+            <td align="right" class="p-10" style="width: 20%;">
+              <p class="d-inline-block ml-1">-
+                <span>{{invoice_details?.discount_amount}}</span>
+              </p>
+            </td>
+          </tr>
+          <tr class="invoice-total grand-total invoice-border">
+            <td [attr.colspan]="hsncode_exist? '4': '3'" align="right" style="width: 80%;">
+              <h5 class="m-0">Grand Total</h5>
+            </td>
+            <td class="p-10" align="right" style="width: 20%;">
+              <h5 class="m-0">{{invoice_details?.final_price}}</h5>
+            </td>
+          </tr>
+        </table>
 
       </div>
-    </kendo-pdf-export>
+
+      <div class="col-md-12 mt-1">
+        <p class="mt-2 mb-0" align="left"><b>Note:</b> The above prices are in <b>{{
+            invoice_details?.currency_type?.country_code }}</b></p>
+      </div>
+
+      <div class="col-md-12">
+        <div class="invoice-footer-details mt-2 mb-2">
+          <p class="invoice-store-name">{{commonService.store_details?.name}}</p>
+          <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">
+            {{commonService.store_details?.gst_no}}</p>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <p class="mt-2 mb-0" align="center">This is a computer generated invoice that does not require a signature.
+        </p>
+      </div>
+
+    </div>
   </div>
   <div class="modal-footer">
-    <button kendo-button class="btn btn-wide btn-primary" (click)="invoicePdf.saveAs('invoice.pdf')">Save as
-      pdf</button>
+    <button class="btn btn-wide btn-primary" (click)="generatePDF('orderInvoice', invoice_details.order_number);">Save as pdf</button>
   </div>
-
 </ng-template>
 
 <!-- create item group -->
@@ -3219,7 +3213,7 @@
         </tr>
       </table>
   </div>
-  <!-- <div class="modal-footer">
+  <div class="modal-footer">
     <button class="btn btn-wide btn-primary" (click)="generatePDF('packageSlipPdf', slip_details?.order_number+'-packing-slip');">Save as pdf</button>
-  </div> -->
+  </div>
 </ng-template>

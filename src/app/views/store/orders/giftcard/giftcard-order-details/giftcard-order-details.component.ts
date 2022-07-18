@@ -4,6 +4,8 @@ import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrderService } from '../../order.service';
 import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-giftcard-order-details',
@@ -87,6 +89,19 @@ export class GiftcardOrderDetailsComponent implements OnInit {
 
   transformHtml(string) {
     return string.replace(new RegExp('\n', 'g'), "<br />");
+  }
+
+  generatePDF() {
+    let data = document.getElementById('contentToConvert');
+    html2canvas(data).then(canvas => {
+      let docWidth = 190;
+      let docHeight = canvas.height*(docWidth/canvas.width);
+      let top = 10; let left = 10;
+      let contentDataURL = canvas.toDataURL('image/png');
+      let doc = new jsPDF('p', 'mm', 'a4');
+      doc.addImage(contentDataURL, 'PNG', left, top, docWidth, docHeight);
+      doc.save(this.invoice_details.order_number+'.pdf');
+    });
   }
 
 }

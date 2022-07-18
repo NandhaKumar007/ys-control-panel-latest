@@ -9,6 +9,8 @@ import { CommonService } from '../../../../../services/common.service';
 import { environment } from '../../../../../../environments/environment';
 import ghanaDomesDestinations from '../../../../../../assets/json/ghana-domes-destinations.json';
 import ghanaInterDestinations from '../../../../../../assets/json/ghana-inter-destinations.json';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-product-order-details',
@@ -907,6 +909,19 @@ export class ProductOrderDetailsComponent implements OnInit {
         });
       });
     }
+  }
+
+  generatePDF(elemName, fileName) {
+    let data = document.getElementById(elemName);
+    html2canvas(data).then(canvas => {
+      let docWidth = 190;
+      let docHeight = canvas.height*(docWidth/canvas.width);
+      let top = 10; let left = 10;
+      let contentDataURL = canvas.toDataURL('image/png');
+      let doc = new jsPDF('p', 'mm', 'a4');
+      doc.addImage(contentDataURL, 'PNG', left, top, docWidth, docHeight);
+      doc.save(fileName+'.pdf');
+    });
   }
 
   transformHtml(string) {
