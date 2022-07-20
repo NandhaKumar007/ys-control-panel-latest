@@ -82,69 +82,9 @@ export class ProductOrdersComponent implements OnInit {
             orderList.forEach(obj => {
               if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
               if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
-              if(!obj.customer_name) obj.customer_name = obj.shipping_address.name;
-              obj.customer_email = obj.guest_email;
-              obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
-              // delivery time
-              if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
-                let delDate = obj.shipping_method.delivery_date.split(" (")[0];
-                let delTime = obj.shipping_method.delivery_time.split(" - ")[0];
-                obj.delivery_time = new Date(delDate+" "+delTime);
-              }
-              // vendor
-              if(this.commonService.store_details.login_type=='vendor') {
-                let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
-                if(venIndex!=-1) {
-                  obj.order_number = obj.vendor_list[venIndex].order_number;
-                  obj.order_status = obj.vendor_list[venIndex].order_status;
-                  obj.final_price = obj.vendor_list[venIndex].final_price;
-                }
-              }
-              else if(this.params.type=='live' && obj.vendor_list?.length) {
-                let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
-                let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
-                if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
-                  if(confirmedCount>0) {
-                    obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
-                  }
-                }
-                else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
-                  obj.order_status = 'confirmed';
-                  let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
-                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
-                }
-                else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
-                  obj.order_status = 'dispatched';
-                  let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
-                  if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
-                }
-              }
-              this.list.push(obj);
-            });
-          }
-          else console.log("response", result);
-          setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos) }, 500);
-        });
-      }
-      else {
-        this.api.ORDER_LIST(this.filterForm).subscribe(result => {
-          if(result.status) {
-            let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
-            orderList.forEach(obj => {
-              if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
-              if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
-              if(obj.customerDetails.length) {
-                if(!obj.customer_name) obj.customer_name = obj.customerDetails[0].name;
-                obj.customer_email = obj.customerDetails[0].email;
-                obj.customer_mobile = obj.shipping_address.mobile;
-                if(obj.customerDetails[0].mobile) obj.customer_mobile = obj.customerDetails[0].mobile;
-                else if(obj.order_type=='pickup') obj.customer_mobile = 'NA';
-              }
-              else {
                 if(!obj.customer_name) obj.customer_name = obj.shipping_address.name;
                 obj.customer_email = obj.guest_email;
-                obj.customer_mobile = obj.shipping_address.mobile;
-              }
+                obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
               // delivery time
               if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
                 let delDate = obj.shipping_method.delivery_date.split(" (")[0];
@@ -162,6 +102,7 @@ export class ProductOrdersComponent implements OnInit {
                       obj.order_number = obj.vendor_list[venIndex].order_number;
                       obj.order_status = obj.vendor_list[venIndex].order_status;
                       obj.final_price = obj.vendor_list[venIndex].final_price;
+                      if(this.orderTypes.indexOf(obj.order_status) != -1) this.list.push(obj);
                     }
                   }
                   else if(this.params.type=='live') {
@@ -182,8 +123,78 @@ export class ProductOrdersComponent implements OnInit {
                       let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
                       if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
                     }
+                    this.list.push(obj);
                   }
-                  this.list.push(obj);
+                  else this.list.push(obj);
+                }
+              }
+              else this.list.push(obj);
+            });
+          }
+          else console.log("response", result);
+          setTimeout(() => { this.pageLoader = false; this.commonService.pageTop(this.scrollPos) }, 500);
+        });
+      }
+      else {
+        this.api.ORDER_LIST(this.filterForm).subscribe(result => {
+          if(result.status) {
+            let orderList: any = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+            orderList.forEach(obj => {
+              if(obj.shipping_address) obj.shipping_customer_name = obj.shipping_address.name;
+              if(obj.billing_address) obj.billing_customer_name = obj.billing_address.name;
+              if(obj.customerDetails.length) {
+                if(!obj.customer_name) obj.customer_name = obj.customerDetails[0].name;
+                obj.customer_email = obj.customerDetails[0].email;
+                obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
+                if(obj.customerDetails[0].mobile) obj.customer_mobile = obj.customerDetails[0].mobile;
+                else if(obj.order_type=='pickup') obj.customer_mobile = 'NA';
+              }
+              else {
+                if(!obj.customer_name) obj.customer_name = obj.shipping_address.name;
+                obj.customer_email = obj.guest_email;
+                obj.customer_mobile = obj.shipping_address.dial_code+" "+obj.shipping_address.mobile;
+              }
+              // delivery time
+              if(this.commonService.ys_features.indexOf('time_based_delivery')!=-1 && obj.shipping_method.delivery_date && obj.shipping_method.delivery_time) {
+                let delDate = obj.shipping_method.delivery_date.split(" (")[0];
+                let delTime = obj.shipping_method.delivery_time.split(" - ")[0];
+                obj.delivery_time = new Date(delDate+" "+delTime);
+              }
+              // vendor
+              if(obj.vendor_list?.length) {
+                let tIndex = obj.vendor_list.findIndex(el => this.orderTypes.indexOf(el.order_status)!=-1);
+                if(tIndex!=-1)
+                {
+                  if(this.commonService.store_details.login_type=='vendor') {
+                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
+                    if(venIndex!=-1) {
+                      obj.order_number = obj.vendor_list[venIndex].order_number;
+                      obj.order_status = obj.vendor_list[venIndex].order_status;
+                      obj.final_price = obj.vendor_list[venIndex].final_price;
+                      if(this.orderTypes.indexOf(obj.order_status) != -1) this.list.push(obj);
+                    }
+                  }
+                  else if(this.params.type=='live') {
+                    let vendorLiveOrders = obj.vendor_list.filter(el => el.order_status!='delivered' && el.order_status!='cancelled');
+                    let confirmedCount = vendorLiveOrders.filter(el => el.confirmed_on).length;
+                    if(vendorLiveOrders.findIndex(el => el.order_status=='placed') != -1) {
+                      if(confirmedCount>0) {
+                        obj.order_status = confirmedCount+" out of "+vendorLiveOrders.length+" confirmed";
+                      }
+                    }
+                    else if(vendorLiveOrders.findIndex(el => el.order_status=='confirmed') != -1 && vendorLiveOrders.findIndex(el => el.dispatched_on) == -1) {
+                      obj.order_status = 'confirmed';
+                      let vCount = vendorLiveOrders.filter(el => el.order_status!='confirmed').length;
+                      if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" confirmed";
+                    }
+                    else if(vendorLiveOrders.findIndex(el => el.order_status=='dispatched') != -1) {
+                      obj.order_status = 'dispatched';
+                      let vCount = vendorLiveOrders.filter(el => el.order_status!='dispatched').length;
+                      if(vCount>0) obj.order_status = vCount+" out of "+vendorLiveOrders.length+" dispatched";
+                    }
+                    this.list.push(obj);
+                  }
+                  else this.list.push(obj);
                 }
               }
               else this.list.push(obj);

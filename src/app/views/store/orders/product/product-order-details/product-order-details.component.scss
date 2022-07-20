@@ -42,3 +42,11 @@
     width: 500px;
   }
 }
+
+#vendorOrderInvoice {
+  .logo-img {
+    width: auto;
+    height: 60px;
+    object-fit: contain;
+  }
+}

@@ -39,7 +39,7 @@ export class ProductOrderDetailsComponent implements OnInit {
   groupForm: any; remaining_items: any = [];
   courierData: any = {}; itemInfo: any = {};
   tax_rates: any = []; addedCourier: any = { name: 'Others' };
-  slip_details: any = {};
+  slip_details: any = {}; vendorDetails: any = {};
   // temp
   destList: any = []; selectedVendor: any;
 
@@ -119,6 +119,7 @@ export class ProductOrderDetailsComponent implements OnInit {
             if(!this.order_details.vendor_list?.length) this.commonService.goBack();
             if(this.commonService.store_details.login_type!='vendor') {
               this.order_details.vendor_list.forEach(element => {
+                element.courierForm = {};
                 element.existing_status = element.order_status;
                 if(element.existing_status=='placed') element.order_status='confirmed';
                 if(element.existing_status=='confirmed') element.order_status='dispatched';
@@ -200,15 +201,15 @@ export class ProductOrderDetailsComponent implements OnInit {
   }
 
   // courier partner
-  createCpOrder(vendorId) {
-    this.courierForm.submit = true;
-    this.courierForm.order_id = this.order_details._id;
-    if(vendorId) this.courierForm.vendor_id = vendorId;
-    this.api.CREATE_CP_ORDER(this.courierForm).subscribe(result => {
-      this.courierForm.submit = false;
+  createCpOrder(vendorId, formData) {
+    formData.submit = true;
+    formData.order_id = this.order_details._id;
+    if(vendorId) formData.vendor_id = vendorId;
+    this.api.CREATE_CP_ORDER(formData).subscribe(result => {
+      formData.submit = false;
       if(result.status) this.ngOnInit();
       else {
-        this.courierForm.errorMsg = result.message;
+        formData.errorMsg = result.message;
         console.log("response", result);
       }
     });
@@ -579,6 +580,7 @@ export class ProductOrderDetailsComponent implements OnInit {
     else document.getElementById(reqInput).focus();
   }
 
+  // order invoice
   onViewInvoice(modalName) {
     this.invoice_details = { loader: true };
     this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
@@ -596,23 +598,37 @@ export class ProductOrderDetailsComponent implements OnInit {
       else console.log("response", result);
     });
   }
-  onViewVendorInvoice(x, modalName) {
-    this.invoice_details = x;
-    this.invoice_details.loader = true;
-    if(!this.invoice_details.invoice_number) this.invoice_details.invoice_number = this.order_details.invoice_number;
-    this.invoice_details.created_on = this.order_details.created_on;
-    this.invoice_details.currency_type = this.order_details.currency_type;
-    this.invoice_details.billing_address = this.order_details.billing_address;
-    this.invoice_details.shipping_address = this.order_details.shipping_address;
-    this.invoice_details.payment_details = this.order_details.payment_details;
-    this.invoice_details.item_list = this.order_details.item_list.filter(obj => obj.vendor_id==x.vendor_id);
-    if(!this.tax_rates?.length) {
-      this.extrasApi.TAX_LIST().subscribe(result => {
-        if(result.status) this.tax_rates = result.list;
-        this.invoiceCont(modalName);
-      });
-    }
-    else this.invoiceCont(modalName);
+  // vendor order invoice
+  onViewVendorInvoice(vendorInfo, modalName) {
+    this.invoice_details = { loader: true };
+    this.api.VENDOR_ORDER_DETAILS(vendorInfo.vendor_id, this.params.order_id).subscribe(result => {
+      if(result.status) {
+        let orderDetails = result.data;
+        this.vendorDetails = result.vendor_info;
+        let vIndex = orderDetails.vendor_list.findIndex(obj => obj.vendor_id==vendorInfo.vendor_id);
+        if(vIndex!=-1) {
+          setTimeout(() => { this.pageLoader = false; }, 500);
+          this.invoice_details = orderDetails.vendor_list[vIndex];
+          this.invoice_details.loader = true;
+          this.invoice_details._id = orderDetails._id;
+          this.invoice_details.created_on = orderDetails.created_on;
+          this.invoice_details.currency_type = orderDetails.currency_type;
+          this.invoice_details.payment_details = orderDetails.payment_details;
+          this.invoice_details.billing_address = orderDetails.billing_address;
+          this.invoice_details.shipping_address = orderDetails.shipping_address;
+          this.invoice_details.item_list = orderDetails.item_list.filter(obj => obj.vendor_id==vendorInfo.vendor_id);
+          if(!this.tax_rates?.length) {
+            this.extrasApi.TAX_LIST().subscribe(result => {
+              if(result.status) this.tax_rates = result.list;
+              this.invoiceCont(modalName);
+            });
+          }
+          else this.invoiceCont(modalName);
+        }
+        else console.log("Invalid order");
+      }
+      else console.log("response", result);
+    });
   }
   invoiceCont(modalName) {
     delete this.invoice_details.loader;

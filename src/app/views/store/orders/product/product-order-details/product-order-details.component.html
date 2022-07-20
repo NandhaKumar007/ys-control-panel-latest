@@ -420,49 +420,49 @@
                   <div class="row card-body">
                     <div class="col-md-5">
                       <!-- courier partner -->
-                      <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendor?.cp_status && vendor.order_status=='dispatched'"
-                      (ngSubmit)="createCpOrder(vendor.vendor_id);" autocomplete="off" ngNativeValidate>
+                      <form *ngIf="order_details.order_type!='pickup' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendor?.cp_status && vendor.order_status=='dispatched'"
+                      (ngSubmit)="createCpOrder(vendor.vendor_id, vendor.courierForm);" autocomplete="off" ngNativeValidate>
                         <div class="row mb-3">
                           <div class="col-md-12 form-group mb-3 summary-section">
                             <label>Delivery Partners</label>
-                            <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="courierForm.selected_cp" (change)="courierForm.errorMsg='';" required>
+                            <select name="selected_cp" class="form-control select-arrow" [(ngModel)]="vendor.courierForm.selected_cp" (change)="vendor.courierForm.errorMsg='';" required>
                               <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
                               <option *ngIf="!vendor.shipping_method.delivery_method" [ngValue]="addedCourier.name">{{addedCourier?.name}}</option>
                             </select>
                           </div>
-                          <ng-container *ngIf="courierForm.selected_cp=='Dunzo'">
+                          <ng-container *ngIf="vendor.courierForm?.selected_cp=='Dunzo'">
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Special Instructions</label>
-                              <input type="text" name="special_instructions" class="form-control" [(ngModel)]="courierForm.special_instructions" />
+                              <input type="text" name="special_instructions" class="form-control" [(ngModel)]="vendor.courierForm.special_instructions" />
                             </div>
                             <div *ngIf="vendor.shipping_method?.delivery_method" class="col-md-12 form-group mb-3">
                               <label class="checkbox checkbox-primary">
-                                <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="courierForm.schedule_status" #schedule_status="ngModel">
+                                <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="vendor.courierForm.schedule_status" #schedule_status="ngModel">
                                 <span>Enable Scheduled Delivery</span>
                                 <span class="checkmark"></span>
                               </label>
                             </div>
                           </ng-container>
-                          <ng-container *ngIf="courierForm.selected_cp=='Others'">
+                          <ng-container *ngIf="vendor.courierForm?.selected_cp=='Others'">
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Courier Name</label>
-                              <input type="text" name="tracker_name" class="form-control" [(ngModel)]="courierForm.name" required />
+                              <input type="text" name="tracker_name" class="form-control" [(ngModel)]="vendor.courierForm.name" required />
                             </div>
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Tracking Number</label>
-                              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="courierForm.tracking_number" required />
+                              <input type="text" name="tracking_number" class="form-control" [(ngModel)]="vendor.courierForm.tracking_number" required />
                             </div>
                             <div class="col-md-12 form-group mb-3 summary-section">
                               <label>Tracking Link</label>
-                              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="courierForm.tracking_link" required />
+                              <input type="text" name="tracking_link" class="form-control" [(ngModel)]="vendor.courierForm.tracking_link" required />
                             </div>
                           </ng-container>
                           <div class="col-md-12">
-                            <div *ngIf="courierForm?.errorMsg">
-                              <p class="text-danger mb-3">{{ courierForm.errorMsg }}</p>
+                            <div *ngIf="vendor.courierForm?.errorMsg">
+                              <p class="text-danger mb-3">{{ vendor.courierForm.errorMsg }}</p>
                             </div>
-                            <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="courierForm.submit" [ladda]="courierForm.submit">
-                              {{ courierForm.selected_cp=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
+                            <button type="submit" class="btn btn-default w-100 ladda-button" [disabled]="vendor.courierForm?.submit" [ladda]="vendor.courierForm.submit">
+                              {{ vendor.courierForm?.selected_cp=='Others' ? 'Update Details': 'Check and Set Delivery Partner' }}
                             </button>
                           </div>
                         </div>
@@ -663,7 +663,7 @@
                           </div>
                         </div>
                         <div class="col-12">
-                          <button type="button" (click)="onViewVendorInvoice(vendor, invoiceModal);" class="btn btn-wide btn-primary w-100 ladda-button mt-10"
+                          <button type="button" (click)="onViewVendorInvoice(vendor, vendorInvoiceModal);" class="btn btn-wide btn-primary w-100 ladda-button mt-10"
                           [disabled]="invoice_details?.loader" [ladda]="invoice_details?.loader">
                             View Invoice
                           </button>
@@ -1283,8 +1283,8 @@
         </div>
 
         <!-- courier partner -->
-        <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !order_details?.cp_status && order_details.order_status=='dispatched'"
-          (ngSubmit)="createCpOrder('');" autocomplete="off" ngNativeValidate>
+        <form *ngIf="order_details.order_type!='pickup' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !order_details?.cp_status && order_details.order_status=='dispatched'"
+          (ngSubmit)="createCpOrder('', courierForm);" autocomplete="off" ngNativeValidate>
           <div class="order-summary-header">
             <p class="sec-desc">Delivery Partner</p>
           </div>
@@ -1574,7 +1574,7 @@
                 </div>
               </div>
               <div class="col-12">
-                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewVendorInvoice(vendorInfo, invoiceModal);"
+                <button *ngIf="params?.type!='inactive'" type="button" (click)="onViewVendorInvoice(vendorInfo, vendorInvoiceModal);"
                 class="btn btn-wide btn-primary w-100 ladda-button mt-10" [disabled]="invoice_details?.loader" [ladda]="invoice_details?.loader">
                   View Invoice
                 </button>
@@ -1588,8 +1588,8 @@
         </div>
         <div class="card order-summary-details mtb-10">
           <!-- courier partner -->
-          <form *ngIf="order_details.order_type=='delivery' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendorInfo?.cp_status && vendorInfo.order_status=='dispatched'"
-          (ngSubmit)="createCpOrder(vendorInfo.vendor_id);" autocomplete="off" ngNativeValidate>
+          <form *ngIf="order_details.order_type!='pickup' && params?.type=='live' && commonService.ys_features.indexOf('courier_partners')!=-1 && commonService.courier_partners.length && !vendorInfo?.cp_status && vendorInfo.order_status=='dispatched'"
+          (ngSubmit)="createCpOrder(vendorInfo.vendor_id, courierForm);" autocomplete="off" ngNativeValidate>
             <div class="row mtb-10">
               <div class="col-md-12 form-group mb-3 summary-section">
                 <label>Delivery Partners</label>
@@ -2736,10 +2736,7 @@
                     <td class="p-10 invoice-font-size" [attr.align]="hsncode_exist? 'left': 'right'"
                       [ngStyle]="{'width.%': hsncode_exist? '10': '20' }">{{x.quantity}}</td>
                     <td class="p-10 invoice-font-size " align="right" style="width: 20%;">
-                      <span *ngIf="x.unit=='Pcs'"
-                        [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount((x.final_price*x.quantity), order.tax_details))"></span>
-                      <span *ngIf="x.unit!='Pcs'"
-                        [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(((x.final_price*x.quantity)+x.addon_price), order.tax_details))"></span>
+                      <span>{{x.temp_final_price | number: '1.2-2'}}</span>
                     </td>
                   </tr>
 
@@ -2749,9 +2746,7 @@
                         <p>Item total</p>
                       </td>
                       <td align="right" class="p-10">
-                        <p
-                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findBaseAmount(order.sub_total, order.tax_details))">
-                        </p>
+                        <p>{{order.temp_sub_total | number: '1.2-2'}}</p>
                       </td>
                     </tr>
                     <!-- India -->
@@ -2762,9 +2757,7 @@
                             <p>SGST ({{order?.tax_details?.sgst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
-                            <p
-                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.sgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
-                            </p>
+                            <p>{{order.temp_sgst | number: '1.2-2'}}</p>
                           </td>
                         </tr>
                         <tr>
@@ -2772,9 +2765,7 @@
                             <p>CGST ({{order?.tax_details?.cgst}}%)</p>
                           </td>
                           <td align="right" class="p-10">
-                            <p
-                              [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount( order.sub_total, order.tax_details.cgst, ((order.tax_details.sgst*1)+(order.tax_details.cgst*1)) ))">
-                            </p>
+                            <p>{{order.temp_cgst | number: '1.2-2'}}</p>
                           </td>
                         </tr>
                       </ng-container>
@@ -2783,9 +2774,7 @@
                           <p>IGST ({{order?.tax_details?.igst}}%)</p>
                         </td>
                         <td align="right" class="p-10">
-                          <p
-                            [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount(order.sub_total, order.tax_details.igst, order.tax_details.igst))">
-                          </p>
+                          <p>{{order.temp_igst | number: '1.2-2'}}</p>
                         </td>
                       </tr>
                     </ng-container>
@@ -2795,9 +2784,7 @@
                         <p>{{order?.tax_details?.name}}</p>
                       </td>
                       <td align="right" class="p-10">
-                        <p
-                          [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, findTaxAmount(order.sub_total, order.tax_details.igst, order.tax_details.igst))">
-                        </p>
+                        <p>{{order.temp_igst | number: '1.2-2'}}</p>
                       </td>
                     </tr>
                   </ng-container>
@@ -2870,20 +2857,23 @@
       </div>
 
       <div class="col-md-12 mt-1">
-        <p class="mt-2 mb-0" align="left"><b>Note:</b> The above prices are in <b>{{
-            invoice_details?.currency_type?.country_code }}</b></p>
+        <p class="mt-2 mb-0" align="left">
+          <b>Note:</b> The above prices are in <b>{{ invoice_details?.currency_type?.country_code }}</b>
+        </p>
       </div>
 
       <div class="col-md-12">
         <div class="invoice-footer-details mt-2 mb-2">
           <p class="invoice-store-name">{{commonService.store_details?.name}}</p>
           <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">
-            {{commonService.store_details?.gst_no}}</p>
+            {{commonService.store_details?.gst_no}}
+          </p>
         </div>
       </div>
 
       <div class="col-md-12">
-        <p class="mt-2 mb-0" align="center">This is a computer generated invoice that does not require a signature.
+        <p class="mt-2 mb-0" align="center">
+          This is a computer generated invoice that does not require a signature.
         </p>
       </div>
 
@@ -2891,6 +2881,287 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-wide btn-primary" (click)="generatePDF('orderInvoice', invoice_details.order_number);">Save as pdf</button>
+  </div>
+</ng-template>
+
+<!-- vendor invoice -->
+<ng-template #vendorInvoiceModal let-modal>
+  <div class="main-header-div">
+    <div class="m-header"></div>
+    <p class="m-close-btn m-1">
+      <a (click)="modal.dismiss('Cross click');">CLOSE</a>
+    </p>
+  </div>
+  <div class="modal-body modal-scroll slim-scroll mr-3 ml-3" id="vendorOrderInvoice">
+    <div class="row">
+      <div class="col-md-12 justify-content-center align-items-center" id="contentToConvert">     
+        
+        <div class="row mx-0 mb-3">
+          <div class="col-6">
+            <table>
+              <tr>
+                <td>
+                  <img [src]="imgBaseUrl+'uploads/'+commonService.store_details?._id+'/logo.png?v='+order_details._id" width="100%" height="100%" class="logo-img">
+                </td>             
+              </tr>            
+            </table>
+          </div>
+          <div class="col-6 invoice-gst-no d-flex justify-content-end">
+            <table>
+              <tr>
+                <td class="text-right">
+                  <h6><b>Tax Invoice/Bill of Supply/Cash Memo</b></h6>
+                  <p>(Original for Recipient)</p>
+                </td>
+              </tr>           
+            </table>
+          </div>
+        </div>
+
+        <div class="row m-0 mb-3">
+          <div class="col-6">
+            <table>
+              <tr>
+                <td>
+                  <p class="mb-0"><b>Sold By:</b></p>
+                  <p>
+                    {{vendorDetails?.company_details?.name}},<br>
+                    {{vendorDetails.registered_address?.address}}, {{vendorDetails.registered_address?.city}}<br>
+                    {{vendorDetails.registered_address?.state}}, {{vendorDetails.registered_address?.country}}, {{vendorDetails.registered_address?.pincode}}.
+                  </p>
+                </td>             
+              </tr>            
+            </table>
+          </div>
+          <div class="col-6 invoice-gst-no d-flex justify-content-end">
+            <table>
+              <tr>
+                <td class="text-right">
+                  <p class="mb-0"><b>Billing Address:</b></p>
+                  <p>
+                    {{invoice_details.billing_address?.name}}<br>
+                    {{invoice_details.billing_address?.address}}, {{invoice_details.billing_address?.city}}<br>
+                    {{invoice_details.billing_address?.state}}, {{invoice_details.billing_address?.country}}, {{invoice_details.billing_address?.pincode}}.
+                  </p>
+                </td>
+              </tr>           
+            </table>
+          </div>
+        </div>
+
+        <div class="row m-0 mb-3">
+          <div class="col-6">
+            <table>
+              <tr>
+                <td>
+                  <p *ngIf="vendorDetails?.company_details?.pan_no" class="mb-0"><b>PAN No:</b> {{vendorDetails.company_details.pan_no}}</p>
+                  <p *ngIf="vendorDetails?.company_details?.gst_no" class="mb-0"><b>GST No:</b> {{vendorDetails.company_details.gst_no}}</p>
+                  <p *ngIf="vendorDetails?.company_details?.tin_no" class="mb-0"><b>GST No:</b> {{vendorDetails.company_details.tin_no}}</p>
+                </td>             
+              </tr>            
+            </table>
+          </div>
+          <div class="col-6 invoice-gst-no d-flex justify-content-end">
+            <table>
+              <tr>
+                <td class="text-right">
+                  <p class="mb-0"><b>Shipping Address:</b></p>
+                  <p>
+                    {{invoice_details.shipping_address?.name}}<br>
+                    {{invoice_details.shipping_address?.address}}, {{invoice_details.shipping_address?.city}}<br>
+                    {{invoice_details.shipping_address?.state}}, {{invoice_details.shipping_address?.country}}, {{invoice_details.shipping_address?.pincode}}.
+                  </p>
+                </td>
+              </tr>           
+            </table>
+          </div>
+        </div>
+
+        <div class="row mx-0 mb-4">
+          <div class="col-6">
+            <table>
+              <tr>
+                <td>
+                  <p class="mb-0"><b>Order Number:</b> {{invoice_details.order_number}}</p>                  
+                </td>        
+              </tr>            
+            </table>
+          </div>
+          <div class="col-6 invoice-gst-no d-flex justify-content-end">
+            <table>
+              <tr>
+                <td class="text-right">
+                  <p *ngIf="invoice_details.invoice_number" class="mb-0"><b>Invoice Number:</b> {{invoice_details.invoice_number}}</p>
+                  <p class="mb-0"><b>Invoice Date:</b> {{invoice_details.created_on | date: "dd MMM y"}}</p>
+                </td>
+              </tr>           
+            </table>
+          </div>
+        </div>
+      
+        <!-- item section -->
+        <div class="col-md-12">
+          <table class="w-100 m-t-10">
+            <tr>
+              <td class="p-10 gray-bg invoice-font-size-head p-2" align="left" style="width: 40%;">Item</td>
+              <td class="p-10 gray-bg invoice-font-size-head p-2" align="left" style="width: 20%;">SKU</td>
+              <td class="p-10 gray-bg invoice-font-size-head p-2" align="right" style="width: 20%;">Qty.</td>
+              <td class="p-10 gray-bg invoice-font-size-head p-2" align="right" style="width: 20%;">Subtotal</td>
+            </tr>
+
+            <tr>
+              <td colspan="5">
+                <div class="invoice-details" *ngFor="let order of invoice_order_list; let i=index;">
+                  <table class="w-100">
+
+                    <tr *ngFor="let x of order.item_list;">
+                      <td class="p-10 invoice-font-size" align="left" style="width: 40%;">
+                        <p class="mb-0">{{x.name}}</p>
+                        <ng-container *ngIf="x.variant_status">
+                          <p class="mb-0 pt-3" *ngFor="let y of x.variant_types; let j=index;">
+                            <strong>{{y.name}}:</strong> {{y.value}}
+                          </p>
+                        </ng-container>
+                        <p *ngIf="x.addon_status && x.selected_addon">
+                          <strong>Addon: </strong>
+                          {{x.selected_addon?.name}}
+                          <ng-container *ngIf="x.customization_status"> - {{x.customized_model?.name}}</ng-container>
+                        </p>
+                      </td>
+                      <td class="p-10 invoice-font-size" align="left" style="width: 20%;">{{x.sku}}</td>
+                      <td class="p-10 invoice-font-size" align="right" style="width: 20%;">{{x.quantity}}</td>
+                      <td class="p-10 invoice-font-size" align="right" style="width: 20%;">
+                        <span>{{ x.temp_final_price | number: '1.2-2' }}</span>
+                      </td>
+                    </tr>
+                    <!-- if tax details exist -->
+                    <ng-container *ngIf="order.tax_details">
+                      <tr>
+                        <td colspan="3" align="right">
+                          <p>Item total</p>
+                        </td>
+                        <td align="right" class="p-2">
+                          <p>{{ order.temp_sub_total | number: '1.2-2' }}</p>
+                        </td>
+                      </tr>
+                      <!-- India -->
+                      <ng-container *ngIf="vendorInfo?.registered_address?.country=='India'">
+                        <ng-container *ngIf="invoice_details?.billing_address?.country==order?.tax_details?.home_country && invoice_details?.billing_address?.state==order?.tax_details?.home_state">
+                          <tr>
+                            <td colspan="3" align="right">
+                              <p>SGST ({{order?.tax_details?.sgst}}%)</p>
+                            </td>
+                            <td align="right" class="p-2">
+                              <p>{{ order.temp_sgst | number: '1.2-2' }}</p>
+                            </td>
+                          </tr>
+                          <tr class="invoice-border">
+                            <td colspan="3" align="right">
+                              <p>CGST ({{order?.tax_details?.cgst}}%)</p>
+                            </td>
+                            <td align="right" class="p-2">
+                              <p>{{ order.temp_cgst | number: '1.2-2' }}</p>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <tr *ngIf="invoice_details?.billing_address?.country!=order?.tax_details?.home_country || invoice_details?.billing_address?.state!=order?.tax_details?.home_state"
+                          class="invoice-border">
+                          <td colspan="3" align="right">
+                            <p>IGST ({{order?.tax_details?.igst}}%)</p>
+                          </td>
+                          <td align="right" class="p-2">
+                            <p>{{ order.temp_igst | number: '1.2-2' }}</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <!-- Except India -->
+                      <tr *ngIf="vendorInfo?.registered_address?.country!='India'" class="invoice-border">
+                        <td colspan="3" align="right">
+                          <p>{{order?.tax_details?.name}}</p>
+                        </td>
+                        <td align="right" class="p-2">
+                          <p>{{ order.temp_igst | number: '1.2-2' }}</p>
+                        </td>
+                      </tr>
+                    </ng-container>
+
+                  </table>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="sub-total-container">
+              <td colspan="3" align="right" style="width: 80%;">
+                <p class="m-0">Subtotal</p>
+              </td>
+              <td align="right" class="p-10 p-18-15" style="width: 20%;">
+                <p class="m-0">{{ invoice_details.sub_total }}</p>
+              </td>
+            </tr>
+            <tr class="sub-total-container" *ngIf="invoice_details?.gift_wrapper > 0">
+              <td colspan="3" align="right" tyle="width: 80%;">
+                <p>Gift Wrapping</p>
+              </td>
+              <td align="right" class="p-2" style="width: 20%;">
+                <p>{{ invoice_details.gift_wrapper }}</p>
+              </td>
+            </tr>
+            <tr class="sub-total-container">
+              <td colspan="3" align="right" tyle="width: 80%;">
+                <p>Shipping and Handling</p>
+              </td>
+              <td align="right" class="p-2" style="width: 20%;">
+                <p>{{ invoice_details.shipping_cost }}</p>
+              </td>
+            </tr>
+            <tr class="sub-total-container" *ngIf="invoice_details?.discount_amount > 0">
+              <td colspan="3" align="right" tyle="width: 80%;">
+                <p>Discount</p>
+              </td>
+              <td align="right" class="p-2" style="width: 20%;">
+                <p>
+                  - <span>{{ invoice_details.discount_amount }}</span>
+                </p>
+              </td>
+            </tr>
+            <tr class="sub-total-container grand-total">
+              <td colspan="3" class="gt-p" align="right" style="width: 80%;">
+                <h5 class="m-0">Grand Total</h5>
+              </td>
+              <td class="p-10" align="right" style="width: 20%;">
+                <p class="m-0">{{ invoice_details.final_price }}</p>
+              </td>
+            </tr>
+          </table>
+
+          <table class="w-100 mt-4" style="border:1px solid #eee">
+            <tr class="grand-total">  
+              <td class="py-2 pl-2" style="width: 60%;border-right:1px solid #eee"> 
+                <p class="m-0"><b>Payment Transaction ID:</b></p>
+                <p class="m-0">{{(invoice_details?.payment_details?.payment_id)? invoice_details.payment_details.payment_id: 'NA'}}</p>
+              </td>
+              <td class="py-2 pl-2" style="width: 40%;">
+                <p class="m-0"><b>Mode of Payment:</b></p>
+                <p class="m-0">{{invoice_details?.payment_details?.name}}</p>
+              </td>
+            </tr>
+          </table>
+          
+        </div>
+
+        <div class="col-md-12 mt-1">
+          <p class="mt-2 mb-0" align="left">
+            <b>Note:</b> The above prices are in <b>{{ invoice_details?.currency_type?.country_code }}</b>
+          </p>
+        </div>
+        <div class="col-md-12 pt-5">
+          <p style="text-align: center;font-size: 12px;">Digitally Signed by {{vendorDetails?.company_details?.name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-wide btn-primary" (click)="generatePDF('vendorOrderInvoice', invoice_details.order_number);">Save as pdf</button>
   </div>
 </ng-template>
 
