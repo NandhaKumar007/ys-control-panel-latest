@@ -249,10 +249,6 @@ export class CommonService {
     }
   }
 
-  PRICE_FORMAT(currency_details, price) {
-    return (price/currency_details.country_inr_value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-  }
-
   stripHtml(html) {
     if(html) {
       let tmp = document.createElement("DIV");

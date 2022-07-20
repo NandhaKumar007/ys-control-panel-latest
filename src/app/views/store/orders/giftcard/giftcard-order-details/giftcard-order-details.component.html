@@ -378,9 +378,7 @@
                 <p>1</p>
               </td>
               <td class="p-10" align="right" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.price)">
-              </p>
+                <p>{{invoice_details.temp_price | number: '1.2-2'}}</p>
               </td>
             </tr>
 
@@ -389,9 +387,7 @@
                 <p>Subtotal</p>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <p
-                  [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.price)">
-                </p>
+                <p>{{invoice_details.temp_price | number: '1.2-2'}}</p>
               </td>
             </tr>
             <tr class="invoice-total invoice-border-top grand-total invoice-border">
@@ -399,7 +395,7 @@
                 <h5 class="m-0">Grand Total</h5>
               </td>
               <td align="right" class="p-10" style="width: 20%;">
-                <h5 class="m-0" [innerHTML]="commonService.PRICE_FORMAT(invoice_details?.currency_type, invoice_details?.price)"></h5>
+                <h5 class="m-0">{{invoice_details.temp_price | number: '1.2-2'}}</h5>
               </td>
             </tr>
             
@@ -413,7 +409,6 @@
         <div class="col-md-12">
           <div class="invoice-footer-details mt-2 mb-2">
             <p class="invoice-store-name">{{commonService.store_details?.name}}</p>
-            <p *ngIf="commonService.store_details?.gst_no" class="invoice-gst-no">{{commonService.store_details?.gst_no}}</p>
           </div>
         </div>
 

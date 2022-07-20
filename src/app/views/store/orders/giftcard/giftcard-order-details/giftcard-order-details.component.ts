@@ -84,6 +84,8 @@ export class GiftcardOrderDetailsComponent implements OnInit {
 
   onViewInvoice(modalName) {
     this.invoice_details = this.details;
+    let countryInr = this.invoice_details.currency_type.country_inr_value;
+    this.invoice_details.temp_price = (this.invoice_details.price/countryInr).toFixed(2);
     this.modalService.open(modalName, { size: 'lg' });
   }
 
