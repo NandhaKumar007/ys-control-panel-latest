@@ -45,7 +45,6 @@ export class SigninComponent implements OnInit {
   storeLogin() {
     if(sessionStorage.getItem("app_token")) this.loginForm.app_token = sessionStorage.getItem("app_token");
     this.api.LOGIN(this.loginForm).subscribe(result => {
-      this.loading = false; this.loadingText = "";
       if(result.status) {
         localStorage.setItem("store_token", result.token);
         this.commonService.store_details = {
@@ -149,6 +148,7 @@ export class SigninComponent implements OnInit {
         }
       }
       else {
+        this.loading = false; this.loadingText = "";
         this.loginForm.errorMsg = result.message;
         console.log("response", result);
       }
@@ -157,7 +157,6 @@ export class SigninComponent implements OnInit {
 
   masterLogin() {
     this.api.MASTER_LOGIN(this.loginForm).subscribe(result => {
-      this.loading = false; this.loadingText = "";
       if(result.status) {
         this.commonService.ys_payment_list = result.payment_types;
         this.commonService.updateLocalData('ys_payment_list', this.commonService.ys_payment_list);
@@ -166,6 +165,7 @@ export class SigninComponent implements OnInit {
         this.router.navigateByUrl('/control-panel');
       }
       else {
+        this.loading = false; this.loadingText = "";
         this.loginForm.errorMsg = result.message;
         console.log("response", result);
       }

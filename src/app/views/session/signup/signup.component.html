@@ -19,7 +19,8 @@
                   <div class="col-lg-1"></div>
                   <div class="col-lg-10">
                     <div class="form-group">
-                      <input type="text" name="contact_person" class="theme-input-style" placeholder="Your full name" [(ngModel)]="signupForm.company_details.contact_person" required>
+                      <input type="text" name="contact_person" class="theme-input-style" placeholder="Your full name" [(ngModel)]="signupForm.company_details.contact_person"
+                      onkeydown="return /[a-z\s.]/i.test(event.key)" (paste)="(false)" required>
                     </div>
                     <div class="form-group">
                       <div class="input-group mobile-num-container">
@@ -36,13 +37,13 @@
                     </div>
                     <div class="form-group">
                       <div class="input-group mobile-num-container mb-3">
-                        <input type="email" name="email" [(ngModel)]="signupForm.email" class="form-control theme-input-style" placeholder="Email" required>
+                        <input type="email" name="email" [(ngModel)]="signupForm.email" class="form-control theme-input-style" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Invalid email" placeholder="Email" required>
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="input-group mb-3">
                         <input placeholder="Password" [type]="signupForm.input_txt? 'text': 'password'" name="password"
-                        class="form-control theme-input-style" [(ngModel)]="signupForm.password" required>
+                        class="form-control theme-input-style" [(ngModel)]="signupForm.password" pattern=".{8,}" title="Minimum 8 characters required" required>
                         <div class="input-group-append">
                           <span class="input-group-text">
                             <i class="material-icons" *ngIf="!signupForm.input_txt" (click)="signupForm.input_txt = !signupForm.input_txt" aria-hidden="true">visibility</i>
@@ -122,7 +123,7 @@
                   <div class="row">
                     <div class="col-lg-12">
                       <label class="col-form-label black"><strong>What's your store name?</strong></label>
-                      <input type="text" name="store_name" [(ngModel)]="signupForm.name" class="theme-input-style" placeholder="Store name" pattern="([^\s][A-z0-9À-ž\s]+)" title="Special characters not accepted" required>
+                      <input type="text" name="store_name" [(ngModel)]="signupForm.name" class="theme-input-style" placeholder="Store name" onkeydown="return /[a-z\s.]/i.test(event.key)" (paste)="(false)" required>
                     </div>
                     <div class="col-lg-12">
                       <label class="col-form-label black"><strong>What's your country and currency?</strong></label>
@@ -187,7 +188,7 @@
                           <textarea class="theme-input-style" name="address" [(ngModel)]="signupForm.company_details.address" placeholder="Store address" required></textarea>
                         </div>
                         <div class="col-md-6">
-                          <input type="text" class="theme-input-style" name="city" [(ngModel)]="signupForm.company_details.city" placeholder="City" required>
+                          <input type="text" class="theme-input-style" name="city" [(ngModel)]="signupForm.company_details.city" placeholder="City" onkeydown="return /[a-z\s.]/i.test(event.key)" required>
                         </div>
                         <div class="col-md-6 mb-3 select-state-wrapper">
                           <select *ngIf="stateList.length" name="state" [(ngModel)]="signupForm.company_details.state" class="selectbox-state" required>
@@ -197,7 +198,7 @@
                           <input *ngIf="!stateList.length" type="text" class="theme-input-style" name="state" [(ngModel)]="signupForm.company_details.state" placeholder="State" required>
                         </div>
                         <div class="col-md-6">
-                          <input type="text" class="theme-input-style" name="pincode" [(ngModel)]="signupForm.company_details.pincode" placeholder="Zip / Postal Code" required>
+                          <input type="text" class="theme-input-style" name="pincode" [(ngModel)]="signupForm.company_details.pincode" placeholder="Zip / Postal Code" appNumberOnly required>
                         </div>
                         <div class="col-md-6">
                           <input type="text" class="theme-input-style" name="gst_no" [(ngModel)]="signupForm.gst_no" placeholder="GST (If available)">
@@ -262,7 +263,7 @@
                     </div>
                     <div class="col-lg-12">
                       <div class="mb-3">
-                        <textarea name="description" [(ngModel)]="signupForm.description" placeholder="A description about your brand, products and pricing in less than 200 characters" required></textarea>
+                        <textarea name="description" [(ngModel)]="signupForm.description" placeholder="A description about your brand, products and pricing in less than 200 characters" maxlength="200" required></textarea>
                       </div>
                     </div>
                     <div *ngIf="signupForm.errorMsg" class="col-lg-12">

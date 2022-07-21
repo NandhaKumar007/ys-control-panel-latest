@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StoreApiService } from '../../../../services/store-api.service';
@@ -41,7 +40,7 @@ export class HomeLayoutComponent implements OnInit {
   gridList: any = [];
 
   constructor(
-    private router: Router, config: NgbModalConfig, public modalService: NgbModal,
+    config: NgbModalConfig, public modalService: NgbModal,
     private api: StoreApiService, public commonService: CommonService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
