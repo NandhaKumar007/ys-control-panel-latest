@@ -36,7 +36,7 @@ export class BillingComponent implements OnInit {
 
   ngOnInit(): void {
     this.pageLoader = true;
-    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, month: 1 }).subscribe(result => {
+    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, month: this.commonService.store_details.package_details.month }).subscribe(result => {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status) {
         this.billDetails = result.data;
@@ -65,7 +65,7 @@ export class BillingComponent implements OnInit {
 
   onSubscribe(x) {
     this.billDetails.submit = true;
-    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, payment_details: { name: x.name }, month: 1 }).subscribe(result => {
+    this.api.BILLING_DETAILS({ store_id: this.commonService.store_details._id, payment_details: { name: x.name }, month: this.commonService.store_details.package_details.month }).subscribe(result => {
       if(result.status) {
         if(result.data) {
           if(x.name=="Razorpay") {

@@ -350,7 +350,7 @@ export class SidebarService {
         );
         this.sidePanelList.push({ name: 'Settings', type: 'dropDown', icon: 'settings', sub: settingList });
         // my account
-        routePermissionList.push("deployment", "app_store", "billing");
+        routePermissionList.push("deployment", "billing");
         let accountList: IChildItem[] = [];
         accountList.push({ icon: 'account_circle', name: 'Profile', state: '/account/profile', type: 'link' });
         if(ysFeatures.indexOf('store_pickup')!=-1) {
@@ -371,6 +371,7 @@ export class SidebarService {
         }
         if(this.commonService.master_token) {
           accountList.push({ icon: 'widgets', name: 'App Store', state: '/account/app-store', type: 'link' });
+          routePermissionList.push("app_store");
         }
         accountList.push({ icon: 'receipt_long', name: 'Billing', state: '/account/billing', type: 'link' });
         this.sidePanelList.push({ name: 'My Account', type: 'dropDown', icon: 'account_circle', sub: accountList });

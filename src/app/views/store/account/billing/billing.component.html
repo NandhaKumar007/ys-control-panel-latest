@@ -123,7 +123,7 @@
             <p>{{billDetails?.package_details?.disp_name | uppercase}}</p>
           </div>
           <div class="col-md-6">
-            <div *ngIf="commonService.master_token" class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end">
               <button class="btn-primary" [routerLink]="(billDetails?.next_package_details)? '/deployment/plans': '/account/app-store'" type="button">
                 {{ (billDetails?.next_package_details)? 'Upgrade Plan': 'View Apps' }}
               </button>
