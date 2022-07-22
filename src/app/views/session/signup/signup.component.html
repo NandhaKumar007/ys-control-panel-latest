@@ -32,7 +32,7 @@
                           </span>
                         </div>
                         <input type="tel" name="mobile" [(ngModel)]="signupForm.company_details.mobile" class="form-control theme-input-style"
-                        placeholder="Mobile" title="Please fill the valid mobile number" pattern=".{10,100}" appNumberOnly required>
+                        placeholder="Mobile" title="Please fill the valid mobile number" pattern=".{10,15}" appNumberOnly required>
                       </div>
                     </div>
                     <div class="form-group">
@@ -201,7 +201,7 @@
                           <input type="text" class="theme-input-style" name="pincode" [(ngModel)]="signupForm.company_details.pincode" placeholder="Zip / Postal Code" appNumberOnly required>
                         </div>
                         <div class="col-md-6">
-                          <input type="text" class="theme-input-style" name="gst_no" [(ngModel)]="signupForm.gst_no" placeholder="GST (If available)">
+                          <input type="text" class="theme-input-style" name="gst_no" [(ngModel)]="signupForm.gst_no" placeholder="{{ (signupForm.country=='India')? 'GST': 'VAT/TIN' }} (If available)">
                         </div>
                       </div>
                     </div>

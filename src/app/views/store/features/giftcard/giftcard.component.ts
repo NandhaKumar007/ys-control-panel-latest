@@ -83,7 +83,7 @@ export class GiftcardComponent implements OnInit {
   onDelete() {
     this.api.DELETE_GIFTCARD(this.deleteForm).subscribe(result => {
       if(result.status) {
-        document.getElementById('closeDeleteModal').click();
+        document.getElementById('closeModal').click();
         this.list = result.list;
       }
       else {
