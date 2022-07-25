@@ -365,10 +365,15 @@
                     </div>
                     <div *ngIf="vendor?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
                       <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                        <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
-                          {{vendor.shipping_method.tracking_number}}
-                        </p>
-                        <p class="w-70 w-sm-100 m-b-0">{{vendor.shipping_method?.tracking_link}}</p>
+                        <p class="w-30 w-sm-100 m-b-0">{{vendor.shipping_method.tracking_number}}</p>
+                        <p class="w-30 w-sm-100 m-b-0">{{vendor.shipping_method?.tracking_link}}</p>
+                        <ng-container *ngIf="vendor?.existing_status=='placed' || vendor?.existing_status=='confirmed'">
+                          <p class="w-30 w-sm-100 m-b-0" *ngIf="vendor.cp_status && !vendor.cp_exists">
+                            <button type="button" class="btn btn-primary" (click)="courierForm={ type: 'Others', order_number: vendor.order_number, vendor_id: vendor.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
+                              Cancel
+                            </button>
+                          </p>
+                        </ng-container>
                       </div>
                     </div>
                   </div>
@@ -590,7 +595,7 @@
                           </ng-container>
                           <!-- cancel order -->
                           <div *ngIf="!params?.coupon_id && params?.type=='live' && vendor?.existing_status!='delivered'" class="col-md-12">
-                            <button *ngIf="params?.type=='live' || params?.type=='delivered'" type="button"
+                            <button *ngIf="params?.type=='live' || params?.type=='delivered'" [disabled]="vendor.cp_status" type="button"
                             (click)="cancelVendorOrder(vendor, cancelVendorModal);" class="btn gray-btn w-100 mtb-10">
                               <span class="gray-btn-txt">Cancel Order</span>
                             </button>
@@ -780,10 +785,15 @@
                   </div>
                   <div *ngIf="order_details?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
                     <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                      <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
-                        {{order_details.shipping_method.tracking_number}}
-                      </p>
-                      <p class="w-70 w-sm-100 m-b-0">{{order_details.shipping_method?.tracking_link}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method.tracking_number}}</p>
+                      <p class="w-30 w-sm-100 m-b-0">{{order_details.shipping_method?.tracking_link}}</p>
+                      <ng-container *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'">
+                        <p class="w-30 w-sm-100 m-b-0" *ngIf="order_details.cp_status && !order_details.cp_exists">
+                          <button type="button" class="btn btn-primary" (click)="courierForm={ type: 'Others', order_number: order_details.order_number }; modalService.open(cancelCourierModal, { centered: true });">
+                            Cancel
+                          </button>
+                        </p>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
@@ -867,10 +877,15 @@
               </div>
               <div *ngIf="vendorInfo?.shipping_method?.tracking_number" class="flex-grow-1 pl-2 d-flex">
                 <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center flex-lg-row">
-                  <p style="width: 37% !important;" class="w-30 w-sm-100 m-b-0">
-                    {{vendorInfo.shipping_method.tracking_number}}
-                  </p>
-                  <p class="w-70 w-sm-100 m-b-0">{{vendorInfo.shipping_method?.tracking_link}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{vendorInfo.shipping_method.tracking_number}}</p>
+                  <p class="w-30 w-sm-100 m-b-0">{{vendorInfo.shipping_method?.tracking_link}}</p>
+                  <ng-container *ngIf="vendorInfo?.existing_status=='placed' || vendorInfo?.existing_status=='confirmed'">
+                    <p class="w-30 w-sm-100 m-b-0" *ngIf="vendorInfo.cp_status && !vendorInfo.cp_exists">
+                      <button type="button" class="btn btn-primary" (click)="courierForm={ type: 'Others', order_number: vendorInfo.order_number, vendor_id: vendorInfo.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
+                        Cancel
+                      </button>
+                    </p>
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -1481,8 +1496,7 @@
 
         <!-- cancel order -->
         <button *ngIf="!params?.coupon_id && params?.type=='live' && order_details.existing_status!='delivered' && !order_details.vendor_list?.length" type="button"
-          (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });"
-          class="btn orng-outline-btn w-100 mtb-10">
+        [disabled]="order_details.cp_status" (click)="errorMsg=null; btnLoader=false; modalService.open(cancelModal, { centered: true });" class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
         </button>
         <!-- # cancel order -->
@@ -1749,7 +1763,7 @@
 
         <!-- cancel order -->
         <button *ngIf="!params?.coupon_id && params?.type=='live' && vendorInfo.existing_status!='delivered'" type="button"
-        (click)="cancelVendorOrder(vendorInfo, cancelVendorModal);" class="btn orng-outline-btn w-100 mtb-10">
+        [disabled]="vendorInfo.cp_status" (click)="cancelVendorOrder(vendorInfo, cancelVendorModal);" class="btn orng-outline-btn w-100 mtb-10">
           <span class="orng-outline-txt">Cancel Order</span>
         </button>
         <!-- # cancel order -->
@@ -2470,7 +2484,10 @@
 <ng-template #cancelCourierModal let-modal>
   <form autocomplete="off" (ngSubmit)="cancelCpOrder();" ngNativeValidate>
     <div class="modal-body">
-      <p>
+      <p *ngIf="courierForm.type=='Others'">
+        <strong>Are you sure you want to cancel the shipping for <span class="text-danger">"{{courierForm.order_number}}"</span>?</strong>
+      </p>
+      <p *ngIf="courierForm.type!='Others'">
         <strong>Are you sure you want to cancel the
           <span class="text-danger">"{{courierForm.type}}"</span> order for <span class="text-danger">"{{courierForm.order_number}}"</span>?</strong>
       </p>

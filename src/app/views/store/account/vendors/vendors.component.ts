@@ -65,8 +65,8 @@ export class VendorsComponent implements OnInit {
     this.api.VENDOR_LIST().subscribe(result => {
       if(result.status) {
         this.parent_list = result.list;
-        this.commonService.vendor_list = this.parent_list;
-        this.commonService.updateLocalData('vendor_list', this.parent_list);
+        this.commonService.vendor_list = result.list.filter(obj => obj.status=='active');
+        this.commonService.updateLocalData('vendor_list', this.commonService.vendor_list);
         this.onTypeChange(this.list_type);
       }
       else console.log("response", result);
@@ -128,7 +128,7 @@ export class VendorsComponent implements OnInit {
       });
     }
     if(this.vendorForm.form_type=='edit_permissions') {
-      let sendData = { _id: this.vendorForm._id, permission_list: [], session_key: new Date().valueOf() };
+      let sendData = { _id: this.vendorForm._id, permission_list: [], change_key: true };
       this.permissionList.forEach(obj => {
         if(obj.selected) sendData.permission_list.push(obj.keyword);
         obj.sub_list.forEach(el => {
@@ -241,7 +241,7 @@ export class VendorsComponent implements OnInit {
     let newStatus = 'active';
     if(this.deleteForm.status=='active') newStatus = 'inactive';
     this.deleteForm.submit = true;
-    this.api.UPDATE_VENDOR({ _id: this.deleteForm._id, form_type: 'change_status', status: newStatus, session_key: new Date().valueOf() }).subscribe(result => {
+    this.api.UPDATE_VENDOR({ _id: this.deleteForm._id, form_type: 'change_status', status: newStatus, change_key: true }).subscribe(result => {
       this.deleteForm.submit = false;
       if(result.status) {
         document.getElementById('closeModal').click();
@@ -360,7 +360,7 @@ export class VendorsComponent implements OnInit {
 
   onTypeChange(x) {
     this.pageLoader = true;
-    if(x=="active") this.list = this.parent_list.filter(obj => obj.password && obj.status=='active');
+    if(x=="active") this.list = this.parent_list.filter(obj => obj.status=='active');
     else if(x=="inactive") this.list = this.parent_list.filter(obj => obj.password && obj.status=='inactive');
     else if(x=="new") this.list = this.parent_list.filter(obj => !obj.password && obj.status=='inactive');
     else if(x=="declined") this.list = this.parent_list.filter(obj => obj.status=='declined');

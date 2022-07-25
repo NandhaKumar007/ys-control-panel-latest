@@ -95,6 +95,9 @@ export class ProductOrderDetailsComponent implements OnInit {
             else this.order_details.order_status='dispatched';
           }
           if(this.order_details.existing_status=='dispatched') this.order_details.order_status='delivered';
+          if(this.order_details.cp_status) {
+            if(this.order_details.cp_orders.findIndex(el => el.status=='active')!=-1) this.order_details.cp_exists = true;
+          }
           // shipping info
           if(this.order_details.order_type!='pickup') {
             if(this.order_details.vendor_list?.length) {
@@ -120,6 +123,9 @@ export class ProductOrderDetailsComponent implements OnInit {
             if(this.commonService.store_details.login_type!='vendor') {
               this.order_details.vendor_list.forEach(element => {
                 element.courierForm = {};
+                if(element.cp_status) {
+                  if(element.cp_orders.findIndex(el => el.status=='active')!=-1) element.cp_exists = true;
+                }
                 element.existing_status = element.order_status;
                 if(element.existing_status=='placed') element.order_status='confirmed';
                 if(element.existing_status=='confirmed') element.order_status='dispatched';
@@ -134,6 +140,9 @@ export class ProductOrderDetailsComponent implements OnInit {
               let vendorIndex = this.order_details.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
               if(vendorIndex!=-1) {
                 this.vendorInfo = this.order_details.vendor_list[vendorIndex];
+                if(this.vendorInfo.cp_status) {
+                  if(this.vendorInfo.cp_orders.findIndex(el => el.status=='active')!=-1) this.vendorInfo.cp_exists = true;
+                }
                 this.vendorInfo.existing_status = this.vendorInfo.order_status;
                 if(this.vendorInfo.existing_status=='placed') this.vendorInfo.order_status='confirmed';
                 if(this.vendorInfo.existing_status=='confirmed') this.vendorInfo.order_status='dispatched';

@@ -105,7 +105,7 @@
             <div class="col-md-12 form-group mb-3">
               <label>Mode</label>
               <select name="mode" class="form-control select-arrow" [(ngModel)]="cpForm.mode" required>
-                <option value="test">Test</option>
+                <option *ngIf="commonService.host_name=='localhost'" value="test">Test</option>
                 <option value="live">Live</option>
               </select>
             </div>

@@ -165,41 +165,43 @@
           </div>
         </div>
         <!-- pickup address -->
-        <div class="col-md-12 mt-3">
-          <h6>PICKUP ADDRESS</h6>
-        </div>
-        <div class="card">
-          <div class="row card-body">
-            <div class="col-md-6 mb-3">
-              <label>Country</label>
-              <input type="text" name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" readonly required />
-            </div>
-            <ng-container *ngFor="let field of pick_address_fields; let j=index;">
-              <ng-container *ngIf="field.keyword=='state'">
-                <!-- if state list exist -->
-                <div *ngIf="state_list?.length" class="col-md-6 mb-3">
-                  <label>{{field.label}}</label>
-                  <select class="form-control" name="p_field{{j}}" [(ngModel)]="field.value" required>
-                    <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
-                  </select>
-                </div>
-                <!-- if not state list exist -->
-                <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+        <ng-container *ngIf="!vendorForm.pickup_locations?.length">
+          <div class="col-md-12 mt-3">
+            <h6>PICKUP ADDRESS</h6>
+          </div>
+          <div class="card">
+            <div class="row card-body">
+              <div class="col-md-6 mb-3">
+                <label>Country</label>
+                <input type="text" name="p_country" class="form-control" [(ngModel)]="vendorForm.pickup_address.country" readonly required />
+              </div>
+              <ng-container *ngFor="let field of pick_address_fields; let j=index;">
+                <ng-container *ngIf="field.keyword=='state'">
+                  <!-- if state list exist -->
+                  <div *ngIf="state_list?.length" class="col-md-6 mb-3">
+                    <label>{{field.label}}</label>
+                    <select class="form-control" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                      <option *ngFor="let x of state_list | orderAsc: 'name';" [ngValue]="x.name">{{x.name}}</option>
+                    </select>
+                  </div>
+                  <!-- if not state list exist -->
+                  <div *ngIf="!state_list?.length" class="col-md-6 mb-3">
+                    <label>{{field.label}}</label>
+                    <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+                  </div>
+                </ng-container>
+                <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
                   <label>{{field.label}}</label>
                   <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
                 </div>
               </ng-container>
-              <div *ngIf="field.keyword!='state'" class="col-md-6 mb-3">
-                <label>{{field.label}}</label>
-                <input class="form-control" type="text" name="p_field{{j}}" [(ngModel)]="field.value" required>
+              <div class="col-md-12 mb-3">
+                <label>Complete Address</label>
+                <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>
               </div>
-            </ng-container>
-            <div class="col-md-12 mb-3">
-              <label>Complete Address</label>
-              <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>
             </div>
           </div>
-        </div>
+        </ng-container>
         <!-- bank details -->
         <div class="col-md-12 mt-3">
           <h6>BANK DETAILS

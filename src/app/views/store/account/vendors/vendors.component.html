@@ -133,7 +133,6 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">
       {{(vendorForm.form_type=='add')? 'Add New Vendor': vendorForm.email}}
-      <span *ngIf="vendorForm.payout_contact_id">- {{vendorForm.payout_contact_id}}</span>
     </h4>
   </div>
   <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
@@ -158,13 +157,19 @@
               <input type="tel" name="wallet_balance" class="form-control" [(ngModel)]="vendorForm.wallet_balance" appNumberOnly required />
             </div>
           </ng-container>
-          <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.payout_contact_id" class="col-md-12 mb-3">
-            <label class="checkbox checkbox-success">
-              <input class="form-check-input" type="checkbox" name="update_contact" [(ngModel)]="vendorForm.update_contact">
-              <b>Update Contact Information in RazorpayX</b>
-              <span class="checkmark"></span>
-            </label>
-          </div>
+          <!-- payout -->
+          <ng-container *ngIf="commonService.store_details?.payout_gateway && vendorForm.payout_contact_id">
+            <div class="col-md-6">
+              <p><b>RazorpayX Contact ID:</b> {{vendorForm.payout_contact_id}}</p>
+            </div>
+            <div class="col-md-6">
+              <label class="checkbox checkbox-success">
+                <input class="form-check-input" type="checkbox" name="update_contact" [(ngModel)]="vendorForm.update_contact">
+                <b>Update Contact Information in RazorpayX</b>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </ng-container>
         </div>
         <hr class="mt-0 mb-3">
         <!-- login details -->
@@ -310,13 +315,23 @@
               <label>Complete Address</label>
               <textarea name="p_address" [(ngModel)]="vendorForm.pickup_address.address" class="form-control" required></textarea>
             </div>
+            <ng-container *ngIf="commonService.courier_partners?.length">
+              <div *ngFor="let pl of vendorForm.pickup_locations;" class="col-md-12">
+                <p><b>{{pl.name}}:</b> {{pl.location_id}}</p>
+              </div>
+              <div *ngIf="vendorForm.status=='active'" class="col-md-12">
+                <label class="checkbox checkbox-success">
+                  <input class="form-check-input" type="checkbox" name="update_warehouse" [(ngModel)]="vendorForm.update_warehouse">
+                  <b>Add/Update Pickup Address in Delivery Partners</b>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </ng-container>
           </div>
         </div>
         <!-- bank details -->
         <div class="col-md-12 mt-3">
-          <h6>BANK DETAILS
-            <span *ngIf="vendorForm.bank_details?.payout_account_id">- {{vendorForm.bank_details.payout_account_id}}</span>
-          </h6>
+          <h6>BANK DETAILS</h6>
         </div>
         <div class="card">
           <div class="row card-body">
@@ -339,17 +354,23 @@
               pattern=".{11,11}" required title="Invalid Code" maxlength="11" required />
               <input *ngIf="!commonService.store_details?.payout_gateway" type="text" name="ifsc_code" class="form-control" [(ngModel)]="vendorForm.bank_details.ifsc_code" required />
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
               <label>Account No</label>
               <input type="text" name="acc_no" class="form-control" [(ngModel)]="vendorForm.bank_details.acc_no" required />
             </div>
-            <div *ngIf="commonService.store_details?.payout_gateway && vendorForm.bank_details?.payout_account_id" class="col-md-12 mt-3">
-              <label class="checkbox checkbox-success">
-                <input class="form-check-input" type="checkbox" name="update_bank" [(ngModel)]="vendorForm.update_bank">
-                <b>Update Bank Details in RazorpayX</b>
-                <span class="checkmark"></span>
-              </label>
-            </div>
+            <!-- payout -->
+            <ng-container *ngIf="commonService.store_details?.payout_gateway && vendorForm.bank_details?.payout_account_id">
+              <div class="col-md-6">
+                <p><b>RazorpayX Account ID:</b> {{vendorForm.bank_details.payout_account_id}}</p>
+              </div>
+              <div class="col-md-6">
+                <label class="checkbox checkbox-success">
+                  <input class="form-check-input" type="checkbox" name="update_bank" [(ngModel)]="vendorForm.update_bank">
+                  <b>Update Bank Details in RazorpayX</b>
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>

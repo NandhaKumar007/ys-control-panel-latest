@@ -54,7 +54,7 @@
   <div class="separator-breadcrumb border-top"></div>
 
   <div class="top-filter-sec">
-    <div *ngIf="params?.type=='live' && commonService.vendor_list?.length" class="row mb-2">
+    <div class="row mb-2">
       <div class="col-md-6"></div>
       <div class="col-md-6">
         <div class="form-group">
@@ -63,7 +63,7 @@
       </div>
     </div>
     <div class="row mb-4">
-      <div *ngIf="params?.type=='live' && commonService.store_details?.login_type!='vendor' && !commonService.vendor_list?.length" class="col-md-3 col-6">
+      <div *ngIf="params?.type=='live' && !commonService.vendor_list?.length" class="col-md-6 col-6">
         <div class="form-group">
           <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type"
             (change)="getOrderList();">
@@ -74,7 +74,7 @@
           </select>
         </div>
       </div>
-      <div *ngIf="commonService.vendor_list?.length" class="col-md-3 col-6">
+      <div *ngIf="commonService.vendor_list?.length" class="col-md-6 col-6">
         <div class="form-group">
           <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
             (change)="getOrderList();">
@@ -83,14 +83,6 @@
           </select>
         </div>
       </div>
-      <!-- search box -->
-      <div *ngIf="!commonService.vendor_list?.length || params?.type!='live' || commonService.vendor_list?.length"
-      [ngClass]="(commonService.vendor_list?.length && commonService.store_details?.login_type!='vendor' || params.type=='live' && commonService.store_details?.login_type!='vendor')? 'col-md-3 col-6': 'col-md-6'">
-        <div class="form-group">
-          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
-        </div>
-      </div>
-
       <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" placeholder="Select Date" class="form-control" name="from_date"
@@ -105,7 +97,6 @@
             [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
         </div>
       </div>
-
     </div>
   </div>
   <!-- DATA LIST -->
