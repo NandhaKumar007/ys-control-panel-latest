@@ -280,12 +280,11 @@ export class AddProductComponent implements OnInit {
 
   /* Common Functions */
   onChangeVendor(vendorId) {
+    this.setVendorProdTag(vendorId);
+    this.addonList = []; this.faqList = []; this.sizeCharts = []; this.noteList = [];
     this.api.VENDOR_FEATURES(vendorId).subscribe(result => {
       if(result.status) this.setVendorInfo(result.data);
-      else {
-        console.log("response", result);
-        this.addonList = []; this.faqList = []; this.sizeCharts = []; this.noteList = []; this.tagList = [];
-      }
+      else console.log("response", result);
     });
   }
   setVendorInfo(vInfo) {
@@ -293,11 +292,12 @@ export class AddProductComponent implements OnInit {
     this.faqList = vInfo.faq_list.filter(el => el.status=='active');
     this.sizeCharts = vInfo.size_chart.filter(el => el.status=='active');
     this.noteList = vInfo.footnote_list;
-    // product tags
+  }
+  setVendorProdTag(vendorId) {
     this.tagList = [];
     this.productFeatures.tag_list.filter(obj => obj.status=='active').forEach(obj => {
       obj.option_list = [];
-      let vtIndex = obj.vendor_list.findIndex(v => v.vendor_id==vInfo._id);
+      let vtIndex = obj.vendor_list.findIndex(v => v.vendor_id==vendorId);
       if(vtIndex!=-1) {
         obj.option_list = obj.vendor_list[vtIndex].option_list;
         this.tagList.push(obj);
