@@ -234,6 +234,13 @@ export class AddProductComponent implements OnInit {
     if(!this.productForm.image_tag_status) {
       this.productForm.image_list.forEach(obj => { delete obj.tag; });
     }
+    this.productForm.search_terms = "";
+    if(this.productForm.search_keywords?.length) {
+      this.productForm.search_keywords.forEach(el => {
+        this.productForm.search_terms += el.value+', ';
+      });
+    }
+    this.productForm.search_terms = this.productForm.search_terms.slice(0, -2);
     // img badges
     this.productForm.badge_list = [];
     if(this.productForm.badge_status) {

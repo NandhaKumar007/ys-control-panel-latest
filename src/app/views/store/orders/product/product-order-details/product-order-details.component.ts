@@ -537,28 +537,9 @@ export class ProductOrderDetailsComponent implements OnInit {
         if(element.value) this.addressForm[element.keyword] = element.value;
       });
     }
-    let formData: any = {_id: this.order_details._id, shipping_address: this.addressForm };
+    let formData: any = { _id: this.order_details._id, shipping_address: this.addressForm };
     if(this.addressType=='billing') formData = {_id: this.order_details._id, billing_address: this.addressForm };
-    // this.onUpdate(formData);
-    this.api.UPDATE_ORDER_DETAILS(formData).subscribe(result => {
-      if(result.status) {
-        if(this.addressType=='shipping') {
-          // update courier details
-          let cpIndex = this.order_details.cp_orders.findIndex(obj => obj.status=='active');
-          if(this.order_details.existing_status=='confirmed' && cpIndex!=-1) {
-            if(this.order_details.cp_orders[cpIndex].name=='Delhivery') {
-              this.api.DELHIVERY_UPDATE_ORDER({ _id: this.order_details._id, cancellation: false }).subscribe(result => { });
-            }
-          }
-        }
-        document.getElementById('closeModal').click();
-        this.ngOnInit();
-      }
-      else {
-        this.addressForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
+    this.onUpdate(formData);
   }
   onUpdateCustomization() {
     let reqInput = this.validateForm();
@@ -587,6 +568,19 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.onUpdate(formData);
     }
     else document.getElementById(reqInput).focus();
+  }
+  // update
+  onUpdate(x) {
+    this.api.UPDATE_ORDER_DETAILS(x).subscribe(result => {
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.addressForm.errorMsg = result.message;
+        console.log("response", result);
+      }
+    });
   }
 
   // order invoice
@@ -719,20 +713,6 @@ export class ProductOrderDetailsComponent implements OnInit {
     let totalPercentage = 100+parseFloat(totalTax);
     let onePercentAmount = amount/totalPercentage;
     return (onePercentAmount*tax);
-  }
-
-  // update
-  onUpdate(x) {
-    this.api.UPDATE_ORDER_DETAILS(x).subscribe(result => {
-      if(result.status) {
-        document.getElementById('closeModal').click();
-        this.ngOnInit();
-      }
-      else {
-        this.addressForm.errorMsg = result.message;
-        console.log("response", result);
-      }
-    });
   }
 
   onPlaceOrder(x) {

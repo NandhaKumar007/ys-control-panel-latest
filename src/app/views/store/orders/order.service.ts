@@ -103,6 +103,10 @@ export class OrderService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
   }
+  UPDATE_CP_ORDER(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.put<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
+  }
   CANCEL_CP_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/courier_partner', x, httpOptions);
@@ -112,10 +116,6 @@ export class OrderService {
     return this.http.post<any>(environment.ws_url+'/store/courier_partner/pickup_request', x, httpOptions);
   }
   
-  DELHIVERY_UPDATE_ORDER(x) {
-    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.put<any>(environment.ws_url+'/store/courier_partner/delhivery', x, httpOptions);
-  }
   CANCEL_DUNZO_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.patch<any>(environment.ws_url+'/store/courier_partner/dunzo', x, httpOptions);

@@ -99,6 +99,13 @@ export class ModifyProductComponent implements OnInit {
                   if(!element.taxrate_id && this.productForm.taxrate_id) element.taxrate_id = this.productForm.taxrate_id;
                 });
               }
+              if(this.productForm.search_terms) {
+                this.productForm.search_keywords = [];
+                let sTerms = this.productForm.search_terms.split(', ');
+                sTerms.forEach(el => {
+                  this.productForm.search_keywords.push({ display: el, value: el });
+                });
+              }
               // image tags
               if(this.productForm.badge_list?.length) {
                 this.productForm.badge_status = true;
@@ -299,6 +306,13 @@ export class ModifyProductComponent implements OnInit {
         variant_status: this.productForm.variant_status, variant_types: this.productForm.variant_types, variant_list: this.productForm.variant_list
       };
     }
+    this.productForm.search_terms = "";
+    if(this.productForm.search_keywords?.length) {
+      this.productForm.search_keywords.forEach(el => {
+        this.productForm.search_terms += el.value+', ';
+      });
+    }
+    this.productForm.search_terms = this.productForm.search_terms.slice(0, -2);
     // img badges
     this.productForm.badge_list = [];
     if(this.productForm.badge_status) {

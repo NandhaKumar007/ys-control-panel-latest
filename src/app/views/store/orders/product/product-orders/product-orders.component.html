@@ -39,13 +39,19 @@
         </ng-container>
       </div>
       <div class="col-md-4 d-flex align-items-center justify-content-end mt-sm-15">
+        <!-- export -->
         <ng-container *ngIf="commonService.ys_features.indexOf('sales_report')!=-1 || commonService.ys_features.indexOf('advanced_sales_report')!=-1">
           <button *ngIf="commonService.store_details?.login_type=='admin' || commonService.subuser_features.indexOf('order_export')!=-1"
-          type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button mr-2" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
+          type="button" (click)="exportAsXLSX();" class="btn btn-primary ladda-button" [disabled]="exportLoader" [ladda]="exportLoader">Export</button>
         </ng-container>
+        <!-- manual order -->
         <ng-container *ngIf="params?.type=='live' && params?.customer_id=='all' && commonService.store_details?.login_type!='vendor' && commonService.ys_features.indexOf('vendors')==-1">
           <button *ngIf="commonService.ys_features.indexOf('manual_order')!=-1 || commonService.subuser_features.indexOf('manual_order')!=-1"
-          type="button" class="btn btn-primary" routerLink="/orders/create-order">Create New Order</button>
+          type="button" class="btn btn-primary ml-2" routerLink="/orders/create-order">Create New Order</button>
+        </ng-container>
+        <!-- pickup request -->
+        <ng-container *ngIf="params?.type=='live' && params?.customer_id=='all' && commonService.courier_partners.length">
+          <button *ngIf="filterForm.vendor_id!='all' || commonService.ys_features.indexOf('vendors')==-1" type="button" (click)="pickupForm={}; pickupOrders=[]; modalService.open(pickupReqModal);" class="btn btn-primary ml-2">Order Pickup</button>
         </ng-container>
       </div>
     </div>
@@ -192,4 +198,54 @@
       <span class="orng-outline-txt">Yes</span>
     </button>
   </div>
+</ng-template>
+
+<!-- Pickup Request -->
+<ng-template #pickupReqModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Pickup Request</h4>
+  </div>
+  <form id="addon-form" name="addon-form" autocomplete="off">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 form-group mb-3">
+          <label>Delivery Partners</label>
+          <select name="cp_name" (change)="pickupForm.errorMsg=null; pickupForm.requested=null; pickupOrders=[];"
+          class="form-control select-arrow" [(ngModel)]="pickupForm.name" required>
+            <option [ngValue]="x.name" *ngFor="let x of commonService.courier_partners">{{x.name}}</option>
+          </select>
+        </div>
+        <ng-container *ngIf="pickupOrders.length">
+          <div *ngFor="let x of pickupOrders; let i=index;" class="form-group mb-3 col-md-12">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="selected{{i+1}}" [(ngModel)]="x.selected">
+              <span>{{x.order_number}}</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Pickup Time</label>
+            <input type="text" name="pickup_time" class="form-control" [(ngModel)]="pickupForm.pickup_time" (click)="timePicker();" required />
+          </div>
+        </ng-container>
+        <div *ngIf="pickupForm.requested && !pickupOrders.length" class="col-md-12">
+          <p class="text-danger">No orders found</p>
+        </div>
+      </div>
+      <div *ngIf="pickupForm.errorMsg">
+        <p class="text-danger">{{ pickupForm.errorMsg | json }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="modal.dismiss('cancel');" type="button" id="closeModal" class="btn btn-wide black-outline-btn">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <ng-container *ngIf="!pickupForm.requested || pickupOrders.length">
+        <button type="button" (click)="(pickupOrders.length)? getPickupOrders(true): getPickupOrders(false);"
+        class="btn btn-wide btn-primary ladda-button" [disabled]="pickupForm.submit" [ladda]="pickupForm.submit">
+          {{ (pickupOrders.length)? 'Submit': 'Find Orders' }}
+        </button>
+      </ng-container>
+    </div>
+  </form>
 </ng-template>

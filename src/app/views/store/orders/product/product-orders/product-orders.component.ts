@@ -4,6 +4,7 @@ import { SwPush } from '@angular/service-worker';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { AmazingTimePickerService } from 'amazing-time-picker';
 import { CookieService } from 'ngx-cookie-service';
 import { OrderService } from '../../order.service';
 import { ExcelService } from '../../../../../services/excel.service';
@@ -17,7 +18,8 @@ declare const Notification: any;
   selector: 'app-product-orders',
   templateUrl: './product-orders.component.html',
   styleUrls: ['./product-orders.component.scss'],
-  animations: [SharedAnimations]
+  animations: [SharedAnimations],
+  providers: [AmazingTimePickerService]
 })
 
 export class ProductOrdersComponent implements OnInit {
@@ -26,11 +28,12 @@ export class ProductOrdersComponent implements OnInit {
   page = 1; pageSize = 10; exportLoader: boolean;
   params: any = {}; filterForm: any = {};
   list: any = []; scrollPos: number = 0;
-  orderTypes: any = [];
+  orderTypes: any = []; pickupForm: any = {};
+  pickupOrders: any = [];
 
   constructor(
     private api: OrderService, private activeRoute: ActivatedRoute, private excelService: ExcelService, private datePipe: DatePipe, private cookieService: CookieService,
-    public commonService: CommonService, private swPush: SwPush, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService
+    public commonService: CommonService, private swPush: SwPush, config: NgbModalConfig, public modalService: NgbModal, private storeApi: StoreApiService, private atp: AmazingTimePickerService
   ) {
     config.backdrop = 'static'; config.keyboard = false;
   }
@@ -165,8 +168,8 @@ export class ProductOrdersComponent implements OnInit {
                 let tIndex = obj.vendor_list.findIndex(el => this.orderTypes.indexOf(el.order_status)!=-1);
                 if(tIndex!=-1)
                 {
-                  if(this.commonService.store_details.login_type=='vendor') {
-                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
+                  if(this.filterForm.vendor_id!='all') {
+                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.filterForm.vendor_id);
                     if(venIndex!=-1) {
                       obj.order_number = obj.vendor_list[venIndex].order_number;
                       obj.order_status = obj.vendor_list[venIndex].order_status;
@@ -266,6 +269,55 @@ export class ProductOrdersComponent implements OnInit {
         sendData['Price'+(i+1)] = list[i].final_price*list[i].quantity;
       }
       resolve(sendData);
+    });
+  }
+
+  getPickupOrders(createReq) {
+    delete this.pickupForm.vendor_id; delete this.pickupForm.errorMsg;
+    if(this.filterForm.vendor_id!='all') this.pickupForm.vendor_id = this.filterForm.vendor_id;
+    this.pickupForm.order_list = [];
+    if(createReq) {
+      this.pickupOrders.forEach(obj => {
+        if(obj.selected) this.pickupForm.order_list.push(obj);
+      });
+      if(this.pickupForm.order_list.length) {
+        // create request
+        this.pickupForm.pickup_date = this.datePipe.transform(new Date(), 'dd-MM-y');
+        console.log(this.pickupForm)
+        this.pickupForm.submit = true;
+        this.api.CP_ORDER_PICKUP_REQUEST(this.pickupForm).subscribe(result => {
+          this.pickupForm.submit = false;
+          this.pickupForm.requested = true;
+          if(result.status) {
+            document.getElementById("closeModal").click();
+            this.getOrderList();
+          }
+          else {
+            this.pickupForm.errorMsg = result.message;
+            console.log("response", result);
+          }
+        });
+      }
+      else this.pickupForm.errorMsg = "Please choose any one order on before submit";
+    }
+    else {
+      // fetch orders
+      this.pickupForm.submit = true;
+      this.api.CP_ORDER_PICKUP_REQUEST(this.pickupForm).subscribe(result => {
+        this.pickupForm.submit = false;
+        this.pickupForm.requested = true;
+        if(result.status) this.pickupOrders = result.list;
+        else {
+          this.pickupForm.errorMsg = result.message;
+          console.log("response", result);
+        }
+      });
+    }
+  }
+  timePicker() {
+    const amazingTimePicker =this.atp.open({ theme: 'material-purple' });
+    amazingTimePicker.afterClose().subscribe(time => {
+      this.pickupForm.pickup_time = this.commonService.timeConversion(time);
     });
   }
 

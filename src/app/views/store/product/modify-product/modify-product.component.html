@@ -201,6 +201,11 @@
                         [(ngModel)]="productForm.handover_on" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
                       </div>
                     </ng-container>
+                    <div *ngIf="commonService.ys_features.indexOf('adv_product_search')!=-1" class="col-md-12 form-group mb-3 quill-mb-5">
+                      <label>Advanced Search Keywords</label>
+                      <tag-input class="w-100" name="search_keywords" id="options" [(ngModel)]="productForm.search_keywords" placeholder=""
+                      [secondaryPlaceholder]="'Enter options separated by commas'" [separatorKeyCodes]="[188]" required></tag-input>
+                    </div>
                   </div>
                   
                   <div class="row mt-2">
