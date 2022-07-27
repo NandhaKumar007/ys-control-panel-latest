@@ -104,10 +104,10 @@ export class SidebarService {
           prodExtraList.push({ name: 'Image Tags', state: '/product-extras/image-tags', type: 'link' });
           routePermissionList.push("image_tag");
         }
-        if(this.commonService.store_details?.package_info?.category!='genie') {
-          prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
-          routePermissionList.push("product_taxonomy");
-        }
+        // if(this.commonService.store_details?.package_info?.category!='genie') {
+        //   prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
+        //   routePermissionList.push("product_taxonomy");
+        // }
         if(ysFeatures.indexOf('variant_colors')!=-1) {
           prodExtraList.push({ name: 'Variant Colors', state: '/product-extras/variant-colors', type: 'link' });
           routePermissionList.push("variant_colors");
@@ -320,6 +320,10 @@ export class SidebarService {
           moduleList.push({ icon: 'book_online', name: 'Appointment Services', state: '/features/appointment-categories', type: 'link' });
           routePermissionList.push("appointment_services");
         }
+        if(ysFeatures.indexOf('ad_management')!=-1) {
+          moduleList.push({ icon: 'art_track', name: 'Ad Management', state: '/features/ad-management', type: 'link' });
+          routePermissionList.push("ad_management");
+        }
         if(moduleList.length) this.sidePanelList.push({ name: 'Store Modules', type: 'dropDown', icon: 'view_week', sub: moduleList });
         // setting
         let settingList: IChildItem[] = [];
@@ -411,10 +415,10 @@ export class SidebarService {
         prodExtraList.push({ name: 'FAQ', state: '/product-extras/faq', type: 'link' });
         routePermissionList.push("faq");
       }
-      if(this.commonService.store_details?.package_info?.category!='genie' && subuserFeatures.indexOf('product_taxonomy')!=-1) {
-        prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
-        routePermissionList.push("product_taxonomy");
-      }
+      // if(this.commonService.store_details?.package_info?.category!='genie' && subuserFeatures.indexOf('product_taxonomy')!=-1) {
+      //   prodExtraList.push({ name: 'Product Taxonomy', state: '/product-extras/product-taxonomy', type: 'link' });
+      //   routePermissionList.push("product_taxonomy");
+      // }
       // products
       let prodList: IChildItem[] = [];
       if(subuserFeatures.indexOf('catalogs')!=-1) {

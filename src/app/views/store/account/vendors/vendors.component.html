@@ -87,8 +87,8 @@
                                 <button class="dropdown-item" (click)="onEdit(x, 'edit_permissions', permissionModal);">Permissions</button>
                                 <button *ngIf="commonService.store_details?.payout_gateway && !x.payout_contact_id" class="dropdown-item"
                                 (click)="deleteForm=x; modalService.open(linkModal, { centered: true });">Link to RazorpayX</button>
-                                <button class="dropdown-item" (click)="deleteForm=x; deleteForm.submit=null; modalService.open(deleteModal, { centered: true });">Remove</button>
                               </ng-container>
+                              <button class="dropdown-item" (click)="deleteForm=x; deleteForm.submit=null; modalService.open(deleteModal, { centered: true });">Remove</button>
                             </div>
                           </div>
                         </div>
@@ -375,7 +375,7 @@
         </div>
       </div>
       <div *ngIf="vendorForm.errorMsg">
-        <p class="text-danger">{{ vendorForm.errorMsg }}</p>
+        <p class="text-danger">{{ vendorForm.errorMsg | json }}</p>
       </div>
     </div>
     <div class="modal-footer">

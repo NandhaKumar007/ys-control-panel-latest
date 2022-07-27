@@ -99,8 +99,8 @@ export class ProductOrdersComponent implements OnInit {
                 let tIndex = obj.vendor_list.findIndex(el => this.orderTypes.indexOf(el.order_status)!=-1);
                 if(tIndex!=-1)
                 {
-                  if(this.commonService.store_details.login_type=='vendor') {
-                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.commonService.vendor_details?._id);
+                  if(this.filterForm.vendor_id!='all') {
+                    let venIndex = obj.vendor_list.findIndex(el => el.vendor_id==this.filterForm.vendor_id);
                     if(venIndex!=-1) {
                       obj.order_number = obj.vendor_list[venIndex].order_number;
                       obj.order_status = obj.vendor_list[venIndex].order_status;
@@ -283,7 +283,6 @@ export class ProductOrdersComponent implements OnInit {
       if(this.pickupForm.order_list.length) {
         // create request
         this.pickupForm.pickup_date = this.datePipe.transform(new Date(), 'dd-MM-y');
-        console.log(this.pickupForm)
         this.pickupForm.submit = true;
         this.api.CP_ORDER_PICKUP_REQUEST(this.pickupForm).subscribe(result => {
           this.pickupForm.submit = false;
