@@ -1,1 +1,288 @@
-<p>ad-management works!</p>
+<div *ngIf="pageLoader" class="row">
+  <app-spinner></app-spinner>
+</div>
+
+<div *ngIf="!pageLoader">
+  <div class="breadcrumb with-back-btn">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Ad Management</h1>
+        <ul>
+          <li style="padding: 0px;">View and manage your ad segments</li>
+        </ul>
+      </div>
+      <div *ngIf="commonService.store_details?.login_type!='vendor'" class="col-md-4 d-flex align-items-end justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onGetSettingDetails(adSettingModal);">Ad Setting</button>
+      </div>
+    </div>
+  </div>
+  <div class="separator-breadcrumb border-top"></div>
+
+  <div class="top-filter-sec">
+    <div class="row mb-4">
+      <div *ngIf="commonService.store_details?.login_type!='vendor'" class="col-md-6">
+        <button type="button" class="btn btn-primary ml-3" (click)="adForm = { form_type: 'add' }; modalService.open(adModal, {size: 'lg'});">Add Segment</button>
+      </div>
+      <div class="col-md-6 mt-sm-15">
+        <div class="form-group">
+          <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA LIST -->
+  <div *ngIf="list?.length" class="list-horizontal">
+    <div class="data-list-card-wrapper">
+      <div class="data-list-card-inner">
+        <div class="row m-0">
+          <!-- SINGLE LIST ITEM -->
+          <div *ngFor="let x of list | fieldSearch:'ad_name':search_bar | paginate: { itemsPerPage: pageSize, currentPage: page }; let i=index;"
+            class="col-md-12 list-item data-list-card p-0" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-md-3 d-flex align-items-center">
+                  <img class="only-product-image" [src]="imgBaseUrl+x.ad_config.image" style="height: 120px;" alt="">
+                </div>
+                <div *ngIf="commonService.store_details?.login_type!='vendor'" class="col-md-3 d-flex align-items-center">
+                  <p class="m-b-0">{{x.name}}</p>
+                </div>
+                <div class="col-md-3 d-flex align-items-center">
+                  <p class="m-b-0">{{x.ad_config.name}}</p>
+                </div>
+                <div *ngIf="commonService.store_details?.login_type=='vendor'" class="col-md-3 d-flex align-items-center">
+                  <p class="m-b-0">Starts @ {{x.ad_config.normal_price | currency:commonService.store_currency?.country_code}}</p>
+                </div>
+                <div class="col-md-3 d-flex align-items-center justify-content-end">
+                  <p *ngIf="commonService.store_details?.login_type!='vendor'" class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button (click)="deleteForm=x; modalService.open(statusModal, { centered: true });"
+                    class="btn btn-wide mr-3 w-md-100" [ngClass]="(x.ad_status=='active')? 'btn-outline-danger': 'btn-outline-success'">
+                      {{ (x.ad_status=='active')? 'Disable': 'Enable' }}
+                    </button>
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" (click)="onEdit(x, adModal);">
+                      <span class="black-outline-txt">Edit</span>
+                    </button>
+                    <button class="btn orng-outline-btn w-md-100"
+                      (click)="deleteForm=x; modalService.open(deleteModal, { centered: true });">
+                      <span class="orng-outline-txt">Remove</span>
+                    </button>
+                  </p>
+                  <p *ngIf="commonService.store_details?.login_type=='vendor'" class="m-0 text-muted text-small w-15 w-sm-100 d-lg-block item-actions">
+                    <button class="btn btn-wide black-outline-btn w-md-100 mr-3" routerLink="{{'/features/ad-management/'+x._id}}">
+                      <span class="black-outline-txt">Book Now</span>
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGINATION CONTROL -->
+    <div class="row">
+      <div class="col-md-12 mt-3">
+        <pagination-controls (pageChange)="page=$event; commonService.pageTop(0);" autoHide="true" responsive="true"
+          maxSize="5" previousLabel="" nextLabel=""></pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!list?.length" class="row">
+    <div class="col-md-12 d-flex flex-column align-items-center justify-content-center no-rec-found-wrapper">
+      <img class="no-rec-found" src="assets/images/no_records_found.png" alt="no-records">
+      <p align="center">No data to display.</p>
+    </div>
+  </div>
+</div>
+
+<!-- AD SETTING MODAL -->
+<ng-template #adSettingModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ad Setting</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onUpdateSetting()" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="mb-3">
+              <b>Normal Days</b>
+            </div>
+            <div class=" form-group mb-3" *ngFor="let x of settingForm.normal_days; let i=index;">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="active{{i+1}}" [(ngModel)]="x.active" (change)="onDaySelect(settingForm.peak_days, x.code);">
+                <span>{{x.day}}</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="mb-3">
+              <b>Peak Days</b>
+            </div>
+            <div class="form-group mb-3" *ngFor="let x of settingForm.peak_days; let i=index;">
+              <label class="checkbox checkbox-primary">
+                <input class="form-check-input" type="checkbox" name="active{{i+0}}" [(ngModel)]="x.active" (change)="onDaySelect(settingForm.normal_days, x.code);">
+                <span>{{x.day}}</span>
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Start Time</label>
+            <input type="text" name="start_time" class="form-control" [(ngModel)]='settingForm.start_time' (click)="timePicker('start_time');" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>End Time</label>
+            <input type="text" name="end_time" class="form-control" [(ngModel)]="settingForm.end_time" (click)="timePicker('end_time');" required />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="settingForm.errorMsg">
+        <p class="text-danger">{{ settingForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click')">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="settingForm.submit"
+      [ladda]="settingForm.submit">Update</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- AD MODAL -->
+<ng-template #adModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{adForm.form_type=='add'? 'Add Segment': adForm.layout_name}}</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onSubmit();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div *ngIf="adForm.form_type=='add'" class="col-md-12 form-group mb-3">
+            <label>Segment Type</label>
+            <select name="type" class="form-control select-arrow" [(ngModel)]="adForm.type" required>
+              <option [ngValue]="x._id" *ngFor="let x of segmentList;">{{x.name}}</option>
+            </select>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" [(ngModel)]="adForm.name" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Allocated Slots</label>
+            <input type="number" name="allocated_slots" class="form-control" [(ngModel)]="adForm.allocated_slots" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <div *ngIf="adForm.image" class="text-center mt-3">
+              <span (click)="adForm.img_change=null; adForm.image=null;" class="material-icons item-close float-right" aria-hidden="true">close</span>
+              <img *ngIf="adForm.img_change" [src]="adForm.image" height="100px;" width="auto;">
+              <img *ngIf="!adForm.img_change" [src]="imgBaseUrl+adForm.image" height="100px;" width="auto;">
+            </div>
+            <div *ngIf="!adForm.image" class="text-center">
+              <label>
+                <div>
+                  <i class="material-icons add-img">add_photo_alternate</i>
+                  <p>Click to upload image</p>
+                </div>
+                <input type="file" name="image" style="display: none;" (change)="fileChangeListener($event);" accept="image/jpeg, image/png" />
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Image Description</label>
+            <textarea type="text" name="description" class="form-control" [(ngModel)]="adForm.description" required></textarea>
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label>Input Remarks</label>
+            <textarea type="text" name="input_remarks" class="form-control" [(ngModel)]="adForm.input_remarks" required></textarea>
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Normal Day Price</label>
+            <input type="number" name="normal_price" class="form-control" [(ngModel)]="adForm.normal_price" required />
+          </div>
+          <div class="col-md-6 form-group mb-3">
+            <label>Peak Day Price</label>
+            <input type="number" name="peak_price" class="form-control" [(ngModel)]="adForm.peak_price" required />
+          </div>
+          <div class="col-md-12 form-group mb-3">
+            <label class="checkbox checkbox-primary">
+              <input class="form-check-input" type="checkbox" name="schedule_status" [(ngModel)]="adForm.schedule_status">
+              <span>Enable Scheduled Off</span>
+              <span class="checkmark"></span>
+            </label>
+          </div>
+          <ng-container *ngIf="adForm.schedule_status">
+            <div class="col-md-6 form-group mb-3">
+              <label>From</label>
+              <input type="text" class="form-control" name="schedule_from" autocomplete="off" [(ngModel)]="adForm.schedule_from"
+              bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" placement="top" required />
+            </div>
+            <div class="col-md-6 form-group mb-3">
+              <label>To</label>
+              <input type="text" class="form-control" name="schedule_to" autocomplete="off" [(ngModel)]="adForm.schedule_to" placement="top"
+              bsDatepicker [minDate]="adForm.schedule_from" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="adForm.errorMsg">
+        <p class="text-danger">{{ adForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="adForm.submit" [ladda]="adForm.submit">
+        {{adForm.form_type=='add'? 'Add': 'Update'}}
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- STATUS MODAL -->
+<ng-template #statusModal let-modal>
+  <div class="modal-body">
+    <p>
+      <strong>Are you sure you want to {{ (deleteForm.ad_status=='active')? 'disable': 'enable' }} the
+        <span class="text-danger">"{{deleteForm.name}}"</span> segment?
+      </strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onUpdateStatus();" class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- DELETE AD MODAL -->
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p><strong>Are you sure you want to delete the <span class="txt-grdint-highlight">"{{deleteForm.name}}"</span>
+      segment?</strong>
+    </p>
+    <div *ngIf="deleteForm.errorMsg">
+      <p class="text-danger">{{ deleteForm.errorMsg }}</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+      <span class="black-outline-txt">No</span>
+    </button>
+    <button type="button" (click)="onDelete();" class="btn btn-wide orng-outline-btn">
+      <span class="orng-outline-txt">Yes</span>
+    </button>
+  </div>
+</ng-template>

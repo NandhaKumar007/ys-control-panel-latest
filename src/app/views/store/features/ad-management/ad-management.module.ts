@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { AdManagementRoutingModule } from './ad-management-routing.module';
 import { AdManagementComponent } from './ad-management.component';
@@ -7,8 +9,10 @@ import { AdManagementComponent } from './ad-management.component';
 @NgModule({
   declarations: [AdManagementComponent],
   imports: [
-    CommonModule,
-    AdManagementRoutingModule
+    SharedModule,
+    AdManagementRoutingModule,
+    AmazingTimePickerModule,
+    BsDatepickerModule.forRoot()
   ]
 })
 
