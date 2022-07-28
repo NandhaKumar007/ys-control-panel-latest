@@ -38,18 +38,14 @@ export class AdManagementComponent implements OnInit {
         result.list = result.list.sort((a, b) => 0 - (a.rank > b.rank ? -1 : 1));
         // highlights
         result.list.filter(el => el.type=='highlights').forEach(el => {
-          if(el.ad_status) {
-            el.ad_name = el.ad_config?.name;
-            this.list.push(el);
-          }
+          el.ad_name = el.ad_config?.name;
+          if(el.ad_status) this.list.push(el);
           else this.segmentList.push({ _id: el._id, type: el.type, name: el.name });
         });
         // except highlights
         result.list.filter(el => el.type!='highlights').forEach(el => {
-          if(el.ad_status) {
-            el.ad_name = el.ad_config?.name;
-            this.list.push(el);
-          }
+          el.ad_name = el.ad_config?.name;
+          if(el.ad_status) this.list.push(el);
           else this.segmentList.push({ _id: el._id, type: el.type, name: el.name });
         });
       }

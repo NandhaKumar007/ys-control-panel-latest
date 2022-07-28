@@ -31,7 +31,7 @@
           <div class="pb-2">
           <p class="sec-desc" style="display: inline-block;">Customer Details</p>
           <i *ngIf="commonService.store_details?.login_type!='vendor' && order_details.order_by!='guest'" style="float:right;" class="material-icons edit-icon"
-          (click)="editForm = { _id: order_details.customerDetails[0]?._id, notes: order_details.customerDetails[0]?.notes}; modalService.open(editCustomerNote);">edit</i>
+          (click)="editForm = { _id: order_details.customerDetails[0]?._id, notes: order_details.customerDetails[0]?.notes}; modalService.open(customerNoteModal);">edit</i>
           </div>
           <div class="col-md-12 list-item p-0 mtb-10">
             <div class="card mb-4 d-flex flex-column">
@@ -399,6 +399,9 @@
                         <div *ngIf="vendor?.existing_status=='placed' || vendor?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
                           <div class="card-body" style="padding-top: 0px;">
                             <ng-container *ngIf="x?.name=='Delhivery'">
+                              <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendor.order_number, vendor_id: vendor.vendor_id }; modalService.open(updateCourierModal, { centered: true });">
+                                Update Order
+                              </button>
                               <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendor.order_number, vendor_id: vendor.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
                                 Cancel Order
                               </button>
@@ -835,6 +838,9 @@
                       <div *ngIf="order_details?.existing_status=='placed' || order_details?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
                         <div class="card-body" style="padding-top: 0px;">
                           <ng-container *ngIf="x?.name=='Delhivery'">
+                            <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: order_details.order_number }; modalService.open(updateCourierModal, { centered: true });">
+                              Update Order
+                            </button>
                             <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: order_details.order_number }; modalService.open(cancelCourierModal, { centered: true });">
                               Cancel Order
                             </button>
@@ -911,6 +917,9 @@
                   <div *ngIf="vendorInfo?.existing_status=='placed' || vendorInfo?.existing_status=='confirmed'" class="flex-grow-1 pl-2 d-flex">
                     <div class="card-body" style="padding-top: 0px;">
                       <ng-container *ngIf="x?.name=='Delhivery'">
+                        <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendorInfo.order_number, vendor_id: vendorInfo.vendor_id }; modalService.open(updateCourierModal, { centered: true });">
+                          Update Order
+                        </button>
                         <button type="button" class="btn btn-primary mr-3" (click)="courierForm={ type: x.name, order_number: vendorInfo.order_number, vendor_id: vendorInfo.vendor_id }; modalService.open(cancelCourierModal, { centered: true });">
                           Cancel Order
                         </button>
@@ -2480,6 +2489,28 @@
   </div>
 </ng-template>
 
+<!-- Update Courier -->
+<ng-template #updateCourierModal let-modal>
+  <form autocomplete="off" (ngSubmit)="updateCpOrder();" ngNativeValidate>
+    <div class="modal-body">
+      <p>
+        <strong>Are you sure you want to update the order information in
+          <span class="text-danger">"{{courierForm.type}}"</span> for order <span class="text-danger">"{{courierForm.order_number}}"</span>?</strong>
+      </p>
+      <div *ngIf="courierForm.errorMsg">
+        <p class="text-danger">{{ courierForm.errorMsg | json }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('cancel')">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      <button type="submit" class="btn btn-wide btn-primary ladda-button" [disabled]="courierForm.submit"
+        [ladda]="courierForm.submit">Ok</button>
+    </div>
+  </form>
+</ng-template>
+
 <!-- Cancel Courier -->
 <ng-template #cancelCourierModal let-modal>
   <form autocomplete="off" (ngSubmit)="cancelCpOrder();" ngNativeValidate>
@@ -2499,7 +2530,7 @@
         </div>
       </div>
       <div *ngIf="courierForm.errorMsg">
-        <p class="text-danger">{{ courierForm.errorMsg }}</p>
+        <p class="text-danger">{{ courierForm.errorMsg | json }}</p>
       </div>
     </div>
     <div class="modal-footer">
@@ -3366,8 +3397,8 @@
   </form>
 </ng-template>
 
-<!-- EDIT CUSTOMER NOTE MODAL -->
-<ng-template #editCustomerNote let-modal>
+<!-- customer note -->
+<ng-template #customerNoteModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Update Customer Note</h4>
   </div>
@@ -3395,7 +3426,7 @@
 <!-- package slip -->
 <ng-template #packageSlipModal let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{slip_details?.order_number}}</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{slip_details?.oid}}</h4>
     <p class="m-close-btn m-1">
       <a (click)="modal.dismiss('Cross click');">CLOSE</a>
     </p>
@@ -3449,8 +3480,8 @@
         </tr>
         <tr>
           <td width="60%">
-            <p class="mb-0">Seller: {{slip_details.seller_name}}</p>
-            <p class="mb-0">Address: {{slip_details.seller_addr}}</p>
+            <p class="mb-0">Seller: {{slip_details.snm}}</p>
+            <p class="mb-0">Address: {{slip_details.sadd}}</p>
           </td>
           <td colspan="2" width="40%">
             <p class="mb-0" align="center">&nbsp;</p>
@@ -3496,12 +3527,12 @@
         </tr>
         <tr>
           <td colspan="3">
-            <p class="mb-0">Return Address: {{slip_details.seller_addr}}</p>
+            <p class="mb-0">Return Address: {{slip_details.sadd}}</p>
           </td>
         </tr>
       </table>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-wide btn-primary" (click)="generatePDF('packageSlipPdf', slip_details?.order_number+'-packing-slip');">Save as pdf</button>
+    <button class="btn btn-wide btn-primary" (click)="generatePDF('packageSlipPdf', slip_details?.oid+'-packing-slip');">Save as pdf</button>
   </div>
 </ng-template>

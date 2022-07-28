@@ -93,11 +93,9 @@ export class OrderService {
   }
 
   // courier partners
-  CP_ORDER_DETAILS(type, wbn, vendorId) {
-    let params = 'type='+type+'&wbn='+wbn;
-    if(vendorId) params = params+'&vendor_id='+vendorId;
+  CP_ORDER_DETAILS(type, wbn) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/courier_partner?'+params, httpOptions);
+    return this.http.get<any>(environment.ws_url+'/store/courier_partner?type='+type+'&wbn='+wbn, httpOptions);
   }
   CREATE_CP_ORDER(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

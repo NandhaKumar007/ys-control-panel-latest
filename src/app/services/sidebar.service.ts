@@ -728,8 +728,10 @@ export class SidebarService {
       routePermissionList.push("orders", "vendor_settlement");
       this.sidePanelList.push({ name: 'Orders', type: 'dropDown', icon: 'settings_backup_restore', sub: orderList });
       // ad management
-      routePermissionList.push("ad_management");
-      this.sidePanelList.push({ name: 'Ad Management', type: 'link', icon: 'public', state: '/features/ad-management' });
+      if(ysFeatures.indexOf('ad_management')!=-1) {
+        routePermissionList.push("ad_management");
+        this.sidePanelList.push({ name: 'Ad Management', type: 'link', icon: 'public', state: '/features/ad-management' });
+      }
       // profile
       routePermissionList.push("vendor_profile");
       this.sidePanelList.push({ name: 'Profile', type: 'link', icon: 'account_circle', state: '/account/vendor-profile' });

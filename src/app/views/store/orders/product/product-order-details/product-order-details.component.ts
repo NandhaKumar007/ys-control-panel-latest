@@ -59,15 +59,19 @@ export class ProductOrderDetailsComponent implements OnInit {
       this.api.ORDER_DETAILS(this.params.order_id).subscribe(result => {
         if(result.status) {
           this.order_details = result.data;
-          if(this.params.type=='inactive' && this.order_details.status!='inactive') this.commonService.goBack();
+          if(this.params.type=='inactive' && this.order_details.status!='inactive') {
+            this.commonService.goBack();
+          }
           if(!this.order_details.vendor_list?.length) {
             if(this.params.type=='live') {
-              if(this.order_details.order_status=='delivered' || this.order_details.order_status=='cancelled')
+              if(this.order_details.order_status=='delivered' || this.order_details.order_status=='cancelled') {
                 this.commonService.goBack();
+              }
             }
             else {
-              if(this.params.type!='inactive' && this.order_details.order_status!=this.params.type)
+              if(this.params.type!='inactive' && this.order_details.order_status!=this.params.type) {
                 this.commonService.goBack();
+              }
             }
           }
           // item list
@@ -224,20 +228,31 @@ export class ProductOrderDetailsComponent implements OnInit {
     });
   }
   getCpOrderDetails(modalName) {
-    this.api.CP_ORDER_DETAILS(this.courierForm.type, this.courierForm.wbn, this.courierForm.vendor_id).subscribe(result => {
+    this.api.CP_ORDER_DETAILS(this.courierForm.type, this.courierForm.wbn).subscribe(result => {
       if(result.status) {
         this.slip_details = result.data.packages[0];
         this.slip_details.order_number = this.courierForm.order_number;
         this.slip_details.product_list = this.slip_details.prd.split(',');
-        this.slip_details.seller_name = this.commonService.store_details?.name;
-        this.slip_details.seller_addr = this.commonService.store_details?.company_details?.address;
-        if(result.vendor_details) {
-          this.slip_details.seller_name = result.vendor_details.company_details?.name;
-          this.slip_details.seller_addr = result.vendor_details.pickup_address?.address;
-        }
+        if(!this.slip_details.snm) this.slip_details.snm = this.commonService.store_details?.name;
+        if(!this.slip_details.sadd) this.slip_details.sadd = this.commonService.store_details?.company_details?.address;
         this.modalService.open(modalName, {size: 'lg'});
       }
       else console.log("response", result);
+    });
+  }
+  updateCpOrder() {
+    this.courierForm.submit = true;
+    this.courierForm.order_id = this.order_details._id;
+    this.api.UPDATE_CP_ORDER(this.courierForm).subscribe(result => {
+      this.courierForm.submit = false;
+      if(result.status) {
+        document.getElementById('closeModal').click();
+        this.ngOnInit();
+      }
+      else {
+        this.courierForm.errorMsg = result.message;
+        console.log("response", result);
+      }
     });
   }
   cancelCpOrder() {
