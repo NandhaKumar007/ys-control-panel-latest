@@ -6,13 +6,16 @@
 
   <div class="breadcrumb with-back-btn">
     <div class="row">
-      <div class="col-md-12">
-        <h1>
-          Settlement Orders
-        </h1>
+      <div class="col-md-8">
+        <h1>Settlement Orders</h1>
         <ul>
           <li style="padding: 0px;">View and manage your settlement orders</li>
         </ul>
+      </div>
+      <div *ngIf="filterForm.vendor_id!='all' || commonService.store_details?.login_type=='vendor'" class="col-md-4">
+        <h5 class="pull-right mt-2">
+          Outstanding: {{ outstanding  | currency: commonService.store_currency?.country_code }}
+        </h5>
       </div>
     </div>
   </div>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { echartStyles } from '../../../../shared/animations/echart-styles';
 import { ApiService } from '../../../../services/api.service';
+import { StoreApiService } from '../../../../services/store-api.service';
 import { CommonService } from '../../../../services/common.service';
 
 @Component({
@@ -12,12 +14,13 @@ import { CommonService } from '../../../../services/common.service';
 export class VendorsDashboardComponent implements OnInit {
 
   preLoader: boolean; order_details: any = {
-    total_sales: 0, order_list: [], vendor_items: [], item_grand_total: 0,
-    vendor_products: 0, products: 0
+    products: 0, order_list: [], total_sales: 0, items_sold: 0, net_sales: 0,
+    placed_orders: 0, confirmed_orders: 0, dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0,
+    banked_amount: 0, next_settlement: {}
   };
 	chartPie: any; chartLine: any; filterForm: any;
 
-  constructor(public datepipe: DatePipe, public commonService: CommonService, private api: ApiService) {
+  constructor(public datepipe: DatePipe, public commonService: CommonService, private api: ApiService, private storeApi: StoreApiService) {
     if(!localStorage.getItem("country_list")) {
       this.api.COUNTRIES_LIST().subscribe(result => {
         this.commonService.country_list = [];
@@ -33,132 +36,70 @@ export class VendorsDashboardComponent implements OnInit {
 	}
 
   getDashboardData() {
-    // if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
-    //   this.preLoader = true;
-    //   this.order_details = {
-    //     products: 0, vendor_products: 0, order_list: [], total_sales: 0, placed_orders: 0, confirmed_orders: 0,
-    //     dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0, pending_orders: 0, vendor_items: [], item_grand_total: 0
-    //   };
-    //   // DASHBOARD
-    //   this.api.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.vendor_details?._id }).subscribe(result => {
-    //     setTimeout(() => { this.preLoader = false; }, 500);
-    //     if(result.status) {
-    //       this.order_details.products = result.data.products;
-    //       this.order_details.vendor_products = result.data.vendor_products;
-    //       this.order_details.order_list = result.data.order_list.filter(obj => obj.order_status!='cancelled');
-    //       this.order_details.cancelled_orders = result.data.order_list.length - this.order_details.order_list.length;
-    //       this.order_details.order_list.forEach(element => {
-    //         let vendorOrderPrice = 0
-    //         element.item_list.filter(item => item.vendor_id==this.commonService.vendor_details?._id).forEach(obj => {
-    //           vendorOrderPrice += (obj.final_price*obj.quantity)+parseFloat(obj.addon_price);
-    //           if(element.unit=="Pcs") vendorOrderPrice += obj.final_price*obj.quantity;
-    //           if(this.order_details.vendor_items.indexOf(obj._id) == -1) {
-    //             this.order_details.vendor_items.push(obj._id);
-    //             this.order_details.item_grand_total += obj.discounted_price;
-    //           }
-    //         });
-    //         this.order_details.total_sales += vendorOrderPrice;
-    //         let vendorIndex = element.vendor_list.findIndex(obj => obj.vendor_id==this.commonService.vendor_details?._id);
-    //         if(element.order_status=='delivered') this.order_details.completed_orders++;
-    //         else {
-    //           if(element.vendor_list[vendorIndex].status=='pending') this.order_details.placed_orders++;
-    //           if(element.vendor_list[vendorIndex].status=='confirmed') this.order_details.confirmed_orders++;
-    //         }
-    //       });
-    //       // pie chart
-    //       // this.chartPie = {
-    //       //   ...echartStyles.defaultOptions, ...{
-    //       //     legend: {
-    //       //       show: true,
-    //       //       bottom: 0,
-    //       //     },
-    //       //     series: [{
-    //       //       type: 'pie',
-    //       //       ...echartStyles.pieRing,
-    //       //       label: echartStyles.pieLabelCenterHover,
-    //       //       data: [
-    //       //         { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
-    //       //         { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
-    //       //         { name: 'Transit', value: this.order_details.dispatched_orders, itemStyle: { color: '#4CAF50' } },
-    //       //         { name: 'Pending', value: this.order_details.pending_orders, itemStyle: { color: '#f56725' } },
-    //       //         { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
-    //       //         { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
-    //       //       ]
-    //       //     }]
-    //       //   }
-    //       // };
-    //       this.chartPie = {
-    //         ...echartStyles.defaultOptions, ...{
-
-    //           tooltip: {
-    //             trigger: 'item',
-    //             formatter: '{a} <br/>{b}: {c} ({d}%)'
-    //         },
-
-    //           legend: {
-    //             show: true,
-    //             textStyle: {
-    //               color:'#d83967'
-    //           },
-
-    //           },
-    //           series: [{
-    //             type: 'pie',
-    //             ...echartStyles.pieRing,
-    //             avoidLabelOverlap: false,
-    //             width:'50%',
-    //             label: {
-    //               normal: {
-    //                   show: false,
-    //                   position: 'center'
-    //               },
-    //               emphasis: {
-    //                   show: true,
-    //               }
-    //           },
-    //           labelLine: {
-    //               normal: {
-    //                   show: false
-    //               }
-    //           },
-    //             data: [
-    //               { name: 'Awaiting', value: this.order_details.placed_orders, itemStyle: { color: '#FFC107' } },
-    //               { name: 'Confirmed', value: this.order_details.confirmed_orders, itemStyle: { color: '#42bcf5' } },
-    //               { name: 'Completed', value: this.order_details.completed_orders, itemStyle: { color: '#d83967' } },
-    //               { name: 'Cancelled', value: this.order_details.cancelled_orders, itemStyle: { color: '#a9a9a9' } }
-    //             ]
-    //           }]
-    //         }
-    //       };
-    //       // line chart
-    //       this.buildLineChart(this.order_details.order_list).then((respData) => {
-    //         this.chartLine = {
-    //           ...echartStyles.lineNoAxis, ...{
-    //             series: [{
-    //               data: respData.orders,
-    //               lineStyle: {
-    //                 color: 'rgba(216, 57, 103, .86)',
-    //                 width: 3,
-    //                 shadowColor: 'rgba(0, 0, 0, .2)',
-    //                 shadowOffsetX: -1,
-    //                 shadowOffsetY: 8,
-    //                 shadowBlur: 10
-    //               },
-    //               label: { show: true, color: '#212121' },
-    //               type: 'line',
-    //               smooth: true,
-    //               itemStyle: {
-    //                 borderColor: 'rgba(216, 57, 103, 0.86)'
-    //               }
-    //             }]
-    //           }
-    //         };
-    //         this.chartLine.xAxis.data = respData.days;
-    //       })
-    //     }
-    //     else console.log("dashboard response", result);
-    //   });
-    // }
+    if(this.filterForm.from_date && this.filterForm.to_date && new Date(this.filterForm.to_date) >= new Date(this.filterForm.from_date)) {
+      this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
+      this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
+      this.preLoader = true;
+      this.order_details = {
+        products: 0, order_list: [], total_sales: 0, items_sold: 0, net_sales: 0,
+        placed_orders: 0, confirmed_orders: 0, dispatched_orders: 0, completed_orders: 0, cancelled_orders: 0,
+        banked_amount: 0, next_settlement: {}
+      };
+      // DASHBOARD
+      this.storeApi.VENDOR_DASHBOARD({ from_date: this.filterForm.from_date, to_date: this.filterForm.to_date, vendor_id: this.commonService.vendor_details?._id }).subscribe(result => {
+        setTimeout(() => { this.preLoader = false; }, 500);
+        if(result.status) {
+          // products
+          this.order_details.products = result.data.product_count;
+          // orders
+          this.order_details.order_list = result.data.order_list;
+          this.order_details.order_list.forEach(element => {
+            let vendorOrderDetails = element.vendor_list[0];
+            this.order_details.items_sold += element.total_items;
+            this.order_details.total_sales += vendorOrderDetails.final_price;
+            if(vendorOrderDetails.order_status!='cancelled') this.order_details.net_sales += vendorOrderDetails.final_price;
+            // orders count
+            if(vendorOrderDetails.order_status=='placed') this.order_details.placed_orders++;
+            if(vendorOrderDetails.order_status=='confirmed') this.order_details.confirmed_orders++;
+            if(vendorOrderDetails.order_status=='dispatched') this.order_details.dispatched_orders++;
+            if(vendorOrderDetails.order_status=='delivered') this.order_details.completed_orders++;
+            if(vendorOrderDetails.order_status=='cancelled') this.order_details.cancelled_orders++;
+          });
+          // settlement orders
+          let sOrders = result.data.settlement_orders.sort((a, b) => 0 - (a.settlement_on > b.settlement_on ? -1 : 1));
+          sOrders.forEach(element => {
+            this.order_details.banked_amount += element.settlement_amt;
+          });
+          if(sOrders.length) this.order_details.next_settlement = sOrders[0];
+          // line chart
+          this.buildLineChart(this.order_details.order_list).then((respData) => {
+            this.chartLine = {
+              ...echartStyles.lineNoAxis, ...{
+                series: [{
+                  data: respData.orders,
+                  lineStyle: {
+                    color: 'rgba(216, 57, 103, .86)',
+                    width: 3,
+                    shadowColor: 'rgba(0, 0, 0, .2)',
+                    shadowOffsetX: -1,
+                    shadowOffsetY: 8,
+                    shadowBlur: 10
+                  },
+                  label: { show: true, color: '#212121' },
+                  type: 'line',
+                  smooth: true,
+                  itemStyle: {
+                    borderColor: 'rgba(216, 57, 103, 0.86)'
+                  }
+                }]
+              }
+            };
+            this.chartLine.xAxis.data = respData.days;
+          })
+        }
+        else console.log("dashboard response", result);
+      });
+    }
   }
 
   onFilterChange(x) {
@@ -211,7 +152,7 @@ export class VendorsDashboardComponent implements OnInit {
         this.filterForm.to_date = new Date(new Date().getFullYear(), 2, 31);
       }
     }
-    else if(x=='all_time') { this.filterForm.from_date = new Date(this.commonService.store_details.created_on); this.filterForm.to_date = new Date; }
+    else if(x=='all_time') { this.filterForm.from_date = new Date(this.commonService.vendor_details.created_on); this.filterForm.to_date = new Date; }
 		this.getDashboardData();
   }
   

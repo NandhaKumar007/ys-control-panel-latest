@@ -31,7 +31,7 @@ export class ModifyHomeLayoutComponent implements OnInit {
     this.activeRoute.params.subscribe((params: Params) => {
       this.pageLoader = true; this.btnLoader = false; this.params = params
       // layout details
-      this.api.LAYOUT_DETAILS(this.params.layout_id).subscribe(result => {
+      this.api.LAYOUT_DETAILS(this.params.layout_id, false).subscribe(result => {
         setTimeout(() => { this.pageLoader = false; }, 500);
         if(result.status) {
           this.layoutDetails = result.data;

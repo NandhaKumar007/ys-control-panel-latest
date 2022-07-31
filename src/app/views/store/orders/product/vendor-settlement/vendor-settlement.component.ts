@@ -15,6 +15,7 @@ export class VendorSettlementComponent implements OnInit {
   pageLoader: boolean; search_bar: string;
   page = 1; pageSize = 10; filterForm: any = {};
   list: any = []; scrollPos: number = 0;
+  outstanding: number = 0;
 
   constructor(private api: OrderService, public commonService: CommonService) { }
 
@@ -49,6 +50,7 @@ export class VendorSettlementComponent implements OnInit {
           this.list.forEach(obj => {
             let vendorIndex = this.commonService.vendor_list.findIndex(el => el._id==obj.vendor_id);
             if(vendorIndex!=-1) obj.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.brand;
+            if(obj.status!='paid') this.outstanding = obj.settlement_amt;
           });
         }
         else console.log("response", result);

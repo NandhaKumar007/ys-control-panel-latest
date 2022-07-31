@@ -50,24 +50,35 @@
     </div>
   </div>
 
-
-  <div class="col-lg-6 col-md-12">
-    <!-- CARD ICON -->
+  <div class="col-md-12">
     <div class="row m-0">
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
-            <i class="material-icons">monetization_on</i>
-            <p class="text-muted text-gradient mt-2 mb-2">Total Sales</p>
-            <p class="text-primary text-18 line-height-1 m-0">
+            <i class="material-icons">cloud_upload</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Uploads</p>
+            <p class="line-height-1 text-title text-18 mt-2 mb-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">{{order_details?.total_sales | number : '1.0-0'}}</span>
+              <span *ngIf="!preLoader">{{order_details?.products}}</span>
             </p>
           </div>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+        <div class="card card-icon w-100 mb-4">
+          <div class="card-body text-center">
+            <i class="material-icons">settings_backup_restore</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Items Sold</p>
+            <p class="line-height-1 text-title text-18 mt-2 mb-0">
+              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+              <span *ngIf="!preLoader">{{ order_details?.items_sold }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">settings_backup_restore</i>
@@ -80,7 +91,7 @@
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">all_out</i>
@@ -96,79 +107,56 @@
         </div>
       </div>
 
-
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
-            <i class="material-icons">settings_backup_restore</i>
-            <p class="text-muted text-gradient mt-2 mb-2">Items Sold</p>
-            <p class="line-height-1 text-title text-18 mt-2 mb-0">
+            <i class="material-icons">monetization_on</i>
+            <p class="text-muted text-gradient mt-2 mb-2">Total Sales</p>
+            <p class="text-primary text-18 line-height-1 m-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">{{ order_details?.vendor_items?.length }}</span>
+              <span *ngIf="!preLoader">{{order_details?.total_sales | number : '1.0-0'}}</span>
             </p>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">all_out</i>
-            <p class="text-muted text-gradient mt-2 mb-2">Average Item Value</p>
+            <p class="text-muted text-gradient mt-2 mb-2">Net Sales</p>
             <p class="line-height-1 text-title text-18 mt-2 mb-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader && order_details?.order_list?.length">
-                {{ (order_details?.item_grand_total / order_details.vendor_items.length).toFixed(0) | number : '1.0-0' }}
-              </span>
-              <span *ngIf="!preLoader && !order_details?.order_list?.length">0</span>
+              <span *ngIf="!preLoader">{{order_details?.net_sales | number : '1.0-0'}}</span>
             </p>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-        <div class="card card-icon w-100 mb-4">
-          <div class="card-body text-center">
-            <i class="material-icons">cloud_upload</i>
-            <p class="text-muted text-gradient mt-2 mb-2">Listed Products</p>
-            <p class="line-height-1 text-title text-18 mt-2 mb-0">
-              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">{{order_details?.vendor_products}}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-        <div class="card card-icon w-100 mb-4">
-          <div class="card-body text-center">
-            <i class="material-icons">cloud_upload</i>
-            <p class="text-muted text-gradient mt-2 mb-2">Uploads</p>
-            <p class="line-height-1 text-title text-18 mt-2 mb-0">
-              <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">{{order_details?.products}}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">cloud_upload</i>
             <p class="text-muted text-gradient mt-2 mb-2">Amount Banked</p>
             <p class="line-height-1 text-title text-18 mt-2 mb-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">0</span>
+              <span *ngIf="!preLoader">{{order_details.banked_amount}}</span>
             </p>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
+
+      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
         <div class="card card-icon w-100 mb-4">
           <div class="card-body text-center">
             <i class="material-icons">paid</i>
             <p class="text-muted text-gradient mt-2 mb-2">Next Settlement</p>
-            <!-- <p class="text-muted mt-2">28 Feb 2022</p> -->
+            <p *ngIf="order_details.next_settlement?.settlement_on" class="text-muted mt-2">
+              {{ order_details.next_settlement?.settlement_on | date: "dd MMM y" }}
+            </p>
             <p class="line-height-1 text-title text-18 mt-2 mb-0">
               <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
-              <span *ngIf="!preLoader">0</span>
+              <span *ngIf="!preLoader">{{ (order_details.next_settlement?.settlement_amt)? order_details.next_settlement?.settlement_amt: 0 }}</span>
             </p>
           </div>
         </div>
@@ -191,7 +179,7 @@
     </div>
   </div>
 
-  <!-- <div class="col-lg-6 col-md-12 d-flex">
+  <div class="col-lg-6 col-md-12 d-flex">
     <div class="card w-100 mb-4">
       <div class="card-body">
         <div class="card-title">Orders</div>
@@ -220,6 +208,13 @@
                   </td>
                 </tr>
                 <tr>
+                  <td>In Transit</td>
+                  <td class="text-success font-weight-bold">
+                    <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
+                    <span *ngIf="!preLoader">{{order_details?.dispatched_orders}}</span>
+                  </td>
+                </tr>
+                <tr>
                   <td>Completed</td>
                   <td class="font-weight-bold" style="color: #d83967;">
                     <i *ngIf="preLoader" class="fa fa-circle-o-notch fa-spin load-spin"></i>
@@ -236,15 +231,9 @@
               </tbody>
             </table>
           </div>
-          <div class="col-md-12">
-            <div *ngIf="preLoader">
-              <i class="fa fa-circle-o-notch fa-spin load-spin"></i>
-            </div>
-            <div id="dashboard-piechart" *ngIf="!preLoader" echarts [options]="chartPie" [autoResize]="true" style="height: 200px;"></div>
-          </div>
         </div>
       </div>
     </div>
-  </div> -->
-
+  </div>
+  
 </div>

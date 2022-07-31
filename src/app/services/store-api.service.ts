@@ -162,9 +162,11 @@ export class StoreApiService {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
     return this.http.post<any>(environment.ws_url+'/store/layout', x, httpOptions);
   }
-  LAYOUT_DETAILS(x) {
+  LAYOUT_DETAILS(segmentId, adsetting) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
-    return this.http.get<any>(environment.ws_url+'/store/layout?layout_id='+x, httpOptions);
+    let url = environment.ws_url+'/store/layout?layout_id='+segmentId;
+    if(adsetting) url += '&adsetting=true';
+    return this.http.get<any>(url, httpOptions);
   }
   UPDATE_LAYOUT(x) {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

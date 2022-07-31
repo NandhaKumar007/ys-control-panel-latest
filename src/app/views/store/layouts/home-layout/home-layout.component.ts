@@ -106,7 +106,7 @@ export class HomeLayoutComponent implements OnInit {
 
   // EDIT
   onEditDetails(x, modalName) {
-    this.api.LAYOUT_DETAILS(x._id).subscribe(result => {
+    this.api.LAYOUT_DETAILS(x._id, false).subscribe(result => {
 			if(result.status) {
         this.editForm = result.data;
         this.editForm.prev_rank = this.editForm.rank;

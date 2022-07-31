@@ -5,7 +5,6 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
 import { StoreApiService } from 'src/app/services/store-api.service';
 import { CommonService } from 'src/app/services/common.service';
 import { environment } from '../../../../../environments/environment';
-import { id } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-ad-management',
@@ -139,12 +138,12 @@ export class AdManagementComponent implements OnInit {
       if(result.status) {
         if(result.data?.normal_days) {
           this.settingForm.normal_days.forEach(el => {
-            if(result.data.normal_days.findIndex(obj => obj.code===el.code) != -1) el.active = true;
+            if(result.data.normal_days.indexOf(el.code) != -1) el.active = true;
           })
         }
         if(result.data?.peak_days) {
           this.settingForm.peak_days.forEach(el => {
-            if(result.data.peak_days.findIndex(obj => obj.code===el.code) != -1) el.active = true;
+            if(result.data.peak_days.indexOf(el.code) != -1) el.active = true;
           })
         }
         if(result.data?.start_time) this.settingForm.start_time = result.data.start_time;
@@ -157,10 +156,14 @@ export class AdManagementComponent implements OnInit {
 
   onUpdateSetting() {
     let formData = {
-      normal_days: this.settingForm.normal_days.filter(obj => obj.active),
-      peak_days: this.settingForm.peak_days.filter(obj => obj.active),
-      start_time: this.settingForm.start_time, end_time: this.settingForm.end_time
+      normal_days: [], peak_days: [], start_time: this.settingForm.start_time, end_time: this.settingForm.end_time
     };
+    this.settingForm.normal_days.filter(obj => obj.active).forEach(el => {
+      formData.normal_days.push(el.code);
+    });
+    this.settingForm.peak_days.filter(obj => obj.active).forEach(el => {
+      formData.peak_days.push(el.code);
+    });
     this.settingForm.submit = true;
     this.api.AD_SETTING({ ad_config: formData }).subscribe((result) => {
       this.settingForm.submit = false;
