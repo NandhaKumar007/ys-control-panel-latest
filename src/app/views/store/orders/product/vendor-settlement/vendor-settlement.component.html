@@ -34,26 +34,30 @@
       </div>
       <div class="col-md-3 col-6">
         <div class="form-group">
-          <input type="text" placeholder="Select Date" class="form-control" name="from_date" [(ngModel)]="filterForm.from_date"
-          (ngModelChange)="getOrderList();" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
-        </div>
-      </div>
-      <div class="col-md-3 col-6">
-        <div class="form-group">
-          <input type="text" placeholder="Select Date" class="form-control" name="to_date" [(ngModel)]="filterForm.to_date"
-          (ngModelChange)="getOrderList();" bsDatepicker [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
-        </div>
-      </div>
-      <!-- <div class="col-md-3 col-6">
-        <div class="form-group">
           <select name="list_type" class="form-control select-arrow" [(ngModel)]="filterForm.list_type" (change)="getOrderList();">
-            <option value="all">All</option>
-            <option value="pending">Settlement Pending</option>
-            <option value="settled">Settlement Completed</option>
+            <option value="all">All Orders</option>
+            <option value="pending">Payment Pending</option>
+            <option value="failed">Payment Failed</option>
+            <option value="overdue">Overdue</option>
+            <option value="paid">Settled</option>
           </select>
         </div>
-      </div> -->
-      <div class="col-6" [ngClass]="(commonService.store_details?.login_type=='admin')? 'col-md-3': 'col-md-6'">
+      </div>
+      <ng-container *ngIf="filterForm.list_type=='all' || filterForm.list_type=='paid'">
+        <div class="col-md-3 col-6">
+          <div class="form-group">
+            <input type="text" placeholder="Select Date" class="form-control" name="from_date" [(ngModel)]="filterForm.from_date"
+            (ngModelChange)="getOrderList();" bsDatepicker [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="form-group">
+            <input type="text" placeholder="Select Date" class="form-control" name="to_date" [(ngModel)]="filterForm.to_date"
+            (ngModelChange)="getOrderList();" bsDatepicker [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
+          </div>
+        </div>
+      </ng-container>
+      <div class="col-md-3 col-6">
         <div class="form-group">
           <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
         </div>

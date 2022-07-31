@@ -60,14 +60,12 @@
         </button>
       </div>
       <!-- theme colors -->
-      <ng-container *ngIf="colorSections.length && !colorList.length">
-        <ng-container *ngFor="let sec of colorSections; let i=index;">
-          <div *ngIf="sec.name!='vendor_bg'" class="col-md-12 mt-3">
-            <div class="card card-in-card p-3">
-              <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
-            </div>
+      <ng-container *ngFor="let sec of colorSections; let i=index;">
+        <div *ngIf="sec.name!='vendor_bg'" class="col-md-12 mt-3">
+          <div class="card card-in-card p-3">
+            <h5 class="mb-0">{{sec.name | titlecase}} Color - <span class="color-span" [ngStyle]="{'background': sec.value}"></span></h5>
           </div>
-        </ng-container>
+        </div>
       </ng-container>
     </div>
   </ng-container>

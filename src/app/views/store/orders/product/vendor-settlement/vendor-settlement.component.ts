@@ -21,8 +21,8 @@ export class VendorSettlementComponent implements OnInit {
 
   ngOnInit() {
     this.filterForm = {
-      from_date: new Date(),
-      to_date: new Date(new Date().setMonth(new Date().getMonth() + 1)), vendor_id: 'all', list_type: 'pending'
+      from_date: new Date(), to_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      vendor_id: 'all', list_type: 'all'
     };
     if(sessionStorage.getItem("order_page")) {
       let pageInfo = JSON.parse(sessionStorage.getItem("order_page"));
@@ -46,7 +46,7 @@ export class VendorSettlementComponent implements OnInit {
       this.pageLoader = true;
       this.api.SETTLEMENT_ORDERS(this.filterForm).subscribe(result => {
         if(result.status) {
-          this.list = result.list.sort((a, b) => 0 - (a.created_on > b.created_on ? 1 : -1));
+          this.list = result.list;
           this.list.forEach(obj => {
             let vendorIndex = this.commonService.vendor_list.findIndex(el => el._id==obj.vendor_id);
             if(vendorIndex!=-1) obj.vendor_name = this.commonService.vendor_list[vendorIndex].company_details.brand;
