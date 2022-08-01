@@ -56,7 +56,7 @@ export class AdDetailsComponent implements OnInit {
     }
     else {
       this.findDayCount(new Date(this.adForm.from_date), new Date(this.adForm.to_date));
-      this.adForm.total_price = (this.totalNday * this.layoutDetails.normal_price)+(this.totalPday * this.layoutDetails.peak_price);
+      this.adForm.total_price = (this.totalNday * this.layoutDetails.normal_price) + (this.totalPday * this.layoutDetails.peak_price);
     }
   }
 
@@ -76,6 +76,7 @@ export class AdDetailsComponent implements OnInit {
     }
   }
   findDayCount(start, end) {
+    this.totalNday = 0; this.totalPday = 0;
     for(let dt = new Date(start); dt <= new Date(end); dt.setDate(dt.getDate() + 1)) {
       let dayCode = dt.getDay();
       if(this.normalDay.indexOf(dayCode) != -1) this.totalNday++;

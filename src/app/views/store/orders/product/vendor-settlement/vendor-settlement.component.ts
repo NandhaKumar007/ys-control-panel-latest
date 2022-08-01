@@ -39,7 +39,7 @@ export class VendorSettlementComponent implements OnInit {
   }
 
   getOrderList() {
-    this.list = [];
+    this.list = []; this.outstanding = 0;
     if(this.filterForm.from_date && this.filterForm.to_date) {
       this.filterForm.from_date = new Date(new Date(this.filterForm.from_date).setHours(0,0,0,0));
       this.filterForm.to_date = new Date(new Date(this.filterForm.to_date).setHours(23,59,59,999));
