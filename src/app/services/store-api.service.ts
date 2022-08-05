@@ -203,6 +203,22 @@ export class StoreApiService {
     return this.http.patch<any>(environment.ws_url+'/store/ad', x, httpOptions);
   }
 
+  // ad order
+  LIST_AD_ORDERS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/ad_orders/list',x, httpOptions);
+  }
+  ADD_AD_ORDERS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/ad_orders', x, httpOptions);
+  }
+
+  DELETE_AD_ORDERS(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.patch<any>(environment.ws_url+'/store/ad_orders', x, httpOptions);
+  }
+  
+
   // features
   PRODUCT_FEATURES() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

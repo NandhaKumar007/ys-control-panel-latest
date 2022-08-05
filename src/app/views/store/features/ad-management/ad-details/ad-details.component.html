@@ -6,7 +6,7 @@
   <div class="breadcrumb with-back-btn">
     <div class="row">
       <div class="col-md-12">
-        <h1>{{layoutDetails.name}}</h1>
+        <h1>{{adConfigDetails.name}}</h1>
         <ul>
           <li style="padding: 0px;">View the ad details and book your ad</li>
         </ul>
@@ -20,14 +20,14 @@
     <div class="col-md-10">
       <div class="card p-3 mb-3">
         <div class="col-md-12 form-group mb-3">
-          <div *ngIf="layoutDetails.image" class="text-center mt-3">
-            <img [src]="imgBaseUrl+layoutDetails.image" height="100px;" width="auto;">
+          <div *ngIf="adConfigDetails.image" class="text-center mt-3">
+            <img [src]="imgBaseUrl+adConfigDetails.image" height="100px;" width="auto;">
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-12">
             <div class="text-left">
-              <p>{{layoutDetails.description}}</p>
+              <p>{{adConfigDetails.description}}</p>
             </div>
           </div>
           <div class="col-6">
@@ -37,7 +37,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end">
-              <p>{{layoutDetails.normal_price | currency:commonService.store_currency?.country_code}}</p>
+              <p>{{adConfigDetails.normal_price | currency:commonService.store_currency?.country_code}}</p>
             </div>
           </div>
           <div class="col-6">
@@ -47,7 +47,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end">
-              <p>{{layoutDetails.peak_price | currency:commonService.store_currency?.country_code}}</p>
+              <p>{{adConfigDetails.peak_price | currency:commonService.store_currency?.country_code}}</p>
             </div>
           </div>
           <div class="col-6">
@@ -57,7 +57,7 @@
           </div>
           <div class="col-6">
             <div class="d-flex justify-content-end">
-              <p>{{layoutDetails.input_remarks}}</p>
+              <p>{{adConfigDetails.input_remarks}}</p>
             </div>
           </div>
         </div>
@@ -84,14 +84,18 @@
             <div class="col-md-6 form-group mb-3">
               <label>From date</label>
               <input type="text" class="form-control" name="from_date" autocomplete="off"
-              [(ngModel)]="adForm.from_date" placement="top" (ngModelChange)="adForm.total_price='';" bsDatepicker
+              [(ngModel)]="adForm.from_date" placement="top" (ngModelChange)="adForm.total_price=''; adForm.errorMsg='';" bsDatepicker
               [datesDisabled]="disabledDates" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
             </div>
             <div class="col-md-6 form-group mb-3">
               <label>To date</label>
               <input type="text" class="form-control" name="to_date" autocomplete="off"
-              [(ngModel)]="adForm.to_date" placement="top" (ngModelChange)="adForm.total_price='';" bsDatepicker
+              [(ngModel)]="adForm.to_date" placement="top" (ngModelChange)="adForm.total_price=''; adForm.errorMsg='';" bsDatepicker
               [minDate]="adForm.from_date" [datesDisabled]="disabledDates" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" required />
+            </div>
+            <div class="col-md-12 form-group mb-3">
+              <label>Notes</label>
+              <textarea type="text" name="notes" class="form-control" [(ngModel)]="adForm.notes" required></textarea>
             </div>
             <div *ngIf="adForm.total_price" class="col-md-12 mt-3 text-center">
               <b>Total Cost: {{adForm.total_price | currency:commonService.store_currency?.country_code}}</b>

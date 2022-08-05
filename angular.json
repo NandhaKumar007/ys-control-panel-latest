@@ -38,7 +38,11 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "core-js", "raf", "xlsx", "echarts", "file-saver"
+              "core-js",
+              "raf",
+              "xlsx",
+              "echarts",
+              "file-saver"
             ]
           },
           "configurations": {
@@ -94,8 +98,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [],
-            "scripts": [
-            ],
+            "scripts": [],
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -145,5 +148,8 @@
       }
     }
   },
-  "defaultProject": "yourstore"
+  "defaultProject": "yourstore",
+  "cli": {
+    "analytics": false
+  }
 }

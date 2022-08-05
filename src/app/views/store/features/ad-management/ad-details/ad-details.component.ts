@@ -18,6 +18,7 @@ export class AdDetailsComponent implements OnInit {
   normalDay: any = []; peakDay: any = [];
   dispNormDay: any = []; dispPeakDay: any = [];
   totalNday: number = 0; totalPday: number = 0;
+  calculation: boolean = true; adConfigDetails: any = {};
 
   constructor(private api: StoreApiService, private router: Router, private activeRoute: ActivatedRoute, public commonService: CommonService) {
   }
@@ -29,13 +30,14 @@ export class AdDetailsComponent implements OnInit {
         this.api.LAYOUT_DETAILS(params.id, true).subscribe((result) => {
           setTimeout(() => { this.pageLoader = false; }, 500);
           if (result.status) {
-            this.layoutDetails = result.data.ad_config;
-            if(this.layoutDetails.schedule_status && this.layoutDetails.schedule_from && this.layoutDetails.schedule_to) {
-              this.findDisableDays(this.layoutDetails.schedule_from, this.layoutDetails.schedule_to);
+            this.layoutDetails = result.data;
+            this.adConfigDetails = result.data.ad_config;
+            if(this.adConfigDetails.schedule_status && this.adConfigDetails.schedule_from && this.adConfigDetails.schedule_to) {
+              this.findDisableDays(this.adConfigDetails.schedule_from, this.adConfigDetails.schedule_to);
             }
             // store ad config
-            this.normalDay = result.ad_config?.normal_days;
-            this.peakDay = result.ad_config?.peak_days;
+            this.normalDay = result.ad_setting?.normal_days;
+            this.peakDay = result.ad_setting?.peak_days;
             this.normalDay.forEach(el => {
               this.dispNormDay.push(this.dayList[el]);
             });
@@ -52,11 +54,31 @@ export class AdDetailsComponent implements OnInit {
 
   onBook() {
     if(this.adForm.total_price) {
-      console.log(this.adForm);
+    this.adForm.segment_id = this.layoutDetails._id;
+    this.adForm.from_date = new Date(new Date(this.adForm.from_date).setHours(0,0,0,0));
+    this.adForm.to_date = new Date(new Date(this.adForm.to_date).setHours(23,59,59,999));
+    this.api.ADD_AD_ORDERS(this.adForm).subscribe((result)=>{
+      if(result.status){
+        this.router.navigate(['/features/ad-orders'])
+      }else{
+        console.log("response", result)
+        this.adForm.errorMsg = result.message;
+      }
+    });
     }
     else {
       this.findDayCount(new Date(this.adForm.from_date), new Date(this.adForm.to_date));
-      this.adForm.total_price = (this.totalNday * this.layoutDetails.normal_price) + (this.totalPday * this.layoutDetails.peak_price);
+      for(let y of this.disabledDates){
+        if(new Date(this.adForm.from_date) < y && new Date(this.adForm.to_date) > y) {
+          this.calculation = false;
+          this.adForm.errorMsg = 'Selected days was not available';
+          break;
+        }else{
+          this.adForm.errorMsg='';
+          this.calculation = true;
+        }
+      }
+      if(this.calculation)this.adForm.total_price = (this.totalNday * this.adConfigDetails.normal_price) + (this.totalPday * this.adConfigDetails.peak_price); 
     }
   }
 
