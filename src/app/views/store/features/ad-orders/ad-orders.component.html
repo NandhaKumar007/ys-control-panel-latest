@@ -21,13 +21,17 @@
 
     <div class="top-filter-sec">
         <div class="row mb-4">
-          <div *ngIf="commonService.vendor_list?.length" class="col-md-3 col-6">
+          <div class="col-md-3 col-6">
             <div class="form-group">
-              <select name="vendor_id" class="form-control select-arrow" [(ngModel)]="filterForm.vendor_id"
-                (change)="getAdOrderList();">
-                <option value="all">All Vendors</option>
-                <option [ngValue]="x._id" *ngFor="let x of commonService.vendor_list">{{x.company_details.brand}}</option>
-              </select>
+              <div class="form-group">
+                <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type"
+                  (change)="getAdOrderList();">
+                  <option value="all">All Orders</option>
+                  <option value="progress">Progress Orders</option>
+                  <option value="completed">Completed Orders</option>
+                  <option value="cancelled">Cancelled Orders</option>
+                </select>
+              </div>
             </div>
           </div>
             <div class="col-md-3 col-6">
@@ -44,7 +48,7 @@
                   [minDate]="filterForm.from_date" [bsConfig]="{ showWeekNumbers: false, dateInputFormat: 'DD-MM-YYYY' }" />
               </div>
             </div>
-          <div class="col-6" >
+          <div class="col-md-3 col-6" >
             <div class="form-group">
               <input type="text" name="search_bar" placeholder="Search" class="form-control" [(ngModel)]="search_bar" />
             </div>
@@ -74,9 +78,10 @@
                       </p>
                       <p class="w-30 w-sm-100 m-b-0">
                         <span class="badge" [ngClass]="{
-                          'badge-primary badge-red': x.status === 'placed',
-                          'badge-info badge-blue': x.status.indexOf('confirmed')!=-1,
-                          'badge-warning badge-green': x.status.indexOf('active')!=-1
+                          'badge-primary badge-red': x.status === 'cancelled',
+                          'badge-info badge-blue': x.status.indexOf('progress')!=-1,
+                          'badge-warning badge-green': x.status.indexOf('completed')!=-1,
+                          'badge-primary badge-green': x.status.indexOf('active')!=-1
                         }">{{x.status}}</span>
                       </p>
                       <p class=" text-muted text-small w-15 w-sm-100 d-lg-block item-actions mr-3 m-b-0">

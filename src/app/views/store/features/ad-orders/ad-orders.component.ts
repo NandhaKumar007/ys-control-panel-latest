@@ -22,7 +22,7 @@ export class AdOrdersComponent implements OnInit {
   constructor(public api: StoreApiService, public commonService: CommonService, public modalService: NgbModal,) { }
 
   ngOnInit(): void {
-    this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date(), vendor_id: 'all' };
+    this.filterForm = { from_date: new Date(new Date().setMonth(new Date().getMonth() - 1)), to_date: new Date() , type: 'all'};
     if(this.commonService.store_details.login_type=='vendor') {
       this.filterForm.vendor_id = this.commonService.vendor_details?._id;
     }
@@ -39,8 +39,10 @@ export class AdOrdersComponent implements OnInit {
       setTimeout(() => { this.pageLoader = false; }, 500);
       if(result.status){
         this.list = result.list;
+        this.pageLoader = false;
       }else{
         console.log("response", result)
+        this.pageLoader = false;
       }
     })
    }
