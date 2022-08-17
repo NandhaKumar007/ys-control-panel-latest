@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
 import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
+
 
 @Component({
   selector: 'app-catalogs',
@@ -13,7 +14,6 @@ import { CommonService } from '../../../services/common.service';
 })
 
 export class CatalogsComponent implements OnInit {
-
   page = 1; pageSize = 10;
   list: any = []; search_bar: string;
   addForm: any; editForm: any; deleteForm: any;
@@ -21,6 +21,7 @@ export class CatalogsComponent implements OnInit {
 
   constructor(config: NgbModalConfig, public modalService: NgbModal, private router: Router, private storeApi: StoreApiService, public commonService: CommonService) {
     config.backdrop = 'static'; config.keyboard = false;
+
   }
 
   ngOnInit() {

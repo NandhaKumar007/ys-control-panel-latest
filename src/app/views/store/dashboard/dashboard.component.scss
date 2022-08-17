@@ -19,3 +19,57 @@ i.load-spin {
 {
     .fs-md-28{font-size:28px;}
 }
+
+// .md-drppicker{
+//     background-color: red !important;
+//     min-width: 1000px !important;
+//   }
+
+  ::ng-deep {
+    ngx-daterangepicker-material {
+        // z-index: 999 !important;
+    & {
+     .md-drppicker {
+        position: absolute;
+        font-family: Roboto,sans-serif;
+        color: inherit;
+        border-radius: 4px;
+        width: auto;
+        padding: 4px;
+        margin-top: -10px;
+        overflow: hidden; 
+        z-index: 2;
+        font-size: 14px;
+        background-color: #ec848b;
+        box-shadow: 0 2px 4px 0rgba(0,0,0,.16),0 2px 8px 0rgba(0,0,0,.12);
+        &.double {
+          .calendar {
+ 
+          td {
+            &.active {
+               background-color: #ec848b;
+            //    border-radius: ........;
+            //    color: ...........;
+ 
+             &.off {
+                background-color: #ec848b !important;
+                // border-color: ....... !important;
+                // color: ........ !important; background: #ec848b;
+             }
+           }
+          }
+        }
+    }
+}
+.md-drppicker .ranges {
+    // min-width: 300px !important;
+    // z-index: 9999 !important;
+    }
+}
+}
+}
+
+#chart {
+    max-width: 650px;
+    margin: 35px auto;
+  }

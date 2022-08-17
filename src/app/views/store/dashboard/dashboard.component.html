@@ -269,6 +269,10 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <!-- <input name="type" type="text" class="form-control" ngxDaterangepickerMd [(ngModel)]="filterForm.type" [showCustomRangeLabel]="true" 
+            [alwaysShowCalendars]="false" [ranges]="ranges" [linkedCalendars]="true" [isInvalidDate] = "isInvalidDate" [showClearButton]="true" 
+            (change)="onFilterChange(filterForm.type)" /> -->
+          
             <select name="type" class="form-control select-arrow" [(ngModel)]="filterForm.type" (change)="filterForm.type!='custom' ? onFilterChange(filterForm.type): ''">
               <option value="today">Today</option>
               <option value="yesterday">Yesterday</option>
@@ -283,12 +287,13 @@
               <option value="all_time">All time</option>
               <option value="custom">Custom</option>
             </select>
-          </div>
-        </div>
+          </div>         
+        </div>       
       </div>
       </div>
     </div>
   </div>
+
 
   <div class="col-lg-6 col-md-12">
     <!-- CARD ICON -->

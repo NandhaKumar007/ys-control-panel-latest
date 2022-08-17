@@ -7,6 +7,7 @@ import { ApiService } from '../../../services/api.service';
 import { StoreApiService } from '../../../services/store-api.service';
 import { CommonService } from '../../../services/common.service';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'app-dashboard',
@@ -180,10 +181,27 @@ export class DashboardComponent implements OnInit {
   totalWhatsNewScreen: number = Object.keys(this.whats_new_list).length;
   promotions: any = [];
 
+  selected: any;
+  alwaysShowCalendars: boolean;
+  ranges: any = {
+    'Today': [moment(), moment()],
+    // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    // 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+    // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+    // 'This Month': [moment().startOf('month'), moment().endOf('month')],
+    // 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+  }
+  invalidDates: moment.Moment[] = [moment().add(2, 'days'), moment().add(3, 'days'), moment().add(5, 'days')];
+  
+  isInvalidDate = (m: moment.Moment) =>  {
+    return this.invalidDates.some(d => d.isSame(m, 'day') )
+  }
+
   constructor(
     config: NgbModalConfig, public modalService: NgbModal, private api: ApiService,
     private storeApi: StoreApiService, private datepipe: DatePipe, public commonService: CommonService
     ) {
+    this.alwaysShowCalendars = true;
     config.backdrop = 'static'; config.keyboard = false;
     if(!localStorage.getItem("country_list")) {
       this.api.COUNTRIES_LIST().subscribe(result => {
@@ -196,6 +214,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.onChart();
     this.commonService.loadChat();
     this.commonService.pageTop(0);
     if(this.commonService.store_details.login_type=='admin' || this.commonService.subuser_features.indexOf('dashboard')!=-1) {
@@ -350,6 +369,10 @@ export class DashboardComponent implements OnInit {
   }
 
   onFilterChange(x) {
+    // console.log("range = ", range)
+    // console.log("start date = ", x.startDate._d)
+    // console.log("end date = ", x.endDate._d)
+    
     if(x=='today') { this.filterForm.from_date = new Date; this.filterForm.to_date = new Date; }
     else if(x=='yesterday') { this.filterForm.from_date = new Date(new Date().setDate(new Date().getDate() - 1)); this.filterForm.to_date = new Date(new Date().setDate(new Date().getDate() - 1)); }
     else if(x=='last_7_days') { this.filterForm.from_date = new Date(new Date().setDate(new Date().getDate() - 7)); this.filterForm.to_date = new Date; }
@@ -510,5 +533,4 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {
     this.commonService.hideChat();
   }
-
 }

@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -13,7 +14,8 @@ import { DashboardComponent } from './dashboard.component';
     SharedModule,
     NgxEchartsModule,
     DashboardRoutingModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),    
+    NgxDaterangepickerMd.forRoot()
     
   ],
   providers: [DatePipe]

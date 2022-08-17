@@ -101,6 +101,16 @@ export class AccountService {
     return this.http.post<any>(environment.ws_url+'/store/courier_partner/wallet', x, httpOptions);
   }
 
+  // vendor wallet
+  VENDOR_WALLET_STATEMENT(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/vendor_topup/vendor_wallet_stmt', x, httpOptions);
+  }
+  VENDOR_WALLET_TOPUP(x) {
+    let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };
+    return this.http.post<any>(environment.ws_url+'/store/vendor_topup/vendor_wallet', x, httpOptions);
+  }
+
   // app store
   YS_FEATURES_LIST() {
     let httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem('store_token') }) };

@@ -11,7 +11,7 @@ import { CatalogsComponent } from './catalogs.component';
   imports: [
     QuillModule.forRoot(environment.quill_config),
     SharedModule,
-    CatalogsRoutingModule
+    CatalogsRoutingModule,
   ]
 })
 

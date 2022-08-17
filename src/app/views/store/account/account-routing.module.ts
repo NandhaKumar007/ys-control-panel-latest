@@ -7,6 +7,7 @@ const routes: Routes = [
   { path: 'vendor-profile', loadChildren: () => import('./vendor-profile/vendor-profile.module').then(m => m.VendorProfileModule), canActivate: [PermissionGuard], data: { name: "vendor_profile" } },
   { path: 'users', loadChildren: () => import('./sub-users/sub-users.module').then(m => m.SubUsersModule), canActivate: [PermissionGuard], data: { name: "sub_users" } },
   { path: 'vendors', loadChildren: () => import('./vendors/vendors.module').then(m => m.VendorsModule), canActivate: [PermissionGuard], data: { name: "vendors" } },
+  { path: 'vendor-wallet', loadChildren: () => import('./vendor-wallet-mgmt/vendor-wallet-mgmt.module').then(m => m.VendorWalletMgmtModule), canActivate: [PermissionGuard], data: { name: "vendor_profile" } },
   { path: 'branches', loadChildren: () => import('./branches/branches.module').then(m => m.BranchesModule), canActivate: [PermissionGuard], data: { name: "branches" } },
   { path: 'wallet', loadChildren: () => import('./dp-wallet-mgmt/dp-wallet-mgmt.module').then(m => m.DpWalletMgmtModule), canActivate: [PermissionGuard], data: { name: "dp_wallet" } },
   { path: 'billing', loadChildren: () => import('./billing/billing.module').then(m => m.BillingModule), canActivate: [PermissionGuard], data: { name: "billing" } },

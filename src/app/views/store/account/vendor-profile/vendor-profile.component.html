@@ -69,6 +69,15 @@
         </div>
       </div>
     </div>
+
+    <div class="col-md-6 col-lg-6" align="right">
+      <div class="top-filter-sec">
+        <h6 class="mr-2">{{balance | currency: commonService.store_currency?.country_code}}</h6>
+        <button type="button" class="btn btn-primary pull-right " (click)="onOpenTopup(orderModal)">Top Up</button>
+        <button type="button" routerLink="/account/vendor-wallet" class="btn btn-primary mr-3">Account Statement's</button>
+      </div>
+      
+    </div>
   </div>
 
 </div>
@@ -346,3 +355,54 @@
     </div>
   </form>
 </ng-template>
+
+
+<!-- ORDER MODAL -->
+<ng-template #orderModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Wallet Top Up</h4>
+  </div>
+  <form autocomplete="off" (ngSubmit)="onTopup();" ngNativeValidate>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-12 form-group mb-3">
+            <label>Price</label>
+            <input type="number" name="price" class="form-control" min="100" [(ngModel)]="orderForm.price" (input)="orderForm.errorMsg=null;" #name="ngModel" required />
+          </div>
+        </div>
+      </div>
+      <div *ngFor="let x of paymentTypes" class="mb-3">
+        <div *ngIf="x.name == 'Razorpay'">
+        <button type="submit" class="btn btn-wide btn-primary ladda-button m-1" [disabled]="orderForm.submit"
+        [ladda]="orderForm.submit">Submit</button>
+      </div>
+      </div>
+      <div *ngIf="orderForm.errorMsg">
+        <p class="text-danger">{{ orderForm.errorMsg }}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" id="closeModal" class="btn btn-wide black-outline-btn" (click)="modal.dismiss('Cross click');">
+        <span class="black-outline-txt">Cancel</span>
+      </button>
+      
+    </div>
+  </form>
+</ng-template>
+
+<!-- razorpay form -->
+<form #razorpayForm method="POST" action="{{environment.razorpay_payment_url}}">
+  <input type="hidden" name="key_id" value="{{razorpayOptions.key}}">
+  <input type="hidden" name="order_id" value="{{razorpayOptions.razorpay_order_id}}">
+  <input type="hidden" name="name" value="{{razorpayOptions.store_name}}">
+  <input type="hidden" name="description" value="{{razorpayOptions.description}}">
+  <input type="hidden" name="prefill[name]" value="{{razorpayOptions.customer_name}}">
+  <input type="hidden" name="prefill[email]" value="{{razorpayOptions.customer_email}}">
+  <input type="hidden" name="prefill[contact]" value="{{razorpayOptions.customer_mobile}}">
+  <input type="hidden" name="notes[my_store_id]" value="{{commonService.store_details._id}}">
+  <input type="hidden" name="notes[my_order_id]" value="{{razorpayOptions.my_order_id}}">
+  <input type="hidden" name="notes[my_order_type]" value="{{razorpayOptions.my_order_type}}">
+  <input type="hidden" name="callback_url" value="{{razorpay_redirect_url+commonService.store_details._id+'/'+vendorDetails._id}}">
+  <!-- <input type="hidden" name="cancel_url" value="{{commonService.origin}}"> -->
+</form>
